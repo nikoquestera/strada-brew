@@ -38,32 +38,53 @@ export default function ApplyPage() {
   }
 
   async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault()
-    setLoading(true)
-    setError('')
-    const payload = {
-      full_name: form.full_name, email: form.email, phone: form.phone,
-      birth_date: form.birth_date || null, domicile: form.domicile || null,
-      instagram_url: form.instagram_url ? `@${form.instagram_url}` : null,
-      position_applied: form.position_applied,
-      outlet_preference: form.outlet_preference || null,
-      source: 'Portal',
-      has_cafe_experience: form.has_cafe_experience,
-      cafe_experience_years: parseFloat(form.cafe_experience_years) || 0,
-      cafe_experience_detail: form.cafe_experience_detail || null,
-      has_barista_cert: form.has_barista_cert,
-      cert_detail: form.cert_detail || null,
-      education_level: form.education_level || null,
-      hr_notes: form.motivation || null,
-      status: 'new',
-    }
-    const { data, error: err } = await supabase.from('applicants').insert([payload]).select().single()
-    if (err) { setError('Terjadi kesalahan. Coba lagi.'); setLoading(false); return }
+  e.preventDefault()
+  setLoading(true)
+  setError('')
+
+  const payload = {
+    full_name: form.full_name, email: form.email, phone: form.phone,
+    birth_date: form.birth_date || null, domicile: form.domicile || null,
+    instagram_url: form.instagram_url ? `@${form.instagram_url}` : null,
+    position_applied: form.position_applied,
+    outlet_preference: form.outlet_preference || null,
+    source: 'Portal',
+    has_cafe_experience: form.has_cafe_experience,
+    cafe_experience_years: parseFloat(form.cafe_experience_years) || 0,
+    cafe_experience_detail: form.cafe_experience_detail || null,
+    has_barista_cert: form.has_barista_cert,
+    cert_detail: form.cert_detail || null,
+    education_level: form.education_level || null,
+    hr_notes: form.motivation || null,
+    status: 'new',
+  }
+
+  const { data, error: err } = await supabase.from('applicants').insert([payload]).select().single()
+  if (err) { setError('Terjadi kesalahan. Coba lagi.'); setLoading(false); return }
+
+  // Upload files (satu kali saja)
+  if (files.length > 0 && data) {
     for (const file of files) {
       await supabase.storage.from('documents').upload(`applicants/${data.id}/${file.name}`, file)
     }
-    setSubmitted(true)
   }
+
+  // Trigger Quest AI scoring (fire and forget)
+  fetch('/api/quest/score', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ applicant_id: data.id })
+  }).catch(() => {})
+
+  // Notify HRD (fire and forget)
+  fetch('/api/notify/new-applicant', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ applicant: payload })
+  }).catch(() => {})
+
+  setSubmitted(true)
+}
 
   const inp = "w-full px-4 py-3 rounded-xl text-sm outline-none transition-all"
   const ist = { border: '1.5px solid #D4CFC9', backgroundColor: '#FAFAF9', color: '#020000' }
