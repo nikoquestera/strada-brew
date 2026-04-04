@@ -17,9 +17,9 @@ export default async function HRDOverview() {
   ])
 
   const stats = [
-    { label: 'Karyawan Aktif', value: totalKaryawan ?? 0, color: 'bg-blue-50 text-blue-700' },
-    { label: 'Pelamar Baru', value: totalApplicants ?? 0, color: 'bg-amber-50 text-amber-700' },
-    { label: 'Kontrak Berakhir (30 hari)', value: kontrakAkanHabis ?? 0, color: 'bg-red-50 text-red-700' },
+    { label: 'Karyawan Aktif', value: totalKaryawan ?? 0, accent: '#037894' },
+    { label: 'Pelamar Baru', value: totalApplicants ?? 0, accent: '#DE9733' },
+    { label: 'Kontrak Berakhir (30 hari)', value: kontrakAkanHabis ?? 0, accent: '#FF4F31' },
   ]
 
   const quickActions = [
@@ -32,24 +32,30 @@ export default async function HRDOverview() {
   return (
     <div className="p-8">
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900">HRD Dashboard</h1>
-        <p className="text-gray-500 text-sm mt-1">Overview data HR Strada Coffee</p>
+        <p className="text-xs font-semibold uppercase tracking-widest mb-1" style={{ color: '#037894' }}>HRD Module</p>
+        <h1 className="text-2xl font-bold" style={{ color: '#020000' }}>Dashboard</h1>
+        <p className="text-sm mt-1" style={{ color: '#8A8A8D' }}>Overview data HR Strada Coffee</p>
       </div>
 
-      <div className="grid grid-cols-3 gap-4 mb-8">
+      <div className="grid grid-cols-3 gap-4 mb-6">
         {stats.map(stat => (
-          <div key={stat.label} className="bg-white rounded-2xl p-6 border border-gray-100">
-            <p className="text-sm text-gray-500 mb-2">{stat.label}</p>
-            <p className="text-3xl font-bold text-gray-900">{stat.value}</p>
+          <div key={stat.label} className="rounded-2xl p-6" style={{ backgroundColor: '#ffffff', border: '1px solid rgba(76,72,69,0.1)' }}>
+            <div className="w-2 h-2 rounded-full mb-4" style={{ backgroundColor: stat.accent }} />
+            <p className="text-3xl font-bold mb-1" style={{ color: '#020000' }}>{stat.value}</p>
+            <p className="text-sm" style={{ color: '#8A8A8D' }}>{stat.label}</p>
           </div>
         ))}
       </div>
 
-      <div className="bg-white rounded-2xl border border-gray-100 p-6">
-        <h2 className="font-semibold text-gray-800 mb-4">Quick actions</h2>
+      <div className="rounded-2xl p-6" style={{ backgroundColor: '#ffffff', border: '1px solid rgba(76,72,69,0.1)' }}>
+        <h2 className="text-sm font-semibold mb-4" style={{ color: '#020000' }}>Quick actions</h2>
         <div className="grid grid-cols-2 gap-3">
           {quickActions.map(item => (
-            <a key={item.label} href={item.href} className="flex items-center px-4 py-3 bg-gray-50 hover:bg-gray-100 rounded-xl text-sm text-gray-700 transition-colors">
+            <a key={item.label} href={item.href}
+              className="flex items-center px-4 py-3 rounded-xl text-sm font-medium transition-all"
+              style={{ backgroundColor: '#E4DED8', color: '#020000' }}
+              onMouseEnter={e => (e.currentTarget as HTMLElement).style.backgroundColor = '#d8d1c9'}
+              onMouseLeave={e => (e.currentTarget as HTMLElement).style.backgroundColor = '#E4DED8'}>
               {item.label}
             </a>
           ))}

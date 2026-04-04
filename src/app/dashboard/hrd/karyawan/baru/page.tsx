@@ -72,8 +72,9 @@ export default function TambahKaryawan() {
         <button onClick={() => router.back()} className="text-sm text-gray-400 hover:text-gray-600 mb-3 flex items-center gap-1">
           ← Kembali
         </button>
-        <h1 className="text-2xl font-bold text-gray-900">Tambah Karyawan Baru</h1>
-        <p className="text-gray-500 text-sm mt-1">Isi data lengkap karyawan</p>
+        <p className="text-xs font-semibold uppercase tracking-widest mb-1" style={{ color: '#037894' }}>HRD</p>
+        <h1 className="text-2xl font-bold" style={{ color: '#020000' }}>Tambah Karyawan Baru</h1>
+        <p className="text-sm mt-1" style={{ color: '#8A8A8D' }}>Isi data lengkap karyawan</p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
@@ -229,8 +230,10 @@ export default function TambahKaryawan() {
           <button type="button" onClick={() => router.back()} className="px-6 py-2.5 border border-gray-200 text-gray-700 rounded-xl text-sm font-medium hover:bg-gray-50 transition-colors">
             Batal
           </button>
-          <button type="submit" disabled={loading} className="px-6 py-2.5 bg-[#1a1a1a] text-white rounded-xl text-sm font-medium hover:bg-gray-800 transition-colors disabled:opacity-50">
-            {loading ? 'Menyimpan...' : 'Simpan Karyawan'}
+          <button type="submit" disabled={loading}
+          className="px-6 py-2.5 rounded-xl text-sm font-semibold transition-all disabled:opacity-50"
+          style={{ backgroundColor: '#037894', color: '#ffffff' }}>
+          {loading ? 'Menyimpan...' : 'Simpan Karyawan'}
           </button>
         </div>
       </form>
