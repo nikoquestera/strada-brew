@@ -15,61 +15,69 @@ export default function LoginPage() {
     e.preventDefault()
     setLoading(true)
     setError('')
-
     const { error } = await supabase.auth.signInWithPassword({ email, password })
-
     if (error) {
       setError('Email atau password salah.')
       setLoading(false)
       return
     }
-
     router.push('/dashboard/hrd')
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#F7F5F2]">
-      <div className="w-full max-w-md">
-        {/* Logo area */}
+    <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: '#E4DED8' }}>
+      <div className="w-full max-w-md px-4">
+
+        {/* Logo */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-[#1a1a1a] rounded-2xl mb-4">
-            <span className="text-white font-bold text-xl">B</span>
+          <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl mb-4" style={{ backgroundColor: '#020000' }}>
+            <div className="text-center">
+              <span className="text-white font-bold text-lg tracking-widest">B</span>
+            </div>
           </div>
-          <h1 className="text-2xl font-bold text-gray-900">BREW</h1>
-          <p className="text-sm text-gray-500 mt-1">Strada Coffee — Internal Portal</p>
+          <h1 className="text-2xl font-bold tracking-wide" style={{ color: '#020000' }}>BREW</h1>
+          <p className="text-sm mt-1" style={{ color: '#4C4845' }}>
+            Strada Coffee — Internal Portal
+          </p>
         </div>
 
         {/* Card */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
-          <h2 className="text-lg font-semibold text-gray-800 mb-6">Masuk ke akun kamu</h2>
+        <div className="rounded-2xl p-8" style={{ backgroundColor: '#ffffff', border: '1px solid rgba(76,72,69,0.12)' }}>
+          <h2 className="text-base font-semibold mb-6" style={{ color: '#020000' }}>Masuk ke akun kamu</h2>
 
           <form onSubmit={handleLogin} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+              <label className="block text-sm font-medium mb-1.5" style={{ color: '#4C4845' }}>Email</label>
               <input
                 type="email"
                 value={email}
                 onChange={e => setEmail(e.target.value)}
                 required
-                className="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent"
-                placeholder="nama@stradacoffee.com"
+                className="w-full px-4 py-2.5 rounded-xl text-sm outline-none transition-all"
+                style={{ border: '1.5px solid rgba(76,72,69,0.2)', backgroundColor: '#fafafa' }}
+                onFocus={e => (e.target as HTMLElement).style.borderColor = '#037894'}
+                onBlur={e => (e.target as HTMLElement).style.borderColor = 'rgba(76,72,69,0.2)'}
+                placeholder="nama@stradacoffee.co.id"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
+              <label className="block text-sm font-medium mb-1.5" style={{ color: '#4C4845' }}>Password</label>
               <input
                 type="password"
                 value={password}
                 onChange={e => setPassword(e.target.value)}
                 required
-                className="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent"
+                className="w-full px-4 py-2.5 rounded-xl text-sm outline-none transition-all"
+                style={{ border: '1.5px solid rgba(76,72,69,0.2)', backgroundColor: '#fafafa' }}
+                onFocus={e => (e.target as HTMLElement).style.borderColor = '#037894'}
+                onBlur={e => (e.target as HTMLElement).style.borderColor = 'rgba(76,72,69,0.2)'}
                 placeholder="••••••••"
               />
             </div>
 
             {error && (
-              <div className="bg-red-50 text-red-600 text-sm px-4 py-3 rounded-xl">
+              <div className="px-4 py-3 rounded-xl text-sm" style={{ backgroundColor: '#fff0ee', color: '#FF4F31' }}>
                 {error}
               </div>
             )}
@@ -77,14 +85,17 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-[#1a1a1a] text-white py-2.5 rounded-xl text-sm font-medium hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full py-2.5 rounded-xl text-sm font-semibold transition-all"
+              style={{ backgroundColor: '#037894', color: '#ffffff' }}
+              onMouseEnter={e => (e.currentTarget as HTMLElement).style.backgroundColor = '#025f76'}
+              onMouseLeave={e => (e.currentTarget as HTMLElement).style.backgroundColor = '#037894'}
             >
               {loading ? 'Masuk...' : 'Masuk'}
             </button>
           </form>
         </div>
 
-        <p className="text-center text-xs text-gray-400 mt-6">
+        <p className="text-center text-xs mt-6" style={{ color: '#8A8A8D' }}>
           Akses terbatas untuk tim internal Strada Coffee
         </p>
       </div>
