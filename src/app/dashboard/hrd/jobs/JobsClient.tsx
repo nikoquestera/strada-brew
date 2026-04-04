@@ -297,4 +297,47 @@ export default function JobsClient({ initialJobs }: { initialJobs: JobPosting[] 
                 <textarea className={inp} style={{ ...ist, resize: 'vertical' as const }} value={form.benefits} onChange={e => set('benefits', e.target.value)} rows={3} placeholder="- Gaji pokok + service charge&#10;- BPJS Kesehatan & Ketenagakerjaan" />
               </div>
 
-              <div style={{ padding: '16px', borderRadius: '14px', border: '1.5px solid rgba(3,
+              <div style={{ padding: '16px', borderRadius: '14px', border: '1.5px solid rgba(3,120,148,0.2)', backgroundColor: 'rgba(3,120,148,0.03)' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '8px' }}>
+                  <Zap size={14} color="#037894" />
+                  <label style={{ ...lbl, margin: 0, color: '#037894' }}>Catatan Screening untuk Quest AI <span style={{ fontSize: '10px', fontWeight: 400, color: '#8A8A8D' }}>(opsional)</span></label>
+                </div>
+                <textarea className={inp} style={{ ...ist, resize: 'vertical' as const, backgroundColor: '#ffffff' }} value={form.ai_screening_notes} onChange={e => set('ai_screening_notes', e.target.value)} rows={4}
+                  placeholder="Contoh: Prioritaskan kandidat dengan pengalaman di specialty coffee. Sertifikasi SCA sangat diutamakan..." />
+                <p style={{ fontSize: '11px', color: '#037894', margin: '6px 0 0' }}>Quest AI akan menggunakan catatan ini saat menilai pelamar untuk posisi ini.</p>
+              </div>
+
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 16px', borderRadius: '12px', backgroundColor: '#F7F5F2' }}>
+                <div>
+                  <p style={{ fontSize: '14px', fontWeight: 600, color: '#020000', margin: '0 0 2px' }}>Tandai sebagai Urgent</p>
+                  <p style={{ fontSize: '12px', color: '#8A8A8D', margin: 0 }}>Badge merah di portal kandidat</p>
+                </div>
+                <button type="button" onClick={() => set('is_urgent', !form.is_urgent)}
+                  style={{ width: '46px', height: '26px', borderRadius: '13px', border: 'none', cursor: 'pointer', position: 'relative', backgroundColor: form.is_urgent ? '#FF4F31' : '#D4CFC9', flexShrink: 0 }}>
+                  <span style={{ position: 'absolute', top: '3px', width: '20px', height: '20px', backgroundColor: '#fff', borderRadius: '50%', boxShadow: '0 1px 3px rgba(0,0,0,0.2)', transition: 'transform 0.2s', transform: form.is_urgent ? 'translateX(23px)' : 'translateX(3px)' }} />
+                </button>
+              </div>
+            </div>
+
+            {saveError && (
+              <div style={{ padding: '12px 16px', borderRadius: '10px', backgroundColor: '#FFF0EE', color: '#FF4F31', fontSize: '13px', marginTop: '16px' }}>
+                ⚠ {saveError}
+              </div>
+            )}
+
+            <div style={{ display: 'flex', gap: '10px', marginTop: '20px' }}>
+              <button onClick={() => setShowForm(false)}
+                style={{ flex: 1, padding: '14px', borderRadius: '12px', border: '1.5px solid #E8E4E0', backgroundColor: 'transparent', color: '#4C4845', fontWeight: 600, fontSize: '14px', cursor: 'pointer' }}>
+                Batal
+              </button>
+              <button onClick={handleSave} disabled={saving || !form.job_id || !form.title || !form.location || !form.description || !form.requirements || !form.responsibilities}
+                style={{ flex: 2, padding: '14px', borderRadius: '12px', backgroundColor: saving ? '#8A8A8D' : '#037894', color: '#fff', fontWeight: 700, fontSize: '14px', border: 'none', cursor: saving ? 'not-allowed' : 'pointer' }}>
+                {saving ? 'Menyimpan...' : editingJob ? 'Update Job Post' : 'Publish Job Post'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
+  )
+}
