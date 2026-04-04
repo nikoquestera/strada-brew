@@ -32,12 +32,12 @@ export default function DashboardShell({ children, userEmail }: Props) {
         {/* Brand */}
         <div className="px-6 py-5" style={{ borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: '#037894' }}>
-              <span className="text-white font-bold text-sm">B</span>
-            </div>
             <div>
-              <p className="text-white font-semibold text-sm tracking-wide">BREW</p>
-              <p className="text-xs" style={{ color: 'rgba(228,222,216,0.4)' }}>Strada Coffee</p>
+              <div className="flex items-center gap-1.5 mb-0.5">
+                <span className="font-bold text-sm tracking-wide" style={{ color: '#E4DED8' }}>Strada</span>
+                <span className="font-bold text-sm tracking-wide px-1.5 py-0.5 rounded" style={{ backgroundColor: '#037894', color: '#ffffff' }}>Brew</span>
+              </div>
+              <p className="text-xs" style={{ color: 'rgba(228,222,216,0.35)' }}>Internal Portal</p>
             </div>
           </div>
         </div>
