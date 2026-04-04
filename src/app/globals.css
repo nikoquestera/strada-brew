@@ -1,26 +1,37 @@
 @import "tailwindcss";
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 
 @theme {
   --font-sans: 'Plus Jakarta Sans', sans-serif;
-
   --color-strada-blue: #037894;
   --color-strada-black: #020000;
   --color-strada-foam: #E4DED8;
-  --color-strada-teal-light: #8FC6C5;
+  --color-strada-teal: #8FC6C5;
   --color-strada-charcoal: #4C4845;
   --color-strada-gray: #8A8A8D;
   --color-strada-coral: #FF4F31;
   --color-strada-amber: #DE9733;
-  --color-strada-teal-dark: #005353;
-  --color-strada-forest: #233212;
+  --color-strada-dark-teal: #005353;
   --color-strada-olive: #82A13B;
 }
 
-* {
-  font-family: 'Plus Jakarta Sans', sans-serif;
-}
+* { font-family: 'Plus Jakarta Sans', sans-serif; box-sizing: border-box; }
 
-body {
-  background-color: #E4DED8;
+body { background-color: #E4DED8; margin: 0; }
+
+/* Mobile sidebar overlay */
+.sidebar-mobile-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 40;
+}
+.sidebar-mobile-overlay.open { display: block; }
+
+/* Responsive table */
+@media (max-width: 768px) {
+  .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .hide-mobile { display: none !important; }
+  .stack-mobile { flex-direction: column !important; }
 }

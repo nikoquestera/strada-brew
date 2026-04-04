@@ -1,7 +1,8 @@
 'use client'
+import { useState } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
-import { Users, FileText, Calculator, Home, LogOut } from 'lucide-react'
+import { Users, FileText, Calculator, Home, LogOut, Menu, X, Briefcase } from 'lucide-react'
 
 interface Props {
   children: React.ReactNode
@@ -12,6 +13,7 @@ const hrdNav = [
   { label: 'Overview', href: '/dashboard/hrd', icon: Home },
   { label: 'Karyawan', href: '/dashboard/hrd/karyawan', icon: Users },
   { label: 'Rekrutmen', href: '/dashboard/hrd/rekrutmen', icon: FileText },
+  { label: 'Job Posting', href: '/dashboard/hrd/jobs', icon: Briefcase },
   { label: 'Payroll', href: '/dashboard/hrd/payroll', icon: Calculator },
 ]
 
@@ -19,95 +21,146 @@ export default function DashboardShell({ children, userEmail }: Props) {
   const router = useRouter()
   const pathname = usePathname()
   const supabase = createClient()
+  const [sidebarOpen, setSidebarOpen] = useState(false)
 
   async function handleLogout() {
     await supabase.auth.signOut()
     router.push('/login')
   }
 
-  return (
-    <div className="flex h-screen" style={{ backgroundColor: '#E4DED8' }}>
-      {/* Sidebar */}
-      <aside className="w-60 flex flex-col" style={{ backgroundColor: '#020000' }}>
-        {/* Brand */}
-        <div className="px-6 py-5" style={{ borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
-          <div className="flex items-center gap-3">
-            <div>
-              <p className="font-bold text-base" style={{ color: '#E4DED8', fontStyle: 'italic', letterSpacing: '-0.3px' }}>Strada</p>
-              <div className="flex items-center gap-1.5">
-                <p className="text-xs font-bold tracking-widest uppercase" style={{ color: '#037894' }}>BREW</p>
-                <span className="text-xs" style={{ color: 'rgba(228,222,216,0.2)' }}>·</span>
-                <p className="text-xs" style={{ color: 'rgba(228,222,216,0.3)', letterSpacing: '0.5px' }}>Internal Portal</p>
-              </div>
-            </div>
-          </div>
+  const SidebarContent = () => (
+    <aside style={{ backgroundColor: '#020000', display: 'flex', flexDirection: 'column', height: '100%' }}>
+      {/* Brand */}
+      <div style={{ padding: '20px 24px', borderBottom: '1px solid rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div>
+          <p style={{ color: '#E4DED8', fontWeight: 800, fontSize: '16px', fontStyle: 'italic', margin: 0, lineHeight: 1 }}>Strada</p>
+          <p style={{ color: '#037894', fontSize: '10px', fontWeight: 700, letterSpacing: '3px', textTransform: 'uppercase', margin: 0 }}>BREW</p>
         </div>
+        {/* Close button mobile only */}
+        <button onClick={() => setSidebarOpen(false)}
+          style={{ display: 'none', color: 'rgba(228,222,216,0.4)', background: 'none', border: 'none', cursor: 'pointer', padding: '4px' }}
+          className="sidebar-close-btn">
+          <X size={18} />
+        </button>
+      </div>
 
-        {/* Module label */}
-        <div className="px-6 pt-6 pb-2">
-          <p className="text-xs font-medium uppercase tracking-widest" style={{ color: 'rgba(255,255,255,0.25)' }}>HRD Module</p>
-        </div>
+      {/* Module label */}
+      <div style={{ padding: '20px 24px 8px' }}>
+        <p style={{ color: 'rgba(255,255,255,0.25)', fontSize: '10px', fontWeight: 700, letterSpacing: '3px', textTransform: 'uppercase', margin: 0 }}>HRD Module</p>
+      </div>
 
-        {/* Nav */}
-        <nav className="flex-1 px-3 space-y-0.5">
-          {hrdNav.map(item => {
-            const Icon = item.icon
-            const active = pathname === item.href
-            return (
-              <button
-                key={item.href}
-                onClick={() => router.push(item.href)}
-                className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-all"
-                style={{
-                  backgroundColor: active ? '#037894' : 'transparent',
-                  color: active ? '#ffffff' : 'rgba(228,222,216,0.45)',
-                }}
-                onMouseEnter={e => { if (!active) (e.currentTarget as HTMLElement).style.color = '#E4DED8' }}
-                onMouseLeave={e => { if (!active) (e.currentTarget as HTMLElement).style.color = 'rgba(228,222,216,0.45)' }}
-              >
-                <Icon size={16} />
-                {item.label}
-              </button>
-            )
-          })}
-        </nav>
-
-        {/* Other modules */}
-        <div className="px-6 py-4" style={{ borderTop: '1px solid rgba(255,255,255,0.08)' }}>
-          <p className="text-xs font-medium uppercase tracking-widest mb-3" style={{ color: 'rgba(255,255,255,0.2)' }}>Modul Lain</p>
-          {['Finance', 'Warehouse', 'Purchasing', 'Audit'].map(m => (
-            <div key={m} className="flex items-center justify-between py-1.5">
-              <span className="text-xs" style={{ color: 'rgba(255,255,255,0.2)' }}>{m}</span>
-              <span className="text-xs" style={{ color: 'rgba(255,255,255,0.15)' }}>Soon</span>
-            </div>
-          ))}
-        </div>
-
-        {/* User */}
-        <div className="px-4 py-4" style={{ borderTop: '1px solid rgba(255,255,255,0.08)' }}>
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ backgroundColor: '#037894' }}>
-              <span className="text-white text-xs font-medium">
-                {userEmail?.[0]?.toUpperCase()}
-              </span>
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-xs truncate" style={{ color: 'rgba(228,222,216,0.6)' }}>{userEmail}</p>
-              <p className="text-xs" style={{ color: 'rgba(228,222,216,0.3)' }}>HRD</p>
-            </div>
-            <button onClick={handleLogout} style={{ color: 'rgba(228,222,216,0.3)' }}
-              onMouseEnter={e => (e.currentTarget as HTMLElement).style.color = '#E4DED8'}
-              onMouseLeave={e => (e.currentTarget as HTMLElement).style.color = 'rgba(228,222,216,0.3)'}>
-              <LogOut size={14} />
+      {/* Nav */}
+      <nav style={{ flex: 1, padding: '0 12px', display: 'flex', flexDirection: 'column', gap: '2px' }}>
+        {hrdNav.map(item => {
+          const Icon = item.icon
+          const active = pathname === item.href || (item.href !== '/dashboard/hrd' && pathname.startsWith(item.href))
+          return (
+            <button key={item.href}
+              onClick={() => { router.push(item.href); setSidebarOpen(false) }}
+              style={{
+                width: '100%', display: 'flex', alignItems: 'center', gap: '10px',
+                padding: '10px 12px', borderRadius: '8px', fontSize: '14px',
+                backgroundColor: active ? '#037894' : 'transparent',
+                color: active ? '#ffffff' : 'rgba(228,222,216,0.45)',
+                border: 'none', cursor: 'pointer', textAlign: 'left', transition: 'all 0.15s',
+              }}>
+              <Icon size={16} />
+              {item.label}
             </button>
-          </div>
-        </div>
-      </aside>
+          )
+        })}
+      </nav>
 
-      {/* Main */}
-      <main className="flex-1 overflow-auto">
-        {children}
-      </main>
-    </div>
+      {/* Coming soon */}
+      <div style={{ padding: '16px 24px', borderTop: '1px solid rgba(255,255,255,0.08)' }}>
+        <p style={{ color: 'rgba(255,255,255,0.2)', fontSize: '10px', fontWeight: 700, letterSpacing: '3px', textTransform: 'uppercase', margin: '0 0 8px' }}>Modul Lain</p>
+        {['Finance', 'Warehouse', 'Purchasing', 'Audit'].map(m => (
+          <div key={m} style={{ display: 'flex', justifyContent: 'space-between', padding: '4px 0' }}>
+            <span style={{ color: 'rgba(255,255,255,0.2)', fontSize: '12px' }}>{m}</span>
+            <span style={{ color: 'rgba(255,255,255,0.15)', fontSize: '11px' }}>Soon</span>
+          </div>
+        ))}
+      </div>
+
+      {/* User */}
+      <div style={{ padding: '16px', borderTop: '1px solid rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', gap: '10px' }}>
+        <div style={{ width: '32px', height: '32px', borderRadius: '50%', backgroundColor: '#037894', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+          <span style={{ color: '#fff', fontSize: '12px', fontWeight: 700 }}>{userEmail?.[0]?.toUpperCase()}</span>
+        </div>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <p style={{ color: 'rgba(228,222,216,0.6)', fontSize: '12px', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{userEmail}</p>
+          <p style={{ color: 'rgba(228,222,216,0.3)', fontSize: '11px', margin: 0 }}>HRD</p>
+        </div>
+        <button onClick={handleLogout} style={{ color: 'rgba(228,222,216,0.3)', background: 'none', border: 'none', cursor: 'pointer', padding: '4px' }}>
+          <LogOut size={14} />
+        </button>
+      </div>
+    </aside>
+  )
+
+  return (
+    <>
+      <style>{`
+        @media (max-width: 768px) {
+          .desktop-sidebar { display: none !important; }
+          .mobile-header { display: flex !important; }
+          .mobile-sidebar { display: ${sidebarOpen ? 'flex' : 'none'} !important; }
+          .sidebar-close-btn { display: block !important; }
+        }
+        @media (min-width: 769px) {
+          .mobile-header { display: none !important; }
+          .mobile-sidebar { display: none !important; }
+          .desktop-sidebar { display: flex !important; }
+        }
+      `}</style>
+
+      {/* Mobile overlay */}
+      {sidebarOpen && (
+        <div onClick={() => setSidebarOpen(false)}
+          style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 40 }} />
+      )}
+
+      {/* Mobile sidebar (drawer) */}
+      <div className="mobile-sidebar" style={{
+        position: 'fixed', top: 0, left: 0, bottom: 0, width: '260px',
+        zIndex: 50, flexDirection: 'column'
+      }}>
+        <SidebarContent />
+      </div>
+
+      {/* Layout */}
+      <div style={{ display: 'flex', height: '100vh', overflow: 'hidden' }}>
+
+        {/* Desktop sidebar */}
+        <div className="desktop-sidebar" style={{ width: '240px', flexShrink: 0, flexDirection: 'column' }}>
+          <SidebarContent />
+        </div>
+
+        {/* Main content */}
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+
+          {/* Mobile header */}
+          <div className="mobile-header" style={{
+            backgroundColor: '#020000', padding: '16px 20px',
+            alignItems: 'center', justifyContent: 'space-between', flexShrink: 0
+          }}>
+            <button onClick={() => setSidebarOpen(true)}
+              style={{ color: '#E4DED8', background: 'none', border: 'none', cursor: 'pointer', padding: '4px' }}>
+              <Menu size={20} />
+            </button>
+            <div style={{ textAlign: 'center' }}>
+              <span style={{ color: '#E4DED8', fontWeight: 800, fontSize: '14px', fontStyle: 'italic' }}>Strada</span>
+              <span style={{ color: '#037894', fontWeight: 700, fontSize: '10px', letterSpacing: '2px', marginLeft: '6px' }}>BREW</span>
+            </div>
+            <div style={{ width: '28px' }} />
+          </div>
+
+          {/* Page content */}
+          <main style={{ flex: 1, overflowY: 'auto' }}>
+            {children}
+          </main>
+        </div>
+      </div>
+    </>
   )
 }
