@@ -55,7 +55,9 @@ export default async function KaryawanPage() {
               const s = statusStyle[emp.status] ?? statusStyle.inactive
 
               return (
-                <tr key={emp.id} style={{ borderBottom: '1px solid rgba(76,72,69,0.05)' }}
+                <tr key={emp.id}
+                  onClick={() => window.location.href = `/dashboard/hrd/karyawan/${emp.id}`}
+                  style={{ borderBottom: '1px solid rgba(76,72,69,0.05)', cursor: 'pointer' }}
                   onMouseEnter={e => (e.currentTarget as HTMLElement).style.backgroundColor = '#faf9f7'}
                   onMouseLeave={e => (e.currentTarget as HTMLElement).style.backgroundColor = 'transparent'}>
                   <td className="px-6 py-4">
