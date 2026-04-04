@@ -10,6 +10,7 @@ export default function JobsClient({ initialJobs }: { initialJobs: JobPosting[] 
   const [showForm, setShowForm] = useState(false)
   const [editingJob, setEditingJob] = useState<JobPosting | null>(null)
   const [saving, setSaving] = useState(false)
+  const [saveError, setSaveError] = useState('')
 
   const emptyForm = {
     job_id: '', title: '', department: '', entity: 'CV_KTN' as const,
@@ -39,12 +40,15 @@ export default function JobsClient({ initialJobs }: { initialJobs: JobPosting[] 
 
   async function handleSave() {
     setSaving(true)
+    setSaveError('')
     const payload = { ...form, min_experience_years: Number(form.min_experience_years) }
     if (editingJob) {
-      const { data } = await supabase.from('job_postings').update(payload).eq('id', editingJob.id).select().single()
+      const { data, error } = await supabase.from('job_postings').update(payload).eq('id', editingJob.id).select().single()
+      if (error) { setSaveError(error.message); setSaving(false); return }
       if (data) setJobs(js => js.map(j => j.id === editingJob.id ? data : j))
     } else {
-      const { data } = await supabase.from('job_postings').insert([{ ...payload, is_active: true }]).select().single()
+      const { data, error } = await supabase.from('job_postings').insert([{ ...payload, is_active: true }]).select().single()
+      if (error) { setSaveError(error.message); setSaving(false); return }
       if (data) setJobs(js => [data, ...js])
     }
     setSaving(false)
@@ -163,8 +167,7 @@ export default function JobsClient({ initialJobs }: { initialJobs: JobPosting[] 
 
       {/* Form Modal */}
       {showForm && (
-        <div style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 100, overflowY: 'auto', padding: '20px' }}
-          onClick={e => { if (e.target === e.currentTarget) setShowForm(false) }}>
+        <div style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 100, overflowY: 'auto', padding: '20px' }}>
           <div style={{ backgroundColor: '#fff', borderRadius: '20px', padding: '28px', maxWidth: '720px', margin: '0 auto', position: 'relative' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
               <h2 style={{ fontSize: '18px', fontWeight: 800, color: '#020000', margin: 0 }}>
@@ -295,6 +298,11 @@ export default function JobsClient({ initialJobs }: { initialJobs: JobPosting[] 
               </div>
             </div>
 
+            {saveError && (
+                <div style={{ padding: '12px 16px', borderRadius: '10px', backgroundColor: '#FFF0EE', color: '#FF4F31', fontSize: '13px', marginBottom: '8px' }}>
+                  ⚠ {saveError}
+                </div>
+            )}
             <div style={{ display: 'flex', gap: '10px', marginTop: '24px' }}>
               <button onClick={() => setShowForm(false)}
                 style={{ flex: 1, padding: '14px', borderRadius: '12px', border: '1.5px solid #E8E4E0', backgroundColor: 'transparent', color: '#4C4845', fontWeight: 600, fontSize: '14px', cursor: 'pointer' }}>
