@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { PIPELINE_STAGES, PipelineStage } from '@/lib/types'
-import { ArrowLeft, Phone, Mail, Instagram, MapPin, Calendar, Briefcase, Star, MessageSquare, Send } from 'lucide-react'
+import { ArrowLeft, Phone, Mail, AtSign, MapPin, Calendar, Briefcase, Star, MessageSquare, Send } from 'lucide-react'
 
 interface Props {
   applicant: Record<string, any>
@@ -112,7 +112,7 @@ export default function ApplicantDetailClient({ applicant }: Props) {
                   { icon: <Phone size={14} />, label: 'No. HP', value: applicant.phone },
                   { icon: <Mail size={14} />, label: 'Email', value: applicant.email },
                   { icon: <MapPin size={14} />, label: 'Domisili', value: applicant.domicile || '-' },
-                  { icon: <Instagram size={14} />, label: 'Instagram', value: applicant.instagram_url || '-' },
+                  { icon: <AtSign size={14} />, label: 'Instagram', value: applicant.instagram_url || '-' },
                   { icon: <Calendar size={14} />, label: 'Tgl Lahir', value: applicant.birth_date ? new Date(applicant.birth_date).toLocaleDateString('id-ID') : '-' },
                   { icon: <Briefcase size={14} />, label: 'Pendidikan', value: applicant.education_level || '-' },
                 ].map(item => (
