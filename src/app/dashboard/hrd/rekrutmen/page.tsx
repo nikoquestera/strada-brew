@@ -34,12 +34,8 @@ export default async function RekrutmenPage() {
           <p className="text-gray-500 text-sm mt-1">{applicants?.length ?? 0} pelamar terdaftar</p>
         </div>
         <div className="flex gap-2">
-          
-            href="/apply"
-            target="_blank"
-            className="border border-gray-200 text-gray-700 px-4 py-2 rounded-xl text-sm font-medium hover:bg-gray-50 transition-colors"
-          >
-            Lihat Portal Pelamar ↗
+          <a href="/apply" target="_blank" rel="noreferrer" className="border border-gray-200 text-gray-700 px-4 py-2 rounded-xl text-sm font-medium hover:bg-gray-50 transition-colors">
+            Lihat Portal Pelamar
           </a>
         </div>
       </div>

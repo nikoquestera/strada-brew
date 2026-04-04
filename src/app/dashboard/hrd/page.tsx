@@ -22,6 +22,13 @@ export default async function HRDOverview() {
     { label: 'Kontrak Berakhir (30 hari)', value: kontrakAkanHabis ?? 0, color: 'bg-red-50 text-red-700' },
   ]
 
+  const quickActions = [
+    { label: '+ Tambah Karyawan', href: '/dashboard/hrd/karyawan/baru' },
+    { label: '+ Lihat Pelamar Baru', href: '/dashboard/hrd/rekrutmen' },
+    { label: '+ Proses Payroll', href: '/dashboard/hrd/payroll' },
+    { label: '+ Cek Kontrak Habis', href: '/dashboard/hrd/karyawan' },
+  ]
+
   return (
     <div className="p-8">
       <div className="mb-8">
@@ -29,7 +36,6 @@ export default async function HRDOverview() {
         <p className="text-gray-500 text-sm mt-1">Overview data HR Strada Coffee</p>
       </div>
 
-      {/* Stats */}
       <div className="grid grid-cols-3 gap-4 mb-8">
         {stats.map(stat => (
           <div key={stat.label} className="bg-white rounded-2xl p-6 border border-gray-100">
@@ -39,21 +45,11 @@ export default async function HRDOverview() {
         ))}
       </div>
 
-      {/* Quick links */}
       <div className="bg-white rounded-2xl border border-gray-100 p-6">
         <h2 className="font-semibold text-gray-800 mb-4">Quick actions</h2>
         <div className="grid grid-cols-2 gap-3">
-          {[
-            { label: '+ Tambah Karyawan', href: '/dashboard/hrd/karyawan/baru' },
-            { label: '+ Lihat Pelamar Baru', href: '/dashboard/hrd/rekrutmen' },
-            { label: '+ Proses Payroll', href: '/dashboard/hrd/payroll' },
-            { label: '+ Cek Kontrak Habis', href: '/dashboard/hrd/karyawan?filter=contract' },
-          ].map(item => (
-            
-              key={item.label}
-              href={item.href}
-              className="flex items-center px-4 py-3 bg-gray-50 hover:bg-gray-100 rounded-xl text-sm text-gray-700 transition-colors"
-            >
+          {quickActions.map(item => (
+            <a key={item.label} href={item.href} className="flex items-center px-4 py-3 bg-gray-50 hover:bg-gray-100 rounded-xl text-sm text-gray-700 transition-colors">
               {item.label}
             </a>
           ))}
