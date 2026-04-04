@@ -1,25 +1,39 @@
 import { createClient } from '@/lib/supabase/server'
+import { redirect } from 'next/navigation'
 
 export default async function HRDOverview() {
-  const supabase = await createClient()
+  let totalKaryawan = 0
+  let totalApplicants = 0
+  let kontrakAkanHabis = 0
 
-  const [
-    { count: totalKaryawan },
-    { count: totalApplicants },
-    { count: kontrakAkanHabis },
-  ] = await Promise.all([
-    supabase.from('employees').select('*', { count: 'exact', head: true }).eq('status', 'active'),
-    supabase.from('applicants').select('*', { count: 'exact', head: true }).eq('status', 'new'),
-    supabase.from('employees').select('*', { count: 'exact', head: true })
-      .eq('status', 'active')
-      .not('contract_end', 'is', null)
-      .lte('contract_end', new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]),
-  ])
+  try {
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) redirect('/login')
+
+    const thirtyDaysFromNow = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
+      .toISOString().split('T')[0]
+
+    const [r1, r2, r3] = await Promise.all([
+      supabase.from('employees').select('*', { count: 'exact', head: true }).eq('status', 'active'),
+      supabase.from('applicants').select('*', { count: 'exact', head: true }).eq('status', 'new'),
+      supabase.from('employees').select('*', { count: 'exact', head: true })
+        .eq('status', 'active')
+        .not('contract_end', 'is', null)
+        .lte('contract_end', thirtyDaysFromNow),
+    ])
+
+    totalKaryawan = r1.count ?? 0
+    totalApplicants = r2.count ?? 0
+    kontrakAkanHabis = r3.count ?? 0
+  } catch {
+    redirect('/login')
+  }
 
   const stats = [
-    { label: 'Karyawan Aktif', value: totalKaryawan ?? 0, accent: '#037894' },
-    { label: 'Pelamar Baru', value: totalApplicants ?? 0, accent: '#DE9733' },
-    { label: 'Kontrak Berakhir (30 hari)', value: kontrakAkanHabis ?? 0, accent: '#FF4F31' },
+    { label: 'Karyawan Aktif', value: totalKaryawan, accent: '#037894' },
+    { label: 'Pelamar Baru', value: totalApplicants, accent: '#DE9733' },
+    { label: 'Kontrak Berakhir (30 hari)', value: kontrakAkanHabis, accent: '#FF4F31' },
   ]
 
   const quickActions = [
@@ -53,9 +67,7 @@ export default async function HRDOverview() {
           {quickActions.map(item => (
             <a key={item.label} href={item.href}
               className="flex items-center px-4 py-3 rounded-xl text-sm font-medium transition-all"
-              style={{ backgroundColor: '#E4DED8', color: '#020000' }}
-              onMouseEnter={e => (e.currentTarget as HTMLElement).style.backgroundColor = '#d8d1c9'}
-              onMouseLeave={e => (e.currentTarget as HTMLElement).style.backgroundColor = '#E4DED8'}>
+              style={{ backgroundColor: '#E4DED8', color: '#020000' }}>
               {item.label}
             </a>
           ))}
