@@ -33,11 +33,12 @@ export default function DashboardShell({ children, userEmail }: Props) {
         <div className="px-6 py-5" style={{ borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
           <div className="flex items-center gap-3">
             <div>
-              <div className="flex items-center gap-1.5 mb-0.5">
-                <span className="font-bold text-sm tracking-wide" style={{ color: '#E4DED8' }}>Strada</span>
-                <span className="font-bold text-sm tracking-wide px-1.5 py-0.5 rounded" style={{ backgroundColor: '#037894', color: '#ffffff' }}>Brew</span>
+              <p className="font-bold text-base" style={{ color: '#E4DED8', fontStyle: 'italic', letterSpacing: '-0.3px' }}>Strada</p>
+              <div className="flex items-center gap-1.5">
+                <p className="text-xs font-bold tracking-widest uppercase" style={{ color: '#037894' }}>BREW</p>
+                <span className="text-xs" style={{ color: 'rgba(228,222,216,0.2)' }}>·</span>
+                <p className="text-xs" style={{ color: 'rgba(228,222,216,0.3)', letterSpacing: '0.5px' }}>Internal Portal</p>
               </div>
-              <p className="text-xs" style={{ color: 'rgba(228,222,216,0.35)' }}>Internal Portal</p>
             </div>
           </div>
         </div>

@@ -30,12 +30,12 @@ export default function LoginPage() {
 
         {/* Logo */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center gap-2 mb-2">
-            <span className="text-2xl font-bold tracking-wide" style={{ color: '#020000' }}>Strada</span>
-            <span className="text-2xl font-bold tracking-wide px-2 py-0.5 rounded-lg" style={{ backgroundColor: '#037894', color: '#ffffff' }}>Brew</span>
+          <div className="mb-2">
+            <p className="text-3xl font-bold" style={{ color: '#020000', fontStyle: 'italic' }}>Strada</p>
+            <p className="text-sm font-bold tracking-widest uppercase" style={{ color: '#037894' }}>BREW</p>
           </div>
-          <p className="text-sm mt-1" style={{ color: '#4C4845' }}>
-            Internal Portal — Strada Coffee
+          <p className="text-sm mt-2" style={{ color: '#4C4845' }}>
+            Internal Portal — Tim Strada Coffee
           </p>
         </div>
 
