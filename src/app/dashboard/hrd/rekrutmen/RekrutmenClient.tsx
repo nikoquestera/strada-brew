@@ -1,10 +1,12 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
+import { createClient } from '@/lib/supabase/client'
 import { PIPELINE_STAGES, PipelineStage } from '@/lib/types'
 import { Search, Filter, ChevronDown } from 'lucide-react'
 
 interface QuestScore {
+  applicant_id?: string
   overall_score?: number
   recommendation?: string
   status: string
@@ -34,18 +36,19 @@ const STAGE_GROUPS = [
   { label: 'Tidak Lanjut', stages: ['tidak_cocok', 'mengundurkan_diri', 'tidak_hadir_interview', 'penawaran_ditolak', 'on_hold'], color: '#8A8A8D' },
 ]
 
-function QuestTriggerButton({ applicantId, currentScore, onScored }: {
+function QuestScoreWidget({ applicantId, scoreData, onScored }: {
   applicantId: string
-  currentScore: QuestScore | undefined
+  scoreData: QuestScore | undefined
   onScored: (id: string) => void
 }) {
-  const [running, setRunning] = useState(false)
-  const needsScore = !currentScore || currentScore.status === 'pending' || currentScore.status === 'failed'
-  if (!needsScore) return null
+  const [triggering, setTriggering] = useState(false)
+
+  const status = scoreData?.status
+  const score = scoreData?.overall_score
 
   async function trigger(e: React.MouseEvent) {
     e.stopPropagation()
-    setRunning(true)
+    setTriggering(true)
     try {
       await fetch('/api/quest/score', {
         method: 'POST',
@@ -54,32 +57,83 @@ function QuestTriggerButton({ applicantId, currentScore, onScored }: {
       })
       onScored(applicantId)
     } catch { } finally {
-      setRunning(false)
+      setTriggering(false)
     }
   }
 
+  // Spinning while scoring
+  if (triggering || status === 'processing') {
+    return (
+      <div style={{ display: 'flex', alignItems: 'center', gap: '4px', padding: '3px 9px', borderRadius: '20px', backgroundColor: '#E6F0F4', whiteSpace: 'nowrap' }}>
+        <span style={{ display: 'inline-block', animation: 'quest-spin 1s linear infinite', fontSize: '11px', lineHeight: 1 }}>⚙</span>
+        <span style={{ fontSize: '11px', fontWeight: 700, color: '#037894' }}>Scoring...</span>
+      </div>
+    )
+  }
+
+  // Completed — show score number
+  if (status === 'completed' && score) {
+    const bg = score >= 75 ? '#E6F4F1' : score >= 50 ? '#FEF8E6' : '#FFF0EE'
+    const color = score >= 75 ? '#005353' : score >= 50 ? '#DE9733' : '#FF4F31'
+    return (
+      <div style={{ padding: '3px 9px', borderRadius: '20px', fontSize: '11px', fontWeight: 700, backgroundColor: bg, color, whiteSpace: 'nowrap' }}>
+        ✦ {score}
+      </div>
+    )
+  }
+
+  // No score / pending / failed — show Run Score button
   return (
-    <button onClick={trigger} disabled={running}
+    <button
+      onClick={trigger}
       style={{
-        padding: '2px 8px', borderRadius: '6px', fontSize: '10px', fontWeight: 700,
-        border: 'none', cursor: running ? 'not-allowed' : 'pointer',
-        backgroundColor: running ? 'rgba(3,120,148,0.1)' : '#020000',
-        color: running ? '#037894' : '#8FC6C5',
-        display: 'flex', alignItems: 'center', gap: '3px',
+        padding: '3px 9px', borderRadius: '20px', fontSize: '11px', fontWeight: 700,
+        border: 'none', cursor: 'pointer', whiteSpace: 'nowrap',
+        backgroundColor: status === 'failed' ? '#FFF0EE' : '#020000',
+        color: status === 'failed' ? '#FF4F31' : '#8FC6C5',
       }}>
-      {running ? <><span style={{ display: 'inline-block', animation: 'quest-spin 1s linear infinite' }}>⚙</span>Scoring...</> : '✦ Score'}
+      {status === 'failed' ? '↻ Retry Score' : '✦ Run Score'}
     </button>
   )
 }
 
 export default function RekrutmenClient({ initialApplicants }: { initialApplicants: Applicant[] }) {
   const router = useRouter()
+  const supabase = createClient()
   const [applicants, setApplicants] = useState<Applicant[]>(initialApplicants)
   const [activeStage, setActiveStage] = useState<PipelineStage | 'semua'>('semua')
   const [search, setSearch] = useState('')
   const [showMobileFilter, setShowMobileFilter] = useState(false)
   const [expandedGroups, setExpandedGroups] = useState<string[]>(['Masuk & Review', 'Seleksi'])
   const [sortBy, setSortBy] = useState<'date' | 'score'>('date')
+
+  const applicantsRef = useRef(applicants)
+  useEffect(() => { applicantsRef.current = applicants }, [applicants])
+
+  // Poll every 3s — updates any card currently in 'processing' state
+  useEffect(() => {
+    const interval = setInterval(async () => {
+      const processingIds = applicantsRef.current
+        .filter(a => a.applicant_quest_scores?.[0]?.status === 'processing')
+        .map(a => a.id)
+      if (processingIds.length === 0) return
+
+      const { data } = await supabase
+        .from('applicant_quest_scores')
+        .select('*')
+        .in('applicant_id', processingIds)
+
+      if (!data || data.length === 0) return
+
+      setApplicants(prev => prev.map(a => {
+        const fresh = data.find((d: QuestScore) => d.applicant_id === a.id)
+        if (!fresh) return a
+        return { ...a, applicant_quest_scores: [fresh] }
+      }))
+    }, 3000)
+
+    return () => clearInterval(interval)
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   function handleScored(applicantId: string) {
     setApplicants(prev => prev.map(a =>
@@ -105,19 +159,6 @@ export default function RekrutmenClient({ initialApplicants }: { initialApplican
   const countByStage = (stage: string) => applicants.filter(a => (a.pipeline_stage || 'baru_masuk') === stage).length
   const countByGroup = (stages: string[]) => stages.reduce((sum, s) => sum + countByStage(s), 0)
   const toggleGroup = (label: string) => setExpandedGroups(prev => prev.includes(label) ? prev.filter(g => g !== label) : [...prev, label])
-
-  const getQuestBadge = (applicant: Applicant) => {
-    const score = applicant.applicant_quest_scores?.[0]
-    if (!score) return { label: '—', bg: '#F0EEEC', color: '#8A8A8D' }
-    if (score.status === 'pending') return { label: '⏳', bg: '#FEF8E6', color: '#DE9733' }
-    if (score.status === 'processing') return { label: '⚙', bg: '#E6F0F4', color: '#037894' }
-    if (score.status === 'failed') return { label: '⚠', bg: '#FFF0EE', color: '#FF4F31' }
-    if (!score.overall_score) return { label: '⏳', bg: '#FEF8E6', color: '#DE9733' }
-    const s = score.overall_score
-    if (s >= 75) return { label: `${s}`, bg: '#E6F4F1', color: '#005353' }
-    if (s >= 50) return { label: `${s}`, bg: '#FEF8E6', color: '#DE9733' }
-    return { label: `${s}`, bg: '#FFF0EE', color: '#FF4F31' }
-  }
 
   const activeStageInfo = PIPELINE_STAGES.find(s => s.key === activeStage)
 
@@ -241,7 +282,6 @@ export default function RekrutmenClient({ initialApplicants }: { initialApplican
             ) : (
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '12px' }} className="ats-cards">
                 {filtered.map(applicant => {
-                  const quest = getQuestBadge(applicant)
                   const stage = PIPELINE_STAGES.find(s => s.key === (applicant.pipeline_stage || 'baru_masuk'))
                   const scoreData = applicant.applicant_quest_scores?.[0]
                   return (
@@ -251,17 +291,14 @@ export default function RekrutmenClient({ initialApplicants }: { initialApplican
                       onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.borderColor = '#037894'; el.style.transform = 'translateY(-1px)'; el.style.boxShadow = '0 4px 16px rgba(3,120,148,0.1)' }}
                       onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.borderColor = '#E8E4E0'; el.style.transform = 'none'; el.style.boxShadow = 'none' }}>
 
-                      {/* Top row: name + quest badge + score button */}
+                      {/* Top row: name + unified quest widget */}
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '8px', marginBottom: '8px' }}>
                         <div style={{ flex: 1, minWidth: 0 }}>
                           <p style={{ fontSize: '14px', fontWeight: 700, color: '#020000', margin: '0 0 2px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{applicant.full_name}</p>
                           <p style={{ fontSize: '12px', color: '#037894', fontWeight: 600, margin: 0 }}>{applicant.position_applied}</p>
                         </div>
-                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '4px', flexShrink: 0 }}>
-                          <div style={{ padding: '3px 9px', borderRadius: '20px', fontSize: '11px', fontWeight: 700, backgroundColor: quest.bg, color: quest.color, whiteSpace: 'nowrap' }}>
-                            ✦ {quest.label}
-                          </div>
-                          <QuestTriggerButton applicantId={applicant.id} currentScore={scoreData} onScored={handleScored} />
+                        <div style={{ flexShrink: 0 }}>
+                          <QuestScoreWidget applicantId={applicant.id} scoreData={scoreData} onScored={handleScored} />
                         </div>
                       </div>
 
