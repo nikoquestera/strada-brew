@@ -1,12 +1,38 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { PIPELINE_STAGES, PipelineStage } from '@/lib/types'
-import { ArrowLeft, Phone, Mail, AtSign, MapPin, Calendar, Briefcase, Star, MessageSquare, Send } from 'lucide-react'
+import { ArrowLeft, Phone, Mail, AtSign, MapPin, Calendar, Briefcase, Star, MessageSquare, Send, Clock } from 'lucide-react'
+
+interface QuestScore {
+  id: string
+  overall_score?: number
+  experience_score?: number
+  certification_score?: number
+  completeness_score?: number
+  motivation_score?: number
+  profile_score?: number
+  summary?: string
+  strengths?: string[]
+  concerns?: string[]
+  recommendation?: string
+  quest_notes?: string
+  status: string
+  processed_at?: string
+  created_at?: string
+}
 
 interface Props {
   applicant: Record<string, any>
+}
+
+function scoreColor(s: number) { return s >= 75 ? '#005353' : s >= 50 ? '#DE9733' : '#FF4F31' }
+function scoreBg(s: number) { return s >= 75 ? '#E6F4F1' : s >= 50 ? '#FEF8E6' : '#FFF0EE' }
+
+function formatTs(ts?: string) {
+  if (!ts) return null
+  return new Date(ts).toLocaleString('id-ID', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })
 }
 
 export default function ApplicantDetailClient({ applicant }: Props) {
@@ -17,11 +43,39 @@ export default function ApplicantDetailClient({ applicant }: Props) {
   const [showMessageModal, setShowMessageModal] = useState(false)
   const [messageChannel, setMessageChannel] = useState<'whatsapp' | 'email'>('whatsapp')
   const [generatingMessages, setGeneratingMessages] = useState(false)
-  const [messageOptions, setMessageOptions] = useState<{option1: string; option2: string; option3: string} | null>(null)
+  const [messageOptions, setMessageOptions] = useState<{ option1: string; option2: string; option3: string } | null>(null)
   const [selectedMessage, setSelectedMessage] = useState<string | null>(null)
-  const [triggerScoring, setTriggerScoring] = useState(false)
 
-  const quest = applicant.applicant_quest_scores?.[0]
+  // Score state — all runs ordered latest first
+  const [scores, setScores] = useState<QuestScore[]>(
+    (applicant.applicant_quest_scores || []).sort((a: QuestScore, b: QuestScore) =>
+      new Date(b.processed_at || b.created_at || 0).getTime() -
+      new Date(a.processed_at || a.created_at || 0).getTime()
+    )
+  )
+  const [scoring, setScoring] = useState(false)
+  const [expandedHistory, setExpandedHistory] = useState(false)
+  const scoresRef = useRef(scores)
+  useEffect(() => { scoresRef.current = scores }, [scores])
+
+  const latestScore = scores[0]
+  const isProcessing = latestScore?.status === 'processing' || scoring
+
+  // Poll every 3s while any score is processing
+  useEffect(() => {
+    const interval = setInterval(async () => {
+      const hasProcessing = scoresRef.current.some(s => s.status === 'processing')
+      if (!hasProcessing) return
+      const { data } = await supabase
+        .from('applicant_quest_scores')
+        .select('*')
+        .eq('applicant_id', applicant.id)
+        .order('processed_at', { ascending: false, nullsFirst: false })
+      if (data) setScores(data)
+    }, 3000)
+    return () => clearInterval(interval)
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
   const stageInfo = PIPELINE_STAGES.find(s => s.key === currentStage)
 
   async function handleStageChange(newStage: PipelineStage) {
@@ -29,6 +83,26 @@ export default function ApplicantDetailClient({ applicant }: Props) {
     await supabase.from('applicants').update({ pipeline_stage: newStage }).eq('id', applicant.id)
     setCurrentStage(newStage)
     setChangingStage(false)
+  }
+
+  async function handleRunScore() {
+    setScoring(true)
+    // Optimistically add a processing record
+    const tempId = `tmp-${Date.now()}`
+    setScores(prev => [{ id: tempId, status: 'processing', created_at: new Date().toISOString() }, ...prev])
+    try {
+      const res = await fetch('/api/quest/score', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ applicant_id: applicant.id }),
+      })
+      if (!res.ok) throw new Error(await res.text())
+    } catch (err) {
+      console.error('Score trigger failed:', err)
+      setScores(prev => prev.map(s => s.id === tempId ? { ...s, status: 'failed' } : s))
+    } finally {
+      setScoring(false)
+    }
   }
 
   async function handleGenerateMessages() {
@@ -42,43 +116,22 @@ export default function ApplicantDetailClient({ applicant }: Props) {
         outlet: applicant.outlet_preference,
         stage: stageInfo?.label || currentStage,
         channel: messageChannel,
-        hr_name: 'Tim HR Strada Coffee'
-      })
+        hr_name: 'Tim HR Strada Coffee',
+      }),
     })
     const data = await res.json()
     setMessageOptions(data)
     setGeneratingMessages(false)
   }
 
-  async function handleTriggerScoring() {
-    setTriggerScoring(true)
-    await supabase.from('applicant_quest_scores')
-      .update({ status: 'pending' })
-      .eq('applicant_id', applicant.id)
-    await fetch('/api/quest/score', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ applicant_id: applicant.id })
-    })
-    setTriggerScoring(false)
-    router.refresh()
-  }
-
-  const scoreColor = (s: number) => s >= 75 ? '#005353' : s >= 50 ? '#DE9733' : '#FF4F31'
-  const scoreBg = (s: number) => s >= 75 ? '#E6F4F1' : s >= 50 ? '#FEF8E6' : '#FFF0EE'
-
   return (
     <>
       <style>{`
-        @media (max-width: 768px) {
-          .detail-grid { grid-template-columns: 1fr !important; }
-          .detail-header { flex-direction: column !important; gap: 12px !important; }
-          .stage-select { font-size: 12px !important; padding: 8px 10px !important; }
-        }
+        @keyframes quest-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @media (max-width: 768px) { .detail-grid { grid-template-columns: 1fr !important; } .stage-select { font-size: 12px !important; padding: 8px 10px !important; } }
       `}</style>
 
       <div style={{ minHeight: '100vh', backgroundColor: '#F7F5F2' }}>
-
         {/* Top bar */}
         <div style={{ backgroundColor: '#020000', padding: '16px 24px', display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap' }}>
           <button onClick={() => router.back()} style={{ color: 'rgba(228,222,216,0.6)', background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px', padding: 0 }}>
@@ -88,14 +141,10 @@ export default function ApplicantDetailClient({ applicant }: Props) {
             <p style={{ color: '#ffffff', fontWeight: 700, fontSize: '16px', margin: 0 }}>{applicant.full_name}</p>
             <p style={{ color: '#8FC6C5', fontSize: '12px', margin: 0 }}>{applicant.position_applied}{applicant.outlet_preference ? ` · ${applicant.outlet_preference}` : ''}</p>
           </div>
-          {/* Stage changer */}
           <select value={currentStage} onChange={e => handleStageChange(e.target.value as PipelineStage)}
-            disabled={changingStage}
-            className="stage-select"
+            disabled={changingStage} className="stage-select"
             style={{ padding: '8px 14px', borderRadius: '10px', border: 'none', backgroundColor: stageInfo?.color || '#037894', color: '#fff', fontWeight: 700, fontSize: '13px', cursor: 'pointer', outline: 'none' }}>
-            {PIPELINE_STAGES.map(s => (
-              <option key={s.key} value={s.key}>{s.label}</option>
-            ))}
+            {PIPELINE_STAGES.map(s => <option key={s.key} value={s.key}>{s.label}</option>)}
           </select>
         </div>
 
@@ -104,7 +153,7 @@ export default function ApplicantDetailClient({ applicant }: Props) {
           {/* LEFT COLUMN */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
 
-            {/* Contact info */}
+            {/* Contact */}
             <div style={{ backgroundColor: '#fff', borderRadius: '16px', padding: '24px', border: '1.5px solid #E8E4E0' }}>
               <h3 style={{ fontSize: '14px', fontWeight: 700, color: '#020000', margin: '0 0 16px' }}>Informasi Kontak</h3>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
@@ -166,6 +215,46 @@ export default function ApplicantDetailClient({ applicant }: Props) {
               </div>
             )}
 
+            {/* Scoring history */}
+            {scores.length > 1 && (
+              <div style={{ backgroundColor: '#fff', borderRadius: '16px', padding: '24px', border: '1.5px solid #E8E4E0' }}>
+                <button onClick={() => setExpandedHistory(p => !p)}
+                  style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
+                  <h3 style={{ fontSize: '14px', fontWeight: 700, color: '#020000', margin: 0 }}>
+                    Riwayat Scoring ({scores.length} run)
+                  </h3>
+                  <span style={{ fontSize: '12px', color: '#037894', fontWeight: 600 }}>{expandedHistory ? '▲ Tutup' : '▼ Lihat semua'}</span>
+                </button>
+                {expandedHistory && (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '16px' }}>
+                    {scores.map((s, i) => (
+                      <div key={s.id} style={{ padding: '12px 14px', borderRadius: '10px', backgroundColor: i === 0 ? 'rgba(3,120,148,0.04)' : '#F7F5F2', border: `1px solid ${i === 0 ? 'rgba(3,120,148,0.2)' : '#E8E4E0'}`, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                          {s.status === 'completed' && s.overall_score ? (
+                            <div style={{ width: '36px', height: '36px', borderRadius: '50%', backgroundColor: scoreBg(s.overall_score), display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                              <span style={{ fontSize: '13px', fontWeight: 800, color: scoreColor(s.overall_score) }}>{s.overall_score}</span>
+                            </div>
+                          ) : (
+                            <div style={{ width: '36px', height: '36px', borderRadius: '50%', backgroundColor: s.status === 'failed' ? '#FFF0EE' : '#E6F0F4', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                              <span style={{ fontSize: '14px' }}>{s.status === 'processing' ? '⚙' : s.status === 'failed' ? '⚠' : '⏳'}</span>
+                            </div>
+                          )}
+                          <div>
+                            {i === 0 && <span style={{ fontSize: '10px', fontWeight: 700, color: '#037894', textTransform: 'uppercase', letterSpacing: '1px' }}>Terbaru</span>}
+                            {s.recommendation && <p style={{ fontSize: '12px', fontWeight: 600, color: '#020000', margin: '1px 0 0' }}>{s.recommendation}</p>}
+                          </div>
+                        </div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '4px', flexShrink: 0 }}>
+                          <Clock size={11} color="#8A8A8D" />
+                          <span style={{ fontSize: '11px', color: '#8A8A8D' }}>{formatTs(s.processed_at || s.created_at)}</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+
             {/* Activity timeline */}
             {applicant.applicant_activities?.length > 0 && (
               <div style={{ backgroundColor: '#fff', borderRadius: '16px', padding: '24px', border: '1.5px solid #E8E4E0' }}>
@@ -176,9 +265,10 @@ export default function ApplicantDetailClient({ applicant }: Props) {
                       <div style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#037894', marginTop: '5px', flexShrink: 0 }} />
                       <div>
                         <p style={{ fontSize: '13px', color: '#4C4845', margin: '0 0 2px' }}>
-                          {act.activity_type === 'stage_changed' ? `Dipindahkan ke ${PIPELINE_STAGES.find(s => s.key === act.to_stage)?.label || act.to_stage}` :
-                           act.activity_type === 'applied' ? 'Mendaftar via portal' :
-                           act.note || act.activity_type}
+                          {act.activity_type === 'stage_changed'
+                            ? `Dipindahkan ke ${PIPELINE_STAGES.find(s => s.key === act.to_stage)?.label || act.to_stage}`
+                            : act.activity_type === 'applied' ? 'Mendaftar via portal'
+                            : act.note || act.activity_type}
                         </p>
                         <p style={{ fontSize: '11px', color: '#8A8A8D', margin: 0 }}>
                           {new Date(act.created_at).toLocaleString('id-ID', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}
@@ -201,42 +291,54 @@ export default function ApplicantDetailClient({ applicant }: Props) {
                   <Star size={14} color="#037894" />
                   <span style={{ fontSize: '12px', fontWeight: 700, color: '#8FC6C5', letterSpacing: '2px', textTransform: 'uppercase' }}>Quest AI</span>
                 </div>
-                {(!quest || quest.status === 'failed') && (
-                  <button onClick={handleTriggerScoring} disabled={triggerScoring}
-                    style={{ padding: '4px 12px', borderRadius: '8px', backgroundColor: '#037894', color: '#fff', fontSize: '11px', fontWeight: 700, border: 'none', cursor: 'pointer' }}>
-                    {triggerScoring ? '...' : 'Run Score'}
-                  </button>
-                )}
+                <button onClick={handleRunScore} disabled={isProcessing}
+                  style={{ padding: '5px 14px', borderRadius: '10px', border: 'none', cursor: isProcessing ? 'not-allowed' : 'pointer', fontSize: '11px', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '5px', backgroundColor: isProcessing ? 'rgba(3,120,148,0.15)' : '#037894', color: isProcessing ? '#037894' : '#fff' }}>
+                  {isProcessing
+                    ? <><span style={{ display: 'inline-block', animation: 'quest-spin 1s linear infinite' }}>⚙</span> Scoring...</>
+                    : scores.length > 0 ? '↻ Re-run Score' : '✦ Run Score'}
+                </button>
               </div>
 
-              {!quest && (
+              {/* Latest score display */}
+              {!latestScore && (
                 <p style={{ color: 'rgba(228,222,216,0.4)', fontSize: '13px', margin: 0 }}>Scoring belum dimulai.</p>
               )}
-              {quest?.status === 'pending' && (
+              {latestScore?.status === 'pending' && (
                 <div style={{ textAlign: 'center', padding: '12px 0' }}>
                   <p style={{ color: '#DE9733', fontSize: '14px', fontWeight: 600, margin: '0 0 4px' }}>⏳ Dalam Antrian</p>
-                  <p style={{ color: 'rgba(228,222,216,0.4)', fontSize: '12px', margin: 0 }}>Scoring akan segera diproses</p>
+                  <p style={{ color: 'rgba(228,222,216,0.4)', fontSize: '12px', margin: 0 }}>Klik Re-run Score untuk memulai</p>
                 </div>
               )}
-              {quest?.status === 'processing' && (
+              {latestScore?.status === 'processing' && (
                 <div style={{ textAlign: 'center', padding: '12px 0' }}>
-                  <p style={{ color: '#037894', fontSize: '14px', fontWeight: 600, margin: '0 0 4px' }}>⚙ Sedang Dianalisa</p>
-                  <p style={{ color: 'rgba(228,222,216,0.4)', fontSize: '12px', margin: 0 }}>Quest AI sedang membaca profil</p>
+                  <p style={{ color: '#037894', fontSize: '14px', fontWeight: 600, margin: '0 0 4px' }}>
+                    <span style={{ display: 'inline-block', animation: 'quest-spin 1s linear infinite' }}>⚙</span> Sedang Dianalisa
+                  </p>
+                  <p style={{ color: 'rgba(228,222,216,0.4)', fontSize: '12px', margin: 0 }}>Quest AI sedang membaca profil...</p>
                 </div>
               )}
-              {quest?.status === 'completed' && (
+              {latestScore?.status === 'failed' && (
+                <div style={{ textAlign: 'center', padding: '12px 0' }}>
+                  <p style={{ color: '#FF4F31', fontSize: '13px', fontWeight: 600, margin: '0 0 4px' }}>⚠ Scoring gagal</p>
+                  <p style={{ color: 'rgba(228,222,216,0.4)', fontSize: '12px', margin: 0 }}>Klik Re-run Score untuk mencoba lagi</p>
+                </div>
+              )}
+              {latestScore?.status === 'completed' && (
                 <>
-                  {/* Overall score */}
                   <div style={{ textAlign: 'center', marginBottom: '16px' }}>
-                    <div style={{ fontSize: '52px', fontWeight: 800, color: '#ffffff', lineHeight: 1 }}>{quest.overall_score}</div>
+                    <div style={{ fontSize: '52px', fontWeight: 800, color: '#ffffff', lineHeight: 1 }}>{latestScore.overall_score}</div>
                     <div style={{ fontSize: '12px', color: 'rgba(228,222,216,0.4)', marginTop: '4px' }}>dari 100</div>
-                    {quest.recommendation && (
+                    {latestScore.recommendation && (
                       <div style={{ marginTop: '10px', display: 'inline-block', padding: '4px 14px', borderRadius: '20px', fontSize: '12px', fontWeight: 700,
-                        backgroundColor: quest.recommendation === 'Highly Recommended' ? '#005353' :
-                          quest.recommendation === 'Recommended' ? '#037894' :
-                          quest.recommendation === 'Consider' ? '#DE9733' : '#FF4F31',
-                        color: '#ffffff' }}>
-                        {quest.recommendation}
+                        backgroundColor: latestScore.recommendation === 'Highly Recommended' ? '#005353' : latestScore.recommendation === 'Recommended' ? '#037894' : latestScore.recommendation === 'Consider' ? '#DE9733' : '#FF4F31',
+                        color: '#fff' }}>
+                        {latestScore.recommendation}
+                      </div>
+                    )}
+                    {latestScore.processed_at && (
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px', marginTop: '8px' }}>
+                        <Clock size={10} color="rgba(228,222,216,0.3)" />
+                        <span style={{ fontSize: '10px', color: 'rgba(228,222,216,0.3)' }}>{formatTs(latestScore.processed_at)}</span>
                       </div>
                     )}
                   </div>
@@ -244,11 +346,11 @@ export default function ApplicantDetailClient({ applicant }: Props) {
                   {/* Score breakdown */}
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '16px' }}>
                     {[
-                      { label: 'Pengalaman', value: quest.experience_score, max: 25 },
-                      { label: 'Sertifikasi', value: quest.certification_score, max: 20 },
-                      { label: 'Motivasi', value: quest.motivation_score, max: 20 },
-                      { label: 'Profil', value: quest.profile_score, max: 20 },
-                      { label: 'Kelengkapan', value: quest.completeness_score, max: 15 },
+                      { label: 'Pengalaman', value: latestScore.experience_score, max: 25 },
+                      { label: 'Sertifikasi', value: latestScore.certification_score, max: 20 },
+                      { label: 'Motivasi', value: latestScore.motivation_score, max: 20 },
+                      { label: 'Profil', value: latestScore.profile_score, max: 20 },
+                      { label: 'Kelengkapan', value: latestScore.completeness_score, max: 15 },
                     ].map(item => (
                       <div key={item.label}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '3px' }}>
@@ -262,16 +364,14 @@ export default function ApplicantDetailClient({ applicant }: Props) {
                     ))}
                   </div>
 
-                  {/* Summary */}
-                  {quest.summary && (
-                    <p style={{ fontSize: '12px', color: 'rgba(228,222,216,0.6)', lineHeight: 1.5, margin: '0 0 12px', fontStyle: 'italic' }}>"{quest.summary}"</p>
+                  {latestScore.summary && (
+                    <p style={{ fontSize: '12px', color: 'rgba(228,222,216,0.6)', lineHeight: 1.5, margin: '0 0 12px', fontStyle: 'italic' }}>"{latestScore.summary}"</p>
                   )}
 
-                  {/* Strengths & concerns */}
-                  {quest.strengths?.length > 0 && (
+                  {latestScore.strengths && latestScore.strengths.length > 0 && (
                     <div style={{ marginBottom: '10px' }}>
                       <p style={{ fontSize: '10px', fontWeight: 700, color: '#8FC6C5', textTransform: 'uppercase', letterSpacing: '1px', margin: '0 0 6px' }}>Kelebihan</p>
-                      {quest.strengths.map((s: string, i: number) => (
+                      {latestScore.strengths.map((s: string, i: number) => (
                         <div key={i} style={{ display: 'flex', gap: '6px', marginBottom: '3px' }}>
                           <span style={{ color: '#82A13B', fontSize: '12px', flexShrink: 0 }}>✓</span>
                           <span style={{ fontSize: '12px', color: 'rgba(228,222,216,0.65)' }}>{s}</span>
@@ -279,15 +379,21 @@ export default function ApplicantDetailClient({ applicant }: Props) {
                       ))}
                     </div>
                   )}
-                  {quest.concerns?.length > 0 && (
-                    <div>
+                  {latestScore.concerns && latestScore.concerns.length > 0 && (
+                    <div style={{ marginBottom: '10px' }}>
                       <p style={{ fontSize: '10px', fontWeight: 700, color: '#FF4F31', textTransform: 'uppercase', letterSpacing: '1px', margin: '0 0 6px' }}>Perhatian</p>
-                      {quest.concerns.map((c: string, i: number) => (
+                      {latestScore.concerns.map((c: string, i: number) => (
                         <div key={i} style={{ display: 'flex', gap: '6px', marginBottom: '3px' }}>
                           <span style={{ color: '#FF4F31', fontSize: '12px', flexShrink: 0 }}>!</span>
                           <span style={{ fontSize: '12px', color: 'rgba(228,222,216,0.65)' }}>{c}</span>
                         </div>
                       ))}
+                    </div>
+                  )}
+                  {latestScore.quest_notes && (
+                    <div style={{ marginTop: '10px', padding: '12px', borderRadius: '10px', backgroundColor: 'rgba(255,255,255,0.05)' }}>
+                      <p style={{ fontSize: '10px', fontWeight: 700, color: '#8FC6C5', textTransform: 'uppercase', letterSpacing: '1px', margin: '0 0 6px' }}>Catatan HR</p>
+                      <p style={{ fontSize: '12px', color: 'rgba(228,222,216,0.55)', lineHeight: 1.6, margin: 0 }}>{latestScore.quest_notes}</p>
                     </div>
                   )}
                 </>
@@ -309,7 +415,7 @@ export default function ApplicantDetailClient({ applicant }: Props) {
               </div>
             </div>
 
-            {/* Applicant source & date */}
+            {/* Meta */}
             <div style={{ backgroundColor: '#fff', borderRadius: '16px', padding: '20px', border: '1.5px solid #E8E4E0' }}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 {[
@@ -330,7 +436,7 @@ export default function ApplicantDetailClient({ applicant }: Props) {
 
       {/* Message Modal */}
       {showMessageModal && (
-        <div style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 100, display: 'flex', alignItems: 'flex-end', justifyContent: 'center', padding: '0' }}
+        <div style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 100, display: 'flex', alignItems: 'flex-end', justifyContent: 'center' }}
           onClick={e => { if (e.target === e.currentTarget) { setShowMessageModal(false); setMessageOptions(null); setSelectedMessage(null) } }}>
           <div style={{ backgroundColor: '#fff', borderRadius: '20px 20px 0 0', padding: '28px', width: '100%', maxWidth: '600px', maxHeight: '85vh', overflowY: 'auto' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
@@ -340,20 +446,14 @@ export default function ApplicantDetailClient({ applicant }: Props) {
               <button onClick={() => { setShowMessageModal(false); setMessageOptions(null); setSelectedMessage(null) }}
                 style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '20px', color: '#8A8A8D' }}>×</button>
             </div>
-
-            {/* Channel toggle */}
             <div style={{ display: 'flex', gap: '8px', marginBottom: '16px' }}>
               {(['whatsapp', 'email'] as const).map(ch => (
                 <button key={ch} onClick={() => { setMessageChannel(ch); setMessageOptions(null); setSelectedMessage(null) }}
-                  style={{ flex: 1, padding: '8px', borderRadius: '10px', border: '1.5px solid', fontSize: '13px', fontWeight: 600, cursor: 'pointer',
-                    backgroundColor: messageChannel === ch ? '#037894' : 'transparent',
-                    borderColor: messageChannel === ch ? '#037894' : '#E8E4E0',
-                    color: messageChannel === ch ? '#fff' : '#8A8A8D' }}>
+                  style={{ flex: 1, padding: '8px', borderRadius: '10px', border: '1.5px solid', fontSize: '13px', fontWeight: 600, cursor: 'pointer', backgroundColor: messageChannel === ch ? '#037894' : 'transparent', borderColor: messageChannel === ch ? '#037894' : '#E8E4E0', color: messageChannel === ch ? '#fff' : '#8A8A8D' }}>
                   {ch === 'whatsapp' ? 'WhatsApp' : 'Email'}
                 </button>
               ))}
             </div>
-
             {!messageOptions ? (
               <button onClick={handleGenerateMessages} disabled={generatingMessages}
                 style={{ width: '100%', padding: '14px', borderRadius: '12px', backgroundColor: generatingMessages ? '#8A8A8D' : '#020000', color: '#fff', fontWeight: 700, fontSize: '14px', border: 'none', cursor: generatingMessages ? 'not-allowed' : 'pointer' }}>
@@ -362,15 +462,9 @@ export default function ApplicantDetailClient({ applicant }: Props) {
             ) : (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                 <p style={{ fontSize: '12px', color: '#8A8A8D', margin: '0 0 4px' }}>Pilih template yang sesuai:</p>
-                {[
-                  { key: 'option1', label: 'Formal & Profesional' },
-                  { key: 'option2', label: 'Hangat & Friendly' },
-                  { key: 'option3', label: 'Singkat & To-the-point' },
-                ].map(opt => (
+                {[{ key: 'option1', label: 'Formal & Profesional' }, { key: 'option2', label: 'Hangat & Friendly' }, { key: 'option3', label: 'Singkat & To-the-point' }].map(opt => (
                   <div key={opt.key} onClick={() => setSelectedMessage(messageOptions[opt.key as keyof typeof messageOptions])}
-                    style={{ padding: '14px', borderRadius: '12px', cursor: 'pointer', border: '1.5px solid',
-                      borderColor: selectedMessage === messageOptions[opt.key as keyof typeof messageOptions] ? '#037894' : '#E8E4E0',
-                      backgroundColor: selectedMessage === messageOptions[opt.key as keyof typeof messageOptions] ? 'rgba(3,120,148,0.04)' : '#fff' }}>
+                    style={{ padding: '14px', borderRadius: '12px', cursor: 'pointer', border: '1.5px solid', borderColor: selectedMessage === messageOptions[opt.key as keyof typeof messageOptions] ? '#037894' : '#E8E4E0', backgroundColor: selectedMessage === messageOptions[opt.key as keyof typeof messageOptions] ? 'rgba(3,120,148,0.04)' : '#fff' }}>
                     <p style={{ fontSize: '11px', fontWeight: 700, color: '#037894', margin: '0 0 6px', textTransform: 'uppercase', letterSpacing: '1px' }}>{opt.label}</p>
                     <p style={{ fontSize: '13px', color: '#4C4845', margin: 0, lineHeight: 1.6, whiteSpace: 'pre-wrap' }}>{messageOptions[opt.key as keyof typeof messageOptions]}</p>
                   </div>

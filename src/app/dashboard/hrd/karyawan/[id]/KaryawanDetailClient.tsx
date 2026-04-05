@@ -1,8 +1,13 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { ArrowLeft, User, Clock, Star, Calendar, FileText, Plus, Check } from 'lucide-react'
+
+function formatTs(ts?: string) {
+  if (!ts) return null
+  return new Date(ts).toLocaleString('id-ID', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })
+}
 
 type Tab = 'profil' | 'timeline' | 'evaluasi' | 'kpi' | 'cuti' | 'dokumen'
 
@@ -50,6 +55,60 @@ export default function KaryawanDetailClient({ employee, timeline, evaluations, 
   const [leaveForm, setLeaveForm] = useState({ leave_type: 'annual', start_date: '', end_date: '', days_count: 0, reason: '' })
   const [kpiForm, setKpiForm] = useState({ period: '', kpi_name: '', target: '', weight: 10 })
   const [saving, setSaving] = useState(false)
+
+  // Quest AI scoring
+  const [empScores, setEmpScores] = useState<any[]>([])
+  const [empScoring, setEmpScoring] = useState(false)
+  const [expandedEmpHistory, setExpandedEmpHistory] = useState(false)
+  const empScoresRef = useRef(empScores)
+  useEffect(() => { empScoresRef.current = empScores }, [empScores])
+
+  // Load employee scores once on mount and poll when processing
+  useEffect(() => {
+    const supabaseClient = createClient()
+    async function loadScores() {
+      const { data } = await supabaseClient
+        .from('applicant_quest_scores')
+        .select('*')
+        .eq('employee_id', employee.id)
+        .order('processed_at', { ascending: false, nullsFirst: false })
+      if (data) setEmpScores(data)
+    }
+    loadScores()
+    const interval = setInterval(async () => {
+      const hasProcessing = empScoresRef.current.some((s: any) => s.status === 'processing')
+      if (!hasProcessing) return
+      const { data } = await supabaseClient
+        .from('applicant_quest_scores')
+        .select('*')
+        .eq('employee_id', employee.id)
+        .order('processed_at', { ascending: false, nullsFirst: false })
+      if (data) setEmpScores(data)
+    }, 3000)
+    return () => clearInterval(interval)
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
+  async function handleEmpRunScore() {
+    setEmpScoring(true)
+    const tempId = `tmp-${Date.now()}`
+    setEmpScores(prev => [{ id: tempId, status: 'processing', created_at: new Date().toISOString() }, ...prev])
+    try {
+      const res = await fetch('/api/quest/score', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ employee_id: employee.id }),
+      })
+      if (!res.ok) throw new Error(await res.text())
+    } catch (err) {
+      console.error('Employee score failed:', err)
+      setEmpScores(prev => prev.map((s: any) => s.id === tempId ? { ...s, status: 'failed' } : s))
+    } finally {
+      setEmpScoring(false)
+    }
+  }
+
+  const latestEmpScore = empScores[0]
+  const isEmpProcessing = latestEmpScore?.status === 'processing' || empScoring
 
   const statusColor: Record<string, { bg: string; color: string }> = {
     active: { bg: '#E6F4F1', color: '#005353' },
@@ -329,6 +388,105 @@ function buildFallbackHTML(docId: string, docName: string, emp: any, today: stri
                   </div>
                 </div>
               ))}
+            </div>
+          )}
+
+          {/* ── QUEST AI SCORING (profil tab) ── */}
+          {tab === 'profil' && (
+            <div style={{ marginTop: '20px', backgroundColor: '#020000', borderRadius: '16px', padding: '24px', border: '1.5px solid rgba(3,120,148,0.3)' }}>
+              <style>{`@keyframes kary-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }`}</style>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <Star size={14} color="#037894" />
+                  <span style={{ fontSize: '12px', fontWeight: 700, color: '#8FC6C5', letterSpacing: '2px', textTransform: 'uppercase' }}>Quest AI Profile Score</span>
+                </div>
+                <button onClick={handleEmpRunScore} disabled={isEmpProcessing}
+                  style={{ padding: '5px 14px', borderRadius: '10px', border: 'none', cursor: isEmpProcessing ? 'not-allowed' : 'pointer', fontSize: '11px', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '5px', backgroundColor: isEmpProcessing ? 'rgba(3,120,148,0.15)' : '#037894', color: isEmpProcessing ? '#037894' : '#fff' }}>
+                  {isEmpProcessing
+                    ? <><span style={{ display: 'inline-block', animation: 'kary-spin 1s linear infinite' }}>⚙</span> Scoring...</>
+                    : empScores.length > 0 ? '↻ Re-run Score' : '✦ Run Score'}
+                </button>
+              </div>
+
+              {!latestEmpScore && <p style={{ color: 'rgba(228,222,216,0.4)', fontSize: '13px', margin: 0 }}>Belum ada scoring untuk karyawan ini.</p>}
+              {latestEmpScore?.status === 'processing' && (
+                <p style={{ color: '#037894', fontSize: '14px', fontWeight: 600, margin: 0 }}>
+                  <span style={{ display: 'inline-block', animation: 'kary-spin 1s linear infinite' }}>⚙</span> Sedang dianalisa...
+                </p>
+              )}
+              {latestEmpScore?.status === 'failed' && (
+                <p style={{ color: '#FF4F31', fontSize: '13px', margin: 0 }}>⚠ Scoring gagal. Klik Re-run Score untuk mencoba lagi.</p>
+              )}
+              {latestEmpScore?.status === 'completed' && (
+                <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '24px', alignItems: 'start' }}>
+                  <div style={{ textAlign: 'center' }}>
+                    <div style={{ fontSize: '52px', fontWeight: 800, color: '#fff', lineHeight: 1 }}>{latestEmpScore.overall_score}</div>
+                    <div style={{ fontSize: '11px', color: 'rgba(228,222,216,0.4)', marginTop: '2px' }}>dari 100</div>
+                    {latestEmpScore.recommendation && (
+                      <div style={{ marginTop: '8px', padding: '3px 10px', borderRadius: '20px', fontSize: '11px', fontWeight: 700, display: 'inline-block',
+                        backgroundColor: latestEmpScore.recommendation === 'Highly Recommended' ? '#005353' : latestEmpScore.recommendation === 'Recommended' ? '#037894' : latestEmpScore.recommendation === 'Consider' ? '#DE9733' : '#FF4F31',
+                        color: '#fff' }}>
+                        {latestEmpScore.recommendation}
+                      </div>
+                    )}
+                    {latestEmpScore.processed_at && (
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px', marginTop: '6px' }}>
+                        <Clock size={10} color="rgba(228,222,216,0.3)" />
+                        <span style={{ fontSize: '10px', color: 'rgba(228,222,216,0.3)' }}>{formatTs(latestEmpScore.processed_at)}</span>
+                      </div>
+                    )}
+                  </div>
+                  <div>
+                    {[
+                      { label: 'Pengalaman', value: latestEmpScore.experience_score, max: 25 },
+                      { label: 'Sertifikasi', value: latestEmpScore.certification_score, max: 20 },
+                      { label: 'Motivasi', value: latestEmpScore.motivation_score, max: 20 },
+                      { label: 'Profil', value: latestEmpScore.profile_score, max: 20 },
+                      { label: 'Kelengkapan', value: latestEmpScore.completeness_score, max: 15 },
+                    ].map(item => (
+                      <div key={item.label} style={{ marginBottom: '7px' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '2px' }}>
+                          <span style={{ fontSize: '11px', color: 'rgba(228,222,216,0.5)' }}>{item.label}</span>
+                          <span style={{ fontSize: '11px', color: 'rgba(228,222,216,0.7)', fontWeight: 600 }}>{item.value || 0}/{item.max}</span>
+                        </div>
+                        <div style={{ height: '4px', borderRadius: '2px', backgroundColor: 'rgba(255,255,255,0.1)' }}>
+                          <div style={{ height: '100%', borderRadius: '2px', backgroundColor: '#037894', width: `${((item.value || 0) / item.max) * 100}%` }} />
+                        </div>
+                      </div>
+                    ))}
+                    {latestEmpScore.summary && (
+                      <p style={{ fontSize: '12px', color: 'rgba(228,222,216,0.55)', lineHeight: 1.5, margin: '10px 0 0', fontStyle: 'italic' }}>"{latestEmpScore.summary}"</p>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* History */}
+              {empScores.length > 1 && (
+                <div style={{ marginTop: '16px', borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: '14px' }}>
+                  <button onClick={() => setExpandedEmpHistory(p => !p)}
+                    style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '12px', color: '#8FC6C5', fontWeight: 600, padding: 0 }}>
+                    {expandedEmpHistory ? '▲ Tutup riwayat' : `▼ Lihat ${empScores.length} riwayat scoring`}
+                  </button>
+                  {expandedEmpHistory && (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', marginTop: '10px' }}>
+                      {empScores.map((s: any, i: number) => (
+                        <div key={s.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px 12px', borderRadius: '8px', backgroundColor: 'rgba(255,255,255,0.05)' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                            <span style={{ fontSize: '15px', fontWeight: 800, color: s.overall_score >= 75 ? '#82A13B' : s.overall_score >= 50 ? '#DE9733' : '#FF4F31' }}>{s.overall_score || '—'}</span>
+                            {i === 0 && <span style={{ fontSize: '10px', color: '#037894', fontWeight: 700 }}>TERBARU</span>}
+                            {s.recommendation && <span style={{ fontSize: '11px', color: 'rgba(228,222,216,0.5)' }}>{s.recommendation}</span>}
+                          </div>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                            <Clock size={10} color="rgba(228,222,216,0.3)" />
+                            <span style={{ fontSize: '11px', color: 'rgba(228,222,216,0.3)' }}>{formatTs(s.processed_at || s.created_at)}</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           )}
 
