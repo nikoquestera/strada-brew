@@ -6,8 +6,9 @@ import ApplicantDetailClient from './ApplicantDetailClient'
 export default async function ApplicantDetailPage({
   params,
 }: {
-  params: { id: string }
+  params: Promise<{ id: string }>
 }) {
+  const { id } = await params
   const supabase = await createClient()
 
   const { data: applicant, error } = await supabase
@@ -22,15 +23,15 @@ export default async function ApplicantDetailPage({
       applicant_quest_scores (*),
       applicant_activities (*)
     `)
-    .eq('id', params.id)
+    .eq('id', id)
     .single()
 
   if (error) {
-    console.error('[rekrutmen/[id]] supabase error:', JSON.stringify(error), 'id:', params.id)
+    console.error('[rekrutmen/[id]] supabase error:', JSON.stringify(error), 'id:', id)
     notFound()
   }
   if (!applicant) {
-    console.error('[rekrutmen/[id]] no applicant found for id:', params.id)
+    console.error('[rekrutmen/[id]] no applicant found for id:', id)
     notFound()
   }
 

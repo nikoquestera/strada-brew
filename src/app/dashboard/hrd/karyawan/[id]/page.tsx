@@ -6,22 +6,23 @@ import KaryawanDetailClient from './KaryawanDetailClient'
 export default async function KaryawanDetailPage({
   params,
 }: {
-  params: { id: string }
+  params: Promise<{ id: string }>
 }) {
+  const { id } = await params
   const supabase = await createClient()
 
   const { data: employee, error } = await supabase
     .from('employees')
     .select('*')
-    .eq('id', params.id)
+    .eq('id', id)
     .single()
 
   if (error) {
-    console.error('[karyawan/[id]] supabase error:', JSON.stringify(error), 'id:', params.id)
+    console.error('[karyawan/[id]] supabase error:', JSON.stringify(error), 'id:', id)
     notFound()
   }
   if (!employee) {
-    console.error('[karyawan/[id]] no employee found for id:', params.id)
+    console.error('[karyawan/[id]] no employee found for id:', id)
     notFound()
   }
 
