@@ -16,7 +16,14 @@ export default async function KaryawanDetailPage({
     .eq('id', params.id)
     .single()
 
-  if (error || !employee) notFound()
+  if (error) {
+    console.error('[karyawan/[id]] supabase error:', JSON.stringify(error), 'id:', params.id)
+    notFound()
+  }
+  if (!employee) {
+    console.error('[karyawan/[id]] no employee found for id:', params.id)
+    notFound()
+  }
 
   // Fetch semua relasi dengan try/catch agar tidak crash jika tabel belum ada
   const safe = async (fn: () => Promise<any>) => {

@@ -25,7 +25,14 @@ export default async function ApplicantDetailPage({
     .eq('id', params.id)
     .single()
 
-  if (error || !applicant) notFound()
+  if (error) {
+    console.error('[rekrutmen/[id]] supabase error:', JSON.stringify(error), 'id:', params.id)
+    notFound()
+  }
+  if (!applicant) {
+    console.error('[rekrutmen/[id]] no applicant found for id:', params.id)
+    notFound()
+  }
 
   return <ApplicantDetailClient applicant={applicant} />
 }
