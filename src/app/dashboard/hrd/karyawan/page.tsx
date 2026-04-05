@@ -5,15 +5,31 @@ export default async function KaryawanPage() {
   const supabase = await createClient()
 
   // Safe fetch — hanya kolom yang pasti ada
-  const { data: employees, error } = await supabase
+  let employees: any[] | null = null
+  let error: any = null
+
+  const result1 = await supabase
     .from('employees')
     .select('id, employee_id, full_name, position, department, entity, outlet, status, contract_end, base_salary, join_date')
-    .order('join_date', { ascending: false })
+    .order('join_date', { ascending: false, nullsFirst: false })
+
+  if (result1.error) {
+    const result2 = await supabase
+      .from('employees')
+      .select('id, employee_id, full_name, position, department, entity, outlet, status, contract_end, base_salary, join_date')
+      .order('full_name', { ascending: true })
+    employees = result2.data
+    error = result2.error
+  } else {
+    employees = result1.data
+    error = result1.error
+  }
 
   if (error) {
     return (
       <div style={{ padding: '40px', textAlign: 'center' }}>
-        <p style={{ color: '#FF4F31', fontSize: '14px' }}>Error: {error.message}</p>
+        <p style={{ color: '#FF4F31', fontSize: '14px' }}>Error loading karyawan: {error.message}</p>
+        <p style={{ color: '#8A8A8D', fontSize: '12px', marginTop: '8px' }}>Cek Supabase connection dan nama kolom di tabel employees.</p>
       </div>
     )
   }
