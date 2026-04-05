@@ -90,6 +90,7 @@ function ApplyContent() {
         .from('applicants')
         .insert([{
           ...form,
+          job_posting_id: selectedJob?.id ?? null,
           source: 'website',
           status: 'new',
           pipeline_stage: 'baru_masuk',
