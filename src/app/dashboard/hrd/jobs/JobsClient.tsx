@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { JobPosting } from '@/lib/types'
-import { Plus, ToggleLeft, ToggleRight, Users, MapPin, Clock, Zap, Edit2 } from 'lucide-react'
+import { Plus, Users, MapPin, Clock, Zap, Edit2 } from 'lucide-react'
 
 export default function JobsClient({ initialJobs }: { initialJobs: JobPosting[] }) {
   const supabase = createClient()
@@ -14,6 +14,7 @@ export default function JobsClient({ initialJobs }: { initialJobs: JobPosting[] 
   const [saving, setSaving] = useState(false)
   const [saveError, setSaveError] = useState('')
   const [loading, setLoading] = useState(true)
+  const [togglingId, setTogglingId] = useState<string | null>(null)
 
   const emptyForm = {
     job_id: '', title: '', department: '', entity: 'CV_KTN' as const,
@@ -25,28 +26,16 @@ export default function JobsClient({ initialJobs }: { initialJobs: JobPosting[] 
   const [form, setForm] = useState(emptyForm)
   const set = (k: string, v: unknown) => setForm(f => ({ ...f, [k]: v }))
 
-  // Load jobs client-side
-  useEffect(() => {
-    loadJobs()
-  }, [])
+  useEffect(() => { loadJobs() }, [])
 
   async function loadJobs() {
     setLoading(true)
-    const { data } = await supabase
-      .from('job_postings')
-      .select('*')
-      .order('created_at', { ascending: false })
+    const { data } = await supabase.from('job_postings').select('*').order('created_at', { ascending: false })
     if (data) setJobs(data)
     setLoading(false)
   }
 
-  function openNew() {
-    setForm(emptyForm)
-    setEditingJob(null)
-    setSaveError('')
-    setShowForm(true)
-  }
-
+  function openNew() { setForm(emptyForm); setEditingJob(null); setSaveError(''); setShowForm(true) }
   function openEdit(job: JobPosting) {
     setForm({
       job_id: job.job_id, title: job.title, department: job.department,
@@ -58,14 +47,11 @@ export default function JobsClient({ initialJobs }: { initialJobs: JobPosting[] 
       min_experience_years: job.min_experience_years, is_urgent: job.is_urgent,
       deadline: job.deadline || '',
     })
-    setEditingJob(job)
-    setSaveError('')
-    setShowForm(true)
+    setEditingJob(job); setSaveError(''); setShowForm(true)
   }
 
   async function handleSave() {
-    setSaving(true)
-    setSaveError('')
+    setSaving(true); setSaveError('')
     const payload = {
       ...form,
       min_experience_years: Number(form.min_experience_years),
@@ -75,7 +61,6 @@ export default function JobsClient({ initialJobs }: { initialJobs: JobPosting[] 
       benefits: form.benefits || null,
       ai_screening_notes: form.ai_screening_notes || null,
     }
-
     if (editingJob) {
       const { error } = await supabase.from('job_postings').update(payload).eq('id', editingJob.id)
       if (error) { setSaveError(error.message); setSaving(false); return }
@@ -83,15 +68,15 @@ export default function JobsClient({ initialJobs }: { initialJobs: JobPosting[] 
       const { error } = await supabase.from('job_postings').insert([{ ...payload, is_active: true, applicant_count: 0 }])
       if (error) { setSaveError(error.message); setSaving(false); return }
     }
-
-    setSaving(false)
-    setShowForm(false)
-    await loadJobs() // Reload fresh from DB
+    setSaving(false); setShowForm(false); await loadJobs()
   }
 
   async function toggleActive(job: JobPosting) {
+    setTogglingId(job.id)
+    // Optimistic update
+    setJobs(prev => prev.map(j => j.id === job.id ? { ...j, is_active: !j.is_active } : j))
     await supabase.from('job_postings').update({ is_active: !job.is_active }).eq('id', job.id)
-    await loadJobs()
+    setTogglingId(null)
   }
 
   const inp = "w-full px-3 py-2.5 rounded-xl text-sm outline-none"
@@ -113,7 +98,7 @@ export default function JobsClient({ initialJobs }: { initialJobs: JobPosting[] 
           <div>
             <p style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '3px', color: '#037894', textTransform: 'uppercase', margin: '0 0 4px' }}>HRD · Rekrutmen</p>
             <h1 style={{ fontSize: '24px', fontWeight: 800, color: '#020000', margin: 0 }}>Job Posting</h1>
-            <p style={{ fontSize: '13px', color: '#8A8A8D', margin: '4px 0 0' }}>{jobs.filter(j => j.is_active).length} posisi aktif dari {jobs.length} total</p>
+            <p style={{ fontSize: '13px', color: '#8A8A8D', margin: '4px 0 0' }}>{jobs.filter(j => j.is_active).length} aktif · {jobs.filter(j => !j.is_active).length} tidak aktif</p>
           </div>
           <button onClick={openNew}
             style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 20px', borderRadius: '12px', backgroundColor: '#037894', color: '#fff', fontWeight: 700, fontSize: '13px', border: 'none', cursor: 'pointer' }}>
@@ -127,11 +112,7 @@ export default function JobsClient({ initialJobs }: { initialJobs: JobPosting[] 
           <div style={{ textAlign: 'center', padding: '60px 20px', backgroundColor: '#fff', borderRadius: '16px', border: '1.5px solid #E8E4E0' }}>
             <p style={{ fontSize: '32px', marginBottom: '12px' }}>📋</p>
             <p style={{ fontSize: '15px', fontWeight: 600, color: '#020000', marginBottom: '4px' }}>Belum ada job posting</p>
-            <p style={{ fontSize: '13px', color: '#8A8A8D', marginBottom: '16px' }}>Buat job posting agar kandidat bisa melamar posisi yang spesifik.</p>
-            <button onClick={openNew}
-              style={{ padding: '10px 24px', borderRadius: '12px', backgroundColor: '#037894', color: '#fff', fontWeight: 700, fontSize: '13px', border: 'none', cursor: 'pointer' }}>
-              + Buat Sekarang
-            </button>
+            <button onClick={openNew} style={{ padding: '10px 24px', borderRadius: '12px', backgroundColor: '#037894', color: '#fff', fontWeight: 700, fontSize: '13px', border: 'none', cursor: 'pointer' }}>+ Buat Sekarang</button>
           </div>
         ) : (
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '14px' }} className="jobs-grid">
@@ -139,8 +120,9 @@ export default function JobsClient({ initialJobs }: { initialJobs: JobPosting[] 
               <div key={job.id}
                 onClick={(e) => { if ((e.target as HTMLElement).closest('button, a')) return; router.push(`/dashboard/hrd/jobs/${job.id}`) }}
                 onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = '#037894'; (e.currentTarget as HTMLElement).style.boxShadow = '0 2px 12px rgba(3,120,148,0.1)' }}
-                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = job.is_active ? '#E8E4E0' : '#F0EEEC'; (e.currentTarget as HTMLElement).style.boxShadow = 'none' }}
-                style={{ backgroundColor: '#fff', borderRadius: '16px', border: `1.5px solid ${job.is_active ? '#E8E4E0' : '#F0EEEC'}`, padding: '20px', opacity: job.is_active ? 1 : 0.65, cursor: 'pointer' }}>
+                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = job.is_active ? '#E8E4E0' : 'rgba(255,79,49,0.2)'; (e.currentTarget as HTMLElement).style.boxShadow = 'none' }}
+                style={{ backgroundColor: '#fff', borderRadius: '16px', border: `1.5px solid ${job.is_active ? '#E8E4E0' : 'rgba(255,79,49,0.2)'}`, padding: '20px', cursor: 'pointer', opacity: job.is_active ? 1 : 0.8, transition: 'all 0.15s' }}>
+
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
                   <div style={{ flex: 1, minWidth: 0, paddingRight: '12px' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '4px' }}>
@@ -150,8 +132,29 @@ export default function JobsClient({ initialJobs }: { initialJobs: JobPosting[] 
                     <h3 style={{ fontSize: '16px', fontWeight: 700, color: '#020000', margin: '0 0 3px', lineHeight: 1.2 }}>{job.title}</h3>
                     <p style={{ fontSize: '13px', color: '#037894', margin: 0, fontWeight: 600 }}>{job.department}</p>
                   </div>
-                  <button onClick={() => toggleActive(job)} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '2px', flexShrink: 0 }}>
-                    {job.is_active ? <ToggleRight size={28} color="#037894" /> : <ToggleLeft size={28} color="#8A8A8D" />}
+
+                  {/* Active/Inactive toggle — clear visual */}
+                  <button
+                    onClick={(e) => { e.stopPropagation(); toggleActive(job) }}
+                    disabled={togglingId === job.id}
+                    title={job.is_active ? 'Klik untuk nonaktifkan' : 'Klik untuk aktifkan'}
+                    style={{
+                      flexShrink: 0,
+                      display: 'flex', alignItems: 'center', gap: '5px',
+                      padding: '5px 10px', borderRadius: '20px', border: 'none',
+                      cursor: togglingId === job.id ? 'not-allowed' : 'pointer',
+                      fontSize: '11px', fontWeight: 700,
+                      backgroundColor: job.is_active ? '#E6F4F1' : '#FFF0EE',
+                      color: job.is_active ? '#005353' : '#FF4F31',
+                      transition: 'all 0.2s',
+                      opacity: togglingId === job.id ? 0.6 : 1,
+                    }}>
+                    <span style={{
+                      width: '7px', height: '7px', borderRadius: '50%',
+                      backgroundColor: job.is_active ? '#005353' : '#FF4F31',
+                      flexShrink: 0,
+                    }} />
+                    {job.is_active ? 'Aktif' : 'Nonaktif'}
                   </button>
                 </div>
 
@@ -184,8 +187,13 @@ export default function JobsClient({ initialJobs }: { initialJobs: JobPosting[] 
                     style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', padding: '8px', borderRadius: '10px', border: '1.5px solid #E8E4E0', backgroundColor: 'transparent', color: '#4C4845', fontSize: '12px', fontWeight: 600, cursor: 'pointer' }}>
                     <Edit2 size={12} /> Edit
                   </button>
-                  <a href={`/apply?job=${encodeURIComponent(job.job_id)}`} target="_blank" rel="noreferrer"
-                    style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '8px', borderRadius: '10px', backgroundColor: 'rgba(3,120,148,0.06)', color: '#037894', fontSize: '12px', fontWeight: 600, textDecoration: 'none', cursor: 'pointer', border: '1.5px solid rgba(3,120,148,0.2)' }}>
+                  {/* FIX: Preview now links directly to job detail page, works for active & inactive */}
+                  <a
+                    href={`/apply?job=${encodeURIComponent(job.job_id)}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    onClick={e => e.stopPropagation()}
+                    style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '8px', borderRadius: '10px', backgroundColor: 'rgba(3,120,148,0.06)', color: '#037894', fontSize: '12px', fontWeight: 600, textDecoration: 'none', border: '1.5px solid rgba(3,120,148,0.2)' }}>
                     Preview ↗
                   </a>
                 </div>
@@ -195,7 +203,7 @@ export default function JobsClient({ initialJobs }: { initialJobs: JobPosting[] 
         )}
       </div>
 
-      {/* Form Modal — NO backdrop close */}
+      {/* Form Modal */}
       {showForm && (
         <div style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 100, overflowY: 'auto', padding: '20px' }}>
           <div style={{ backgroundColor: '#fff', borderRadius: '20px', padding: '28px', maxWidth: '720px', margin: '0 auto' }}>
@@ -210,12 +218,12 @@ export default function JobsClient({ initialJobs }: { initialJobs: JobPosting[] 
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '12px' }} className="form-grid-2">
                 <div>
                   <label style={lbl}>Job ID <span style={{ color: '#FF4F31' }}>*</span></label>
-                  <input className={inp} style={ist} value={form.job_id} onChange={e => set('job_id', e.target.value)} placeholder="STR-BAR-001" required />
+                  <input className={inp} style={ist} value={form.job_id} onChange={e => set('job_id', e.target.value)} placeholder="STR-BAR-001" />
                   <p style={{ fontSize: '11px', color: '#8A8A8D', margin: '3px 0 0' }}>Format: STR-[DEPT]-[NO]</p>
                 </div>
                 <div>
                   <label style={lbl}>Judul Posisi <span style={{ color: '#FF4F31' }}>*</span></label>
-                  <input className={inp} style={ist} value={form.title} onChange={e => set('title', e.target.value)} placeholder="e.g. Barista" required />
+                  <input className={inp} style={ist} value={form.title} onChange={e => set('title', e.target.value)} placeholder="e.g. Barista" />
                 </div>
               </div>
 
@@ -246,7 +254,7 @@ export default function JobsClient({ initialJobs }: { initialJobs: JobPosting[] 
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }} className="form-grid-2">
                 <div>
                   <label style={lbl}>Lokasi <span style={{ color: '#FF4F31' }}>*</span></label>
-                  <input className={inp} style={ist} value={form.location} onChange={e => set('location', e.target.value)} placeholder="Jakarta Utara" required />
+                  <input className={inp} style={ist} value={form.location} onChange={e => set('location', e.target.value)} placeholder="Jakarta Utara" />
                 </div>
                 <div>
                   <label style={lbl}>Outlet</label>
@@ -270,47 +278,34 @@ export default function JobsClient({ initialJobs }: { initialJobs: JobPosting[] 
                 </div>
                 <div>
                   <label style={lbl}>Deadline <span style={{ fontSize: '10px', color: '#8A8A8D', fontWeight: 400 }}>(opsional)</span></label>
-                  <input type="date" className={inp} style={ist} value={form.deadline}
-                    onChange={e => set('deadline', e.target.value)}
-                    onKeyDown={e => { if (e.key === 'Delete' || e.key === 'Backspace') set('deadline', '') }} />
-                  {form.deadline && (
-                    <button type="button" onClick={() => set('deadline', '')}
-                      style={{ fontSize: '11px', color: '#FF4F31', background: 'none', border: 'none', cursor: 'pointer', padding: '2px 0', marginTop: '2px' }}>
-                      × Hapus deadline
-                    </button>
-                  )}
+                  <input type="date" className={inp} style={ist} value={form.deadline} onChange={e => set('deadline', e.target.value)} />
+                  {form.deadline && <button type="button" onClick={() => set('deadline', '')} style={{ fontSize: '11px', color: '#FF4F31', background: 'none', border: 'none', cursor: 'pointer', padding: '2px 0' }}>× Hapus deadline</button>}
                 </div>
               </div>
 
               <div>
                 <label style={lbl}>Deskripsi Posisi <span style={{ color: '#FF4F31' }}>*</span></label>
-                <textarea className={inp} style={{ ...ist, resize: 'vertical' as const }} value={form.description} onChange={e => set('description', e.target.value)} rows={4} placeholder="Deskripsi singkat tentang posisi ini..." required />
+                <textarea className={inp} style={{ ...ist, resize: 'vertical' as const }} value={form.description} onChange={e => set('description', e.target.value)} rows={4} placeholder="Deskripsi singkat tentang posisi ini..." />
               </div>
-
               <div>
                 <label style={lbl}>Tanggung Jawab <span style={{ color: '#FF4F31' }}>*</span></label>
-                <textarea className={inp} style={{ ...ist, resize: 'vertical' as const }} value={form.responsibilities} onChange={e => set('responsibilities', e.target.value)} rows={4} placeholder="- Membuat minuman sesuai SOP&#10;- Menjaga kebersihan bar area" required />
-                <p style={{ fontSize: '11px', color: '#8A8A8D', margin: '3px 0 0' }}>Gunakan "- item" per baris</p>
+                <textarea className={inp} style={{ ...ist, resize: 'vertical' as const }} value={form.responsibilities} onChange={e => set('responsibilities', e.target.value)} rows={4} placeholder="- Membuat minuman sesuai SOP" />
               </div>
-
               <div>
                 <label style={lbl}>Persyaratan <span style={{ color: '#FF4F31' }}>*</span></label>
-                <textarea className={inp} style={{ ...ist, resize: 'vertical' as const }} value={form.requirements} onChange={e => set('requirements', e.target.value)} rows={4} placeholder="- Min. 1 tahun pengalaman kafe&#10;- Memiliki sertifikasi barista (diutamakan)" required />
+                <textarea className={inp} style={{ ...ist, resize: 'vertical' as const }} value={form.requirements} onChange={e => set('requirements', e.target.value)} rows={4} placeholder="- Min. 1 tahun pengalaman kafe" />
               </div>
-
               <div>
                 <label style={lbl}>Benefit <span style={{ fontSize: '10px', color: '#8A8A8D', fontWeight: 400 }}>(opsional)</span></label>
-                <textarea className={inp} style={{ ...ist, resize: 'vertical' as const }} value={form.benefits} onChange={e => set('benefits', e.target.value)} rows={3} placeholder="- Gaji pokok + service charge&#10;- BPJS Kesehatan & Ketenagakerjaan" />
+                <textarea className={inp} style={{ ...ist, resize: 'vertical' as const }} value={form.benefits} onChange={e => set('benefits', e.target.value)} rows={3} placeholder="- Gaji pokok + service charge" />
               </div>
 
               <div style={{ padding: '16px', borderRadius: '14px', border: '1.5px solid rgba(3,120,148,0.2)', backgroundColor: 'rgba(3,120,148,0.03)' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '8px' }}>
                   <Zap size={14} color="#037894" />
-                  <label style={{ ...lbl, margin: 0, color: '#037894' }}>Catatan Screening untuk Quest AI <span style={{ fontSize: '10px', fontWeight: 400, color: '#8A8A8D' }}>(opsional)</span></label>
+                  <label style={{ ...lbl, margin: 0, color: '#037894' }}>Catatan Screening Quest AI <span style={{ fontSize: '10px', fontWeight: 400, color: '#8A8A8D' }}>(opsional)</span></label>
                 </div>
-                <textarea className={inp} style={{ ...ist, resize: 'vertical' as const, backgroundColor: '#ffffff' }} value={form.ai_screening_notes} onChange={e => set('ai_screening_notes', e.target.value)} rows={4}
-                  placeholder="Contoh: Prioritaskan kandidat dengan pengalaman di specialty coffee. Sertifikasi SCA sangat diutamakan..." />
-                <p style={{ fontSize: '11px', color: '#037894', margin: '6px 0 0' }}>Quest AI akan menggunakan catatan ini saat menilai pelamar untuk posisi ini.</p>
+                <textarea className={inp} style={{ ...ist, resize: 'vertical' as const, backgroundColor: '#ffffff' }} value={form.ai_screening_notes} onChange={e => set('ai_screening_notes', e.target.value)} rows={4} placeholder="Prioritaskan kandidat dengan pengalaman specialty coffee..." />
               </div>
 
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 16px', borderRadius: '12px', backgroundColor: '#F7F5F2' }}>
@@ -325,11 +320,7 @@ export default function JobsClient({ initialJobs }: { initialJobs: JobPosting[] 
               </div>
             </div>
 
-            {saveError && (
-              <div style={{ padding: '12px 16px', borderRadius: '10px', backgroundColor: '#FFF0EE', color: '#FF4F31', fontSize: '13px', marginTop: '16px' }}>
-                ⚠ {saveError}
-              </div>
-            )}
+            {saveError && <div style={{ padding: '12px 16px', borderRadius: '10px', backgroundColor: '#FFF0EE', color: '#FF4F31', fontSize: '13px', marginTop: '16px' }}>⚠ {saveError}</div>}
 
             <div style={{ display: 'flex', gap: '10px', marginTop: '20px' }}>
               <button onClick={() => setShowForm(false)}

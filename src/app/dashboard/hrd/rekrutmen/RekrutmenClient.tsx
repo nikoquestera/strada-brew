@@ -1,7 +1,6 @@
 'use client'
-import { useState, useCallback } from 'react'
+import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { createClient } from '@/lib/supabase/client'
 import { PIPELINE_STAGES, PipelineStage } from '@/lib/types'
 import { Search, Filter, ChevronDown } from 'lucide-react'
 
@@ -26,7 +25,6 @@ interface Applicant {
   applicant_quest_scores?: QuestScore[]
 }
 
-// Group stages for sidebar
 const STAGE_GROUPS = [
   { label: 'Masuk & Review', stages: ['baru_masuk', 'perlu_direview', 'sedang_direview'], color: '#037894' },
   { label: 'Seleksi', stages: ['shortlisted', 'dihubungi', 'interview_dijadwalkan', 'sudah_diinterview', 'pertimbangan_akhir'], color: '#005353' },
@@ -36,69 +34,52 @@ const STAGE_GROUPS = [
   { label: 'Tidak Lanjut', stages: ['tidak_cocok', 'mengundurkan_diri', 'tidak_hadir_interview', 'penawaran_ditolak', 'on_hold'], color: '#8A8A8D' },
 ]
 
-function BatchScoringButton({ onComplete }: { onComplete?: () => void }) {
-  const [status, setStatus] = useState<'idle' | 'running' | 'done'>('idle')
-  const [progress, setProgress] = useState({ processed: 0 })
+function QuestTriggerButton({ applicantId, currentScore, onScored }: {
+  applicantId: string
+  currentScore: QuestScore | undefined
+  onScored: (id: string) => void
+}) {
+  const [running, setRunning] = useState(false)
 
-  async function runBatch() {
-    setStatus('running')
-    setProgress({ processed: 0 })
+  const needsScore = !currentScore ||
+    currentScore.status === 'pending' ||
+    currentScore.status === 'failed'
 
-    let totalProcessed = 0
-    let hasMore = true
-    let safetyCounter = 0
+  if (!needsScore) return null
 
-    while (hasMore && safetyCounter < 50) {
-      safetyCounter++
-      try {
-        const res = await fetch('/api/quest/score-batch', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' }
-        })
-        const data = await res.json()
-        const batchProcessed = data.processed || 0
-        totalProcessed += batchProcessed
-        setProgress({ processed: totalProcessed })
-
-        if (batchProcessed === 0) {
-          hasMore = false
-        } else {
-          await new Promise(r => setTimeout(r, 1500))
-        }
-      } catch {
-        hasMore = false
-      }
+  async function trigger(e: React.MouseEvent) {
+    e.stopPropagation()
+    setRunning(true)
+    try {
+      await fetch('/api/quest/score', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ applicant_id: applicantId }),
+      })
+      onScored(applicantId)
+    } catch { /* ignore */ } finally {
+      setRunning(false)
     }
-
-    setStatus('done')
-    onComplete?.()
   }
 
-  if (status === 'done') return (
-    <div style={{ padding: '8px 14px', borderRadius: '10px', backgroundColor: '#E6F4F1', fontSize: '12px', fontWeight: 600, color: '#005353' }}>
-      ✓ {progress.processed} scored
-    </div>
-  )
-
-  if (status === 'running') return (
-    <div style={{ padding: '8px 14px', borderRadius: '10px', backgroundColor: 'rgba(3,120,148,0.08)', fontSize: '12px', color: '#037894', display: 'flex', alignItems: 'center', gap: '6px', whiteSpace: 'nowrap' }}>
-      <span style={{ display: 'inline-block', animation: 'quest-spin 1s linear infinite' }}>⚙</span>
-      Quest... {progress.processed} done
-    </div>
-  )
-
   return (
-    <button onClick={runBatch}
-      style={{ padding: '8px 14px', borderRadius: '10px', backgroundColor: '#020000', color: '#8FC6C5', fontSize: '12px', fontWeight: 600, border: 'none', cursor: 'pointer', whiteSpace: 'nowrap' }}>
-      ✦ Run Quest Batch
+    <button onClick={trigger} disabled={running}
+      style={{
+        padding: '2px 7px', borderRadius: '6px', fontSize: '10px', fontWeight: 700,
+        border: 'none', cursor: running ? 'not-allowed' : 'pointer',
+        backgroundColor: running ? 'rgba(3,120,148,0.1)' : '#020000',
+        color: running ? '#037894' : '#8FC6C5',
+        display: 'flex', alignItems: 'center', gap: '3px', transition: 'all 0.15s',
+      }}>
+      {running
+        ? <><span style={{ display: 'inline-block', animation: 'quest-spin 1s linear infinite' }}>⚙</span>Scoring...</>
+        : '✦ Score'}
     </button>
   )
 }
 
-export default function RekrutmenClient({ initialApplicants }: { 
-initialApplicants: Applicant[] }) {
+export default function RekrutmenClient({ initialApplicants }: { initialApplicants: Applicant[] }) {
   const router = useRouter()
-  const supabase = createClient()
   const [applicants, setApplicants] = useState<Applicant[]>(initialApplicants)
   const [activeStage, setActiveStage] = useState<PipelineStage | 'semua'>('semua')
   const [search, setSearch] = useState('')
@@ -106,25 +87,19 @@ initialApplicants: Applicant[] }) {
   const [expandedGroups, setExpandedGroups] = useState<string[]>(['Masuk & Review', 'Seleksi'])
   const [sortBy, setSortBy] = useState<'date' | 'score'>('date')
 
-  const refreshApplicants = useCallback(async () => {
-    const { data } = await supabase
-      .from('applicants')
-      .select(`
-        id, full_name, email, phone, position_applied,
-        outlet_preference, source, pipeline_stage, quest_score,
-        created_at,
-        applicant_quest_scores (
-          overall_score, recommendation, status, summary
-        )
-      `)
-      .order('created_at', { ascending: false })
-    if (data) setApplicants(data as Applicant[])
-  }, [supabase])
+  function handleScored(applicantId: string) {
+    setApplicants(prev => prev.map(a =>
+      a.id === applicantId
+        ? { ...a, applicant_quest_scores: [{ status: 'processing' }] }
+        : a
+    ))
+  }
 
   const filtered = applicants
     .filter(a => {
       const matchStage = activeStage === 'semua' || (a.pipeline_stage || 'baru_masuk') === activeStage
-      const matchSearch = !search || a.full_name.toLowerCase().includes(search.toLowerCase()) ||
+      const matchSearch = !search ||
+        a.full_name.toLowerCase().includes(search.toLowerCase()) ||
         a.position_applied.toLowerCase().includes(search.toLowerCase())
       return matchStage && matchSearch
     })
@@ -139,35 +114,21 @@ initialApplicants: Applicant[] }) {
 
   const countByStage = (stage: string) =>
     applicants.filter(a => (a.pipeline_stage || 'baru_masuk') === stage).length
-
-
   const countByGroup = (stages: string[]) =>
     stages.reduce((sum, s) => sum + countByStage(s), 0)
-
-  const toggleGroup = (label: string) => {
+  const toggleGroup = (label: string) =>
     setExpandedGroups(prev =>
       prev.includes(label) ? prev.filter(g => g !== label) : [...prev, label]
     )
-  }
 
   const getQuestBadge = (applicant: Applicant) => {
     const score = applicant.applicant_quest_scores?.[0]
-    
-    // Belum ada record sama sekali
     if (!score) return { label: '—', bg: '#F0EEEC', color: '#8A8A8D' }
-    
-    // Ada record tapi belum diproses
     if (score.status === 'pending') return { label: '⏳', bg: '#FEF8E6', color: '#DE9733' }
     if (score.status === 'processing') return { label: '⚙', bg: '#E6F0F4', color: '#037894' }
     if (score.status === 'failed') return { label: '⚠', bg: '#FFF0EE', color: '#FF4F31' }
-    
-    // Completed tapi score null atau 0 — juga pending state
-    if (score.status === 'completed' && !score.overall_score) {
-      return { label: '⏳', bg: '#FEF8E6', color: '#DE9733' }
-    }
-    
-    // Completed dengan score valid
-    const s = score.overall_score || 0
+    if (!score.overall_score) return { label: '⏳', bg: '#FEF8E6', color: '#DE9733' }
+    const s = score.overall_score
     if (s >= 75) return { label: `${s}`, bg: '#E6F4F1', color: '#005353' }
     if (s >= 50) return { label: `${s}`, bg: '#FEF8E6', color: '#DE9733' }
     return { label: `${s}`, bg: '#FFF0EE', color: '#FF4F31' }
@@ -177,15 +138,10 @@ initialApplicants: Applicant[] }) {
 
   const Sidebar = () => (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
-      {/* All */}
       <button onClick={() => { setActiveStage('semua'); setShowMobileFilter(false) }}
-        style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '9px 14px', borderRadius: '10px', border: 'none', cursor: 'pointer', fontSize: '13px', fontWeight: 600, textAlign: 'left',
-          backgroundColor: activeStage === 'semua' ? '#037894' : 'transparent',
-          color: activeStage === 'semua' ? '#fff' : '#020000' }}>
+        style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '9px 14px', borderRadius: '10px', border: 'none', cursor: 'pointer', fontSize: '13px', fontWeight: 600, textAlign: 'left', backgroundColor: activeStage === 'semua' ? '#037894' : 'transparent', color: activeStage === 'semua' ? '#fff' : '#020000' }}>
         <span>Semua Pelamar</span>
-        <span style={{ fontSize: '12px', fontWeight: 700, padding: '1px 7px', borderRadius: '10px',
-          backgroundColor: activeStage === 'semua' ? 'rgba(255,255,255,0.25)' : 'rgba(3,120,148,0.1)',
-          color: activeStage === 'semua' ? '#fff' : '#037894' }}>
+        <span style={{ fontSize: '12px', fontWeight: 700, padding: '1px 7px', borderRadius: '10px', backgroundColor: activeStage === 'semua' ? 'rgba(255,255,255,0.25)' : 'rgba(3,120,148,0.1)', color: activeStage === 'semua' ? '#fff' : '#037894' }}>
           {applicants.length}
         </span>
       </button>
@@ -210,16 +166,9 @@ initialApplicants: Applicant[] }) {
               const isActive = activeStage === stageKey
               return (
                 <button key={stageKey} onClick={() => { setActiveStage(stageKey as PipelineStage); setShowMobileFilter(false) }}
-                  style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '7px 14px 7px 28px', borderRadius: '10px', border: 'none', cursor: 'pointer', fontSize: '13px', textAlign: 'left',
-                    backgroundColor: isActive ? `${stageInfo.color}15` : 'transparent',
-                    color: isActive ? stageInfo.color : '#4C4845',
-                    fontWeight: isActive ? 700 : 400 }}>
+                  style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '7px 14px 7px 28px', borderRadius: '10px', border: 'none', cursor: 'pointer', fontSize: '13px', textAlign: 'left', backgroundColor: isActive ? `${stageInfo.color}15` : 'transparent', color: isActive ? stageInfo.color : '#4C4845', fontWeight: isActive ? 700 : 400 }}>
                   <span>{stageInfo.label}</span>
-                  {count > 0 && (
-                    <span style={{ fontSize: '11px', fontWeight: 700, padding: '1px 7px', borderRadius: '10px',
-                      backgroundColor: isActive ? `${stageInfo.color}25` : '#F0EEEC',
-                      color: isActive ? stageInfo.color : '#8A8A8D' }}>{count}</span>
-                  )}
+                  {count > 0 && <span style={{ fontSize: '11px', fontWeight: 700, padding: '1px 7px', borderRadius: '10px', backgroundColor: isActive ? `${stageInfo.color}25` : '#F0EEEC', color: isActive ? stageInfo.color : '#8A8A8D' }}>{count}</span>}
                 </button>
               )
             })}
@@ -241,10 +190,7 @@ initialApplicants: Applicant[] }) {
           .ats-mobile-filter-btn { display: none !important; }
           .ats-mobile-sidebar { display: none !important; }
         }
-        @keyframes quest-spin {
-          from { transform: rotate(0deg); }
-          to { transform: rotate(360deg); }
-        }
+        @keyframes quest-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
       `}</style>
 
       <div style={{ minHeight: '100vh', backgroundColor: '#F7F5F2' }}>
@@ -256,8 +202,7 @@ initialApplicants: Applicant[] }) {
               <p style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '3px', color: '#037894', textTransform: 'uppercase', margin: '0 0 3px' }}>HRD · Rekrutmen</p>
               <h1 style={{ fontSize: '22px', fontWeight: 800, color: '#020000', margin: 0 }}>Applicant Tracking</h1>
             </div>
-            <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
-              <BatchScoringButton onComplete={refreshApplicants} />
+            <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
               <button onClick={() => setShowMobileFilter(true)} className="ats-mobile-filter-btn"
                 style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '8px 14px', borderRadius: '10px', backgroundColor: '#020000', color: '#fff', fontSize: '13px', fontWeight: 600, border: 'none', cursor: 'pointer' }}>
                 <Filter size={14} /> Filter
@@ -269,61 +214,43 @@ initialApplicants: Applicant[] }) {
             </div>
           </div>
 
-          {/* Search */}
           <div style={{ position: 'relative' }}>
             <Search size={14} style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', color: '#8A8A8D' }} />
             <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Cari nama, posisi..."
               style={{ width: '100%', padding: '10px 14px 10px 36px', borderRadius: '12px', border: '1.5px solid rgba(76,72,69,0.15)', fontSize: '14px', backgroundColor: '#ffffff', outline: 'none', boxSizing: 'border-box' }} />
           </div>
 
-          {/* Sort toggle */}
-          <div style={{ display: 'flex', gap: '6px', marginTop: '8px' }}>
-            <span style={{ fontSize: '12px', color: '#8A8A8D', alignSelf: 'center' }}>Urutkan:</span>
-            {[
-              { key: 'date', label: 'Terbaru' },
-              { key: 'score', label: '✦ Quest Score' },
-            ].map(opt => (
-              <button key={opt.key} onClick={() => setSortBy(opt.key as 'date' | 'score')}
-                style={{ padding: '5px 14px', borderRadius: '8px', fontSize: '12px', fontWeight: 600, border: 'none', cursor: 'pointer', transition: 'all 0.15s',
-                  backgroundColor: sortBy === opt.key ? '#020000' : '#fff',
-                  color: sortBy === opt.key ? '#fff' : '#4C4845',
-                  boxShadow: '0 1px 4px rgba(0,0,0,0.08)' }}>
-                {opt.label}
+          <div style={{ display: 'flex', gap: '6px', marginTop: '8px', alignItems: 'center' }}>
+            <span style={{ fontSize: '12px', color: '#8A8A8D' }}>Urutkan:</span>
+            {(['date', 'score'] as const).map(opt => (
+              <button key={opt} onClick={() => setSortBy(opt)}
+                style={{ padding: '5px 14px', borderRadius: '8px', fontSize: '12px', fontWeight: 600, border: 'none', cursor: 'pointer', backgroundColor: sortBy === opt ? '#020000' : '#fff', color: sortBy === opt ? '#fff' : '#4C4845', boxShadow: '0 1px 4px rgba(0,0,0,0.08)' }}>
+                {opt === 'date' ? 'Terbaru' : '✦ Quest Score'}
               </button>
             ))}
           </div>
         </div>
 
-        {/* Mobile sidebar overlay */}
+        {/* Mobile sidebar */}
         {showMobileFilter && (
           <>
-            <div onClick={() => setShowMobileFilter(false)}
-              style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.4)', zIndex: 40 }} />
-            <div className="ats-mobile-sidebar"
-              style={{ position: 'fixed', left: 0, top: 0, bottom: 0, width: '280px', backgroundColor: '#fff', zIndex: 50, padding: '20px 16px', overflowY: 'auto', boxShadow: '4px 0 20px rgba(0,0,0,0.15)' }}>
+            <div onClick={() => setShowMobileFilter(false)} style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.4)', zIndex: 40 }} />
+            <div className="ats-mobile-sidebar" style={{ position: 'fixed', left: 0, top: 0, bottom: 0, width: '280px', backgroundColor: '#fff', zIndex: 50, padding: '20px 16px', overflowY: 'auto', boxShadow: '4px 0 20px rgba(0,0,0,0.15)' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
                 <h3 style={{ fontSize: '15px', fontWeight: 700, color: '#020000', margin: 0 }}>Filter Status</h3>
-                <button onClick={() => setShowMobileFilter(false)}
-                  style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '20px', color: '#8A8A8D' }}>×</button>
+                <button onClick={() => setShowMobileFilter(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '20px', color: '#8A8A8D' }}>×</button>
               </div>
               <Sidebar />
             </div>
           </>
         )}
 
-        {/* Main layout */}
         <div style={{ display: 'flex', minHeight: 'calc(100vh - 180px)' }} className="ats-layout">
-
-          {/* Desktop sidebar */}
-          <div className="ats-sidebar-desktop"
-            style={{ width: '240px', flexShrink: 0, padding: '20px 16px', backgroundColor: '#ffffff', borderRight: '1px solid #E8E4E0' }}>
+          <div className="ats-sidebar-desktop" style={{ width: '240px', flexShrink: 0, padding: '20px 16px', backgroundColor: '#ffffff', borderRight: '1px solid #E8E4E0' }}>
             <Sidebar />
           </div>
 
-          {/* Content */}
           <div style={{ flex: 1, padding: '20px 24px', overflowX: 'hidden' }}>
-
-            {/* Stage header */}
             {activeStageInfo && activeStage !== 'semua' && (
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px', padding: '10px 16px', borderRadius: '12px', backgroundColor: `${activeStageInfo.color}12`, border: `1px solid ${activeStageInfo.color}25` }}>
                 <div style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: activeStageInfo.color }} />
@@ -333,7 +260,7 @@ initialApplicants: Applicant[] }) {
             )}
             {activeStage === 'semua' && (
               <p style={{ fontSize: '13px', color: '#8A8A8D', marginBottom: '16px' }}>
-                {filtered.length} dari {initialApplicants.length} pelamar{search && ` · "${search}"`}
+                {filtered.length} dari {applicants.length} pelamar{search && ` · "${search}"`}
               </p>
             )}
 
@@ -356,44 +283,43 @@ initialApplicants: Applicant[] }) {
                     <div key={applicant.id}
                       onClick={() => router.push(`/dashboard/hrd/rekrutmen/${applicant.id}`)}
                       style={{ backgroundColor: '#fff', border: '1.5px solid #E8E4E0', borderRadius: '14px', padding: '16px', cursor: 'pointer', transition: 'all 0.15s', position: 'relative' }}
-                      onMouseEnter={e => {
-                        const el = e.currentTarget as HTMLElement
-                        el.style.borderColor = '#037894'
-                        el.style.transform = 'translateY(-1px)'
-                        el.style.boxShadow = '0 4px 16px rgba(3,120,148,0.1)'
-                      }}
-                      onMouseLeave={e => {
-                        const el = e.currentTarget as HTMLElement
-                        el.style.borderColor = '#E8E4E0'
-                        el.style.transform = 'none'
-                        el.style.boxShadow = 'none'
-                      }}>
+                      onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.borderColor = '#037894'; el.style.transform = 'translateY(-1px)'; el.style.boxShadow = '0 4px 16px rgba(3,120,148,0.1)' }}
+                      onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.borderColor = '#E8E4E0'; el.style.transform = 'none'; el.style.boxShadow = 'none' }}>
 
-                      {/* Quest score badge */}
-                      <div style={{ position: 'absolute', top: '12px', right: '12px', display: 'flex', alignItems: 'center', gap: '3px', padding: '3px 9px', borderRadius: '20px', fontSize: '11px', fontWeight: 700, backgroundColor: quest.bg, color: quest.color }}>
-                        ✦ {quest.label}
+                      {/* Top: name + quest badge + score button */}
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '8px', marginBottom: '6px' }}>
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <p style={{ fontSize: '14px', fontWeight: 700, color: '#020000', margin: '0 0 2px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{applicant.full_name}</p>
+                          <p style={{ fontSize: '12px', color: '#037894', fontWeight: 600, margin: 0 }}>{applicant.position_applied}</p>
+                        </div>
+                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '4px', flexShrink: 0 }}>
+                          {/* Quest score badge */}
+                          <div style={{ padding: '3px 9px', borderRadius: '20px', fontSize: '11px', fontWeight: 700, backgroundColor: quest.bg, color: quest.color, whiteSpace: 'nowrap' }}>
+                            ✦ {quest.label}
+                          </div>
+                          {/* Trigger button — only shows when unscored/failed */}
+                          <QuestTriggerButton
+                            applicantId={applicant.id}
+                            currentScore={scoreData}
+                            onScored={handleScored}
+                          />
+                        </div>
                       </div>
 
-                      <div style={{ paddingRight: '60px', marginBottom: '10px' }}>
-                        <p style={{ fontSize: '14px', fontWeight: 700, color: '#020000', margin: '0 0 2px' }}>{applicant.full_name}</p>
-                        <p style={{ fontSize: '12px', color: '#037894', fontWeight: 600, margin: '0 0 1px' }}>{applicant.position_applied}</p>
-                        {applicant.outlet_preference && (
-                          <p style={{ fontSize: '11px', color: '#8A8A8D', margin: 0 }}>{applicant.outlet_preference}</p>
-                        )}
-                      </div>
+                      {applicant.outlet_preference && (
+                        <p style={{ fontSize: '11px', color: '#8A8A8D', margin: '0 0 8px' }}>{applicant.outlet_preference}</p>
+                      )}
 
                       {scoreData?.status === 'completed' && scoreData.summary && (
-                        <div style={{ padding: '8px 10px', borderRadius: '8px', backgroundColor: '#F7F5F2', marginBottom: '10px' }}>
+                        <div style={{ padding: '8px 10px', borderRadius: '8px', backgroundColor: '#F7F5F2', marginBottom: '8px' }}>
                           <p style={{ fontSize: '11px', color: '#4C4845', margin: 0, lineHeight: 1.5, overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
                             {scoreData.summary}
                           </p>
                         </div>
                       )}
 
-                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                        <span style={{ fontSize: '11px', padding: '3px 8px', borderRadius: '6px', fontWeight: 600,
-                          backgroundColor: `${stage?.color || '#8A8A8D'}18`,
-                          color: stage?.color || '#8A8A8D' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '8px' }}>
+                        <span style={{ fontSize: '11px', padding: '3px 8px', borderRadius: '6px', fontWeight: 600, backgroundColor: `${stage?.color || '#8A8A8D'}18`, color: stage?.color || '#8A8A8D' }}>
                           {stage?.label || 'Baru Masuk'}
                         </span>
                         <span style={{ fontSize: '11px', color: '#8A8A8D' }}>
