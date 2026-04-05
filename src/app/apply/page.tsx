@@ -59,6 +59,7 @@ export default function ApplyPage() {
     setSelectedJob(job)
     setView('detail')
     window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
 
   function handleFileAdd(e: React.ChangeEvent<HTMLInputElement>) {
     const selected = Array.from(e.target.files || [])
