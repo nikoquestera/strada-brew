@@ -27,34 +27,20 @@ export default function RekrutmenPage() {
   useEffect(() => {
     fetchApplicants()
 
-    // Subscribe realtime — auto update saat ada aplikan baru atau score berubah
     const channel = supabase
-      .channel('applicants-realtime')
-      .on(
-        'postgres_changes',
-        { event: '*', schema: 'public', table: 'applicants' },
-        () => {
-          fetchApplicants()
-        }
-      )
-      .on(
-        'postgres_changes',
-        { event: '*', schema: 'public', table: 'applicant_quest_scores' },
-        () => {
-          fetchApplicants()
-        }
-      )
+      .channel('rekrutmen-realtime')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'applicants' }, fetchApplicants)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'applicant_quest_scores' }, fetchApplicants)
       .subscribe()
 
-    return () => {
-      supabase.removeChannel(channel)
-    }
+    return () => { supabase.removeChannel(channel) }
   }, [])
 
   if (loading) return (
     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '60vh', flexDirection: 'column', gap: '12px' }}>
-      <div style={{ fontSize: '24px' }}>⚙</div>
+      <div style={{ fontSize: '24px', animation: 'spin 1s linear infinite' }}>⚙</div>
       <p style={{ color: '#8A8A8D', fontSize: '14px' }}>Memuat data pelamar...</p>
+      <style>{`@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }`}</style>
     </div>
   )
 
