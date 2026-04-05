@@ -69,6 +69,7 @@ export async function POST(request: NextRequest) {
         motivation: subject.hr_notes,
         domicile: subject.domicile,
         position_applied: subject.position_applied,
+        birth_date: subject.birth_date,
       } : {
         full_name: subject.full_name,
         has_cafe_experience: false,
@@ -82,6 +83,9 @@ export async function POST(request: NextRequest) {
         title: jobContext.title,
         min_experience_years: jobContext.min_experience_years,
         ai_screening_notes: jobContext.ai_screening_notes,
+        location: jobContext.location,
+        description: jobContext.description,
+        required_certifications: jobContext.required_certifications,
       } : undefined,
     })
 

@@ -47,7 +47,7 @@ const STAGE_GROUPS = [
 function QuestScoreWidget({ applicantId, scoreData, onScored }: {
   applicantId: string
   scoreData: QuestScore | undefined
-  onScored: (id: string) => void
+  onScored: (id: string) => Promise<void>
 }) {
   const [triggering, setTriggering] = useState(false)
 
@@ -63,7 +63,7 @@ function QuestScoreWidget({ applicantId, scoreData, onScored }: {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ applicant_id: applicantId }),
       })
-      onScored(applicantId)
+      await onScored(applicantId)
     } catch { } finally {
       setTriggering(false)
     }
@@ -143,9 +143,18 @@ export default function RekrutmenClient({ initialApplicants }: { initialApplican
     return () => clearInterval(interval)
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
-  function handleScored(applicantId: string) {
+  async function handleScored(applicantId: string) {
+    // Scoring is already complete in DB by the time this is called — fetch fresh scores immediately
+    const { data } = await supabase
+      .from('applicant_quest_scores')
+      .select('*')
+      .eq('applicant_id', applicantId)
+      .order('processed_at', { ascending: false })
+
     setApplicants(prev => prev.map(a =>
-      a.id === applicantId ? { ...a, applicant_quest_scores: [{ status: 'processing' }] } : a
+      a.id === applicantId
+        ? { ...a, applicant_quest_scores: data || [{ status: 'failed' }] }
+        : a
     ))
   }
 

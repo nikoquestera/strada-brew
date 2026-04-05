@@ -11,6 +11,7 @@ export interface QuestScoringInput {
     motivation?: string
     domicile?: string
     position_applied: string
+    birth_date?: string
   }
   job?: {
     title: string
@@ -18,6 +19,7 @@ export interface QuestScoringInput {
     required_certifications?: string[]
     ai_screening_notes?: string
     location?: string
+    description?: string
   }
 }
 
