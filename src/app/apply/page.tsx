@@ -9,7 +9,7 @@ export default function ApplyPage() {
   const [jobs, setJobs] = useState<JobPosting[]>([])
   const [loadingJobs, setLoadingJobs] = useState(true)
   const [selectedJob, setSelectedJob] = useState<JobPosting | null>(null)
-  const [view, setView] = useState<'jobs' | 'form'>('jobs')
+  const [view, setView] = useState<'jobs' | 'detail' | 'form'>('jobs')
   const [step, setStep] = useState(1)
   const [loading, setLoading] = useState(false)
   const [submitted, setSubmitted] = useState(false)
@@ -41,19 +41,24 @@ export default function ApplyPage() {
       const jobId = params.get('job')
       if (jobId && data) {
         const found = data.find((j: JobPosting) => j.job_id === jobId)
-        if (found) { setSelectedJob(found); setView('form'); setForm(f => ({ ...f, position_applied: found.title, outlet_preference: found.outlet || '' })) }
+        if (found) { setSelectedJob(found); setView('detail') }
       }
     }
     load()
   }, [])
 
-  function selectJob(job: JobPosting) {
+  function startApply(job: JobPosting) {
     setSelectedJob(job)
     setForm(f => ({ ...f, position_applied: job.title, outlet_preference: job.outlet || '' }))
     setView('form')
     setStep(1)
     setTimeout(() => formTopRef.current?.scrollIntoView({ behavior: 'smooth' }), 100)
   }
+
+  function selectJob(job: JobPosting) {
+    setSelectedJob(job)
+    setView('detail')
+    window.scrollTo({ top: 0, behavior: 'smooth' })
 
   function handleFileAdd(e: React.ChangeEvent<HTMLInputElement>) {
     const selected = Array.from(e.target.files || [])
@@ -145,6 +150,102 @@ export default function ApplyPage() {
           <p style={{ fontSize: '14px', color: '#4C4845', margin: '0 0 6px' }}>Terima kasih, <strong>{form.full_name}</strong>.</p>
           <p style={{ fontSize: '13px', color: '#8A8A8D', margin: '0 0 28px', lineHeight: 1.6 }}>Tim HR kami akan menghubungi kamu dalam 3–5 hari kerja jika profil kamu sesuai.</p>
           <a href="https://stradacoffee.com" style={{ display: 'inline-block', padding: '12px 32px', borderRadius: '12px', backgroundColor: '#020000', color: '#fff', fontWeight: 700, fontSize: '14px', textDecoration: 'none' }}>← Kembali ke Strada Coffee</a>
+        </div>
+      </div>
+    </div>
+  )
+
+  // JOB DETAIL VIEW
+  if (view === 'detail' && selectedJob) return (
+    <div style={{ minHeight: '100vh', backgroundColor: '#F7F5F2' }}>
+      <Header />
+      <div style={{ maxWidth: '800px', margin: '0 auto', padding: '32px 20px' }}>
+        <button onClick={() => setView('jobs')}
+          style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px', color: '#8A8A8D', background: 'none', border: 'none', cursor: 'pointer', padding: 0, marginBottom: '24px' }}>
+          <ArrowLeft size={14} /> Semua posisi
+        </button>
+
+        <div style={{ backgroundColor: '#fff', borderRadius: '20px', border: '1.5px solid #E8E4E0', padding: '28px', marginBottom: '20px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '16px', flexWrap: 'wrap', marginBottom: '16px' }}>
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
+                <span style={{ fontSize: '11px', fontWeight: 700, color: '#8A8A8D', letterSpacing: '1px' }}>{selectedJob.job_id}</span>
+                {selectedJob.is_urgent && <span style={{ fontSize: '10px', fontWeight: 700, padding: '2px 10px', borderRadius: '6px', backgroundColor: '#FFF0EE', color: '#FF4F31' }}>URGENT</span>}
+              </div>
+              <h1 style={{ fontSize: '26px', fontWeight: 800, color: '#020000', margin: '0 0 4px' }}>{selectedJob.title}</h1>
+              <p style={{ fontSize: '14px', color: '#037894', fontWeight: 600, margin: 0 }}>{selectedJob.department} · {selectedJob.entity.replace('_', ' ')}</p>
+            </div>
+            {selectedJob.salary_display && (
+              <span style={{ fontSize: '14px', fontWeight: 700, color: '#005353', backgroundColor: '#E6F4F1', padding: '8px 16px', borderRadius: '10px', whiteSpace: 'nowrap' }}>
+                {selectedJob.salary_display}
+              </span>
+            )}
+          </div>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px', paddingTop: '16px', borderTop: '1px solid #F0EEEC' }}>
+            <span style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px', color: '#4C4845' }}>
+              <MapPin size={13} color="#037894" /> {selectedJob.location}{selectedJob.outlet ? ` · ${selectedJob.outlet}` : ''}
+            </span>
+            <span style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px', color: '#4C4845' }}>
+              <Clock size={13} color="#037894" /> {selectedJob.employment_type}
+            </span>
+            <span style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px', color: '#4C4845' }}>
+              <Users size={13} color="#037894" /> {selectedJob.applicant_count || 0} pelamar
+            </span>
+            {selectedJob.min_experience_years > 0 && (
+              <span style={{ fontSize: '13px', color: '#4C4845' }}>Min. {selectedJob.min_experience_years} thn pengalaman</span>
+            )}
+            {selectedJob.deadline && (
+              <span style={{ fontSize: '13px', color: '#DE9733', fontWeight: 600 }}>
+                Deadline: {new Date(selectedJob.deadline).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}
+              </span>
+            )}
+          </div>
+        </div>
+
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginBottom: '28px' }}>
+          {selectedJob.description && (
+            <div style={{ backgroundColor: '#fff', borderRadius: '16px', border: '1.5px solid #E8E4E0', padding: '24px' }}>
+              <h3 style={{ fontSize: '14px', fontWeight: 700, color: '#020000', margin: '0 0 12px', textTransform: 'uppercase', letterSpacing: '1px' }}>Tentang Posisi Ini</h3>
+              <p style={{ fontSize: '14px', color: '#4C4845', lineHeight: 1.7, margin: 0, whiteSpace: 'pre-wrap' }}>{selectedJob.description}</p>
+            </div>
+          )}
+          {selectedJob.responsibilities && (
+            <div style={{ backgroundColor: '#fff', borderRadius: '16px', border: '1.5px solid #E8E4E0', padding: '24px' }}>
+              <h3 style={{ fontSize: '14px', fontWeight: 700, color: '#020000', margin: '0 0 12px', textTransform: 'uppercase', letterSpacing: '1px' }}>Tanggung Jawab</h3>
+              <div style={{ fontSize: '14px', color: '#4C4845', lineHeight: 1.8 }}>
+                {selectedJob.responsibilities.split('\n').map((line: string, i: number) => (
+                  <p key={i} style={{ margin: '0 0 6px' }}>{line}</p>
+                ))}
+              </div>
+            </div>
+          )}
+          {selectedJob.requirements && (
+            <div style={{ backgroundColor: '#fff', borderRadius: '16px', border: '1.5px solid #E8E4E0', padding: '24px' }}>
+              <h3 style={{ fontSize: '14px', fontWeight: 700, color: '#020000', margin: '0 0 12px', textTransform: 'uppercase', letterSpacing: '1px' }}>Persyaratan</h3>
+              <div style={{ fontSize: '14px', color: '#4C4845', lineHeight: 1.8 }}>
+                {selectedJob.requirements.split('\n').map((line: string, i: number) => (
+                  <p key={i} style={{ margin: '0 0 6px' }}>{line}</p>
+                ))}
+              </div>
+            </div>
+          )}
+          {selectedJob.benefits && (
+            <div style={{ backgroundColor: '#fff', borderRadius: '16px', border: '1.5px solid #E8E4E0', padding: '24px' }}>
+              <h3 style={{ fontSize: '14px', fontWeight: 700, color: '#020000', margin: '0 0 12px', textTransform: 'uppercase', letterSpacing: '1px' }}>Benefit</h3>
+              <div style={{ fontSize: '14px', color: '#4C4845', lineHeight: 1.8 }}>
+                {selectedJob.benefits.split('\n').map((line: string, i: number) => (
+                  <p key={i} style={{ margin: '0 0 6px' }}>{line}</p>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+
+        <div style={{ position: 'sticky', bottom: '20px' }}>
+          <button onClick={() => startApply(selectedJob)}
+            style={{ width: '100%', padding: '16px', borderRadius: '14px', backgroundColor: '#020000', color: '#fff', fontWeight: 800, fontSize: '16px', border: 'none', cursor: 'pointer', boxShadow: '0 4px 20px rgba(2,0,0,0.25)' }}>
+            Apply untuk Posisi Ini →
+          </button>
         </div>
       </div>
     </div>

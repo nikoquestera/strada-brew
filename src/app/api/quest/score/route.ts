@@ -8,7 +8,6 @@ export async function POST(request: NextRequest) {
 
   const supabase = await createClient()
 
-  // Get applicant data
   const { data: applicant } = await supabase
     .from('applicants')
     .select('*, job_postings(*)')
@@ -17,19 +16,18 @@ export async function POST(request: NextRequest) {
 
   if (!applicant) return NextResponse.json({ error: 'Applicant not found' }, { status: 404 })
 
-  // Mark as processing
+  // upsert = insert if not exists, update if exists
   await supabase.from('applicant_quest_scores')
-    .update({ status: 'processing' })
-    .eq('applicant_id', applicant_id)
+    .upsert({ applicant_id, status: 'processing' }, { onConflict: 'applicant_id' })
 
   try {
     const result = await runQuestScoring({
       applicant: {
         full_name: applicant.full_name,
-        has_cafe_experience: applicant.has_cafe_experience,
-        cafe_experience_years: applicant.cafe_experience_years,
+        has_cafe_experience: applicant.has_cafe_experience || false,
+        cafe_experience_years: applicant.cafe_experience_years || 0,
         cafe_experience_detail: applicant.cafe_experience_detail,
-        has_barista_cert: applicant.has_barista_cert,
+        has_barista_cert: applicant.has_barista_cert || false,
         cert_detail: applicant.cert_detail,
         education_level: applicant.education_level,
         instagram_url: applicant.instagram_url,
@@ -45,22 +43,22 @@ export async function POST(request: NextRequest) {
     })
 
     await supabase.from('applicant_quest_scores')
-      .update({
+      .upsert({
+        applicant_id,
         ...result,
         status: 'completed',
         processed_at: new Date().toISOString()
-      })
-      .eq('applicant_id', applicant_id)
+      }, { onConflict: 'applicant_id' })
 
     await supabase.from('applicants')
       .update({ quest_score: result.overall_score })
       .eq('id', applicant_id)
 
     return NextResponse.json({ success: true, score: result.overall_score })
-  } catch {
+  } catch (err) {
+    console.error('Quest scoring error:', err)
     await supabase.from('applicant_quest_scores')
-      .update({ status: 'failed' })
-      .eq('applicant_id', applicant_id)
-    return NextResponse.json({ error: 'Scoring failed' }, { status: 500 })
+      .upsert({ applicant_id, status: 'failed' }, { onConflict: 'applicant_id' })
+    return NextResponse.json({ error: 'Scoring failed', detail: String(err) }, { status: 500 })
   }
 }

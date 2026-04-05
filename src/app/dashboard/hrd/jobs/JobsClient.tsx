@@ -1,11 +1,13 @@
 'use client'
 import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { JobPosting } from '@/lib/types'
 import { Plus, ToggleLeft, ToggleRight, Users, MapPin, Clock, Zap, Edit2 } from 'lucide-react'
 
 export default function JobsClient({ initialJobs }: { initialJobs: JobPosting[] }) {
   const supabase = createClient()
+  const router = useRouter()
   const [jobs, setJobs] = useState<JobPosting[]>(initialJobs)
   const [showForm, setShowForm] = useState(false)
   const [editingJob, setEditingJob] = useState<JobPosting | null>(null)
@@ -134,7 +136,11 @@ export default function JobsClient({ initialJobs }: { initialJobs: JobPosting[] 
         ) : (
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '14px' }} className="jobs-grid">
             {jobs.map(job => (
-              <div key={job.id} style={{ backgroundColor: '#fff', borderRadius: '16px', border: `1.5px solid ${job.is_active ? '#E8E4E0' : '#F0EEEC'}`, padding: '20px', opacity: job.is_active ? 1 : 0.65 }}>
+              <div key={job.id}
+                onClick={(e) => { if ((e.target as HTMLElement).closest('button, a')) return; router.push(`/dashboard/hrd/jobs/${job.id}`) }}
+                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = '#037894'; (e.currentTarget as HTMLElement).style.boxShadow = '0 2px 12px rgba(3,120,148,0.1)' }}
+                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = job.is_active ? '#E8E4E0' : '#F0EEEC'; (e.currentTarget as HTMLElement).style.boxShadow = 'none' }}
+                style={{ backgroundColor: '#fff', borderRadius: '16px', border: `1.5px solid ${job.is_active ? '#E8E4E0' : '#F0EEEC'}`, padding: '20px', opacity: job.is_active ? 1 : 0.65, cursor: 'pointer' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
                   <div style={{ flex: 1, minWidth: 0, paddingRight: '12px' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '4px' }}>

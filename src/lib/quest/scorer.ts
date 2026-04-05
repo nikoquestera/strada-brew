@@ -43,9 +43,18 @@ Berikan analisa dalam format JSON berikut:
   "quest_notes": "<analisa detail 2-3 paragraf untuk HR dalam Bahasa Indonesia>"
 }`
 
+  const apiKey = process.env.ANTHROPIC_API_KEY
+  if (!apiKey) {
+    throw new Error('ANTHROPIC_API_KEY not configured in environment variables')
+  }
+
   const response = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': apiKey,
+      'anthropic-version': '2023-06-01'
+    },
     body: JSON.stringify({
       model: 'claude-sonnet-4-20250514',
       max_tokens: 1000,
@@ -53,6 +62,12 @@ Berikan analisa dalam format JSON berikut:
       messages: [{ role: 'user', content: userPrompt }]
     })
   })
+
+  if (!response.ok) {
+    const errorText = await response.text()
+    console.error('Anthropic API error:', response.status, errorText)
+    throw new Error(`Anthropic API returned ${response.status}: ${errorText}`)
+  }
 
   const data = await response.json()
   const text = data.content?.[0]?.text || '{}'
