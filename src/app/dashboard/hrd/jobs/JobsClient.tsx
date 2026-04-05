@@ -189,7 +189,7 @@ export default function JobsClient({ initialJobs }: { initialJobs: JobPosting[] 
                   </button>
                   {/* FIX: Preview now links directly to job detail page, works for active & inactive */}
                   <a
-                    href={`/apply?job=${encodeURIComponent(job.job_id)}`}
+                    href={`/dashboard/hrd/jobs/${job.id}`}
                     target="_blank"
                     rel="noreferrer"
                     onClick={e => e.stopPropagation()}

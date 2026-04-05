@@ -1,3 +1,16 @@
+#!/bin/bash
+# Run this from anywhere:
+# bash /tmp/patch_brew.sh
+# It will overwrite 4 files in your strada-brew repo
+
+REPO="/Users/questmotors/strada-brew/src"
+
+echo "🔧 Patching BREW portal files..."
+
+# ============================================================
+# 1. RekrutmenClient.tsx — remove BatchScoring, add per-card QuestTrigger
+# ============================================================
+cat > "$REPO/app/dashboard/hrd/rekrutmen/RekrutmenClient.tsx" << 'ENDOFFILE'
 'use client'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
@@ -288,3 +301,37 @@ export default function RekrutmenClient({ initialApplicants }: { initialApplican
     </>
   )
 }
+ENDOFFILE
+
+echo "✅ 1/3 RekrutmenClient.tsx patched"
+
+# ============================================================
+# 2. JobsClient.tsx — fix Preview button to open job detail page
+# ============================================================
+sed -i '' 's|href={`/apply?job=${encodeURIComponent(job.job_id)}`}|href={`/dashboard/hrd/jobs/${job.id}`}|g' \
+  "$REPO/app/dashboard/hrd/jobs/JobsClient.tsx"
+
+echo "✅ 2/3 JobsClient.tsx Preview link patched"
+
+# ============================================================
+# 3. Fix 404 — check if karyawan and rekrutmen [id] pages actually export correctly
+# ============================================================
+# The page.tsx files exist but might have a TypeScript error causing 404
+# Add 'export const dynamic = "force-dynamic"' to both to prevent static render issues
+
+# Karyawan [id] page
+if ! grep -q "force-dynamic" "$REPO/app/dashboard/hrd/karyawan/[id]/page.tsx"; then
+  sed -i '' '1s/^/export const dynamic = "force-dynamic"\n/' "$REPO/app/dashboard/hrd/karyawan/[id]/page.tsx"
+  echo "✅ 3a karyawan [id] dynamic export added"
+fi
+
+# Rekrutmen [id] page
+if ! grep -q "force-dynamic" "$REPO/app/dashboard/hrd/rekrutmen/[id]/page.tsx"; then
+  sed -i '' '1s/^/export const dynamic = "force-dynamic"\n/' "$REPO/app/dashboard/hrd/rekrutmen/[id]/page.tsx"
+  echo "✅ 3b rekrutmen [id] dynamic export added"
+fi
+
+echo ""
+echo "✅ All patches applied. Now run:"
+echo "   cd /Users/questmotors/strada-brew"
+echo "   git add . && git commit -m 'fix: quest per-card trigger, preview→job detail, force-dynamic [id] pages' && git push"
