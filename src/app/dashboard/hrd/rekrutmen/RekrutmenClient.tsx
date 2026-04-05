@@ -11,6 +11,14 @@ interface QuestScore {
   recommendation?: string
   status: string
   summary?: string
+  processed_at?: string
+}
+
+function latestScore(scores?: QuestScore[]): QuestScore | undefined {
+  if (!scores || scores.length === 0) return undefined
+  return [...scores].sort((a, b) =>
+    new Date(b.processed_at || 0).getTime() - new Date(a.processed_at || 0).getTime()
+  )[0]
 }
 
 interface Applicant {
@@ -114,7 +122,7 @@ export default function RekrutmenClient({ initialApplicants }: { initialApplican
   useEffect(() => {
     const interval = setInterval(async () => {
       const processingIds = applicantsRef.current
-        .filter(a => a.applicant_quest_scores?.[0]?.status === 'processing')
+        .filter(a => latestScore(a.applicant_quest_scores)?.status === 'processing')
         .map(a => a.id)
       if (processingIds.length === 0) return
 
@@ -283,7 +291,7 @@ export default function RekrutmenClient({ initialApplicants }: { initialApplican
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '12px' }} className="ats-cards">
                 {filtered.map(applicant => {
                   const stage = PIPELINE_STAGES.find(s => s.key === (applicant.pipeline_stage || 'baru_masuk'))
-                  const scoreData = applicant.applicant_quest_scores?.[0]
+                  const scoreData = latestScore(applicant.applicant_quest_scores)
                   return (
                     <div key={applicant.id}
                       onClick={() => router.push(`/dashboard/hrd/rekrutmen/${applicant.id}`)}

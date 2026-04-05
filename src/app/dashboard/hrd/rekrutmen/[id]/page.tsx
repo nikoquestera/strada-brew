@@ -20,7 +20,7 @@ export default async function ApplicantDetailPage({
       has_cafe_experience, cafe_experience_years,
       cafe_experience_detail, has_barista_cert, cert_detail,
       education_level, hr_notes, status,
-      applicant_quest_scores (*, order: processed_at.desc.nullslast),
+      applicant_quest_scores (*),
       applicant_activities (*)
     `)
     .eq('id', id)
