@@ -1,6 +1,7 @@
 'use client'
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
+import { createClient } from '@/lib/supabase/client'
 import { PIPELINE_STAGES, PipelineStage } from '@/lib/types'
 import { Search, Filter, ChevronDown } from 'lucide-react'
 
@@ -35,7 +36,7 @@ const STAGE_GROUPS = [
   { label: 'Tidak Lanjut', stages: ['tidak_cocok', 'mengundurkan_diri', 'tidak_hadir_interview', 'penawaran_ditolak', 'on_hold'], color: '#8A8A8D' },
 ]
 
-function BatchScoringButton() {
+function BatchScoringButton({ onComplete }: { onComplete?: () => void }) {
   const [status, setStatus] = useState<'idle' | 'running' | 'done'>('idle')
   const [progress, setProgress] = useState({ processed: 0 })
 
@@ -70,6 +71,7 @@ function BatchScoringButton() {
     }
 
     setStatus('done')
+    onComplete?.()
   }
 
   if (status === 'done') return (
@@ -93,15 +95,33 @@ function BatchScoringButton() {
   )
 }
 
-export default function RekrutmenClient({ initialApplicants }: { initialApplicants: Applicant[] }) {
+export default function RekrutmenClient({ initialApplicants }: { 
+initialApplicants: Applicant[] }) {
   const router = useRouter()
+  const supabase = createClient()
+  const [applicants, setApplicants] = useState<Applicant[]>(initialApplicants)
   const [activeStage, setActiveStage] = useState<PipelineStage | 'semua'>('semua')
   const [search, setSearch] = useState('')
   const [showMobileFilter, setShowMobileFilter] = useState(false)
   const [expandedGroups, setExpandedGroups] = useState<string[]>(['Masuk & Review', 'Seleksi'])
   const [sortBy, setSortBy] = useState<'date' | 'score'>('date')
 
-  const filtered = initialApplicants
+  const refreshApplicants = useCallback(async () => {
+    const { data } = await supabase
+      .from('applicants')
+      .select(`
+        id, full_name, email, phone, position_applied,
+        outlet_preference, source, pipeline_stage, quest_score,
+        created_at,
+        applicant_quest_scores (
+          overall_score, recommendation, status, summary
+        )
+      `)
+      .order('created_at', { ascending: false })
+    if (data) setApplicants(data as Applicant[])
+  }, [supabase])
+
+  const filtered = applicants
     .filter(a => {
       const matchStage = activeStage === 'semua' || (a.pipeline_stage || 'baru_masuk') === activeStage
       const matchSearch = !search || a.full_name.toLowerCase().includes(search.toLowerCase()) ||
@@ -118,7 +138,8 @@ export default function RekrutmenClient({ initialApplicants }: { initialApplican
     })
 
   const countByStage = (stage: string) =>
-    initialApplicants.filter(a => (a.pipeline_stage || 'baru_masuk') === stage).length
+    applicants.filter(a => (a.pipeline_stage || 'baru_masuk') === stage).length
+
 
   const countByGroup = (stages: string[]) =>
     stages.reduce((sum, s) => sum + countByStage(s), 0)
@@ -165,7 +186,7 @@ export default function RekrutmenClient({ initialApplicants }: { initialApplican
         <span style={{ fontSize: '12px', fontWeight: 700, padding: '1px 7px', borderRadius: '10px',
           backgroundColor: activeStage === 'semua' ? 'rgba(255,255,255,0.25)' : 'rgba(3,120,148,0.1)',
           color: activeStage === 'semua' ? '#fff' : '#037894' }}>
-          {initialApplicants.length}
+          {applicants.length}
         </span>
       </button>
 
@@ -236,7 +257,7 @@ export default function RekrutmenClient({ initialApplicants }: { initialApplican
               <h1 style={{ fontSize: '22px', fontWeight: 800, color: '#020000', margin: 0 }}>Applicant Tracking</h1>
             </div>
             <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
-              <BatchScoringButton />
+              <BatchScoringButton onComplete={refreshApplicants} />
               <button onClick={() => setShowMobileFilter(true)} className="ats-mobile-filter-btn"
                 style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '8px 14px', borderRadius: '10px', backgroundColor: '#020000', color: '#fff', fontSize: '13px', fontWeight: 600, border: 'none', cursor: 'pointer' }}>
                 <Filter size={14} /> Filter

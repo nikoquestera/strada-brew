@@ -2,7 +2,7 @@
 import { useState } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
-import { Users, FileText, Calculator, Home, LogOut, Menu, X, Briefcase } from 'lucide-react'
+import { Users, FileText, Calculator, Home, LogOut, Menu, X, Briefcase, FolderOpen } from 'lucide-react'
 
 interface Props {
   children: React.ReactNode
@@ -14,6 +14,7 @@ const hrdNav = [
   { label: 'Karyawan', href: '/dashboard/hrd/karyawan', icon: Users },
   { label: 'Rekrutmen', href: '/dashboard/hrd/rekrutmen', icon: FileText },
   { label: 'Job Posting', href: '/dashboard/hrd/jobs', icon: Briefcase },
+  { label: 'Dokumen', href: '/dashboard/hrd/dokumen', icon: FolderOpen },
   { label: 'Payroll', href: '/dashboard/hrd/payroll', icon: Calculator },
 ]
 

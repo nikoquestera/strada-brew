@@ -178,8 +178,8 @@ export default function JobsClient({ initialJobs }: { initialJobs: JobPosting[] 
                     style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', padding: '8px', borderRadius: '10px', border: '1.5px solid #E8E4E0', backgroundColor: 'transparent', color: '#4C4845', fontSize: '12px', fontWeight: 600, cursor: 'pointer' }}>
                     <Edit2 size={12} /> Edit
                   </button>
-                  <a href={`https://brew.stradacoffee.com/apply?job=${job.job_id}`} target="_blank" rel="noreferrer"
-                    style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '8px', borderRadius: '10px', backgroundColor: job.is_active ? 'rgba(3,120,148,0.06)' : '#F0EEEC', color: job.is_active ? '#037894' : '#8A8A8D', fontSize: '12px', fontWeight: 600, textDecoration: 'none' }}>
+                  <a href={`/apply?job=${encodeURIComponent(job.job_id)}`} target="_blank" rel="noreferrer"
+                    style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '8px', borderRadius: '10px', backgroundColor: 'rgba(3,120,148,0.06)', color: '#037894', fontSize: '12px', fontWeight: 600, textDecoration: 'none', cursor: 'pointer', border: '1.5px solid rgba(3,120,148,0.2)' }}>
                     Preview ↗
                   </a>
                 </div>
