@@ -41,8 +41,7 @@ export default async function KaryawanDetailPage({ params }: { params: { id: str
 
   const leaveBalanceResult = await supabase
     .from('employee_leave_balance').select('*').eq('employee_id', params.id)
-    .single()
-    .then(r => r).catch(() => ({ data: null }))
+    .maybeSingle()
 
   const docStatusResult = await supabase
     .from('employee_document_status').select('*').eq('employee_id', params.id)

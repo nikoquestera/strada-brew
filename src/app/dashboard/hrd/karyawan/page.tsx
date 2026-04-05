@@ -95,14 +95,14 @@ export default async function KaryawanPage() {
                   const s = statusStyle[emp.status] ?? statusStyle.inactive
 
                   return (
-                    <tr key={emp.id}
-                      onClick={() => { window.location.href = `/dashboard/hrd/karyawan/${emp.id}` }}
-                      style={{ borderBottom: '1px solid rgba(76,72,69,0.05)', cursor: 'pointer' }}
-                      onMouseEnter={e => (e.currentTarget as HTMLElement).style.backgroundColor = '#faf9f7'}
-                      onMouseLeave={e => (e.currentTarget as HTMLElement).style.backgroundColor = 'transparent'}>
-                      <td style={{ padding: '12px 14px', fontSize: '12px', color: '#037894', fontWeight: 600, whiteSpace: 'nowrap' }}>{emp.employee_id}</td>
+                    <tr key={emp.id} style={{ borderBottom: '1px solid rgba(76,72,69,0.05)' }}>
+                      <td style={{ padding: '12px 14px', fontSize: '12px', color: '#037894', fontWeight: 600, whiteSpace: 'nowrap' }}>
+                        <Link href={`/dashboard/hrd/karyawan/${emp.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>{emp.employee_id}</Link>
+                      </td>
                       <td style={{ padding: '12px 14px' }}>
-                        <p style={{ fontSize: '13px', fontWeight: 600, color: '#020000', margin: 0, whiteSpace: 'nowrap' }}>{emp.full_name}</p>
+                        <Link href={`/dashboard/hrd/karyawan/${emp.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                          <p style={{ fontSize: '13px', fontWeight: 600, color: '#020000', margin: 0, whiteSpace: 'nowrap' }}>{emp.full_name}</p>
+                        </Link>
                         <p style={{ fontSize: '11px', color: '#8A8A8D', margin: 0 }}>{emp.department} · {emp.entity}</p>
                       </td>
                       <td style={{ padding: '12px 14px', fontSize: '13px', color: '#4C4845', whiteSpace: 'nowrap' }}>{emp.position}</td>
