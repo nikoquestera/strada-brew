@@ -59,6 +59,39 @@ export default function KaryawanDetailClient({ employee, timeline, evaluations, 
   }
   const s = statusColor[employee.status] || statusColor.inactive
 
+  const [generatingDoc, setGeneratingDoc] = useState<string | null>(null)
+  const [generatedDocs, setGeneratedDocs] = useState<Record<string, string>>({})
+  const [viewingDoc, setViewingDoc] = useState<{ title: string; html: string } | null>(null)
+
+  // Daftar dokumen lengkap
+  const DOC_LIST = [
+    // View only
+    { id: 'peraturan_perusahaan', name: 'Peraturan Perusahaan', type: 'view_only', category: 'Onboarding' },
+    { id: 'pp_singkat_sp', name: 'Peraturan Perusahaan Singkat + SP', type: 'view_only', category: 'Onboarding' },
+    { id: 'sop_seragam', name: 'SOP Seragam', type: 'view_only', category: 'Onboarding' },
+    { id: 'memo_seragam', name: 'Internal Memo Seragam', type: 'view_only', category: 'Onboarding' },
+    { id: 'sop_aset', name: 'SOP Pemakaian Aset & Peralatan', type: 'view_only', category: 'Onboarding' },
+    { id: 'memo_sp', name: 'Memo SP', type: 'view_only', category: 'Disiplin' },
+    { id: 'pp_2pager', name: '2 Pager PP', type: 'view_only', category: 'Onboarding' },
+    { id: 'skd_luar', name: 'SKD Dinas Luar Kota', type: 'view_only', category: 'Operasional' },
+    { id: 'skd_dalam', name: 'SKD Dinas Dalam Kota Jabodetabek', type: 'view_only', category: 'Operasional' },
+    { id: 'sk_fasilitas', name: 'SK Fasilitas Karyawan', type: 'view_only', category: 'Fasilitas' },
+    { id: 'memo_bpjs', name: 'Memo BPJS', type: 'view_only', category: 'Fasilitas' },
+    { id: 'memo_insentif', name: 'Memo Insentif Komisi Merchandise', type: 'view_only', category: 'Fasilitas' },
+    { id: 'memo_fasilitas_umum', name: 'Memo Penggunaan Fasilitas Umum', type: 'view_only', category: 'Fasilitas' },
+    { id: 'program_onboarding', name: 'Program Onboarding Pembukaan Strada', type: 'view_only', category: 'Onboarding' },
+    { id: 'culture', name: 'Culture / Budaya Kerja', type: 'view_only', category: 'Onboarding' },
+    { id: 'offboarding_folder', name: 'Offboarding Folder', type: 'view_only', category: 'Offboarding' },
+    // Generate
+    { id: 'anti_suap', name: 'Kebijakan Anti Suap', type: 'generate', category: 'Legal' },
+    { id: 'pernyataan_pp', name: 'Pernyataan Telah Baca PP', type: 'generate', category: 'Legal' },
+    { id: 'nda', name: 'NDA (Non-Disclosure Agreement)', type: 'generate', category: 'Legal' },
+    { id: 'offering_letter', name: 'Offering Letter', type: 'generate', category: 'Rekrutmen' },
+    { id: 'onboarding_30', name: 'Onboarding 30 Days Plan', type: 'generate', category: 'Onboarding' },
+    { id: '1on1_survey', name: '1ON1 Survey', type: 'generate', category: 'Evaluasi' },
+    { id: '1on1_result', name: '1ON1 Result', type: 'generate', category: 'Evaluasi' },
+    { id: 'exit_survey', name: 'Exit Survey', type: 'generate', category: 'Offboarding' },
+  ]
   async function addTimeline() {
     setSaving(true)
     const { data } = await supabase.from('employee_timeline').insert([{
@@ -91,6 +124,70 @@ export default function KaryawanDetailClient({ employee, timeline, evaluations, 
     setShowAddKPI(false)
     setSaving(false)
   }
+
+  async function generateDocument(docId: string, docName: string) {
+  setGeneratingDoc(docId)
+
+  const res = await fetch('/api/documents/generate', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ employee_id: employee.id, doc_id: docId })
+  })
+  const data = await res.json()
+
+  if (data.docx_base64) {
+    // Template ada — download langsung sebagai DOCX
+    const blob = new Blob(
+      [Uint8Array.from(atob(data.docx_base64), c => c.charCodeAt(0))],
+      { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' }
+    )
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = data.filename || `${docId}_${employee.employee_id}.docx`
+    a.click()
+    URL.revokeObjectURL(url)
+
+    setGeneratingDoc(null)
+    // Refresh doc status
+    router.refresh()
+  } else if (data.mode === 'manual') {
+    // Template belum diupload — tampilkan preview HTML fallback
+    const today = new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })
+    const html = buildFallbackHTML(docId, docName, employee, today)
+    setGeneratedDocs(prev => ({ ...prev, [docId]: html }))
+    setViewingDoc({ title: `${docName} (Template belum diupload)`, html })
+    setGeneratingDoc(null)
+  }
+}
+
+function buildFallbackHTML(docId: string, docName: string, emp: any, today: string) {
+  return `
+    <div style="font-family:Arial,sans-serif;max-width:700px;margin:0 auto;padding:40px;">
+      <div style="background:#FEF8E6;border:1px solid #DE9733;border-radius:8px;padding:12px 16px;margin-bottom:24px;">
+        <p style="margin:0;font-size:13px;color:#DE9733;font-weight:600;">⚠ Template DOCX belum diupload</p>
+        <p style="margin:4px 0 0;font-size:12px;color:#4C4845;">Upload template di menu HRD → Dokumen untuk menggunakan template resmi. Preview ini menggunakan template sementara.</p>
+      </div>
+      <div style="text-align:center;border-bottom:2px solid #020000;padding-bottom:20px;margin-bottom:30px;">
+        <h2 style="margin:0;font-size:20px;">${docName.toUpperCase()}</h2>
+        <p style="color:#037894;margin:4px 0 0;font-size:14px;">Strada Coffee — CV Kopi Terbaik Nusantara</p>
+      </div>
+      <table style="width:100%;border-collapse:collapse;margin-bottom:20px;">
+        ${[
+          ['Nama Lengkap', emp.full_name],
+          ['ID Karyawan', emp.employee_id],
+          ['Jabatan', emp.position],
+          ['Penempatan', emp.outlet || emp.entity],
+          ['Tanggal', today],
+        ].map(([k,v]) => `<tr><td style="padding:6px 0;color:#555;width:160px;">${k}</td><td>: <strong>${v || '[___________]'}</strong></td></tr>`).join('')}
+      </table>
+      <p style="color:#8A8A8D;font-style:italic;font-size:13px;">Konten dokumen akan ditampilkan dari template DOCX setelah diupload.</p>
+      <div style="margin-top:60px;display:flex;justify-content:space-between;">
+        <div style="text-align:center;"><div style="border-bottom:1px solid #020000;width:180px;margin:0 0 6px;"></div><p style="margin:0;font-weight:bold;">${emp.full_name}</p></div>
+        <div style="text-align:center;"><div style="border-bottom:1px solid #020000;width:180px;margin:0 0 6px;"></div><p style="margin:0;font-weight:bold;">Evani Jesslyn</p></div>
+      </div>
+    </div>`
+}
 
   async function toggleDocStatus(templateId: string, currentStatus: string) {
     const nextStatus = currentStatus === 'pending' ? 'presented' : currentStatus === 'presented' ? 'signed' : currentStatus === 'signed' ? 'filed' : 'pending'
@@ -599,50 +696,114 @@ export default function KaryawanDetailClient({ employee, timeline, evaluations, 
             <div>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px', flexWrap: 'wrap', gap: '10px' }}>
                 <h2 style={{ fontSize: '18px', fontWeight: 800, color: '#020000', margin: 0 }}>Dokumen Karyawan</h2>
-                <span style={{ fontSize: '13px', color: '#8A8A8D' }}>{completedDocs}/{totalDocs} dokumen selesai</span>
+                <span style={{ fontSize: '13px', color: '#8A8A8D' }}>{completedDocs}/{totalDocs} checklist selesai</span>
               </div>
 
-              {/* Progress bar */}
+              {/* Progress */}
               <div style={{ height: '6px', borderRadius: '3px', backgroundColor: '#E8E4E0', marginBottom: '24px' }}>
                 <div style={{ height: '100%', borderRadius: '3px', backgroundColor: '#037894', width: `${totalDocs > 0 ? (completedDocs / totalDocs) * 100 : 0}%`, transition: 'width 0.3s' }} />
               </div>
 
-              {Object.entries(docsByCategory).map(([category, templates]) => {
-                const catLabels: Record<string, string> = { onboarding: 'Onboarding', employment: 'Ketenagakerjaan', legal: 'Legal', training: 'Training', offboarding: 'Offboarding', other: 'Lainnya' }
-                return (
-                  <div key={category} style={{ marginBottom: '20px' }}>
-                    <p style={{ fontSize: '11px', fontWeight: 700, color: '#037894', textTransform: 'uppercase', letterSpacing: '2px', margin: '0 0 10px' }}>{catLabels[category] || category}</p>
-                    <div style={{ backgroundColor: '#fff', borderRadius: '16px', border: '1.5px solid #E8E4E0', overflow: 'hidden' }}>
-                      {templates.map((template, idx) => {
-                        const docSt = docStatusMap[template.id]
-                        const status = docSt?.status || 'pending'
-                        const display = docStatusDisplay[status]
-                        return (
-                          <div key={template.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 18px', borderBottom: idx < templates.length - 1 ? '1px solid #F0EEEC' : 'none' }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                              <div onClick={() => toggleDocStatus(template.id, status)}
-                                style={{ width: '22px', height: '22px', borderRadius: '50%', border: `2px solid ${status !== 'pending' ? '#037894' : '#D4CFC9'}`, backgroundColor: status !== 'pending' ? '#037894' : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', flexShrink: 0 }}>
-                                {status !== 'pending' && <Check size={12} color="#fff" />}
-                              </div>
-                              <div>
-                                <p style={{ fontSize: '13px', fontWeight: 500, color: '#020000', margin: 0, textDecoration: status === 'filed' ? 'line-through' : 'none', opacity: status === 'filed' ? 0.6 : 1 }}>{template.name}</p>
-                                {template.description && <p style={{ fontSize: '11px', color: '#8A8A8D', margin: 0 }}>{template.description}</p>}
-                              </div>
+              {/* Generate-able documents */}
+              <div style={{ marginBottom: '24px' }}>
+                <p style={{ fontSize: '11px', fontWeight: 700, color: '#037894', textTransform: 'uppercase', letterSpacing: '2px', margin: '0 0 10px' }}>Generate Dokumen</p>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '10px' }}>
+                  {DOC_LIST.filter(d => d.type === 'generate').map(doc => (
+                    <div key={doc.id} style={{ backgroundColor: '#fff', borderRadius: '14px', padding: '16px', border: '1.5px solid #E8E4E0', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                      <div>
+                        <span style={{ fontSize: '10px', fontWeight: 700, color: '#8A8A8D', textTransform: 'uppercase', letterSpacing: '1px' }}>{doc.category}</span>
+                        <p style={{ fontSize: '13px', fontWeight: 600, color: '#020000', margin: '3px 0 0' }}>{doc.name}</p>
+                      </div>
+                      <div style={{ display: 'flex', gap: '6px' }}>
+                        <button onClick={() => generateDocument(doc.id, doc.name)}
+                          disabled={generatingDoc === doc.id}
+                          style={{ flex: 1, padding: '8px', borderRadius: '8px', backgroundColor: generatingDoc === doc.id ? '#8A8A8D' : '#037894', color: '#fff', fontSize: '12px', fontWeight: 700, border: 'none', cursor: generatingDoc === doc.id ? 'not-allowed' : 'pointer' }}>
+                          {generatingDoc === doc.id ? '⚙ Membuat...' : '+ Generate'}
+                        </button>
+                        {generatedDocs[doc.id] && (
+                          <button onClick={() => setViewingDoc({ title: doc.name, html: generatedDocs[doc.id] })}
+                            style={{ padding: '8px 12px', borderRadius: '8px', backgroundColor: '#E6F4F1', color: '#005353', fontSize: '12px', fontWeight: 700, border: 'none', cursor: 'pointer' }}>
+                            View
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Checklist documents grouped by category */}
+              {Object.entries(
+                DOC_LIST.filter(d => d.type === 'view_only').reduce((acc, d) => {
+                  if (!acc[d.category]) acc[d.category] = []
+                  acc[d.category].push(d)
+                  return acc
+                }, {} as Record<string, typeof DOC_LIST>)
+              ).map(([category, docs]) => (
+                <div key={category} style={{ marginBottom: '20px' }}>
+                  <p style={{ fontSize: '11px', fontWeight: 700, color: '#8A8A8D', textTransform: 'uppercase', letterSpacing: '2px', margin: '0 0 10px' }}>{category}</p>
+                  <div style={{ backgroundColor: '#fff', borderRadius: '16px', border: '1.5px solid #E8E4E0', overflow: 'hidden' }}>
+                    {docs.map((doc, idx) => {
+                      const docSt = docStatusMap[doc.id] || docStatusMap[docTemplates.find(t => t.name === doc.name)?.id || '']
+                      const status = docSt?.status || 'pending'
+                      const display = docStatusDisplay[status]
+                      const templateId = docTemplates.find(t => t.name === doc.name)?.id
+                      return (
+                        <div key={doc.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 18px', borderBottom: idx < docs.length - 1 ? '1px solid #F0EEEC' : 'none' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                            <div onClick={() => templateId && toggleDocStatus(templateId, status)}
+                              style={{ width: '22px', height: '22px', borderRadius: '50%', border: `2px solid ${status !== 'pending' ? '#037894' : '#D4CFC9'}`, backgroundColor: status !== 'pending' ? '#037894' : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: templateId ? 'pointer' : 'default', flexShrink: 0 }}>
+                              {status !== 'pending' && <Check size={12} color="#fff" />}
                             </div>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                              {template.is_required && <span style={{ fontSize: '10px', color: '#FF4F31', fontWeight: 700 }}>WAJIB</span>}
-                              <button onClick={() => toggleDocStatus(template.id, status)}
-                                style={{ padding: '4px 12px', borderRadius: '8px', fontSize: '11px', fontWeight: 700, border: 'none', cursor: 'pointer', backgroundColor: display.bg, color: display.color }}>
-                                {display.label}
-                              </button>
+                            <div>
+                              <p style={{ fontSize: '13px', fontWeight: 500, color: '#020000', margin: 0 }}>{doc.name}</p>
+                              <p style={{ fontSize: '11px', color: '#8A8A8D', margin: 0 }}>View only · Tunjukkan ke karyawan</p>
                             </div>
                           </div>
-                        )
-                      })}
+                          {templateId && (
+                            <button onClick={() => toggleDocStatus(templateId, status)}
+                              style={{ padding: '4px 12px', borderRadius: '8px', fontSize: '11px', fontWeight: 700, border: 'none', cursor: 'pointer', backgroundColor: display.bg, color: display.color, flexShrink: 0 }}>
+                              {display.label}
+                            </button>
+                          )}
+                        </div>
+                      )
+                    })}
+                  </div>
+                </div>
+              ))}
+
+              {/* Document viewer modal */}
+              {viewingDoc && (
+                <div style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.6)', zIndex: 200, display: 'flex', flexDirection: 'column', padding: '20px' }}
+                  onClick={e => { if (e.target === e.currentTarget) setViewingDoc(null) }}>
+                  <div style={{ backgroundColor: '#fff', borderRadius: '16px', maxWidth: '760px', width: '100%', margin: '0 auto', display: 'flex', flexDirection: 'column', maxHeight: '90vh' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 20px', borderBottom: '1px solid #E8E4E0', flexShrink: 0 }}>
+                      <h3 style={{ fontSize: '15px', fontWeight: 700, color: '#020000', margin: 0 }}>{viewingDoc.title}</h3>
+                      <div style={{ display: 'flex', gap: '8px' }}>
+                        <button
+                          onClick={() => {
+                            const w = window.open('', '_blank')
+                            if (w) {
+                              w.document.write(`<!DOCTYPE html><html><head><title>${viewingDoc.title}</title><style>@media print{body{margin:0}}</style></head><body>${viewingDoc.html}<script>window.onload=()=>window.print()</script></body></html>`)
+                              w.document.close()
+                            }
+                          }}
+                          style={{ padding: '7px 16px', borderRadius: '8px', backgroundColor: '#020000', color: '#fff', fontSize: '12px', fontWeight: 700, border: 'none', cursor: 'pointer' }}>
+                          🖨 Print / Save PDF
+                        </button>
+                        <button onClick={() => setViewingDoc(null)}
+                          style={{ padding: '7px 12px', borderRadius: '8px', backgroundColor: '#F0EEEC', color: '#4C4845', fontSize: '12px', fontWeight: 700, border: 'none', cursor: 'pointer' }}>
+                          ✕ Tutup
+                        </button>
+                      </div>
+                    </div>
+                    <div style={{ overflowY: 'auto', flex: 1, padding: '4px' }}>
+                      <div dangerouslySetInnerHTML={{ __html: viewingDoc.html }} />
                     </div>
                   </div>
-                )
-              })}
+                </div>
+              )}
             </div>
           )}
 

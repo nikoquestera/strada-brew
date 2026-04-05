@@ -131,10 +131,21 @@ export default function RekrutmenClient({ initialApplicants }: { initialApplican
 
   const getQuestBadge = (applicant: Applicant) => {
     const score = applicant.applicant_quest_scores?.[0]
+    
+    // Belum ada record sama sekali
     if (!score) return { label: '—', bg: '#F0EEEC', color: '#8A8A8D' }
+    
+    // Ada record tapi belum diproses
     if (score.status === 'pending') return { label: '⏳', bg: '#FEF8E6', color: '#DE9733' }
     if (score.status === 'processing') return { label: '⚙', bg: '#E6F0F4', color: '#037894' }
     if (score.status === 'failed') return { label: '⚠', bg: '#FFF0EE', color: '#FF4F31' }
+    
+    // Completed tapi score null atau 0 — juga pending state
+    if (score.status === 'completed' && !score.overall_score) {
+      return { label: '⏳', bg: '#FEF8E6', color: '#DE9733' }
+    }
+    
+    // Completed dengan score valid
     const s = score.overall_score || 0
     if (s >= 75) return { label: `${s}`, bg: '#E6F4F1', color: '#005353' }
     if (s >= 50) return { label: `${s}`, bg: '#FEF8E6', color: '#DE9733' }

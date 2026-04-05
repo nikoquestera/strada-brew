@@ -21,7 +21,7 @@ export default async function KaryawanDetailPage({ params }: { params: { id: str
     supabase.from('employee_kpis').select('*').eq('employee_id', params.id).order('created_at', { ascending: false }),
     supabase.from('employee_leaves').select('*').eq('employee_id', params.id).order('created_at', { ascending: false }),
     supabase.from('employee_leave_balance').select('*').eq('employee_id', params.id).single(),
-    supabase.from('document_checklist_templates').select('*').eq('is_active', true).order('sort_order'),
+    supabase.from('document_templates').select('*').order('category'),
     supabase.from('employee_document_status').select('*').eq('employee_id', params.id),
   ])
 
