@@ -2,7 +2,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
-import { ArrowLeft, User, Clock, Star, Calendar, FileText, Plus, Check, Circle } from 'lucide-react'
+import { ArrowLeft, User, Clock, Star, Calendar, FileText, Plus, Check } from 'lucide-react'
 
 type Tab = 'profil' | 'timeline' | 'evaluasi' | 'kpi' | 'cuti' | 'dokumen'
 
@@ -126,40 +126,40 @@ export default function KaryawanDetailClient({ employee, timeline, evaluations, 
   }
 
   async function generateDocument(docId: string, docName: string) {
-  setGeneratingDoc(docId)
+    setGeneratingDoc(docId)
+    try {
+      const res = await fetch('/api/documents/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ employee_id: employee.id, doc_id: docId })
+      })
+      const data = await res.json()
 
-  const res = await fetch('/api/documents/generate', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ employee_id: employee.id, doc_id: docId })
-  })
-  const data = await res.json()
-
-  if (data.docx_base64) {
-    // Template ada — download langsung sebagai DOCX
-    const blob = new Blob(
-      [Uint8Array.from(atob(data.docx_base64), c => c.charCodeAt(0))],
-      { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' }
-    )
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url
-    a.download = data.filename || `${docId}_${employee.employee_id}.docx`
-    a.click()
-    URL.revokeObjectURL(url)
-
-    setGeneratingDoc(null)
-    // Refresh doc status
-    router.refresh()
-  } else if (data.mode === 'manual') {
-    // Template belum diupload — tampilkan preview HTML fallback
-    const today = new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })
-    const html = buildFallbackHTML(docId, docName, employee, today)
-    setGeneratedDocs(prev => ({ ...prev, [docId]: html }))
-    setViewingDoc({ title: `${docName} (Template belum diupload)`, html })
-    setGeneratingDoc(null)
+      if (data.docx_base64) {
+        const blob = new Blob(
+          [Uint8Array.from(atob(data.docx_base64), c => c.charCodeAt(0))],
+          { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' }
+        )
+        const url = URL.createObjectURL(blob)
+        const a = document.createElement('a')
+        a.href = url
+        a.download = data.filename || `${docId}_${employee.employee_id}.docx`
+        a.click()
+        URL.revokeObjectURL(url)
+        router.refresh()
+      } else {
+        // Template belum diupload atau fallback — tampilkan preview HTML
+        const today = new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })
+        const html = buildFallbackHTML(docId, docName, employee, today)
+        setGeneratedDocs(prev => ({ ...prev, [docId]: html }))
+        setViewingDoc({ title: `${docName}${data.template_missing ? ' (Template belum diupload)' : ''}`, html })
+      }
+    } catch (err) {
+      console.error('generateDocument error:', err)
+    } finally {
+      setGeneratingDoc(null)
+    }
   }
-}
 
 function buildFallbackHTML(docId: string, docName: string, emp: any, today: string) {
   return `
@@ -213,13 +213,6 @@ function buildFallbackHTML(docId: string, docName: string, emp: any, today: stri
     { key: 'cuti', label: 'Cuti', icon: <Calendar size={14} />, count: leaveList.length },
     { key: 'dokumen', label: 'Dokumen', icon: <FileText size={14} /> },
   ]
-
-  const docsByCategory = docTemplates.reduce((acc, t) => {
-    const cat = t.category || 'other'
-    if (!acc[cat]) acc[cat] = []
-    acc[cat].push(t)
-    return acc
-  }, {} as Record<string, any[]>)
 
   const docStatusDisplay: Record<string, { label: string; color: string; bg: string }> = {
     pending: { label: 'Belum', color: '#8A8A8D', bg: '#F0EEEC' },
