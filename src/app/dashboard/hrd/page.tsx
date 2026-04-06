@@ -66,7 +66,7 @@ export default async function HRDOverview() {
         <div className="grid grid-cols-2 gap-3">
           {quickActions.map(item => (
             <a key={item.label} href={item.href}
-              className="flex items-center px-4 py-3 rounded-xl text-sm font-medium transition-all"
+              className="brew-action-link flex items-center px-4 py-3 rounded-xl text-sm font-medium"
               style={{ backgroundColor: '#E4DED8', color: '#020000' }}>
               {item.label}
             </a>

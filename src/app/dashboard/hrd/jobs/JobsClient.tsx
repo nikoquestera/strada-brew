@@ -91,6 +91,8 @@ export default function JobsClient({ initialJobs }: { initialJobs: JobPosting[] 
           .form-grid-2 { grid-template-columns: 1fr !important; }
           .form-grid-3 { grid-template-columns: 1fr !important; }
         }
+        .jobs-edit-btn:hover { background-color: #F0EEEC !important; border-color: #4C4845 !important; }
+        .jobs-preview-btn:hover { background-color: rgba(3,120,148,0.12) !important; }
       `}</style>
 
       <div style={{ padding: '24px', minHeight: '100vh' }}>
@@ -100,8 +102,8 @@ export default function JobsClient({ initialJobs }: { initialJobs: JobPosting[] 
             <h1 style={{ fontSize: '24px', fontWeight: 800, color: '#020000', margin: 0 }}>Job Posting</h1>
             <p style={{ fontSize: '13px', color: '#8A8A8D', margin: '4px 0 0' }}>{jobs.filter(j => j.is_active).length} aktif · {jobs.filter(j => !j.is_active).length} tidak aktif</p>
           </div>
-          <button onClick={openNew}
-            style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 20px', borderRadius: '12px', backgroundColor: '#037894', color: '#fff', fontWeight: 700, fontSize: '13px', border: 'none', cursor: 'pointer' }}>
+          <button onClick={openNew} className="brew-btn-teal"
+            style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 20px', borderRadius: '12px', backgroundColor: '#037894', color: '#fff', fontWeight: 700, fontSize: '13px', border: 'none', cursor: 'pointer', transition: 'background-color 0.15s' }}>
             <Plus size={16} /> Buat Job Post
           </button>
         </div>
@@ -183,17 +185,17 @@ export default function JobsClient({ initialJobs }: { initialJobs: JobPosting[] 
                 )}
 
                 <div style={{ display: 'flex', gap: '8px' }}>
-                  <button onClick={() => openEdit(job)}
-                    style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', padding: '8px', borderRadius: '10px', border: '1.5px solid #E8E4E0', backgroundColor: 'transparent', color: '#4C4845', fontSize: '12px', fontWeight: 600, cursor: 'pointer' }}>
+                  <button onClick={() => openEdit(job)} className="jobs-edit-btn"
+                    style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', padding: '8px', borderRadius: '10px', border: '1.5px solid #E8E4E0', backgroundColor: 'transparent', color: '#4C4845', fontSize: '12px', fontWeight: 600, cursor: 'pointer', transition: 'all 0.15s' }}>
                     <Edit2 size={12} /> Edit
                   </button>
-                  {/* FIX: Preview now links directly to job detail page, works for active & inactive */}
                   <a
                     href={`/dashboard/hrd/jobs/${job.id}`}
                     target="_blank"
                     rel="noreferrer"
                     onClick={e => e.stopPropagation()}
-                    style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '8px', borderRadius: '10px', backgroundColor: 'rgba(3,120,148,0.06)', color: '#037894', fontSize: '12px', fontWeight: 600, textDecoration: 'none', border: '1.5px solid rgba(3,120,148,0.2)' }}>
+                    className="jobs-preview-btn"
+                    style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '8px', borderRadius: '10px', backgroundColor: 'rgba(3,120,148,0.06)', color: '#037894', fontSize: '12px', fontWeight: 600, textDecoration: 'none', border: '1.5px solid rgba(3,120,148,0.2)', transition: 'background-color 0.15s' }}>
                     Preview ↗
                   </a>
                 </div>

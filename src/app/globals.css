@@ -29,6 +29,50 @@ body { background-color: #E4DED8; margin: 0; }
 }
 .sidebar-mobile-overlay.open { display: block; }
 
+/* ── Brew interactive hover states ────────────────────────── */
+
+/* Sidebar nav items */
+.brew-nav-btn:hover {
+  background: rgba(255,255,255,0.09) !important;
+  color: rgba(228,222,216,0.95) !important;
+}
+.brew-nav-btn:hover svg { opacity: 1 !important; }
+
+/* Primary teal buttons */
+.brew-btn-teal:hover { background-color: #026a80 !important; }
+/* Dark/black buttons */
+.brew-btn-dark:hover { background-color: #1c1a1a !important; }
+
+/* Table rows – click target feedback */
+.brew-table-row:hover { background-color: #F0EEEC !important; }
+.brew-table-row { transition: background-color 0.1s; }
+
+/* Clickable cards */
+.brew-card:hover {
+  border-color: #037894 !important;
+  box-shadow: 0 4px 18px rgba(3,120,148,0.12) !important;
+  transform: translateY(-1px);
+}
+.brew-card { transition: all 0.15s; }
+
+/* Quick-action links (overview page) */
+.brew-action-link {
+  transition: all 0.15s !important;
+  text-decoration: none !important;
+}
+.brew-action-link:hover {
+  background-color: #d6d0c9 !important;
+  color: #020000 !important;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* Generic text links inside dark surfaces */
+.brew-back-btn:hover { color: #E4DED8 !important; }
+
+/* Logout / icon buttons in sidebar */
+.brew-icon-btn:hover { color: rgba(228,222,216,0.75) !important; }
+
 /* Responsive table */
 @media (max-width: 768px) {
   .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }

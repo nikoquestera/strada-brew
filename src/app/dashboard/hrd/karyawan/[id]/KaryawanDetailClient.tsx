@@ -297,7 +297,9 @@ function buildFallbackHTML(docId: string, docName: string, emp: any, today: stri
           .kpi-grid { grid-template-columns: 1fr !important; }
         }
         .tab-btn { white-space: nowrap; border: none; cursor: pointer; transition: all 0.15s; }
-        .tab-btn:hover { color: #020000 !important; }
+        .tab-btn:hover { color: #ffffff !important; background: rgba(255,255,255,0.07) !important; }
+        .emp-form-btn:hover { opacity: 0.85 !important; }
+        .emp-cancel-btn:hover { background: #E8E4E0 !important; }
       `}</style>
 
       <div style={{ minHeight: '100vh', backgroundColor: '#F7F5F2' }}>
@@ -306,7 +308,8 @@ function buildFallbackHTML(docId: string, docName: string, emp: any, today: stri
         <div style={{ backgroundColor: '#020000', padding: '0' }}>
           <div style={{ padding: '16px 24px', display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap' }} className="emp-header">
             <button onClick={() => router.push('/dashboard/hrd/karyawan')}
-              style={{ color: 'rgba(228,222,216,0.5)', background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px', padding: 0, flexShrink: 0 }}>
+              className="brew-back-btn"
+              style={{ color: 'rgba(228,222,216,0.5)', background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px', padding: 0, flexShrink: 0, transition: 'color 0.15s' }}>
               <ArrowLeft size={15} /> Karyawan
             </button>
 
@@ -495,8 +498,8 @@ function buildFallbackHTML(docId: string, docName: string, emp: any, today: stri
             <div>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
                 <h2 style={{ fontSize: '18px', fontWeight: 800, color: '#020000', margin: 0 }}>Timeline Karyawan</h2>
-                <button onClick={() => setShowAddTimeline(true)}
-                  style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '8px 16px', borderRadius: '10px', backgroundColor: '#037894', color: '#fff', fontSize: '13px', fontWeight: 600, border: 'none', cursor: 'pointer' }}>
+                <button onClick={() => setShowAddTimeline(true)} className="brew-btn-teal"
+                  style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '8px 16px', borderRadius: '10px', backgroundColor: '#037894', color: '#fff', fontSize: '13px', fontWeight: 600, border: 'none', cursor: 'pointer', transition: 'background-color 0.15s' }}>
                   <Plus size={14} /> Tambah Event
                 </button>
               </div>
@@ -654,8 +657,8 @@ function buildFallbackHTML(docId: string, docName: string, emp: any, today: stri
             <div>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
                 <h2 style={{ fontSize: '18px', fontWeight: 800, color: '#020000', margin: 0 }}>KPI</h2>
-                <button onClick={() => setShowAddKPI(true)}
-                  style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '8px 16px', borderRadius: '10px', backgroundColor: '#037894', color: '#fff', fontSize: '13px', fontWeight: 600, border: 'none', cursor: 'pointer' }}>
+                <button onClick={() => setShowAddKPI(true)} className="brew-btn-teal"
+                  style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '8px 16px', borderRadius: '10px', backgroundColor: '#037894', color: '#fff', fontSize: '13px', fontWeight: 600, border: 'none', cursor: 'pointer', transition: 'background-color 0.15s' }}>
                   <Plus size={14} /> Set KPI
                 </button>
               </div>
@@ -735,8 +738,8 @@ function buildFallbackHTML(docId: string, docName: string, emp: any, today: stri
             <div>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', flexWrap: 'wrap', gap: '10px' }}>
                 <h2 style={{ fontSize: '18px', fontWeight: 800, color: '#020000', margin: 0 }}>Cuti & Izin</h2>
-                <button onClick={() => setShowAddLeave(true)}
-                  style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '8px 16px', borderRadius: '10px', backgroundColor: '#037894', color: '#fff', fontSize: '13px', fontWeight: 600, border: 'none', cursor: 'pointer' }}>
+                <button onClick={() => setShowAddLeave(true)} className="brew-btn-teal"
+                  style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '8px 16px', borderRadius: '10px', backgroundColor: '#037894', color: '#fff', fontSize: '13px', fontWeight: 600, border: 'none', cursor: 'pointer', transition: 'background-color 0.15s' }}>
                   <Plus size={14} /> Ajukan Cuti
                 </button>
               </div>

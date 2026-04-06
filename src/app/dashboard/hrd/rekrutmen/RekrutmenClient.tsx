@@ -94,9 +94,10 @@ function QuestScoreWidget({ applicantId, scoreData, onScored }: {
   return (
     <button
       onClick={trigger}
+      className="rekr-score-btn"
       style={{
         padding: '3px 9px', borderRadius: '20px', fontSize: '11px', fontWeight: 700,
-        border: 'none', cursor: 'pointer', whiteSpace: 'nowrap',
+        border: 'none', cursor: 'pointer', whiteSpace: 'nowrap', transition: 'opacity 0.15s',
         backgroundColor: status === 'failed' ? '#FFF0EE' : '#020000',
         color: status === 'failed' ? '#FF4F31' : '#8FC6C5',
       }}>
@@ -224,6 +225,8 @@ export default function RekrutmenClient({ initialApplicants }: { initialApplican
         @media (max-width: 768px) { .ats-layout { flex-direction: column !important; } .ats-sidebar-desktop { display: none !important; } .ats-cards { grid-template-columns: 1fr !important; } }
         @media (min-width: 769px) { .ats-mobile-filter-btn { display: none !important; } .ats-mobile-sidebar { display: none !important; } }
         @keyframes quest-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        .rekr-score-btn:hover { opacity: 0.85 !important; }
+        .rekr-portal-link:hover { background-color: rgba(3,120,148,0.08) !important; }
       `}</style>
       <div style={{ minHeight: '100vh', backgroundColor: '#F7F5F2' }}>
         <div style={{ padding: '20px 24px', backgroundColor: '#E4DED8', borderBottom: '1px solid rgba(0,0,0,0.06)' }}>
@@ -237,8 +240,8 @@ export default function RekrutmenClient({ initialApplicants }: { initialApplican
                 style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '8px 14px', borderRadius: '10px', backgroundColor: '#020000', color: '#fff', fontSize: '13px', fontWeight: 600, border: 'none', cursor: 'pointer' }}>
                 <Filter size={14} /> Filter
               </button>
-              <a href="/apply" target="_blank" rel="noreferrer"
-                style={{ padding: '8px 16px', borderRadius: '10px', border: '1.5px solid #037894', color: '#037894', fontSize: '13px', fontWeight: 600, textDecoration: 'none', whiteSpace: 'nowrap' }}>
+              <a href="/apply" target="_blank" rel="noreferrer" className="rekr-portal-link"
+                style={{ padding: '8px 16px', borderRadius: '10px', border: '1.5px solid #037894', color: '#037894', fontSize: '13px', fontWeight: 600, textDecoration: 'none', whiteSpace: 'nowrap', transition: 'background-color 0.15s' }}>
                 Portal ↗
               </a>
             </div>

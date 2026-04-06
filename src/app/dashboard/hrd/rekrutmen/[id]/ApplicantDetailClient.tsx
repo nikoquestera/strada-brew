@@ -129,12 +129,15 @@ export default function ApplicantDetailClient({ applicant }: Props) {
       <style>{`
         @keyframes quest-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         @media (max-width: 768px) { .detail-grid { grid-template-columns: 1fr !important; } .stage-select { font-size: 12px !important; padding: 8px 10px !important; } }
+        .appl-back:hover { color: rgba(228,222,216,0.9) !important; }
+        .appl-run-score:hover:not(:disabled) { opacity: 0.85 !important; }
       `}</style>
 
       <div style={{ minHeight: '100vh', backgroundColor: '#F7F5F2' }}>
         {/* Top bar */}
         <div style={{ backgroundColor: '#020000', padding: '16px 24px', display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap' }}>
-          <button onClick={() => router.back()} style={{ color: 'rgba(228,222,216,0.6)', background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px', padding: 0 }}>
+          <button onClick={() => router.back()} className="appl-back"
+            style={{ color: 'rgba(228,222,216,0.6)', background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px', padding: 0, transition: 'color 0.15s' }}>
             <ArrowLeft size={16} /> Kembali
           </button>
           <div style={{ flex: 1 }}>
@@ -291,8 +294,8 @@ export default function ApplicantDetailClient({ applicant }: Props) {
                   <Star size={14} color="#037894" />
                   <span style={{ fontSize: '12px', fontWeight: 700, color: '#8FC6C5', letterSpacing: '2px', textTransform: 'uppercase' }}>Quest AI</span>
                 </div>
-                <button onClick={handleRunScore} disabled={isProcessing}
-                  style={{ padding: '5px 14px', borderRadius: '10px', border: 'none', cursor: isProcessing ? 'not-allowed' : 'pointer', fontSize: '11px', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '5px', backgroundColor: isProcessing ? 'rgba(3,120,148,0.15)' : '#037894', color: isProcessing ? '#037894' : '#fff' }}>
+                <button onClick={handleRunScore} disabled={isProcessing} className="appl-run-score"
+                  style={{ padding: '5px 14px', borderRadius: '10px', border: 'none', cursor: isProcessing ? 'not-allowed' : 'pointer', fontSize: '11px', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '5px', backgroundColor: isProcessing ? 'rgba(3,120,148,0.15)' : '#037894', color: isProcessing ? '#037894' : '#fff', transition: 'opacity 0.15s' }}>
                   {isProcessing
                     ? <><span style={{ display: 'inline-block', animation: 'quest-spin 1s linear infinite' }}>⚙</span> Scoring...</>
                     : scores.length > 0 ? '↻ Re-run Score' : '✦ Run Score'}

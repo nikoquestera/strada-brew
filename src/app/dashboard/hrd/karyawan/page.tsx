@@ -60,6 +60,9 @@ export default async function KaryawanPage() {
           .karyawan-hide { display: none !important; }
           .karyawan-header { flex-direction: column !important; align-items: flex-start !important; }
         }
+        .karyawan-row { transition: background-color 0.1s; }
+        .karyawan-row:hover { background-color: #F0EEEC !important; cursor: pointer; }
+        .karyawan-row:hover a { color: #026a80 !important; }
       `}</style>
       <div style={{ padding: '24px', minHeight: '100vh' }}>
 
@@ -70,8 +73,8 @@ export default async function KaryawanPage() {
             <h1 style={{ fontSize: '24px', fontWeight: 800, color: '#020000', margin: 0 }}>Data Karyawan</h1>
             <p style={{ fontSize: '13px', color: '#8A8A8D', margin: '4px 0 0' }}>{stats.total} karyawan terdaftar</p>
           </div>
-          <Link href="/dashboard/hrd/karyawan/baru"
-            style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '10px 20px', borderRadius: '12px', backgroundColor: '#037894', color: '#fff', fontWeight: 700, fontSize: '13px', textDecoration: 'none' }}>
+          <Link href="/dashboard/hrd/karyawan/baru" className="brew-btn-teal"
+            style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '10px 20px', borderRadius: '12px', backgroundColor: '#037894', color: '#fff', fontWeight: 700, fontSize: '13px', textDecoration: 'none', transition: 'background-color 0.15s' }}>
             + Tambah Karyawan
           </Link>
         </div>
@@ -111,7 +114,7 @@ export default async function KaryawanPage() {
                   const s = statusStyle[emp.status] ?? statusStyle.inactive
 
                   return (
-                    <tr key={emp.id} style={{ borderBottom: '1px solid rgba(76,72,69,0.05)' }}>
+                    <tr key={emp.id} className="karyawan-row" style={{ borderBottom: '1px solid rgba(76,72,69,0.05)' }}>
                       <td style={{ padding: '12px 14px', fontSize: '12px', color: '#037894', fontWeight: 600, whiteSpace: 'nowrap' }}>
                         <Link href={`/dashboard/hrd/karyawan/${emp.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>{emp.employee_id}</Link>
                       </td>
