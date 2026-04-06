@@ -98,11 +98,36 @@ export async function POST(request: NextRequest) {
       } : undefined,
     })
 
+    // Clamp sub-scores to their configured maximums — AI sometimes exceeds them
+    const expMax = defaultWeights?.experience_weight ?? 25
+    const certMax = defaultWeights?.certification_weight ?? 20
+    const motivMax = defaultWeights?.motivation_weight ?? 20
+    const profMax = defaultWeights?.profile_weight ?? 20
+    const compMax = 15
+
+    const clampedExp  = Math.min(expMax,   Math.max(0, result.experience_score    || 0))
+    const clampedCert = Math.min(certMax,  Math.max(0, result.certification_score || 0))
+    const clampedMotiv= Math.min(motivMax, Math.max(0, result.motivation_score    || 0))
+    const clampedProf = Math.min(profMax,  Math.max(0, result.profile_score       || 0))
+    const clampedComp = Math.min(compMax,  Math.max(0, result.completeness_score  || 0))
+    // overall_score is the authoritative sum — no more AI-invented totals
+    const computedOverall = clampedExp + clampedCert + clampedMotiv + clampedProf + clampedComp
+
+    const sanitisedResult = {
+      ...result,
+      experience_score:    clampedExp,
+      certification_score: clampedCert,
+      motivation_score:    clampedMotiv,
+      profile_score:       clampedProf,
+      completeness_score:  clampedComp,
+      overall_score:       computedOverall,
+    }
+
     // UPDATE the specific record by ID — preserves history
     await supabase
       .from('applicant_quest_scores')
       .update({
-        ...result,
+        ...sanitisedResult,
         status: 'completed',
         processed_at: new Date().toISOString(),
       })
@@ -112,11 +137,11 @@ export async function POST(request: NextRequest) {
     if (applicant_id) {
       await supabase
         .from('applicants')
-        .update({ quest_score: result.overall_score })
+        .update({ quest_score: sanitisedResult.overall_score })
         .eq('id', applicant_id)
     }
 
-    return NextResponse.json({ success: true, score: result.overall_score, score_id: scoreId })
+    return NextResponse.json({ success: true, score: sanitisedResult.overall_score, score_id: scoreId })
   } catch (err) {
     console.error('Quest scoring error:', err)
     await supabase
