@@ -37,6 +37,13 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Subject not found' }, { status: 404 })
   }
 
+  // Fetch default scoring weights
+  const { data: defaultWeights } = await supabase
+    .from('scoring_weights')
+    .select('*')
+    .eq('is_default', true)
+    .single()
+
   // INSERT a new score record — gives us history per run
   const { data: scoreRecord, error: insertError } = await supabase
     .from('applicant_quest_scores')
@@ -70,6 +77,7 @@ export async function POST(request: NextRequest) {
         domicile: subject.domicile,
         position_applied: subject.position_applied,
         birth_date: subject.birth_date,
+        screening_notes: subject.screening_notes,
       } : {
         full_name: subject.full_name,
         has_cafe_experience: false,
@@ -79,6 +87,7 @@ export async function POST(request: NextRequest) {
         domicile: subject.outlet || subject.entity,
         motivation: `Karyawan aktif dengan posisi ${subject.position} di ${subject.outlet || subject.entity}`,
       },
+      scoringWeights: defaultWeights ?? undefined,
       job: jobContext ? {
         title: jobContext.title,
         min_experience_years: jobContext.min_experience_years,

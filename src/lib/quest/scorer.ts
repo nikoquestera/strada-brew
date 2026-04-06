@@ -1,7 +1,15 @@
 import { QuestScoringInput, QuestScoringResult } from './types'
 
 export async function runQuestScoring(input: QuestScoringInput): Promise<QuestScoringResult> {
-  const { applicant, job } = input
+  const { applicant, job, scoringWeights } = input
+
+  const w = scoringWeights ?? {
+    experience_weight: 25,
+    certification_weight: 20,
+    education_weight: 15,
+    motivation_weight: 20,
+    profile_weight: 20,
+  }
 
   // Compute age from birth_date if available
   const age = applicant.birth_date
@@ -20,7 +28,8 @@ export async function runQuestScoring(input: QuestScoringInput): Promise<QuestSc
       : `Sertifikasi: tidak ada sertifikasi barista.`,
     `Kehadiran digital: ${applicant.instagram_url ? 'memiliki profil Instagram aktif' : 'tidak ada profil Instagram tercantum'}.`,
     `Motivasi / catatan: "${applicant.motivation || 'tidak diisi'}"`,
-  ].join(' ')
+    applicant.screening_notes ? `Catatan HR untuk evaluasi ini: "${applicant.screening_notes}"` : '',
+  ].filter(Boolean).join(' ')
 
   const jobNarrative = job
     ? [
@@ -59,14 +68,25 @@ Bayangkan kamu mewawancarai kandidat ini langsung. Pertimbangkan semua faktor be
 
 Turunkan sub-score sebagai dimensi holistic fit (bukan checklist terpisah). overall_score mencerminkan probability of success — skor 70+ berarti kandidat solid, 85+ sangat direkomendasikan.
 
+${scoringWeights?.custom_note ? `Panduan bobot khusus HR: "${scoringWeights.custom_note}"` : ''}
+
+BOBOT PENILAIAN YANG DIGUNAKAN (sesuai konfigurasi HR):
+- Pengalaman kafe: ${w.experience_weight} poin
+- Sertifikasi: ${w.certification_weight} poin
+- Pendidikan: ${w.education_weight} poin (digabungkan ke profile_score)
+- Motivasi & kepribadian: ${w.motivation_weight} poin
+- Profil umum: ${w.profile_weight} poin
+
+Gunakan bobot di atas sebagai panduan prioritas — dimensi berbobot lebih tinggi = lebih penting dalam overall_score.
+
 Berikan response dalam format JSON berikut (TANPA teks lain di luar JSON):
 {
   "overall_score": <0-100>,
-  "experience_score": <0-25, kontribusi pengalaman dan kematangan kerja>,
-  "certification_score": <0-20, sertifikasi dan kompetensi teknis>,
+  "experience_score": <0-${w.experience_weight}, kontribusi pengalaman dan kematangan kerja>,
+  "certification_score": <0-${w.certification_weight}, sertifikasi dan kompetensi teknis>,
   "completeness_score": <0-15, kelengkapan dan kualitas informasi yang diberikan>,
-  "motivation_score": <0-20, kekuatan motivasi, kecocokan nilai, antusiasme>,
-  "profile_score": <0-20, kecocokan profil keseluruhan — lokasi, usia, pendidikan, kehadiran digital>,
+  "motivation_score": <0-${w.motivation_weight}, kekuatan motivasi, kecocokan nilai, antusiasme>,
+  "profile_score": <0-${w.profile_weight}, kecocokan profil keseluruhan — lokasi, usia, pendidikan, kehadiran digital>,
   "summary": "<1-2 kalimat ringkasan kandidat dalam Bahasa Indonesia>",
   "strengths": ["<kekuatan nyata 1>", "<kekuatan nyata 2>", "<kekuatan nyata 3>"],
   "concerns": ["<risiko atau kekurangan yang perlu diperhatikan HR>"],

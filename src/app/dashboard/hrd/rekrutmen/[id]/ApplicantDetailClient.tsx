@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { PIPELINE_STAGES, PipelineStage } from '@/lib/types'
-import { ArrowLeft, Phone, Mail, AtSign, MapPin, Calendar, Briefcase, Star, MessageSquare, Send, Clock } from 'lucide-react'
+import { ArrowLeft, Phone, Mail, AtSign, MapPin, Calendar, Briefcase, Star, MessageSquare, Send, Clock, Edit2 } from 'lucide-react'
 
 interface QuestScore {
   id: string
@@ -57,6 +57,50 @@ export default function ApplicantDetailClient({ applicant }: Props) {
   const [expandedHistory, setExpandedHistory] = useState(false)
   const scoresRef = useRef(scores)
   useEffect(() => { scoresRef.current = scores }, [scores])
+
+  // Screening Notes
+  const [screeningNotes, setScreeningNotes] = useState<string>(applicant.screening_notes || '')
+  const [savingNotes, setSavingNotes] = useState(false)
+  const [notesSaved, setNotesSaved] = useState(false)
+
+  async function handleSaveNotes() {
+    setSavingNotes(true)
+    await supabase.from('applicants').update({ screening_notes: screeningNotes }).eq('id', applicant.id)
+    setSavingNotes(false)
+    setNotesSaved(true)
+    setTimeout(() => setNotesSaved(false), 2000)
+  }
+
+  // Edit applicant
+  const [showEditModal, setShowEditModal] = useState(false)
+  const [editForm, setEditForm] = useState({
+    full_name: applicant.full_name || '',
+    email: applicant.email || '',
+    phone: applicant.phone || '',
+    birth_date: applicant.birth_date || '',
+    domicile: applicant.domicile || '',
+    position_applied: applicant.position_applied || '',
+    outlet_preference: applicant.outlet_preference || '',
+    education_level: applicant.education_level || '',
+    has_cafe_experience: applicant.has_cafe_experience || false,
+    cafe_experience_years: applicant.cafe_experience_years || 0,
+    cafe_experience_detail: applicant.cafe_experience_detail || '',
+    has_barista_cert: applicant.has_barista_cert || false,
+    cert_detail: applicant.cert_detail || '',
+    instagram_url: applicant.instagram_url || '',
+    hr_notes: applicant.hr_notes || '',
+  })
+  const [savingEdit, setSavingEdit] = useState(false)
+  const [editData, setEditData] = useState(applicant)
+  const setEdit = (k: string, v: any) => setEditForm(f => ({ ...f, [k]: v }))
+
+  async function handleSaveEdit() {
+    setSavingEdit(true)
+    const { data } = await supabase.from('applicants').update(editForm).eq('id', applicant.id).select().single()
+    if (data) setEditData(data)
+    setSavingEdit(false)
+    setShowEditModal(false)
+  }
 
   const latestScore = scores[0]
   const isProcessing = latestScore?.status === 'processing' || scoring
@@ -141,9 +185,13 @@ export default function ApplicantDetailClient({ applicant }: Props) {
             <ArrowLeft size={16} /> Kembali
           </button>
           <div style={{ flex: 1 }}>
-            <p style={{ color: '#ffffff', fontWeight: 700, fontSize: '16px', margin: 0 }}>{applicant.full_name}</p>
-            <p style={{ color: '#8FC6C5', fontSize: '12px', margin: 0 }}>{applicant.position_applied}{applicant.outlet_preference ? ` · ${applicant.outlet_preference}` : ''}</p>
+            <p style={{ color: '#ffffff', fontWeight: 700, fontSize: '16px', margin: 0 }}>{editData.full_name}</p>
+            <p style={{ color: '#8FC6C5', fontSize: '12px', margin: 0 }}>{editData.position_applied}{editData.outlet_preference ? ` · ${editData.outlet_preference}` : ''}</p>
           </div>
+          <button onClick={() => setShowEditModal(true)} className="appl-back"
+            style={{ color: 'rgba(228,222,216,0.6)', background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '8px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px', padding: '6px 12px', transition: 'all 0.15s' }}>
+            <Edit2 size={13} /> Edit Data
+          </button>
           <select value={currentStage} onChange={e => handleStageChange(e.target.value as PipelineStage)}
             disabled={changingStage} className="stage-select"
             style={{ padding: '8px 14px', borderRadius: '10px', border: 'none', backgroundColor: stageInfo?.color || '#037894', color: '#fff', fontWeight: 700, fontSize: '13px', cursor: 'pointer', outline: 'none' }}>
@@ -161,12 +209,12 @@ export default function ApplicantDetailClient({ applicant }: Props) {
               <h3 style={{ fontSize: '14px', fontWeight: 700, color: '#020000', margin: '0 0 16px' }}>Informasi Kontak</h3>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
                 {[
-                  { icon: <Phone size={14} />, label: 'No. HP', value: applicant.phone },
-                  { icon: <Mail size={14} />, label: 'Email', value: applicant.email },
-                  { icon: <MapPin size={14} />, label: 'Domisili', value: applicant.domicile || '-' },
-                  { icon: <AtSign size={14} />, label: 'Instagram', value: applicant.instagram_url || '-' },
-                  { icon: <Calendar size={14} />, label: 'Tgl Lahir', value: applicant.birth_date ? new Date(applicant.birth_date).toLocaleDateString('id-ID') : '-' },
-                  { icon: <Briefcase size={14} />, label: 'Pendidikan', value: applicant.education_level || '-' },
+                  { icon: <Phone size={14} />, label: 'No. HP', value: editData.phone },
+                  { icon: <Mail size={14} />, label: 'Email', value: editData.email },
+                  { icon: <MapPin size={14} />, label: 'Domisili', value: editData.domicile || '-' },
+                  { icon: <AtSign size={14} />, label: 'Instagram', value: editData.instagram_url || '-' },
+                  { icon: <Calendar size={14} />, label: 'Tgl Lahir', value: editData.birth_date ? new Date(editData.birth_date).toLocaleDateString('id-ID') : '-' },
+                  { icon: <Briefcase size={14} />, label: 'Pendidikan', value: editData.education_level || '-' },
                 ].map(item => (
                   <div key={item.label} style={{ display: 'flex', gap: '10px', alignItems: 'flex-start' }}>
                     <div style={{ color: '#037894', marginTop: '2px', flexShrink: 0 }}>{item.icon}</div>
@@ -185,38 +233,59 @@ export default function ApplicantDetailClient({ applicant }: Props) {
               <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 16px', borderRadius: '12px', backgroundColor: '#F7F5F2' }}>
                   <span style={{ fontSize: '13px', color: '#4C4845' }}>Pengalaman kafe</span>
-                  <span style={{ fontSize: '13px', fontWeight: 700, color: applicant.has_cafe_experience ? '#005353' : '#8A8A8D' }}>
-                    {applicant.has_cafe_experience ? `${applicant.cafe_experience_years} tahun` : 'Belum ada'}
+                  <span style={{ fontSize: '13px', fontWeight: 700, color: editData.has_cafe_experience ? '#005353' : '#8A8A8D' }}>
+                    {editData.has_cafe_experience ? `${editData.cafe_experience_years} tahun` : 'Belum ada'}
                   </span>
                 </div>
-                {applicant.cafe_experience_detail && (
+                {editData.cafe_experience_detail && (
                   <div style={{ padding: '12px 16px', borderRadius: '12px', backgroundColor: '#F7F5F2' }}>
                     <p style={{ fontSize: '11px', color: '#8A8A8D', margin: '0 0 4px' }}>Detail pengalaman</p>
-                    <p style={{ fontSize: '13px', color: '#4C4845', margin: 0 }}>{applicant.cafe_experience_detail}</p>
+                    <p style={{ fontSize: '13px', color: '#4C4845', margin: 0 }}>{editData.cafe_experience_detail}</p>
                   </div>
                 )}
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 16px', borderRadius: '12px', backgroundColor: '#F7F5F2' }}>
                   <span style={{ fontSize: '13px', color: '#4C4845' }}>Sertifikasi barista</span>
-                  <span style={{ fontSize: '13px', fontWeight: 700, color: applicant.has_barista_cert ? '#005353' : '#8A8A8D' }}>
-                    {applicant.has_barista_cert ? 'Ada' : 'Tidak ada'}
+                  <span style={{ fontSize: '13px', fontWeight: 700, color: editData.has_barista_cert ? '#005353' : '#8A8A8D' }}>
+                    {editData.has_barista_cert ? 'Ada' : 'Tidak ada'}
                   </span>
                 </div>
-                {applicant.cert_detail && (
+                {editData.cert_detail && (
                   <div style={{ padding: '12px 16px', borderRadius: '12px', backgroundColor: '#F7F5F2' }}>
                     <p style={{ fontSize: '11px', color: '#8A8A8D', margin: '0 0 4px' }}>Detail sertifikasi</p>
-                    <p style={{ fontSize: '13px', color: '#4C4845', margin: 0 }}>{applicant.cert_detail}</p>
+                    <p style={{ fontSize: '13px', color: '#4C4845', margin: 0 }}>{editData.cert_detail}</p>
                   </div>
                 )}
               </div>
             </div>
 
             {/* Motivation */}
-            {applicant.hr_notes && (
+            {editData.hr_notes && (
               <div style={{ backgroundColor: '#fff', borderRadius: '16px', padding: '24px', border: '1.5px solid #E8E4E0' }}>
                 <h3 style={{ fontSize: '14px', fontWeight: 700, color: '#020000', margin: '0 0 12px' }}>Motivasi</h3>
-                <p style={{ fontSize: '14px', color: '#4C4845', lineHeight: 1.7, margin: 0, fontStyle: 'italic' }}>"{applicant.hr_notes}"</p>
+                <p style={{ fontSize: '14px', color: '#4C4845', lineHeight: 1.7, margin: 0, fontStyle: 'italic' }}>"{editData.hr_notes}"</p>
               </div>
             )}
+
+            {/* Screening Notes — Feature 6 */}
+            <div style={{ backgroundColor: '#fff', borderRadius: '16px', padding: '24px', border: '1.5px solid #E8E4E0' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
+                <MessageSquare size={14} color="#037894" />
+                <h3 style={{ fontSize: '14px', fontWeight: 700, color: '#020000', margin: 0 }}>Catatan Screening</h3>
+              </div>
+              <p style={{ fontSize: '12px', color: '#8A8A8D', margin: '0 0 10px', lineHeight: 1.5 }}>
+                Panduan untuk Quest AI dalam mengevaluasi kandidat ini — misalnya kriteria khusus, kekhawatiran, atau konteks peran.
+              </p>
+              <textarea
+                value={screeningNotes}
+                onChange={e => setScreeningNotes(e.target.value)}
+                placeholder="Contoh: Kandidat ini dilamar untuk outlet Senopati yang butuh barista berpengalaman minimal 2 tahun. Prioritaskan pengalaman specialty coffee..."
+                style={{ width: '100%', minHeight: '100px', padding: '12px', borderRadius: '10px', border: '1.5px solid #E8E4E0', fontSize: '13px', color: '#020000', lineHeight: 1.6, resize: 'vertical', boxSizing: 'border-box', fontFamily: 'inherit', outline: 'none' }}
+              />
+              <button onClick={handleSaveNotes} disabled={savingNotes}
+                style={{ marginTop: '10px', padding: '8px 20px', borderRadius: '8px', border: 'none', cursor: savingNotes ? 'not-allowed' : 'pointer', fontSize: '13px', fontWeight: 700, backgroundColor: notesSaved ? '#005353' : '#037894', color: '#fff', transition: 'background-color 0.2s' }}>
+                {notesSaved ? '✓ Tersimpan' : savingNotes ? 'Menyimpan...' : 'Simpan Catatan'}
+              </button>
+            </div>
 
             {/* Scoring history */}
             {scores.length > 1 && (
@@ -436,6 +505,95 @@ export default function ApplicantDetailClient({ applicant }: Props) {
           </div>
         </div>
       </div>
+
+      {/* Edit Applicant Modal */}
+      {showEditModal && (
+        <div style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.55)', zIndex: 200, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px' }}
+          onClick={e => { if (e.target === e.currentTarget) setShowEditModal(false) }}>
+          <div style={{ backgroundColor: '#fff', borderRadius: '20px', padding: '28px', width: '100%', maxWidth: '560px', maxHeight: '90vh', overflowY: 'auto' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+              <h3 style={{ fontSize: '16px', fontWeight: 700, color: '#020000', margin: 0 }}>Edit Data Pelamar</h3>
+              <button onClick={() => setShowEditModal(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '20px', color: '#8A8A8D' }}>×</button>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+              {[
+                { key: 'full_name', label: 'Nama Lengkap', type: 'text' },
+                { key: 'email', label: 'Email', type: 'email' },
+                { key: 'phone', label: 'No. HP', type: 'tel' },
+                { key: 'birth_date', label: 'Tanggal Lahir', type: 'date' },
+                { key: 'domicile', label: 'Domisili', type: 'text' },
+                { key: 'position_applied', label: 'Posisi Dilamar', type: 'text' },
+                { key: 'outlet_preference', label: 'Outlet Preferensi', type: 'text' },
+                { key: 'education_level', label: 'Pendidikan', type: 'text' },
+                { key: 'instagram_url', label: 'Instagram', type: 'text' },
+              ].map(field => (
+                <div key={field.key}>
+                  <label style={{ fontSize: '12px', fontWeight: 600, color: '#4C4845', display: 'block', marginBottom: '5px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>{field.label}</label>
+                  <input
+                    type={field.type}
+                    value={editForm[field.key as keyof typeof editForm] as string}
+                    onChange={e => setEdit(field.key, e.target.value)}
+                    style={{ width: '100%', padding: '10px 12px', borderRadius: '10px', border: '1.5px solid #E8E4E0', fontSize: '13px', color: '#020000', boxSizing: 'border-box', outline: 'none' }}
+                  />
+                </div>
+              ))}
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
+                <div>
+                  <label style={{ fontSize: '12px', fontWeight: 600, color: '#4C4845', display: 'block', marginBottom: '5px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Pengalaman Kafe</label>
+                  <select value={editForm.has_cafe_experience ? 'ya' : 'tidak'} onChange={e => setEdit('has_cafe_experience', e.target.value === 'ya')}
+                    style={{ width: '100%', padding: '10px 12px', borderRadius: '10px', border: '1.5px solid #E8E4E0', fontSize: '13px', color: '#020000', boxSizing: 'border-box', outline: 'none' }}>
+                    <option value="tidak">Belum ada</option>
+                    <option value="ya">Ada</option>
+                  </select>
+                </div>
+                {editForm.has_cafe_experience && (
+                  <div>
+                    <label style={{ fontSize: '12px', fontWeight: 600, color: '#4C4845', display: 'block', marginBottom: '5px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Tahun Pengalaman</label>
+                    <input type="number" min={0} max={30} value={editForm.cafe_experience_years}
+                      onChange={e => setEdit('cafe_experience_years', parseInt(e.target.value) || 0)}
+                      style={{ width: '100%', padding: '10px 12px', borderRadius: '10px', border: '1.5px solid #E8E4E0', fontSize: '13px', color: '#020000', boxSizing: 'border-box', outline: 'none' }} />
+                  </div>
+                )}
+              </div>
+              <div>
+                <label style={{ fontSize: '12px', fontWeight: 600, color: '#4C4845', display: 'block', marginBottom: '5px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Detail Pengalaman</label>
+                <textarea value={editForm.cafe_experience_detail} onChange={e => setEdit('cafe_experience_detail', e.target.value)}
+                  style={{ width: '100%', padding: '10px 12px', borderRadius: '10px', border: '1.5px solid #E8E4E0', fontSize: '13px', color: '#020000', boxSizing: 'border-box', minHeight: '70px', resize: 'vertical', fontFamily: 'inherit', outline: 'none' }} />
+              </div>
+              <div>
+                <label style={{ fontSize: '12px', fontWeight: 600, color: '#4C4845', display: 'block', marginBottom: '5px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Sertifikasi Barista</label>
+                <select value={editForm.has_barista_cert ? 'ya' : 'tidak'} onChange={e => setEdit('has_barista_cert', e.target.value === 'ya')}
+                  style={{ width: '100%', padding: '10px 12px', borderRadius: '10px', border: '1.5px solid #E8E4E0', fontSize: '13px', color: '#020000', boxSizing: 'border-box', outline: 'none' }}>
+                  <option value="tidak">Tidak ada</option>
+                  <option value="ya">Ada</option>
+                </select>
+              </div>
+              {editForm.has_barista_cert && (
+                <div>
+                  <label style={{ fontSize: '12px', fontWeight: 600, color: '#4C4845', display: 'block', marginBottom: '5px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Detail Sertifikasi</label>
+                  <input type="text" value={editForm.cert_detail} onChange={e => setEdit('cert_detail', e.target.value)}
+                    style={{ width: '100%', padding: '10px 12px', borderRadius: '10px', border: '1.5px solid #E8E4E0', fontSize: '13px', color: '#020000', boxSizing: 'border-box', outline: 'none' }} />
+                </div>
+              )}
+              <div>
+                <label style={{ fontSize: '12px', fontWeight: 600, color: '#4C4845', display: 'block', marginBottom: '5px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Motivasi / Catatan</label>
+                <textarea value={editForm.hr_notes} onChange={e => setEdit('hr_notes', e.target.value)}
+                  style={{ width: '100%', padding: '10px 12px', borderRadius: '10px', border: '1.5px solid #E8E4E0', fontSize: '13px', color: '#020000', boxSizing: 'border-box', minHeight: '80px', resize: 'vertical', fontFamily: 'inherit', outline: 'none' }} />
+              </div>
+              <div style={{ display: 'flex', gap: '10px', paddingTop: '4px' }}>
+                <button onClick={() => setShowEditModal(false)}
+                  style={{ flex: 1, padding: '12px', borderRadius: '12px', border: '1.5px solid #E8E4E0', background: '#fff', color: '#4C4845', fontWeight: 600, fontSize: '14px', cursor: 'pointer' }}>
+                  Batal
+                </button>
+                <button onClick={handleSaveEdit} disabled={savingEdit}
+                  style={{ flex: 2, padding: '12px', borderRadius: '12px', border: 'none', backgroundColor: savingEdit ? '#8A8A8D' : '#037894', color: '#fff', fontWeight: 700, fontSize: '14px', cursor: savingEdit ? 'not-allowed' : 'pointer' }}>
+                  {savingEdit ? 'Menyimpan...' : 'Simpan Perubahan'}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Message Modal */}
       {showMessageModal && (

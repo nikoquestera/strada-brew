@@ -19,7 +19,7 @@ export default async function ApplicantDetailPage({
       source, pipeline_stage, quest_score, created_at,
       has_cafe_experience, cafe_experience_years,
       cafe_experience_detail, has_barista_cert, cert_detail,
-      education_level, hr_notes, status,
+      education_level, hr_notes, status, screening_notes,
       applicant_quest_scores (*),
       applicant_activities (*)
     `)

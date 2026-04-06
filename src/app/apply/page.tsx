@@ -1,11 +1,12 @@
 'use client'
 import { useState, useEffect, Suspense } from 'react'
-import { useSearchParams } from 'next/navigation'
+import { useSearchParams, useRouter as useNextRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 
 function ApplyContent() {
   const supabase = createClient()
   const searchParams = useSearchParams()
+  const nextRouter = useNextRouter()
   const jobParam = searchParams.get('job')
 
   const [jobs, setJobs] = useState<any[]>([])
@@ -98,7 +99,11 @@ function ApplyContent() {
           await fetch('/api/notify/new-applicant', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ applicant_id: newApplicant.id }),
+            body: JSON.stringify({
+              applicant_id: newApplicant.id,
+              ...form,
+              position_applied: form.position_applied || selectedJob?.title || '-',
+            }),
           })
         } catch { /* non-blocking */ }
         try {
@@ -197,7 +202,7 @@ function ApplyContent() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
               {jobs.map(job => (
                 <div key={job.id} className="job-card"
-                  onClick={() => selectJob(job)}
+                  onClick={() => nextRouter.push(`/jobs/${job.job_id}`)}
                   style={{ backgroundColor: '#fff', borderRadius: '18px', padding: '20px', border: '1.5px solid #E8E4E0' }}>
 
                   {/* Top row */}
@@ -212,7 +217,7 @@ function ApplyContent() {
                       <p style={{ fontSize: '13px', color: '#037894', fontWeight: 700, margin: 0 }}>{job.department}</p>
                     </div>
                     <div className="job-lamar-btn" style={{ flexShrink: 0, padding: '10px 18px', borderRadius: '12px', backgroundColor: '#037894', color: '#fff', fontSize: '14px', fontWeight: 700, minHeight: '44px', display: 'flex', alignItems: 'center', whiteSpace: 'nowrap' }}>
-                      Lamar →
+                      Lihat →
                     </div>
                   </div>
 

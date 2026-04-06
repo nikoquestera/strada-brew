@@ -1,3 +1,12 @@
+export interface ScoringWeights {
+  experience_weight: number
+  certification_weight: number
+  education_weight: number
+  motivation_weight: number
+  profile_weight: number
+  custom_note?: string
+}
+
 export interface QuestScoringInput {
   applicant: {
     full_name: string
@@ -12,6 +21,7 @@ export interface QuestScoringInput {
     domicile?: string
     position_applied: string
     birth_date?: string
+    screening_notes?: string
   }
   job?: {
     title: string
@@ -21,6 +31,7 @@ export interface QuestScoringInput {
     location?: string
     description?: string
   }
+  scoringWeights?: ScoringWeights
 }
 
 export interface QuestScoringResult {
