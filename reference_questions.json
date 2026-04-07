@@ -1,0 +1,602 @@
+[
+  {
+    "no": 1,
+    "options": [
+      {
+        "term": "Ramah",
+        "most": "S",
+        "least": "N"
+      },
+      {
+        "term": "Bosan rutinitas",
+        "most": "N",
+        "least": "I"
+      },
+      {
+        "term": "Inovatif",
+        "most": "D",
+        "least": "D"
+      },
+      {
+        "term": "Kepastian",
+        "most": "C",
+        "least": "C"
+      }
+    ]
+  },
+  {
+    "no": 2,
+    "options": [
+      {
+        "term": "Menyenangkan orang",
+        "most": "S",
+        "least": "S"
+      },
+      {
+        "term": "Tertawa lepas",
+        "most": "N",
+        "least": "I"
+      },
+      {
+        "term": "Tak gentar",
+        "most": "D",
+        "least": "D"
+      },
+      {
+        "term": "Tenang",
+        "most": "C",
+        "least": "C"
+      }
+    ]
+  },
+  {
+    "no": 3,
+    "options": [
+      {
+        "term": "Ingin kemajuan",
+        "most": "D",
+        "least": "D"
+      },
+      {
+        "term": "Mudah Puas",
+        "most": "S",
+        "least": "N"
+      },
+      {
+        "term": "Perasaan",
+        "most": "I",
+        "least": "N"
+      },
+      {
+        "term": "Sederhana",
+        "most": "N",
+        "least": "C"
+      }
+    ]
+  },
+  {
+    "no": 4,
+    "options": [
+      {
+        "term": "Frustrasi",
+        "most": "C",
+        "least": "C"
+      },
+      {
+        "term": "Menyimpan perasaan",
+        "most": "S",
+        "least": "S"
+      },
+      {
+        "term": "Menceritakan sisi saya",
+        "most": "N",
+        "least": "I"
+      },
+      {
+        "term": "Siap beroposisi",
+        "most": "D",
+        "least": "D"
+      }
+    ]
+  },
+  {
+    "no": 5,
+    "options": [
+      {
+        "term": "Suka berkumpul",
+        "most": "S",
+        "least": "S"
+      },
+      {
+        "term": "Bersiap",
+        "most": "C",
+        "least": "N"
+      },
+      {
+        "term": "Petualangan baru",
+        "most": "I",
+        "least": "I"
+      },
+      {
+        "term": "Mengharap imbalan",
+        "most": "D",
+        "least": "D"
+      }
+    ]
+  },
+  {
+    "no": 6,
+    "options": [
+      {
+        "term": "Disiplin",
+        "most": "C",
+        "least": "N"
+      },
+      {
+        "term": "Terburu-buru",
+        "most": "D",
+        "least": "D"
+      },
+      {
+        "term": "Sosialita",
+        "most": "I",
+        "least": "I"
+      },
+      {
+        "term": "Berkomitmen",
+        "most": "S",
+        "least": "S"
+      }
+    ]
+  },
+  {
+    "no": 7,
+    "options": [
+      {
+        "term": "Terencana",
+        "most": "S",
+        "least": "N"
+      },
+      {
+        "term": "Mudah berjanji",
+        "most": "I",
+        "least": "I"
+      },
+      {
+        "term": "Menghindar",
+        "most": "N",
+        "least": "C"
+      },
+      {
+        "term": "Petarung",
+        "most": "N",
+        "least": "D"
+      }
+    ]
+  },
+  {
+    "no": 8,
+    "options": [
+      {
+        "term": "Penyemangat",
+        "most": "I",
+        "least": "I"
+      },
+      {
+        "term": "Pendengar",
+        "most": "S",
+        "least": "S"
+      },
+      {
+        "term": "Penganalisa",
+        "most": "C",
+        "least": "C"
+      },
+      {
+        "term": "Delegator",
+        "most": "D",
+        "least": "D"
+      }
+    ]
+  },
+  {
+    "no": 9,
+    "options": [
+      {
+        "term": "Tidak mudah dikalahkan",
+        "most": "D",
+        "least": "D"
+      },
+      {
+        "term": "Ikut pimpinan",
+        "most": "S",
+        "least": "N"
+      },
+      {
+        "term": "Riang",
+        "most": "I",
+        "least": "I"
+      },
+      {
+        "term": "Rapi",
+        "most": "N",
+        "least": "C"
+      }
+    ]
+  },
+  {
+    "no": 10,
+    "options": [
+      {
+        "term": "Lepas kendali",
+        "most": "N",
+        "least": "C"
+      },
+      {
+        "term": "Mengikuti kata hati",
+        "most": "D",
+        "least": "D"
+      },
+      {
+        "term": "Tanpa tekanan",
+        "most": "S",
+        "least": "S"
+      },
+      {
+        "term": "Gigih",
+        "most": "I",
+        "least": "N"
+      }
+    ]
+  },
+  {
+    "no": 11,
+    "options": [
+      {
+        "term": "Memikirkan orang dahulu",
+        "most": "S",
+        "least": "S"
+      },
+      {
+        "term": "Suka tantangan",
+        "most": "D",
+        "least": "D"
+      },
+      {
+        "term": "Optimis",
+        "most": "I",
+        "least": "I"
+      },
+      {
+        "term": "Sistematik",
+        "most": "N",
+        "least": "C"
+      }
+    ]
+  },
+  {
+    "no": 12,
+    "options": [
+      {
+        "term": "Pendiam",
+        "most": "C",
+        "least": "N"
+      },
+      {
+        "term": "Visioner",
+        "most": "D",
+        "least": "D"
+      },
+      {
+        "term": "Suka gaul",
+        "most": "N",
+        "least": "I"
+      },
+      {
+        "term": "Pendamai",
+        "most": "S",
+        "least": "S"
+      }
+    ]
+  },
+  {
+    "no": 13,
+    "options": [
+      {
+        "term": "Penyemangat",
+        "most": "I",
+        "least": "I"
+      },
+      {
+        "term": "Perfeksionis",
+        "most": "N",
+        "least": "C"
+      },
+      {
+        "term": "Berkelompok",
+        "most": "N",
+        "least": "S"
+      },
+      {
+        "term": "Mmepunyai tujuan",
+        "most": "D",
+        "least": "N"
+      }
+    ]
+  },
+  {
+    "no": 14,
+    "options": [
+      {
+        "term": "Dapat diandalkan",
+        "most": "N",
+        "least": "S"
+      },
+      {
+        "term": "Kreatif",
+        "most": "I",
+        "least": "I"
+      },
+      {
+        "term": "Orientasi hasil",
+        "most": "D",
+        "least": "N"
+      },
+      {
+        "term": "Akurat",
+        "most": "C",
+        "least": "N"
+      }
+    ]
+  },
+  {
+    "no": 15,
+    "options": [
+      {
+        "term": "Suka bicara",
+        "most": "I",
+        "least": "N"
+      },
+      {
+        "term": "Gerak cepat",
+        "most": "D",
+        "least": "D"
+      },
+      {
+        "term": "Menjaga keseimbangan",
+        "most": "S",
+        "least": "S"
+      },
+      {
+        "term": "Taat aturan",
+        "most": "N",
+        "least": "C"
+      }
+    ]
+  },
+  {
+    "no": 16,
+    "options": [
+      {
+        "term": "Aturan perlu dipertanyakan",
+        "most": "N",
+        "least": "D"
+      },
+      {
+        "term": "Aturan membuat adil",
+        "most": "C",
+        "least": "N"
+      },
+      {
+        "term": "Aturan membuat bosan",
+        "most": "I",
+        "least": "I"
+      },
+      {
+        "term": "Aturan membuat aman",
+        "most": "S",
+        "least": "S"
+      }
+    ]
+  },
+  {
+    "no": 17,
+    "options": [
+      {
+        "term": "Pendidikan",
+        "most": "N",
+        "least": "C"
+      },
+      {
+        "term": "Prestasi",
+        "most": "D",
+        "least": "D"
+      },
+      {
+        "term": "Keselamatan",
+        "most": "S",
+        "least": "S"
+      },
+      {
+        "term": "Sosial",
+        "most": "I",
+        "least": "N"
+      }
+    ]
+  },
+  {
+    "no": 18,
+    "options": [
+      {
+        "term": "Memimpin",
+        "most": "D",
+        "least": "D"
+      },
+      {
+        "term": "Antusias",
+        "most": "N",
+        "least": "I"
+      },
+      {
+        "term": "Konsisten",
+        "most": "N",
+        "least": "S"
+      },
+      {
+        "term": "Waspada",
+        "most": "C",
+        "least": "N"
+      }
+    ]
+  },
+  {
+    "no": 19,
+    "options": [
+      {
+        "term": "Berorientasi hasil",
+        "most": "D",
+        "least": "D"
+      },
+      {
+        "term": "Akurat",
+        "most": "C",
+        "least": "C"
+      },
+      {
+        "term": "Dibuat menyenangkan",
+        "most": "N",
+        "least": "I"
+      },
+      {
+        "term": "Bekerjasama",
+        "most": "N",
+        "least": "S"
+      }
+    ]
+  },
+  {
+    "no": 20,
+    "options": [
+      {
+        "term": "Saya akan pimpin mereka",
+        "most": "D",
+        "least": "N"
+      },
+      {
+        "term": "Saya akan melaksanakan",
+        "most": "S",
+        "least": "S"
+      },
+      {
+        "term": "Saya akan meyakinkan mereka",
+        "most": "I",
+        "least": "I"
+      },
+      {
+        "term": "Saya dapatkan fakta",
+        "most": "C",
+        "least": "N"
+      }
+    ]
+  },
+  {
+    "no": 21,
+    "options": [
+      {
+        "term": "Mudah setuju",
+        "most": "S",
+        "least": "S"
+      },
+      {
+        "term": "Mudah percaya",
+        "most": "I",
+        "least": "I"
+      },
+      {
+        "term": "Petualang",
+        "most": "N",
+        "least": "D"
+      },
+      {
+        "term": "Toleran",
+        "most": "C",
+        "least": "C"
+      }
+    ]
+  },
+  {
+    "no": 22,
+    "options": [
+      {
+        "term": "Menyerah",
+        "most": "N",
+        "least": "S"
+      },
+      {
+        "term": "Mendetail",
+        "most": "C",
+        "least": "N"
+      },
+      {
+        "term": "Mudah berubah",
+        "most": "I",
+        "least": "I"
+      },
+      {
+        "term": "Kasar",
+        "most": "D",
+        "least": "D"
+      }
+    ]
+  },
+  {
+    "no": 23,
+    "options": [
+      {
+        "term": "Ingin otoritas lebih",
+        "most": "N",
+        "least": "D"
+      },
+      {
+        "term": "Ingin kesempatan baru",
+        "most": "I",
+        "least": "N"
+      },
+      {
+        "term": "Menghindari konflik",
+        "most": "S",
+        "least": "S"
+      },
+      {
+        "term": "Ingin petunjuk yang jelas",
+        "most": "N",
+        "least": "C"
+      }
+    ]
+  },
+  {
+    "no": 24,
+    "options": [
+      {
+        "term": "Tenang",
+        "most": "C",
+        "least": "C"
+      },
+      {
+        "term": "Tanpa beban",
+        "most": "I",
+        "least": "I"
+      },
+      {
+        "term": "Baik hati",
+        "most": "S",
+        "least": "N"
+      },
+      {
+        "term": "Berani",
+        "most": "D",
+        "least": "D"
+      }
+    ]
+  }
+]

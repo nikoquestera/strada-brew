@@ -1,4 +1,4 @@
-import { DISC_QUESTIONS, DISC_PATTERNS, Dimension, DiscPattern } from './data'
+import { DISC_QUESTIONS, DISC_PATTERNS, DISC_SCORING_TABLE, Dimension, DiscPattern, DiscResultRow } from './data'
 
 export interface DiscAnswers {
   [questionNo: number]: { most: string; least: string }
@@ -12,6 +12,10 @@ export interface DiscResults {
   graph1: DiscRawScores   // Most (Public Self / Mask)
   graph2: DiscRawScores   // Least (Private Self / Core)
   graph3: DiscRawScores   // Change = graph1 - graph2 (Perceived Self / Mirror)
+  // Normalized values for plotting (-8 to +8)
+  plot1: DiscRawScores
+  plot2: DiscRawScores
+  plot3: DiscRawScores
   primaryType: Dimension
   secondaryTypes: Dimension[]
   patternKey: string
@@ -21,6 +25,18 @@ export interface DiscResults {
 }
 
 const DIMS: Dimension[] = ['D', 'I', 'S', 'C']
+
+function getPlotValues(raw: DiscRawScores, line: number): DiscRawScores {
+  const plot: DiscRawScores = { D: 0, I: 0, S: 0, C: 0 }
+  for (const d of DIMS) {
+    const val = raw[d]
+    const row = DISC_SCORING_TABLE.find(r => r.line === line && r.value === val)
+    if (row) {
+      plot[d] = (row as any)[d.toLowerCase()]
+    }
+  }
+  return plot
+}
 
 export function computeDiscResults(answers: DiscAnswers): DiscResults {
   const graph1: DiscRawScores = { D: 0, I: 0, S: 0, C: 0 }
@@ -44,63 +60,79 @@ export function computeDiscResults(answers: DiscAnswers): DiscResults {
     C: graph1.C - graph2.C,
   }
 
-  // Determine profile: sort dimensions by graph3 score descending
-  const ranked = DIMS.slice().sort((a, b) => graph3[b] - graph3[a])
+  const plot1 = getPlotValues(graph1, 1)
+  const plot2 = getPlotValues(graph2, 2)
+  const plot3 = getPlotValues(graph3, 3)
+
+  // Patterns are determined by the NORMALIZED plot values, as per reference_result.php
+  const pattern1 = findPatternByPlot(plot1)
+  const pattern2 = findPatternByPlot(plot2)
+  const pattern3 = findPatternByPlot(plot3)
+
+  const ranked = DIMS.slice().sort((a, b) => plot3[b] - plot3[a])
   const primaryType = ranked[0]
+  const secondaryTypes = ranked.slice(1).filter(d => plot3[d] > 0)
 
-  // Secondary = those also above 0 (or within 2 of primary if primary is 0)
-  const threshold = Math.max(0, graph3[primaryType] - 3)
-  const secondaryTypes = ranked.slice(1).filter(d => graph3[d] >= threshold && graph3[d] > 0)
-
-  const patternKey = buildPatternKey(ranked, graph3, 3)
-
-  const pattern  = findPattern(patternKey, graph3)
-
-  // Graph I pattern — public self (rank by graph1)
-  const ranked1 = DIMS.slice().sort((a, b) => graph1[b] - graph1[a])
-  const key1 = buildPatternKey(ranked1, graph1, 3)
-  const pattern1 = findPattern(key1, graph1)
-
-  // Graph II pattern — under-pressure self (rank by graph2)
-  const ranked2 = DIMS.slice().sort((a, b) => graph2[b] - graph2[a])
-  const key2 = buildPatternKey(ranked2, graph2, 3)
-  const pattern2 = findPattern(key2, graph2)
-
-  return { graph1, graph2, graph3, primaryType, secondaryTypes, patternKey, pattern, pattern1, pattern2 }
-}
-
-function buildPatternKey(ranked: Dimension[], scores: DiscRawScores, topN: number): string {
-  const max = scores[ranked[0]]
-  const threshold = Math.max(0, max - 3)
-  const active = ranked.filter(d => scores[d] >= threshold && scores[d] > 0).slice(0, topN)
-  return active.length > 0 ? active.join('-') : ranked[0]
-}
-
-function findPattern(key: string, graph3: DiscRawScores): DiscPattern {
-  // Try exact match first
-  let found = DISC_PATTERNS.find(p => p.type === key)
-  if (found) return found
-
-  // Try alternate slash notation (S-C/C-S)
-  found = DISC_PATTERNS.find(p => p.type.split('/').some(t => t.trim() === key))
-  if (found) return found
-
-  // Try matching the first two letters of the key
-  if (key.length > 1) {
-    const twoKey = key.split('-').slice(0, 2).join('-')
-    found = DISC_PATTERNS.find(p => p.type === twoKey)
-    if (found) return found
+  return { 
+    graph1, graph2, graph3, 
+    plot1, plot2, plot3,
+    primaryType, secondaryTypes, 
+    patternKey: pattern3.type,
+    pattern: pattern3, 
+    pattern1, 
+    pattern2 
   }
+}
 
-  // Fall back to single-letter primary
-  const singleKey = key.split('-')[0]
-  found = DISC_PATTERNS.find(p => p.type === singleKey)
-  if (found) return found
+/**
+ * Ported logic from getPattern in reference_result.php
+ */
+function findPatternByPlot(plot: DiscRawScores): DiscPattern {
+  const { D, I, S, C } = plot
+  let pIdx = 0
 
-  // Absolute fallback: highest score
-  const primary = (Object.entries(graph3) as [Dimension, number][])
-    .sort((a, b) => b[1] - a[1])[0][0]
-  return DISC_PATTERNS.find(p => p.type === primary) || DISC_PATTERNS[0]
+  if(D<=0 && I<=0 && S<=0 && C>0) pIdx=1;
+  else if(D>0 && I<=0 && S<=0 && C<=0) pIdx=2;
+  else if(D>0 && I<=0 && S<=0 && C>0 && C>=D) pIdx=3;
+  else if(D>0 && I>0 && S<=0 && C<=0 && I>=D) pIdx=4;
+  else if(D>0 && I>0 && S<=0 && C>0 && I>=D && D>=C) pIdx=5;
+  else if(D>0 && I>0 && S>0 && C<=0 && I>=D && D>=S) pIdx=6;
+  else if(D>0 && I>0 && S>0 && C<=0 && I>=S && S>=D) pIdx=7;
+  else if(D>0 && I<=0 && S>0 && C>0 && S>=D && D>=C) pIdx=8;
+  else if(D>0 && I>0 && S<=0 && C<=0 && D>=I) pIdx=9;
+  else if(D>0 && I>0 && S>0 && C<=0 && D>=I && I>=S) pIdx=10;
+  else if(D>0 && I<=0 && S>0 && C<=0 && D>=S) pIdx=11;
+  else if(D<=0 && I>0 && S>0 && C>0 && C>=I && I>=S) pIdx=12;
+  else if(D<=0 && I>0 && S>0 && C>0 && C>=S && S>=I) pIdx=13;
+  else if(D<=0 && I>0 && S>0 && C>0 && I>=S && I>=C) pIdx=14;
+  else if(D<=0 && I<=0 && S>0 && C<=0) pIdx=15;
+  else if(D<=0 && I<=0 && S>0 && C>0 && C>=S) pIdx=16;
+  else if(D<=0 && I<=0 && S>0 && C>0 && S>=C) pIdx=17;
+  else if(D>0 && I<=0 && S<=0 && C>0 && D>=C) pIdx=18;
+  else if(D>0 && I>0 && S<=0 && C>0 && D>=I && I>=C) pIdx=19;
+  else if(D>0 && I>0 && S>0 && C<=0 && D>=S && S>=I) pIdx=20;
+  else if(D>0 && I<=0 && S>0 && C>0 && D>=S && S>=C) pIdx=21;
+  else if(D>0 && I>0 && S<=0 && C>0 && D>=C && C>=I) pIdx=22;
+  else if(D>0 && I<=0 && S>0 && C>0 && D>=C && C>=S) pIdx=23;
+  else if(D<=0 && I>0 && S<=0 && C<=0) pIdx=24;
+  else if(D<=0 && I>0 && S>0 && C<=0 && I>=S) pIdx=25;
+  else if(D<=0 && I>0 && S<=0 && C>0 && I>=C) pIdx=26;
+  else if(D>0 && I>0 && S<=0 && C>0 && I>=C && C>=D) pIdx=27;
+  else if(D<=0 && I>0 && S>0 && C>0 && I>=C && C>=S) pIdx=28;
+  else if(D>0 && I<=0 && S>0 && C<=0 && S>=D) pIdx=29;
+  else if(D<=0 && I>0 && S>0 && C<=0 && S>=I) pIdx=30;
+  else if(D>0 && I>0 && S>0 && C<=0 && S>=D && D>=I) pIdx=31;
+  else if(D>0 && I>0 && S>0 && C<=0 && S>=I && I>=D) pIdx=32;
+  else if(D<=0 && I>0 && S>0 && C>0 && S>=I && I>=C) pIdx=33;
+  else if(D>0 && I<=0 && S>0 && C>0 && S>=C && C>=D) pIdx=34;
+  else if(D<=0 && I>0 && S>0 && C>0 && S>=C && C>=I) pIdx=35;
+  else if(D<=0 && I>0 && S<=0 && C>0 && C>=I) pIdx=36;
+  else if(D>0 && I>0 && S<=0 && C>0 && C>=D && D>=I) pIdx=37;
+  else if(D>0 && I<=0 && S>0 && C>0 && C>=D && D>=S) pIdx=38;
+  else if(D>0 && I>0 && S<=0 && C>0 && C>=I && I>=D) pIdx=39;
+  else if(D>0 && I<=0 && S>0 && C>0 && C>=S && S>=D) pIdx=40;
+
+  return DISC_PATTERNS[pIdx - 1] || DISC_PATTERNS[0]
 }
 
 // Generate a unique 6-character alphanumeric access code
