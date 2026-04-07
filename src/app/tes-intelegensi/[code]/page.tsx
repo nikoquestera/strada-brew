@@ -240,7 +240,7 @@ export default function CfitTestPage() {
                   <h3 style={{ fontSize: '18px', fontWeight: 800, color: '#020000', margin: 0 }}>Pelajari pola pada contoh berikut</h3>
                 </div>
               </div>
-              <CfitCropImage crop={currentSubtest.exampleCrop} alt={`Contoh ${currentSubtest.title}`} maxWidth={560} />
+              <CfitCropImage visual={currentSubtest.exampleVisual} alt={`Contoh ${currentSubtest.title}`} maxWidth={560} />
               <p style={{ fontSize: '13px', color: '#8A8A8D', margin: '14px 0 0', lineHeight: 1.7 }}>
                 {currentSubtest.exampleAnswersSummary}
               </p>
@@ -301,7 +301,7 @@ export default function CfitTestPage() {
         {currentQuestion && (
           <div style={{ backgroundColor: '#fff', borderRadius: '24px', padding: '24px', border: '1.5px solid #E8E4E0', boxShadow: '0 10px 30px rgba(0,0,0,0.04)' }}>
             <div style={{ marginBottom: '20px' }}>
-              <CfitCropImage crop={currentQuestion.crop} alt={`${currentSubtest.title} nomor ${currentQuestion.questionNo}`} />
+              <CfitCropImage visual={currentQuestion.visual} alt={`${currentSubtest.title} nomor ${currentQuestion.questionNo}`} maxWidth={920} />
             </div>
 
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px', flexWrap: 'wrap', marginBottom: '16px' }}>

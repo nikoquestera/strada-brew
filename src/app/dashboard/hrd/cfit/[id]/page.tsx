@@ -135,8 +135,8 @@ export default async function CfitResultPage({ params }: Props) {
                     </span>
                   </div>
                 </div>
-                <div style={{ padding: '18px' }}>
-                  <CfitCropImage crop={question.crop} alt={`${question.id} visual`} />
+                <div style={{ padding: '18px', backgroundColor: '#FCFBFA' }}>
+                  <CfitCropImage visual={question.visual} alt={`${question.id} visual`} compact maxWidth={860} />
                 </div>
               </div>
             )
