@@ -30,6 +30,7 @@ export async function POST(req: NextRequest) {
       access_code,
       status: 'pending',
       created_by: user.email,
+      sent_at: new Date().toISOString(),
       expires_at: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
     })
     .select()
