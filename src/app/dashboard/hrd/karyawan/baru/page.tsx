@@ -4,6 +4,67 @@ import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { ArrowLeft, ChevronDown, ChevronUp } from 'lucide-react'
 
+
+const inp = 'w-full px-3 py-2.5 rounded-xl text-sm outline-none'
+const ist = { border: '1.5px solid #E8E4E0', backgroundColor: '#FAFAF9', boxSizing: 'border-box' as const }
+const err_ist = { border: '1.5px solid #FF4F31', backgroundColor: '#FFF9F8', boxSizing: 'border-box' as const }
+const lbl = { display: 'block', fontSize: '12px', fontWeight: 600, color: '#4C4845', marginBottom: '5px' } as const
+
+const Section = ({ id, title, openSections, toggleSection, children }: { id: string; title: string; openSections: string[]; toggleSection: (id: string) => void; children: React.ReactNode }) => {
+  const open = openSections.includes(id)
+  return (
+    <div style={{ backgroundColor: '#fff', borderRadius: '16px', border: '1.5px solid #E8E4E0', overflow: 'hidden', marginBottom: '12px' }}>
+      <button onClick={() => toggleSection(id)} type="button"
+        style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 20px', background: 'none', border: 'none', cursor: 'pointer' }}>
+        <span style={{ fontSize: '14px', fontWeight: 700, color: '#020000' }}>{title}</span>
+        {open ? <ChevronUp size={16} color="#8A8A8D" /> : <ChevronDown size={16} color="#8A8A8D" />}
+      </button>
+      {open && <div style={{ padding: '0 20px 20px', display: 'flex', flexDirection: 'column', gap: '14px' }}>{children}</div>}
+    </div>
+  )
+}
+
+const Grid2 = ({ children }: { children: React.ReactNode }) => (
+  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '12px' }}>{children}</div>
+)
+
+const Field = ({ k, label, form, set, errors, required, type = 'text', options, placeholder }: {
+  k: string; label: string; form: any; set: (k: string, v: any) => void; errors: any; required?: boolean; type?: string
+  options?: { value: string; label: string }[]; placeholder?: string
+}) => {
+  const hasErr = !!errors[k]
+  return (
+    <div data-error={hasErr}>
+      <label style={lbl}>{label} {required && <span style={{ color: '#FF4F31' }}>*</span>}</label>
+      {options ? (
+        <select className={inp} style={hasErr ? err_ist : ist} value={form[k] || ''}
+          onChange={e => set(k, e.target.value)}>
+          <option value="">Pilih...</option>
+          {options.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
+        </select>
+      ) : (
+        <input type={type} className={inp} style={hasErr ? err_ist : ist}
+          value={form[k] || ''} onChange={e => set(k, e.target.value)}
+          placeholder={placeholder} />
+      )}
+      {hasErr && <p style={{ fontSize: '11px', color: '#FF4F31', margin: '3px 0 0' }}>{errors[k]}</p>}
+    </div>
+  )
+}
+
+const Toggle = ({ k, label, form, set }: { k: string; label: string; form: Record<string, unknown>; set: (k: string, v: unknown) => void }) => (
+  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 14px', borderRadius: '10px', backgroundColor: form[k] ? 'rgba(3,120,148,0.06)' : '#F7F5F2', border: `1px solid ${form[k] ? 'rgba(3,120,148,0.2)' : '#E8E4E0'}` }}>
+    <span style={{ fontSize: '13px', color: '#020000', fontWeight: form[k] ? 600 : 400 }}>{label}</span>
+    <button type="button" onClick={() => set(k, !form[k])}
+      style={{ width: '40px', height: '22px', borderRadius: '11px', border: 'none', cursor: 'pointer', position: 'relative', backgroundColor: form[k] ? '#037894' : '#D4CFC9', flexShrink: 0, transition: 'all 0.15s' }}>
+      <span style={{ position: 'absolute', top: '2px', width: '18px', height: '18px', backgroundColor: '#fff', borderRadius: '50%', boxShadow: '0 1px 3px rgba(0,0,0,0.2)', transition: 'transform 0.2s', transform: form[k] ? 'translateX(20px)' : 'translateX(2px)' }} />
+    </button>
+  </div>
+)
+
+const OUTLETS = ['La Piazza', 'MKG', 'BSD', 'SMS', 'SMB', 'SMB Gold Lounge', 'SMB2', 'Back Office', 'Hibrida / Back Office', 'Roastery', 'Academy', 'Semarang HO']
+const POSITIONS = ['Barista', 'Senior Barista', 'Coordinator Bar', 'Head Bar', 'Trainer Academy', 'Waitress/Waiter', 'Kasir', 'Floor Coordinator', 'Head Floor', 'Cook Helper', 'Cook', 'Junior Cook', 'Kitchen Coordinator', 'Head Kitchen', 'Housekeeping', 'Senior Housekeeping', 'Steward', 'Supervisor', 'Area Manager', 'Admin HR', 'HR Manager', 'Admin Warehouse', 'Inventory Officer', 'Admin Purchasing', 'Staff Accounting', 'Admin Accounting', 'Coordinator Finance', 'Marketing', 'General Affair', 'Driver', 'Auditor', 'IT Staff', 'Head of Academy', 'Head of Marketing', 'Other']
+
 export default function KaryawanBaruPage() {
   const router = useRouter()
   const supabase = createClient()
@@ -127,65 +188,6 @@ export default function KaryawanBaruPage() {
     router.push(`/dashboard/hrd/karyawan/${data.id}`)
   }
 
-  const inp = 'w-full px-3 py-2.5 rounded-xl text-sm outline-none'
-  const ist = { border: '1.5px solid #E8E4E0', backgroundColor: '#FAFAF9', boxSizing: 'border-box' as const }
-  const err_ist = { border: '1.5px solid #FF4F31', backgroundColor: '#FFF9F8', boxSizing: 'border-box' as const }
-  const lbl = { display: 'block', fontSize: '12px', fontWeight: 600, color: '#4C4845', marginBottom: '5px' } as const
-
-  const Section = ({ id, title, children }: { id: string; title: string; children: React.ReactNode }) => {
-    const open = openSections.includes(id)
-    return (
-      <div style={{ backgroundColor: '#fff', borderRadius: '16px', border: '1.5px solid #E8E4E0', overflow: 'hidden', marginBottom: '12px' }}>
-        <button onClick={() => toggleSection(id)} type="button"
-          style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 20px', background: 'none', border: 'none', cursor: 'pointer' }}>
-          <span style={{ fontSize: '14px', fontWeight: 700, color: '#020000' }}>{title}</span>
-          {open ? <ChevronUp size={16} color="#8A8A8D" /> : <ChevronDown size={16} color="#8A8A8D" />}
-        </button>
-        {open && <div style={{ padding: '0 20px 20px', display: 'flex', flexDirection: 'column', gap: '14px' }}>{children}</div>}
-      </div>
-    )
-  }
-
-  const Grid2 = ({ children }: { children: React.ReactNode }) => (
-    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '12px' }}>{children}</div>
-  )
-
-  const Field = ({ k, label, required, type = 'text', options, placeholder }: {
-    k: string; label: string; required?: boolean; type?: string
-    options?: { value: string; label: string }[]; placeholder?: string
-  }) => {
-    const hasErr = !!errors[k]
-    return (
-      <div data-error={hasErr}>
-        <label style={lbl}>{label} {required && <span style={{ color: '#FF4F31' }}>*</span>}</label>
-        {options ? (
-          <select className={inp} style={hasErr ? err_ist : ist} value={(form as any)[k]}
-            onChange={e => set(k, e.target.value)}>
-            <option value="">Pilih...</option>
-            {options.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
-          </select>
-        ) : (
-          <input type={type} className={inp} style={hasErr ? err_ist : ist}
-            value={(form as any)[k]} onChange={e => set(k, e.target.value)}
-            placeholder={placeholder} />
-        )}
-        {hasErr && <p style={{ fontSize: '11px', color: '#FF4F31', margin: '3px 0 0' }}>{errors[k]}</p>}
-      </div>
-    )
-  }
-
-  const Toggle = ({ k, label }: { k: string; label: string }) => (
-    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 14px', borderRadius: '10px', backgroundColor: (form as any)[k] ? 'rgba(3,120,148,0.06)' : '#F7F5F2', border: `1px solid ${(form as any)[k] ? 'rgba(3,120,148,0.2)' : '#E8E4E0'}` }}>
-      <span style={{ fontSize: '13px', color: '#020000', fontWeight: (form as any)[k] ? 600 : 400 }}>{label}</span>
-      <button type="button" onClick={() => set(k, !(form as any)[k])}
-        style={{ width: '40px', height: '22px', borderRadius: '11px', border: 'none', cursor: 'pointer', position: 'relative', backgroundColor: (form as any)[k] ? '#037894' : '#D4CFC9', flexShrink: 0, transition: 'all 0.15s' }}>
-        <span style={{ position: 'absolute', top: '2px', width: '18px', height: '18px', backgroundColor: '#fff', borderRadius: '50%', boxShadow: '0 1px 3px rgba(0,0,0,0.2)', transition: 'transform 0.2s', transform: (form as any)[k] ? 'translateX(20px)' : 'translateX(2px)' }} />
-      </button>
-    </div>
-  )
-
-  const OUTLETS = ['La Piazza', 'MKG', 'BSD', 'SMS', 'SMB', 'SMB Gold Lounge', 'SMB2', 'Back Office', 'Hibrida / Back Office', 'Roastery', 'Academy', 'Semarang HO']
-  const POSITIONS = ['Barista', 'Senior Barista', 'Coordinator Bar', 'Head Bar', 'Trainer Academy', 'Waitress/Waiter', 'Kasir', 'Floor Coordinator', 'Head Floor', 'Cook Helper', 'Cook', 'Junior Cook', 'Kitchen Coordinator', 'Head Kitchen', 'Housekeeping', 'Senior Housekeeping', 'Steward', 'Supervisor', 'Area Manager', 'Admin HR', 'HR Manager', 'Admin Warehouse', 'Inventory Officer', 'Admin Purchasing', 'Staff Accounting', 'Admin Accounting', 'Coordinator Finance', 'Marketing', 'General Affair', 'Driver', 'Auditor', 'IT Staff', 'Head of Academy', 'Head of Marketing', 'Other']
 
   return (
     <>
@@ -214,31 +216,31 @@ export default function KaryawanBaruPage() {
           )}
 
           {/* IDENTITAS */}
-          <Section id="identitas" title="📋 Identitas & Kontrak (Wajib)">
+          <Section openSections={openSections} toggleSection={toggleSection} id="identitas" title="📋 Identitas & Kontrak (Wajib)">
             <Grid2>
-              <Field k="employee_id" label="Employee ID" required placeholder="STD00xxx" />
-              <Field k="full_name" label="Nama Lengkap" required placeholder="Sesuai KTP" />
+              <Field form={form} set={set} errors={errors} k="employee_id" label="Employee ID" required placeholder="STD00xxx" />
+              <Field form={form} set={set} errors={errors} k="full_name" label="Nama Lengkap" required placeholder="Sesuai KTP" />
             </Grid2>
             <Grid2>
-              <Field k="join_date" label="Tanggal Masuk" required type="date" />
-              <Field k="position" label="Posisi" required options={POSITIONS.map(p => ({ value: p, label: p }))} />
+              <Field form={form} set={set} errors={errors} k="join_date" label="Tanggal Masuk" required type="date" />
+              <Field form={form} set={set} errors={errors} k="position" label="Posisi" required options={POSITIONS.map(p => ({ value: p, label: p }))} />
             </Grid2>
             <Grid2>
-              <Field k="department" label="Departemen" options={[
+              <Field form={form} set={set} errors={errors} k="department" label="Departemen" options={[
                 { value: 'Operations', label: 'Operations' },
                 { value: 'Finance', label: 'Finance' },
                 { value: 'Marketing', label: 'Marketing' },
                 { value: 'HRD', label: 'HRD' },
               ]} />
-              <Field k="entity" label="Entity" options={[
+              <Field form={form} set={set} errors={errors} k="entity" label="Entity" options={[
                 { value: 'CV_KTN', label: 'CV KTN (Jakarta)' },
                 { value: 'CV_PRI', label: 'CV PRI (Semarang)' },
                 { value: 'PT_BSB', label: 'PT BSB (Roastery)' },
               ]} />
             </Grid2>
             <Grid2>
-              <Field k="outlet" label="Outlet" options={OUTLETS.map(o => ({ value: o, label: o }))} />
-              <Field k="employment_type" label="Tipe Kontrak" options={[
+              <Field form={form} set={set} errors={errors} k="outlet" label="Outlet" options={OUTLETS.map(o => ({ value: o, label: o }))} />
+              <Field form={form} set={set} errors={errors} k="employment_type" label="Tipe Kontrak" options={[
                 { value: 'PKWT', label: 'PKWT' },
                 { value: 'PKWTT', label: 'PKWTT (Tetap)' },
                 { value: 'Freelance', label: 'Freelance' },
@@ -248,71 +250,71 @@ export default function KaryawanBaruPage() {
           </Section>
 
           {/* KONTRAK */}
-          <Section id="kontrak" title="📄 Detail Kontrak & Gaji">
+          <Section openSections={openSections} toggleSection={toggleSection} id="kontrak" title="📄 Detail Kontrak & Gaji">
             <Grid2>
-              <Field k="grade" label="Golongan" placeholder="Contoh: 4A" />
-              <Field k="pkwt_ke" label="PKWT Ke-" type="number" placeholder="1, 2, 3..." />
+              <Field form={form} set={set} errors={errors} k="grade" label="Golongan" placeholder="Contoh: 4A" />
+              <Field form={form} set={set} errors={errors} k="pkwt_ke" label="PKWT Ke-" type="number" placeholder="1, 2, 3..." />
             </Grid2>
             <Grid2>
-              <Field k="contract_start" label="Mulai Kontrak" type="date" />
-              <Field k="contract_end" label="Akhir Kontrak" type="date" />
+              <Field form={form} set={set} errors={errors} k="contract_start" label="Mulai Kontrak" type="date" />
+              <Field form={form} set={set} errors={errors} k="contract_end" label="Akhir Kontrak" type="date" />
             </Grid2>
-            <Field k="contract_period_text" label="Periode Kontrak (teks)" placeholder="Contoh: 1 Januari 2026 - 31 Desember 2026" />
+            <Field form={form} set={set} errors={errors} k="contract_period_text" label="Periode Kontrak (teks)" placeholder="Contoh: 1 Januari 2026 - 31 Desember 2026" />
             <Grid2>
-              <Field k="base_salary" label="Gaji Pokok (Rp)" type="number" placeholder="3500000" />
-              <Field k="tunjangan" label="Tunjangan (Rp)" type="number" placeholder="1400000" />
+              <Field form={form} set={set} errors={errors} k="base_salary" label="Gaji Pokok (Rp)" type="number" placeholder="3500000" />
+              <Field form={form} set={set} errors={errors} k="tunjangan" label="Tunjangan (Rp)" type="number" placeholder="1400000" />
             </Grid2>
 
             <div style={{ padding: '14px', borderRadius: '12px', backgroundColor: '#F7F5F2', border: '1px solid #E8E4E0' }}>
               <p style={{ fontSize: '13px', fontWeight: 600, color: '#020000', margin: '0 0 12px' }}>Trial / Percobaan</p>
               <Grid2>
-                <Field k="trial_position" label="Posisi Trial" placeholder="Contoh: Trial Head Bar" />
-                <Field k="trial_salary" label="Gaji Trial (Rp)" type="number" />
+                <Field form={form} set={set} errors={errors} k="trial_position" label="Posisi Trial" placeholder="Contoh: Trial Head Bar" />
+                <Field form={form} set={set} errors={errors} k="trial_salary" label="Gaji Trial (Rp)" type="number" />
               </Grid2>
               <div style={{ marginTop: '10px' }}>
-                <Field k="trial_period" label="Periode Trial" placeholder="Contoh: 1 Feb 2026 - 30 Apr 2026" />
+                <Field form={form} set={set} errors={errors} k="trial_period" label="Periode Trial" placeholder="Contoh: 1 Feb 2026 - 30 Apr 2026" />
               </div>
             </div>
 
             <div style={{ padding: '14px', borderRadius: '12px', backgroundColor: '#FFF8F6', border: '1px solid rgba(255,79,49,0.2)' }}>
               <p style={{ fontSize: '13px', fontWeight: 600, color: '#020000', margin: '0 0 12px' }}>Status SP</p>
               <Grid2>
-                <Field k="sp_status" label="Level SP" options={[
+                <Field form={form} set={set} errors={errors} k="sp_status" label="Level SP" options={[
                   { value: '0', label: 'Tidak Ada SP' },
                   { value: '1', label: 'SP 1' },
                   { value: '2', label: 'SP 2' },
                   { value: '3', label: 'SP 3' },
                 ]} />
-                <Field k="sp_period" label="Periode SP" placeholder="Contoh: 1 Jan 2026 - 1 Jul 2026" />
+                <Field form={form} set={set} errors={errors} k="sp_period" label="Periode SP" placeholder="Contoh: 1 Jan 2026 - 1 Jul 2026" />
               </Grid2>
             </div>
           </Section>
 
           {/* DATA PRIBADI */}
-          <Section id="pribadi" title="👤 Data Pribadi">
+          <Section openSections={openSections} toggleSection={toggleSection} id="pribadi" title="👤 Data Pribadi">
             <Grid2>
-              <Field k="full_name" label="Nama Lengkap" placeholder="Sesuai KTP" />
-              <Field k="birth_date" label="Tanggal Lahir" type="date" />
+              <Field form={form} set={set} errors={errors} k="full_name" label="Nama Lengkap" placeholder="Sesuai KTP" />
+              <Field form={form} set={set} errors={errors} k="birth_date" label="Tanggal Lahir" type="date" />
             </Grid2>
             <Grid2>
-              <Field k="place_of_birth" label="Tempat Lahir" placeholder="Kota lahir" />
-              <Field k="gender" label="Jenis Kelamin" options={[
+              <Field form={form} set={set} errors={errors} k="place_of_birth" label="Tempat Lahir" placeholder="Kota lahir" />
+              <Field form={form} set={set} errors={errors} k="gender" label="Jenis Kelamin" options={[
                 { value: 'L', label: 'Laki-laki' },
                 { value: 'P', label: 'Perempuan' },
               ]} />
             </Grid2>
             <Grid2>
-              <Field k="email" label="Email Pribadi" type="email" placeholder="nama@email.com" />
-              <Field k="phone" label="No. HP" placeholder="08xxxxxxxxxx" />
+              <Field form={form} set={set} errors={errors} k="email" label="Email Pribadi" type="email" placeholder="nama@email.com" />
+              <Field form={form} set={set} errors={errors} k="phone" label="No. HP" placeholder="08xxxxxxxxxx" />
             </Grid2>
-            <Field k="address" label="Alamat KTP" placeholder="Alamat lengkap sesuai KTP" />
+            <Field form={form} set={set} errors={errors} k="address" label="Alamat KTP" placeholder="Alamat lengkap sesuai KTP" />
             <Grid2>
-              <Field k="marital_status" label="Status Pernikahan" options={[
+              <Field form={form} set={set} errors={errors} k="marital_status" label="Status Pernikahan" options={[
                 { value: 'Belum Menikah/Single', label: 'Belum Menikah' },
                 { value: 'Menikah/Married', label: 'Menikah' },
                 { value: 'Cerai/Divorced', label: 'Cerai' },
               ]} />
-              <Field k="education" label="Pendidikan Terakhir" options={[
+              <Field form={form} set={set} errors={errors} k="education" label="Pendidikan Terakhir" options={[
                 { value: 'SMA', label: 'SMA/SMK' },
                 { value: 'D3', label: 'D3' },
                 { value: 'S1', label: 'S1' },
@@ -320,57 +322,57 @@ export default function KaryawanBaruPage() {
               ]} />
             </Grid2>
             <Grid2>
-              <Field k="emergency_contact_name" label="Nama Kontak Darurat" />
-              <Field k="emergency_contact_phone" label="No. HP Kontak Darurat" />
+              <Field form={form} set={set} errors={errors} k="emergency_contact_name" label="Nama Kontak Darurat" />
+              <Field form={form} set={set} errors={errors} k="emergency_contact_phone" label="No. HP Kontak Darurat" />
             </Grid2>
           </Section>
 
           {/* BPJS & BANK */}
-          <Section id="bpjs" title="🏦 BPJS, NPWP & Rekening Bank">
+          <Section openSections={openSections} toggleSection={toggleSection} id="bpjs" title="🏦 BPJS, NPWP & Rekening Bank">
             <Grid2>
-              <Field k="id_number" label="Nomor KTP" placeholder="16 digit NIK" />
-              <Field k="npwp" label="NPWP" placeholder="Nomor NPWP" />
+              <Field form={form} set={set} errors={errors} k="id_number" label="Nomor KTP" placeholder="16 digit NIK" />
+              <Field form={form} set={set} errors={errors} k="npwp" label="NPWP" placeholder="Nomor NPWP" />
             </Grid2>
             <Grid2>
-              <Field k="bpjs_kesehatan" label="No. BPJS Kesehatan" />
-              <Field k="bpjs_tk" label="No. BPJS Ketenagakerjaan" />
+              <Field form={form} set={set} errors={errors} k="bpjs_kesehatan" label="No. BPJS Kesehatan" />
+              <Field form={form} set={set} errors={errors} k="bpjs_tk" label="No. BPJS Ketenagakerjaan" />
             </Grid2>
             <Grid2>
-              <Field k="bank_name" label="Nama Bank" placeholder="BCA, BNI, dll" />
-              <Field k="bank_account_number" label="No. Rekening" placeholder="Nomor rekening" />
+              <Field form={form} set={set} errors={errors} k="bank_name" label="Nama Bank" placeholder="BCA, BNI, dll" />
+              <Field form={form} set={set} errors={errors} k="bank_account_number" label="No. Rekening" placeholder="Nomor rekening" />
             </Grid2>
-            <Field k="bank_account_name" label="Nama Pemilik Rekening" placeholder="Sesuai buku tabungan" />
+            <Field form={form} set={set} errors={errors} k="bank_account_name" label="Nama Pemilik Rekening" placeholder="Sesuai buku tabungan" />
           </Section>
 
           {/* DOKUMEN */}
-          <Section id="dokumen" title="🔗 Link Dokumen">
-            <Field k="gdrive_link" label="Google Drive Folder" placeholder="https://drive.google.com/..." />
+          <Section openSections={openSections} toggleSection={toggleSection} id="dokumen" title="🔗 Link Dokumen">
+            <Field form={form} set={set} errors={errors} k="gdrive_link" label="Google Drive Folder" placeholder="https://drive.google.com/..." />
             <Grid2>
-              <Field k="pkwt_doc_number" label="Nomor Dokumen PKWT" placeholder="xxx/PKWT/007/HR/..." />
-              <Field k="pkwt_link" label="Link PKWT" placeholder="https://drive.google.com/..." />
+              <Field form={form} set={set} errors={errors} k="pkwt_doc_number" label="Nomor Dokumen PKWT" placeholder="xxx/PKWT/007/HR/..." />
+              <Field form={form} set={set} errors={errors} k="pkwt_link" label="Link PKWT" placeholder="https://drive.google.com/..." />
             </Grid2>
           </Section>
 
           {/* TRAINING CHECKLIST */}
-          <Section id="training" title="🎓 Checklist Training">
+          <Section openSections={openSections} toggleSection={toggleSection} id="training" title="🎓 Checklist Training">
             <p style={{ fontSize: '12px', color: '#8A8A8D', margin: 0 }}>Tandai training yang sudah diselesaikan karyawan ini:</p>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: '8px' }}>
-              <Toggle k="hr_onboarding" label="HR Onboarding" />
-              <Toggle k="barista" label="Barista Training" />
-              <Toggle k="brew" label="Brew Training" />
-              <Toggle k="sensory" label="Sensory Training" />
-              <Toggle k="test_bar_back" label="Test Bar Back" />
-              <Toggle k="test_bar" label="Test Bar" />
-              <Toggle k="kebijakan_perusahaan" label="Kebijakan & Peraturan" />
-              <Toggle k="service_excellent" label="Service Excellence" />
-              <Toggle k="matcha" label="Matcha Training" />
-              <Toggle k="pk_barista" label="PK Barista" />
-              <Toggle k="pk_kitchen" label="PK Kitchen" />
+              <Toggle form={form} set={set} k="hr_onboarding" label="HR Onboarding" />
+              <Toggle form={form} set={set} k="barista" label="Barista Training" />
+              <Toggle form={form} set={set} k="brew" label="Brew Training" />
+              <Toggle form={form} set={set} k="sensory" label="Sensory Training" />
+              <Toggle form={form} set={set} k="test_bar_back" label="Test Bar Back" />
+              <Toggle form={form} set={set} k="test_bar" label="Test Bar" />
+              <Toggle form={form} set={set} k="kebijakan_perusahaan" label="Kebijakan & Peraturan" />
+              <Toggle form={form} set={set} k="service_excellent" label="Service Excellence" />
+              <Toggle form={form} set={set} k="matcha" label="Matcha Training" />
+              <Toggle form={form} set={set} k="pk_barista" label="PK Barista" />
+              <Toggle form={form} set={set} k="pk_kitchen" label="PK Kitchen" />
             </div>
           </Section>
 
           {/* CATATAN */}
-          <Section id="catatan" title="📝 Catatan Internal">
+          <Section openSections={openSections} toggleSection={toggleSection} id="catatan" title="📝 Catatan Internal">
             <div>
               <label style={lbl}>Catatan Khusus (Case Notes)</label>
               <textarea className={inp} style={{ ...ist, resize: 'vertical' as const }} value={form.case_notes}

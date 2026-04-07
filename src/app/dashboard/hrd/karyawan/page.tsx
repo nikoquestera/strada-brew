@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import Link from 'next/link'
+import { Plus, Users, Clock, AlertTriangle } from 'lucide-react'
 
 export default async function KaryawanPage() {
   const supabase = await createClient()
@@ -27,9 +28,9 @@ export default async function KaryawanPage() {
 
   if (error) {
     return (
-      <div style={{ padding: '40px', textAlign: 'center' }}>
-        <p style={{ color: '#FF4F31', fontSize: '14px' }}>Error loading karyawan: {error.message}</p>
-        <p style={{ color: '#8A8A8D', fontSize: '12px', marginTop: '8px' }}>Cek Supabase connection dan nama kolom di tabel employees.</p>
+      <div className="p-10 text-center">
+        <p className="text-strada-coral text-sm font-medium">Error loading karyawan: {error.message}</p>
+        <p className="text-gray-500 text-xs mt-2">Cek Supabase connection dan nama kolom di tabel employees.</p>
       </div>
     )
   }
@@ -47,110 +48,109 @@ export default async function KaryawanPage() {
   }
 
   const statusStyle: Record<string, { bg: string; color: string }> = {
-    active: { bg: '#E6F4F1', color: '#005353' },
-    inactive: { bg: '#F0EEEC', color: '#4C4845' },
-    resigned: { bg: '#FEF8E6', color: '#DE9733' },
-    terminated: { bg: '#FFF0EE', color: '#FF4F31' },
+    active: { bg: 'bg-teal-50', color: 'text-teal-700' },
+    inactive: { bg: 'bg-gray-100', color: 'text-gray-600' },
+    resigned: { bg: 'bg-amber-50', color: 'text-amber-700' },
+    terminated: { bg: 'bg-red-50', color: 'text-red-600' },
   }
 
   return (
-    <>
-      <style>{`
-        @media (max-width: 768px) {
-          .karyawan-hide { display: none !important; }
-          .karyawan-header { flex-direction: column !important; align-items: flex-start !important; }
-        }
-        .karyawan-row { transition: background-color 0.1s; }
-        .karyawan-row:hover { background-color: #F0EEEC !important; cursor: pointer; }
-        .karyawan-row:hover a { color: #026a80 !important; }
-      `}</style>
-      <div style={{ padding: '24px', minHeight: '100vh' }}>
+    <div className="p-6 md:p-8 max-w-7xl mx-auto space-y-6">
 
-        {/* Header */}
-        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '20px', flexWrap: 'wrap', gap: '12px' }} className="karyawan-header">
-          <div>
-            <p style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '3px', color: '#037894', textTransform: 'uppercase', margin: '0 0 4px' }}>HRD</p>
-            <h1 style={{ fontSize: '24px', fontWeight: 800, color: '#020000', margin: 0 }}>Data Karyawan</h1>
-            <p style={{ fontSize: '13px', color: '#8A8A8D', margin: '4px 0 0' }}>{stats.total} karyawan terdaftar</p>
-          </div>
-          <Link href="/dashboard/hrd/karyawan/baru" className="brew-btn-teal"
-            style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '10px 20px', borderRadius: '12px', backgroundColor: '#037894', color: '#fff', fontWeight: 700, fontSize: '13px', textDecoration: 'none', transition: 'background-color 0.15s' }}>
-            + Tambah Karyawan
-          </Link>
+      {/* Header */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <p className="text-[10px] font-bold tracking-[0.2em] text-strada-blue uppercase mb-1">HRD Module</p>
+          <h1 className="text-2xl md:text-3xl font-extrabold text-gray-900 tracking-tight">Data Karyawan</h1>
+          <p className="text-sm font-medium text-gray-500 mt-1">{stats.total} karyawan terdaftar di sistem</p>
         </div>
-
-        {/* Stats */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '10px', marginBottom: '20px' }}>
-          {[
-            { label: 'Total Karyawan', value: stats.total, color: '#020000' },
-            { label: 'Aktif', value: stats.active, color: '#005353' },
-            { label: 'Kontrak ≤30 Hari', value: stats.expiring, color: '#FF4F31' },
-          ].map(s => (
-            <div key={s.label} style={{ backgroundColor: '#fff', borderRadius: '14px', padding: '16px', border: '1.5px solid #E8E4E0', textAlign: 'center' }}>
-              <p style={{ fontSize: '26px', fontWeight: 800, color: s.color, margin: '0 0 4px' }}>{s.value}</p>
-              <p style={{ fontSize: '11px', color: '#8A8A8D', margin: 0 }}>{s.label}</p>
-            </div>
-          ))}
-        </div>
-
-        {/* Table */}
-        <div style={{ backgroundColor: '#fff', borderRadius: '16px', border: '1.5px solid #E8E4E0', overflow: 'hidden' }}>
-          <div style={{ overflowX: 'auto' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '600px' }}>
-              <thead>
-                <tr style={{ backgroundColor: '#FAFAF9', borderBottom: '1px solid #F0EEEC' }}>
-                  {['ID', 'Nama', 'Posisi', 'Outlet', 'Gaji', 'Kontrak Berakhir', 'Status'].map(h => (
-                    <th key={h} style={{ padding: '12px 14px', fontSize: '11px', fontWeight: 700, color: '#8A8A8D', textAlign: 'left', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>
-                      {h}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {(employees || []).map(emp => {
-                  const contractEnd = emp.contract_end ? new Date(emp.contract_end) : null
-                  const daysLeft = contractEnd ? Math.ceil((contractEnd.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)) : null
-                  const isExpiring = daysLeft !== null && daysLeft <= 30 && daysLeft >= 0
-                  const s = statusStyle[emp.status] ?? statusStyle.inactive
-
-                  return (
-                    <tr key={emp.id} className="karyawan-row" style={{ borderBottom: '1px solid rgba(76,72,69,0.05)' }}>
-                      <td style={{ padding: '12px 14px', fontSize: '12px', color: '#037894', fontWeight: 600, whiteSpace: 'nowrap' }}>
-                        <Link href={`/dashboard/hrd/karyawan/${emp.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>{emp.employee_id}</Link>
-                      </td>
-                      <td style={{ padding: '12px 14px' }}>
-                        <Link href={`/dashboard/hrd/karyawan/${emp.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-                          <p style={{ fontSize: '13px', fontWeight: 600, color: '#020000', margin: 0, whiteSpace: 'nowrap' }}>{emp.full_name}</p>
-                        </Link>
-                        <p style={{ fontSize: '11px', color: '#8A8A8D', margin: 0 }}>{emp.department} · {emp.entity}</p>
-                      </td>
-                      <td style={{ padding: '12px 14px', fontSize: '13px', color: '#4C4845', whiteSpace: 'nowrap' }}>{emp.position}</td>
-                      <td style={{ padding: '12px 14px', fontSize: '12px', color: '#4C4845' }} className="karyawan-hide">{emp.outlet || '-'}</td>
-                      <td style={{ padding: '12px 14px', fontSize: '12px', color: '#020000', whiteSpace: 'nowrap' }} className="karyawan-hide">
-                        {emp.base_salary ? `Rp ${(emp.base_salary / 1000000).toFixed(1)}jt` : '-'}
-                      </td>
-                      <td style={{ padding: '12px 14px', fontSize: '12px', whiteSpace: 'nowrap', color: isExpiring ? '#FF4F31' : '#4C4845', fontWeight: isExpiring ? 700 : 400 }} className="karyawan-hide">
-                        {contractEnd ? contractEnd.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: '2-digit' }) : '-'}
-                        {isExpiring && <span style={{ marginLeft: '4px', fontSize: '10px' }}>({daysLeft}hr)</span>}
-                      </td>
-                      <td style={{ padding: '12px 14px' }}>
-                        <span style={{ fontSize: '11px', fontWeight: 700, padding: '4px 10px', borderRadius: '8px', backgroundColor: s.bg, color: s.color, whiteSpace: 'nowrap' }}>
-                          {emp.status?.toUpperCase() || 'UNKNOWN'}
-                        </span>
-                      </td>
-                    </tr>
-                  )
-                })}
-              </tbody>
-            </table>
-          </div>
-          {(!employees || employees.length === 0) && (
-            <div style={{ textAlign: 'center', padding: '60px', color: '#8A8A8D', fontSize: '14px' }}>
-              Belum ada data karyawan. <Link href="/dashboard/hrd/karyawan/baru" style={{ color: '#037894' }}>Tambah sekarang</Link>
-            </div>
-          )}
-        </div>
+        <Link href="/dashboard/hrd/karyawan/baru" 
+          className="apple-btn-primary flex items-center justify-center gap-2">
+          <Plus size={18} /> Tambah Karyawan
+        </Link>
       </div>
-    </>
+
+      {/* Stats */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        {[
+          { label: 'Total Karyawan', value: stats.total, color: 'text-gray-900', icon: Users },
+          { label: 'Karyawan Aktif', value: stats.active, color: 'text-strada-blue', icon: Clock },
+          { label: 'Kontrak ≤30 Hari', value: stats.expiring, color: 'text-strada-coral', icon: AlertTriangle },
+        ].map((s, idx) => {
+          const Icon = s.icon;
+          return (
+            <div key={idx} className="apple-card p-6 flex flex-col items-center justify-center text-center">
+              <Icon size={24} className={`${s.color} mb-3 opacity-80`} />
+              <p className={`text-3xl font-extrabold ${s.color} mb-1 tracking-tight`}>{s.value}</p>
+              <p className="text-[11px] font-bold text-gray-400 uppercase tracking-widest">{s.label}</p>
+            </div>
+          )
+        })}
+      </div>
+
+      {/* Table */}
+      <div className="apple-card overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full text-left border-collapse min-w-[800px]">
+            <thead>
+              <tr className="bg-gray-50/50 border-b border-gray-100">
+                {['ID Karyawan', 'Nama Karyawan', 'Posisi', 'Outlet', 'Gaji Dasar', 'Kontrak Berakhir', 'Status'].map(h => (
+                  <th key={h} className="px-5 py-4 text-[11px] font-extrabold text-gray-400 uppercase tracking-widest whitespace-nowrap">
+                    {h}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-100">
+              {(employees || []).map(emp => {
+                const contractEnd = emp.contract_end ? new Date(emp.contract_end) : null
+                const daysLeft = contractEnd ? Math.ceil((contractEnd.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)) : null
+                const isExpiring = daysLeft !== null && daysLeft <= 30 && daysLeft >= 0
+                const s = statusStyle[emp.status] ?? statusStyle.inactive
+
+                return (
+                  <tr key={emp.id} className="hover:bg-gray-50/80 transition-colors duration-150 group cursor-pointer">
+                    <td className="px-5 py-4 whitespace-nowrap">
+                      <Link href={`/dashboard/hrd/karyawan/${emp.id}`} className="text-strada-blue font-bold text-[13px] group-hover:text-strada-dark-teal transition-colors">
+                        {emp.employee_id}
+                      </Link>
+                    </td>
+                    <td className="px-5 py-4">
+                      <Link href={`/dashboard/hrd/karyawan/${emp.id}`} className="block">
+                        <p className="text-[14px] font-bold text-gray-900 group-hover:text-strada-blue transition-colors truncate max-w-[200px]">{emp.full_name}</p>
+                        <p className="text-[11px] font-medium text-gray-500 mt-0.5 truncate max-w-[200px]">{emp.department} · {emp.entity}</p>
+                      </Link>
+                    </td>
+                    <td className="px-5 py-4 text-[13px] font-medium text-gray-700 whitespace-nowrap">{emp.position}</td>
+                    <td className="px-5 py-4 text-[13px] font-medium text-gray-500 whitespace-nowrap">{emp.outlet || '-'}</td>
+                    <td className="px-5 py-4 text-[13px] font-semibold text-gray-900 whitespace-nowrap">
+                      {emp.base_salary ? `Rp ${(emp.base_salary / 1000000).toFixed(1)}jt` : '-'}
+                    </td>
+                    <td className="px-5 py-4 whitespace-nowrap">
+                      <div className={`flex items-center gap-1.5 ${isExpiring ? 'text-strada-coral font-bold' : 'text-gray-600 font-medium'} text-[13px]`}>
+                        {contractEnd ? contractEnd.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: '2-digit' }) : '-'}
+                        {isExpiring && <span className="text-[10px] bg-red-50 text-red-600 px-1.5 py-0.5 rounded font-bold">({daysLeft}hr)</span>}
+                      </div>
+                    </td>
+                    <td className="px-5 py-4 whitespace-nowrap">
+                      <span className={`text-[10px] font-extrabold px-2.5 py-1 rounded-md tracking-wider uppercase ${s.bg} ${s.color}`}>
+                        {emp.status || 'UNKNOWN'}
+                      </span>
+                    </td>
+                  </tr>
+                )
+              })}
+            </tbody>
+          </table>
+        </div>
+        {(!employees || employees.length === 0) && (
+          <div className="text-center py-16">
+            <Users size={40} className="mx-auto text-gray-300 mb-3" />
+            <p className="text-gray-500 text-sm font-medium">Belum ada data karyawan.</p>
+            <Link href="/dashboard/hrd/karyawan/baru" className="text-strada-blue text-sm font-bold mt-2 inline-block hover:underline">Tambah karyawan pertama</Link>
+          </div>
+        )}
+      </div>
+    </div>
   )
 }

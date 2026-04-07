@@ -30,44 +30,43 @@ export default function DashboardShell({ children, userEmail }: Props) {
     router.push('/login')
   }
 
-  const SidebarContent = () => (
-    <aside style={{ backgroundColor: '#020000', display: 'flex', flexDirection: 'column', height: '100%' }}>
+  const sidebarContent = (
+    <aside className="bg-white/80 backdrop-blur-xl border-r border-gray-200/50 flex flex-col h-full w-full">
       {/* Brand / Logo */}
-      <div style={{ padding: '18px 20px', borderBottom: '1px solid rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+      <div className="px-6 py-5 border-b border-gray-100 flex items-center justify-between">
         <img
           src="/strada-logo.svg"
           alt="Strada Coffee BREW"
-          style={{ height: '38px', width: 'auto', display: 'block' }}
+          className="h-8 w-auto block filter grayscale contrast-200 opacity-90"
         />
-        <button onClick={() => setSidebarOpen(false)}
-          style={{ display: 'none', color: 'rgba(228,222,216,0.4)', background: 'none', border: 'none', cursor: 'pointer', padding: '4px' }}
-          className="sidebar-close-btn brew-icon-btn">
-          <X size={18} />
+        <button 
+          onClick={() => setSidebarOpen(false)}
+          className="md:hidden text-gray-400 hover:text-gray-600 transition-colors p-1"
+        >
+          <X size={20} />
         </button>
       </div>
 
       {/* Module label */}
-      <div style={{ padding: '20px 24px 8px' }}>
-        <p style={{ color: 'rgba(255,255,255,0.22)', fontSize: '10px', fontWeight: 700, letterSpacing: '3px', textTransform: 'uppercase', margin: 0 }}>HRD Module</p>
+      <div className="px-6 pt-6 pb-2">
+        <p className="text-gray-400 text-[10px] font-bold tracking-[3px] uppercase m-0">HRD Module</p>
       </div>
 
       {/* Nav */}
-      <nav style={{ flex: 1, padding: '0 12px', display: 'flex', flexDirection: 'column', gap: '2px' }}>
+      <nav className="flex-1 px-3 py-2 flex flex-col gap-1 overflow-y-auto">
         {hrdNav.map(item => {
           const Icon = item.icon
           const active = pathname === item.href || (item.href !== '/dashboard/hrd' && pathname.startsWith(item.href))
           return (
             <button key={item.href}
               onClick={() => { router.push(item.href); setSidebarOpen(false) }}
-              className={active ? undefined : 'brew-nav-btn'}
-              style={{
-                width: '100%', display: 'flex', alignItems: 'center', gap: '10px',
-                padding: '10px 12px', borderRadius: '8px', fontSize: '13px', fontWeight: 600,
-                backgroundColor: active ? '#037894' : 'transparent',
-                color: active ? '#ffffff' : 'rgba(228,222,216,0.5)',
-                border: 'none', cursor: 'pointer', textAlign: 'left', transition: 'all 0.15s',
-              }}>
-              <Icon size={15} />
+              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] font-semibold transition-all duration-200 ${
+                active 
+                  ? 'bg-strada-blue text-white shadow-sm' 
+                  : 'text-gray-500 hover:bg-gray-100 hover:text-gray-900'
+              }`}
+            >
+              <Icon size={16} className={active ? "text-white" : "text-gray-400"} />
               {item.label}
             </button>
           )
@@ -75,94 +74,72 @@ export default function DashboardShell({ children, userEmail }: Props) {
       </nav>
 
       {/* Coming soon modules */}
-      <div style={{ padding: '16px 20px', borderTop: '1px solid rgba(255,255,255,0.07)' }}>
-        <p style={{ color: 'rgba(255,255,255,0.18)', fontSize: '10px', fontWeight: 700, letterSpacing: '3px', textTransform: 'uppercase', margin: '0 0 8px' }}>Segera Hadir</p>
-        {['Finance', 'Warehouse', 'Purchasing', 'Audit'].map(m => (
-          <div key={m} style={{ display: 'flex', justifyContent: 'space-between', padding: '3px 0' }}>
-            <span style={{ color: 'rgba(255,255,255,0.18)', fontSize: '12px' }}>{m}</span>
-            <span style={{ color: 'rgba(255,255,255,0.12)', fontSize: '10px', letterSpacing: '1px' }}>SOON</span>
-          </div>
-        ))}
+      <div className="px-6 py-5 border-t border-gray-100 bg-gray-50/50">
+        <p className="text-gray-400 text-[10px] font-bold tracking-[3px] uppercase mb-3">Segera Hadir</p>
+        <div className="flex flex-col gap-2.5">
+          {['Finance', 'Warehouse', 'Purchasing', 'Audit'].map(m => (
+            <div key={m} className="flex justify-between items-center">
+              <span className="text-gray-500 text-xs font-medium">{m}</span>
+              <span className="bg-gray-100 text-gray-400 px-1.5 py-0.5 rounded text-[9px] font-bold tracking-wider">SOON</span>
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* User section */}
-      <div style={{ padding: '14px 16px', borderTop: '1px solid rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', gap: '10px' }}>
-        <div style={{ width: '32px', height: '32px', borderRadius: '50%', backgroundColor: '#037894', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-          <span style={{ color: '#fff', fontSize: '12px', fontWeight: 700 }}>{userEmail?.[0]?.toUpperCase()}</span>
+      <div className="p-4 border-t border-gray-100 bg-white flex items-center gap-3">
+        <div className="w-9 h-9 rounded-full bg-gradient-to-br from-strada-blue to-strada-dark-teal flex items-center justify-center shrink-0 shadow-sm">
+          <span className="text-white text-xs font-bold">{userEmail?.[0]?.toUpperCase()}</span>
         </div>
-        <div style={{ flex: 1, minWidth: 0 }}>
-          <p style={{ color: 'rgba(228,222,216,0.65)', fontSize: '12px', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{userEmail}</p>
-          <p style={{ color: 'rgba(228,222,216,0.28)', fontSize: '10px', margin: 0, letterSpacing: '1px', textTransform: 'uppercase' }}>HRD</p>
+        <div className="flex-1 min-w-0">
+          <p className="text-gray-900 text-sm font-semibold m-0 truncate">{userEmail}</p>
+          <p className="text-gray-400 text-[10px] m-0 tracking-wider uppercase font-medium">HRD Administrator</p>
         </div>
         <button onClick={handleLogout} title="Keluar"
-          style={{ color: 'rgba(228,222,216,0.28)', background: 'none', border: 'none', cursor: 'pointer', padding: '4px', transition: 'color 0.15s' }}
-          className="brew-icon-btn">
-          <LogOut size={14} />
+          className="text-gray-400 hover:text-strada-coral hover:bg-red-50 p-2 rounded-full transition-all duration-200">
+          <LogOut size={16} />
         </button>
       </div>
     </aside>
   )
 
   return (
-    <>
-      <style>{`
-        @media (max-width: 768px) {
-          .desktop-sidebar { display: none !important; }
-          .mobile-header { display: flex !important; }
-          .mobile-sidebar { display: ${sidebarOpen ? 'flex' : 'none'} !important; }
-          .sidebar-close-btn { display: block !important; }
-        }
-        @media (min-width: 769px) {
-          .mobile-header { display: none !important; }
-          .mobile-sidebar { display: none !important; }
-          .desktop-sidebar { display: flex !important; }
-        }
-      `}</style>
-
+    <div className="flex h-screen overflow-hidden bg-[#F5F5F7]">
       {/* Mobile overlay */}
       {sidebarOpen && (
-        <div onClick={() => setSidebarOpen(false)}
-          style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.55)', zIndex: 40 }} />
+        <div 
+          onClick={() => setSidebarOpen(false)}
+          className="fixed inset-0 bg-gray-900/40 backdrop-blur-sm z-40 transition-opacity md:hidden" 
+        />
       )}
 
       {/* Mobile sidebar drawer */}
-      <div className="mobile-sidebar" style={{
-        position: 'fixed', top: 0, left: 0, bottom: 0, width: '260px',
-        zIndex: 50, flexDirection: 'column'
-      }}>
-        <SidebarContent />
+      <div className={`fixed top-0 left-0 bottom-0 w-[280px] z-50 transform transition-transform duration-300 ease-in-out md:hidden ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+        {sidebarContent}
       </div>
 
-      <div style={{ display: 'flex', height: '100vh', overflow: 'hidden' }}>
-
-        {/* Desktop sidebar */}
-        <div className="desktop-sidebar" style={{ width: '240px', flexShrink: 0, flexDirection: 'column' }}>
-          <SidebarContent />
-        </div>
-
-        {/* Main content area */}
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-
-          {/* Mobile header */}
-          <div className="mobile-header" style={{
-            backgroundColor: '#020000', padding: '14px 20px',
-            alignItems: 'center', justifyContent: 'space-between', flexShrink: 0
-          }}>
-            <button onClick={() => setSidebarOpen(true)}
-              style={{ color: '#E4DED8', background: 'none', border: 'none', cursor: 'pointer', padding: '4px' }}
-              className="brew-icon-btn">
-              <Menu size={20} />
-            </button>
-            <img src="/strada-logo.svg" alt="Strada BREW" style={{ height: '30px', width: 'auto' }} />
-            <div style={{ width: '28px' }} />
-          </div>
-
-          {/* Page content */}
-          <main style={{ flex: 1, overflowY: 'auto' }}>
-            {children}
-          </main>
-        </div>
+      {/* Desktop sidebar */}
+      <div className="hidden md:flex w-[260px] lg:w-[280px] shrink-0 flex-col shadow-[1px_0_10px_rgba(0,0,0,0.02)] z-10 relative">
+        {sidebarContent}
       </div>
-    </>
+
+      {/* Main content area */}
+      <div className="flex-1 flex flex-col min-w-0 overflow-hidden relative">
+        {/* Mobile header */}
+        <div className="md:hidden bg-white/80 backdrop-blur-xl border-b border-gray-200/50 px-4 py-3 flex items-center justify-between shrink-0 sticky top-0 z-30 shadow-sm">
+          <button onClick={() => setSidebarOpen(true)}
+            className="text-gray-600 hover:text-gray-900 p-1.5 hover:bg-gray-100 rounded-lg transition-colors">
+            <Menu size={20} />
+          </button>
+          <img src="/strada-logo.svg" alt="Strada BREW" className="h-6 w-auto filter grayscale contrast-200 opacity-90" />
+          <div className="w-8" /> {/* spacer for center alignment */}
+        </div>
+
+        {/* Page content */}
+        <main className="flex-1 overflow-y-auto">
+          {children}
+        </main>
+      </div>
+    </div>
   )
 }

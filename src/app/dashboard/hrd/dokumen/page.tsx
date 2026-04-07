@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { Upload, CheckCircle, FileText, Zap } from 'lucide-react'
 
@@ -19,17 +19,18 @@ export default function DokumenPage() {
   const [uploading, setUploading] = useState<string | null>(null)
   const [uploadSuccess, setUploadSuccess] = useState<string | null>(null)
 
-  useEffect(() => {
-    loadTemplates()
-  }, [])
-
-  async function loadTemplates() {
+  const loadTemplates = useCallback(async () => {
     const { data } = await supabase
       .from('document_templates')
       .select('*')
       .order('category')
     if (data) setTemplates(data)
-  }
+  }, [supabase])
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    loadTemplates()
+  }, [loadTemplates])
 
   async function handleUpload(docId: string, file: File) {
     if (!file.name.endsWith('.docx')) {

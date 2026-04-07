@@ -2,6 +2,7 @@
 import { useState, useEffect, Suspense } from 'react'
 import { useSearchParams, useRouter as useNextRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
+import { MapPin, Clock, DollarSign, ArrowLeft, ArrowRight, CheckCircle2, ChevronRight, Check } from 'lucide-react'
 
 function ApplyContent() {
   const supabase = createClient()
@@ -122,34 +123,33 @@ function ApplyContent() {
     }
   }
 
-  // ── shared styles ─────────────────────────────────────────
-  const inp: React.CSSProperties = {
-    width: '100%', padding: '14px 16px', borderRadius: '14px',
-    border: '1.5px solid #E8E4E0', fontSize: '16px', outline: 'none',
-    backgroundColor: '#fff', boxSizing: 'border-box',
-    color: '#020000', fontFamily: 'inherit', WebkitAppearance: 'none',
-  }
-  const lbl: React.CSSProperties = { display: 'block', fontSize: '13px', fontWeight: 700, color: '#4C4845', marginBottom: '8px' }
-  const btn: React.CSSProperties = { width: '100%', padding: '16px', borderRadius: '14px', fontSize: '16px', fontWeight: 700, border: 'none', cursor: 'pointer', minHeight: '52px' }
-
   // ── SUCCESS ────────────────────────────────────────────────
   if (submitted) return (
-    <div style={{ minHeight: '100vh', backgroundColor: '#F7F5F2', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
-      <div style={{ backgroundColor: '#fff', borderRadius: '24px', padding: '40px 28px', maxWidth: '460px', width: '100%', textAlign: 'center', border: '1.5px solid #E8E4E0', boxShadow: '0 4px 32px rgba(0,0,0,0.06)' }}>
-        <div style={{ fontSize: '52px', marginBottom: '16px' }}>🎉</div>
-        <h2 style={{ fontSize: '22px', fontWeight: 800, color: '#020000', margin: '0 0 12px', lineHeight: 1.2 }}>Lamaran Terkirim!</h2>
-        <p style={{ fontSize: '15px', color: '#4C4845', lineHeight: 1.7, margin: '0 0 8px' }}>
-          Terima kasih <strong>{form.full_name}</strong>! Lamaran untuk posisi <strong>{form.position_applied}</strong> sudah kami terima.
-        </p>
-        <p style={{ fontSize: '14px', color: '#8A8A8D', lineHeight: 1.6, margin: 0 }}>
-          Tim HR Strada Coffee akan menghubungi kamu di nomor <strong>{form.phone}</strong> dalam 3–5 hari kerja.
-        </p>
-        <div style={{ marginTop: '24px', padding: '16px', borderRadius: '14px', backgroundColor: 'rgba(3,120,148,0.06)', border: '1px solid rgba(3,120,148,0.15)' }}>
-          <p style={{ margin: 0, fontSize: '13px', color: '#037894', fontWeight: 700 }}>✦ Quest AI sedang menganalisa profil kamu</p>
-          <p style={{ margin: '4px 0 0', fontSize: '12px', color: '#8A8A8D' }}>Seleksi awal dilakukan secara otomatis oleh AI</p>
+    <div className="min-h-screen bg-[#F5F5F7] flex items-center justify-center p-6">
+      <div className="bg-white rounded-3xl p-10 md:p-12 max-w-lg w-full text-center border border-gray-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
+        <div className="w-20 h-20 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-6">
+          <CheckCircle2 size={40} className="text-green-500" />
         </div>
-        <div style={{ marginTop: '24px', padding: '12px 0', borderTop: '1px solid #F0EEEC' }}>
-          <p style={{ margin: 0, fontSize: '12px', color: '#8A8A8D', fontStyle: 'italic' }}>strada coffee · est. 2012</p>
+        <h2 className="text-3xl font-extrabold text-gray-900 mb-3 tracking-tight">Lamaran Terkirim!</h2>
+        <p className="text-base text-gray-600 leading-relaxed mb-4">
+          Terima kasih <strong className="text-gray-900">{form.full_name}</strong>! Lamaran untuk posisi <strong className="text-gray-900">{form.position_applied}</strong> sudah kami terima.
+        </p>
+        <p className="text-sm text-gray-500 leading-relaxed">
+          Tim HR Strada Coffee akan menghubungi Anda di nomor <strong className="text-gray-900">{form.phone}</strong> dalam 3–5 hari kerja.
+        </p>
+        
+        <div className="mt-8 p-5 rounded-2xl bg-blue-50/50 border border-blue-100 text-left flex gap-4 items-start">
+          <div className="w-8 h-8 rounded-full bg-white shadow-sm flex items-center justify-center shrink-0">
+            <span className="text-lg">✨</span>
+          </div>
+          <div>
+            <p className="text-sm font-bold text-strada-blue mb-1">Quest AI sedang menganalisa profil Anda</p>
+            <p className="text-[13px] text-gray-500">Seleksi awal dilakukan secara otomatis dan objektif oleh AI untuk memastikan kecocokan profil.</p>
+          </div>
+        </div>
+        
+        <div className="mt-10 pt-6 border-t border-gray-100">
+          <p className="text-xs text-gray-400 font-medium tracking-wide">STRADA COFFEE · EST. 2012</p>
         </div>
       </div>
     </div>
@@ -157,324 +157,302 @@ function ApplyContent() {
 
   // ── LOADING ────────────────────────────────────────────────
   if (loading) return (
-    <div style={{ minHeight: '100vh', backgroundColor: '#F7F5F2', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-      <p style={{ color: '#8A8A8D', fontSize: '15px' }}>Memuat posisi tersedia...</p>
+    <div className="min-h-screen bg-[#F5F5F7] flex items-center justify-center">
+      <div className="flex flex-col items-center gap-3">
+        <div className="w-8 h-8 border-4 border-gray-200 border-t-strada-blue rounded-full animate-spin" />
+        <p className="text-gray-500 font-medium text-sm">Memuat data...</p>
+      </div>
     </div>
   )
 
   // ── JOB LIST ───────────────────────────────────────────────
   if (!selectedJob) return (
-    <>
-      <style>{`
-        * { box-sizing: border-box; }
-        body { margin: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
-        .job-card { transition: all 0.15s; cursor: pointer; }
-        .job-card:hover { border-color: #037894 !important; box-shadow: 0 4px 20px rgba(3,120,148,0.12) !important; transform: translateY(-1px); }
-        .job-card:active { transform: scale(0.99); }
-        @media (max-width: 480px) {
-          .job-meta { flex-direction: column !important; gap: 4px !important; }
-          .job-lamar-btn { padding: 10px 14px !important; font-size: 13px !important; }
-        }
-      `}</style>
-      <div style={{ minHeight: '100vh', backgroundColor: '#F7F5F2' }}>
+    <div className="min-h-screen bg-[#F5F5F7] font-sans">
+      {/* Header */}
+      <div className="bg-white/80 backdrop-blur-xl border-b border-gray-200/50 sticky top-0 z-30 px-6 py-4 flex flex-col items-center shadow-sm">
+        <img src="/strada-logo.svg" alt="Strada Coffee" className="h-8 w-auto filter grayscale contrast-200 mb-1" />
+        <p className="text-[11px] font-bold text-gray-400 tracking-[0.2em] uppercase">Bergabunglah bersama tim kami</p>
+      </div>
 
-        {/* Header */}
-        <div style={{ backgroundColor: '#020000', padding: '28px 20px 24px', textAlign: 'center' }}>
-          <img src="/strada-logo.svg" alt="Strada Coffee" style={{ height: '44px', width: 'auto', margin: '0 auto 12px', display: 'block' }} />
-          <p style={{ fontSize: '13px', fontWeight: 600, color: 'rgba(228,222,216,0.6)', margin: 0, letterSpacing: '1px' }}>Bergabunglah bersama tim kami</p>
+      <div className="max-w-3xl mx-auto px-6 py-12 md:py-16">
+        <div className="mb-10 text-center md:text-left">
+          <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 tracking-tight mb-3">Posisi Tersedia</h1>
+          <p className="text-base text-gray-500">
+            {jobs.length > 0 ? `Temukan peran yang sesuai dengan passion Anda dari ${jobs.length} posisi terbuka.` : 'Belum ada posisi terbuka saat ini'}
+          </p>
         </div>
 
-        <div style={{ maxWidth: '680px', margin: '0 auto', padding: '28px 16px 48px' }}>
-          <div style={{ marginBottom: '24px' }}>
-            <h1 style={{ fontSize: '22px', fontWeight: 800, color: '#020000', margin: '0 0 6px' }}>Posisi yang Tersedia</h1>
-            <p style={{ fontSize: '14px', color: '#8A8A8D', margin: 0 }}>
-              {jobs.length > 0 ? `${jobs.length} posisi terbuka · Pilih yang sesuai passion kamu` : 'Belum ada posisi terbuka saat ini'}
-            </p>
+        {jobs.length === 0 ? (
+          <div className="text-center py-20 px-6 bg-white rounded-[32px] border border-gray-100 shadow-sm">
+            <span className="text-5xl mb-4 block">☕</span>
+            <p className="text-xl font-bold text-gray-900 mb-2">Belum ada posisi terbuka</p>
+            <p className="text-gray-500">Pantau terus halaman ini untuk lowongan terbaru dari Strada Coffee.</p>
           </div>
-
-          {jobs.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: '60px 20px', backgroundColor: '#fff', borderRadius: '20px', border: '1.5px solid #E8E4E0' }}>
-              <p style={{ fontSize: '40px', margin: '0 0 12px' }}>☕</p>
-              <p style={{ fontSize: '16px', fontWeight: 700, color: '#020000', margin: '0 0 8px' }}>Belum ada posisi terbuka</p>
-              <p style={{ fontSize: '14px', color: '#8A8A8D', margin: 0, lineHeight: 1.6 }}>Pantau terus halaman ini untuk lowongan terbaru dari Strada Coffee.</p>
-            </div>
-          ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-              {jobs.map(job => (
-                <div key={job.id} className="job-card"
-                  onClick={() => nextRouter.push(`/jobs/${job.job_id}`)}
-                  style={{ backgroundColor: '#fff', borderRadius: '18px', padding: '20px', border: '1.5px solid #E8E4E0' }}>
-
-                  {/* Top row */}
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '12px', marginBottom: '10px' }}>
-                    <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap', marginBottom: '4px' }}>
-                        <h3 style={{ fontSize: '17px', fontWeight: 800, color: '#020000', margin: 0, lineHeight: 1.2 }}>{job.title}</h3>
-                        {job.is_urgent && (
-                          <span style={{ fontSize: '10px', fontWeight: 700, padding: '3px 8px', borderRadius: '6px', backgroundColor: '#FFF0EE', color: '#FF4F31', flexShrink: 0 }}>URGENT</span>
-                        )}
-                      </div>
-                      <p style={{ fontSize: '13px', color: '#037894', fontWeight: 700, margin: 0 }}>{job.department}</p>
-                    </div>
-                    <div className="job-lamar-btn" style={{ flexShrink: 0, padding: '10px 18px', borderRadius: '12px', backgroundColor: '#037894', color: '#fff', fontSize: '14px', fontWeight: 700, minHeight: '44px', display: 'flex', alignItems: 'center', whiteSpace: 'nowrap' }}>
-                      Lihat →
-                    </div>
-                  </div>
-
-                  {/* Meta info */}
-                  <div className="job-meta" style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
-                    <span style={{ fontSize: '13px', color: '#4C4845', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                      📍 {job.location}{job.outlet ? ` · ${job.outlet}` : ''}
-                    </span>
-                    <span style={{ fontSize: '13px', color: '#4C4845', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                      ⏰ {job.employment_type}
-                    </span>
-                    {job.salary_display && (
-                      <span style={{ fontSize: '13px', color: '#4C4845', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                        💰 {job.salary_display}
-                      </span>
+        ) : (
+          <div className="flex flex-col gap-4">
+            {jobs.map(job => (
+              <div key={job.id} 
+                onClick={() => nextRouter.push(`/jobs/${job.job_id}`)}
+                className="group bg-white rounded-3xl p-6 border border-gray-200/60 shadow-sm hover:shadow-md hover:border-strada-blue/30 transition-all duration-300 cursor-pointer flex flex-col md:flex-row md:items-center gap-6">
+                
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-3 flex-wrap mb-2">
+                    <h3 className="text-xl font-bold text-gray-900 tracking-tight group-hover:text-strada-blue transition-colors">{job.title}</h3>
+                    {job.is_urgent && (
+                      <span className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-red-50 text-strada-coral tracking-wide uppercase">URGENT</span>
                     )}
                   </div>
-
-                  {/* Short description */}
+                  <p className="text-sm font-semibold text-strada-blue mb-4">{job.department}</p>
+                  
+                  <div className="flex flex-wrap gap-4 gap-y-2 text-sm text-gray-500 font-medium">
+                    <span className="flex items-center gap-1.5"><MapPin size={16} className="text-gray-400" /> {job.location}{job.outlet ? ` · ${job.outlet}` : ''}</span>
+                    <span className="flex items-center gap-1.5"><Clock size={16} className="text-gray-400" /> {job.employment_type}</span>
+                    {job.salary_display && (
+                      <span className="flex items-center gap-1.5"><DollarSign size={16} className="text-gray-400" /> {job.salary_display}</span>
+                    )}
+                  </div>
+                  
                   {job.description && (
-                    <p style={{ fontSize: '13px', color: '#8A8A8D', margin: '10px 0 0', lineHeight: 1.6, overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
+                    <p className="text-sm text-gray-500 mt-4 line-clamp-2 leading-relaxed">
                       {job.description}
                     </p>
                   )}
                 </div>
-              ))}
-            </div>
-          )}
 
-          {/* Footer */}
-          <p style={{ textAlign: 'center', fontSize: '12px', color: '#8A8A8D', margin: '32px 0 0', fontStyle: 'italic' }}>
-            strada coffee · CV Kopi Terbaik Nusantara · est. 2012
-          </p>
+                <div className="shrink-0 flex items-center justify-end">
+                  <button className="flex items-center gap-2 px-5 py-2.5 bg-gray-50 text-gray-700 font-bold rounded-full group-hover:bg-strada-blue group-hover:text-white transition-colors duration-300 text-sm">
+                    Lihat Detail <ArrowRight size={16} />
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        <div className="mt-16 text-center">
+          <p className="text-xs font-semibold text-gray-400 tracking-widest uppercase">STRADA COFFEE · EST. 2012</p>
         </div>
       </div>
-    </>
+    </div>
   )
 
   // ── FORM ───────────────────────────────────────────────────
   const STEPS = ['Data Diri', 'Pengalaman', 'Motivasi']
 
   return (
-    <>
-      <style>{`
-        * { box-sizing: border-box; }
-        body { margin: 0; font-family: 'Plus Jakarta Sans', sans-serif; background: #F7F5F2; }
-        input, select, textarea { -webkit-appearance: none; appearance: none; }
-        input:focus, select:focus, textarea:focus { border-color: #037894 !important; box-shadow: 0 0 0 3px rgba(3,120,148,0.1); }
-        .apply-back:hover { color: rgba(228,222,216,0.9) !important; }
-        .apply-secondary:hover { background: #E8E4E0 !important; }
-        .apply-primary:hover:not(:disabled) { background: #026a80 !important; }
-        .apply-submit:hover:not(:disabled) { background: #1a1818 !important; }
-        @media (max-width: 540px) {
-          .form-row-2 { grid-template-columns: 1fr !important; }
-          .form-btn-row { flex-direction: column-reverse !important; }
-          .form-btn-row button { flex: none !important; width: 100% !important; }
-          .apply-summary-label { width: 100px !important; font-size: 12px !important; }
-          .apply-summary-value { font-size: 12px !important; }
-          .step-label { font-size: 10px !important; }
-        }
-      `}</style>
+    <div className="min-h-screen bg-[#F5F5F7] font-sans pb-20">
+      {/* Header */}
+      <div className="bg-white/80 backdrop-blur-xl border-b border-gray-200/50 sticky top-0 z-30 px-4 py-3 flex items-center shadow-sm gap-4">
+        <button onClick={() => setSelectedJob(null)} 
+          className="p-2 -ml-2 text-gray-400 hover:text-gray-900 hover:bg-gray-100 rounded-full transition-colors">
+          <ArrowLeft size={20} />
+        </button>
+        <img src="/strada-logo.svg" alt="Strada Coffee" className="h-6 w-auto filter grayscale contrast-200" />
+      </div>
 
-      <div style={{ minHeight: '100vh', backgroundColor: '#F7F5F2' }}>
-
-        {/* Header */}
-        <div style={{ backgroundColor: '#020000', padding: '14px 20px', display: 'flex', alignItems: 'center', gap: '14px' }}>
-          <button onClick={() => setSelectedJob(null)} className="apply-back"
-            style={{ color: 'rgba(228,222,216,0.5)', background: 'none', border: 'none', cursor: 'pointer', fontSize: '22px', padding: '4px 8px 4px 0', lineHeight: 1, flexShrink: 0, transition: 'color 0.15s' }}>
-            ←
-          </button>
-          <img src="/strada-logo.svg" alt="Strada Coffee" style={{ height: '32px', width: 'auto' }} />
-        </div>
-
-        {/* Job banner */}
-        <div style={{ backgroundColor: 'rgba(3,120,148,0.07)', borderBottom: '1px solid rgba(3,120,148,0.15)', padding: '12px 20px' }}>
-          <div style={{ maxWidth: '560px', margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '12px' }}>
-            <div style={{ minWidth: 0 }}>
-              <p style={{ margin: 0, fontSize: '12px', color: '#8A8A8D' }}>Melamar untuk</p>
-              <p style={{ margin: 0, fontSize: '15px', fontWeight: 800, color: '#037894', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                {selectedJob.title}
-                {selectedJob.outlet && <span style={{ fontSize: '12px', fontWeight: 500, color: '#8A8A8D' }}> · {selectedJob.outlet}</span>}
-                {!selectedJob.is_active && <span style={{ marginLeft: '8px', fontSize: '11px', padding: '2px 8px', borderRadius: '6px', backgroundColor: '#FEF8E6', color: '#DE9733', fontWeight: 700 }}>PREVIEW</span>}
-              </p>
-            </div>
-            {!jobParam && (
-              <button onClick={() => setSelectedJob(null)}
-                style={{ fontSize: '12px', color: '#037894', fontWeight: 600, background: 'none', border: 'none', cursor: 'pointer', flexShrink: 0, padding: '4px' }}>
-                Ganti
-              </button>
-            )}
+      {/* Job banner */}
+      <div className="bg-white border-b border-gray-100 px-6 py-4">
+        <div className="max-w-2xl mx-auto flex justify-between items-center gap-4">
+          <div className="min-w-0">
+            <p className="text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-1">Melamar Posisi</p>
+            <p className="text-base font-extrabold text-gray-900 truncate flex items-center gap-2">
+              {selectedJob.title}
+              {selectedJob.outlet && <span className="text-gray-400 font-medium">· {selectedJob.outlet}</span>}
+              {!selectedJob.is_active && <span className="text-[10px] px-2 py-0.5 rounded bg-yellow-100 text-yellow-800 uppercase tracking-wide">PREVIEW</span>}
+            </p>
           </div>
+          {!jobParam && (
+            <button onClick={() => setSelectedJob(null)}
+              className="text-xs font-bold text-strada-blue hover:text-strada-dark-teal transition-colors whitespace-nowrap bg-blue-50 hover:bg-blue-100 px-3 py-1.5 rounded-full">
+              Ganti Posisi
+            </button>
+          )}
         </div>
+      </div>
 
-        {/* Progress stepper */}
-        <div style={{ backgroundColor: '#fff', borderBottom: '1px solid #F0EEEC', padding: '16px 20px' }}>
-          <div style={{ display: 'flex', maxWidth: '400px', margin: '0 auto' }}>
-            {STEPS.map((s, i) => (
-              <div key={s} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', position: 'relative' }}>
-                {i > 0 && (
-                  <div style={{ position: 'absolute', left: '-50%', top: '15px', width: '100%', height: '2px', backgroundColor: step > i ? '#037894' : '#E8E4E0', transition: 'background-color 0.3s' }} />
-                )}
-                <div style={{ width: '30px', height: '30px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '13px', fontWeight: 700, position: 'relative', zIndex: 1, transition: 'all 0.3s', backgroundColor: step > i + 1 ? '#037894' : step === i + 1 ? '#020000' : '#F0EEEC', color: step >= i + 1 ? '#fff' : '#8A8A8D' }}>
-                  {step > i + 1 ? '✓' : i + 1}
+      {/* Progress stepper */}
+      <div className="max-w-2xl mx-auto px-6 py-8">
+        <div className="flex items-center justify-between relative max-w-sm mx-auto">
+          <div className="absolute left-0 top-1/2 -translate-y-1/2 w-full h-1 bg-gray-200 rounded-full -z-10" />
+          <div className="absolute left-0 top-1/2 -translate-y-1/2 h-1 bg-strada-blue rounded-full -z-10 transition-all duration-500" 
+               style={{ width: `${((step - 1) / (STEPS.length - 1)) * 100}%` }} />
+          
+          {STEPS.map((s, i) => {
+            const active = step >= i + 1;
+            const current = step === i + 1;
+            return (
+              <div key={s} className="flex flex-col items-center gap-2 bg-[#F5F5F7]">
+                <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-colors duration-300 border-2 ${
+                  active ? 'bg-strada-blue border-strada-blue text-white' : 'bg-white border-gray-300 text-gray-400'
+                }`}>
+                  {step > i + 1 ? <Check size={16} strokeWidth={3} /> : i + 1}
                 </div>
-                <span className="step-label" style={{ fontSize: '11px', marginTop: '5px', color: step === i + 1 ? '#020000' : '#8A8A8D', fontWeight: step === i + 1 ? 700 : 400, textAlign: 'center' }}>{s}</span>
+                <span className={`text-[10px] font-bold uppercase tracking-wide absolute -bottom-6 whitespace-nowrap ${current ? 'text-gray-900' : 'text-gray-400'}`}>{s}</span>
               </div>
-            ))}
-          </div>
+            )
+          })}
         </div>
+      </div>
 
-        {/* Form content */}
-        <div style={{ maxWidth: '560px', margin: '0 auto', padding: '24px 16px 48px' }}>
-
+      {/* Form content */}
+      <div className="max-w-2xl mx-auto px-4 sm:px-6 mt-6">
+        <div className="bg-white rounded-[32px] p-6 sm:p-10 border border-gray-100 shadow-sm">
+          
           {/* ── STEP 1: Data Diri ── */}
           {step === 1 && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
-              <div>
-                <h2 style={{ fontSize: '20px', fontWeight: 800, color: '#020000', margin: '0 0 4px' }}>Data Diri</h2>
-                <p style={{ fontSize: '13px', color: '#8A8A8D', margin: 0 }}>Semua kolom bertanda * wajib diisi</p>
+            <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+              <div className="mb-8">
+                <h2 className="text-2xl font-extrabold text-gray-900 tracking-tight">Data Diri</h2>
+                <p className="text-gray-500 text-sm mt-1">Lengkapi informasi dasar Anda. Kolom dengan <span className="text-red-500">*</span> wajib diisi.</p>
               </div>
 
-              <div>
-                <label style={lbl}>Nama Lengkap <span style={{ color: '#FF4F31' }}>*</span></label>
-                <input style={inp} value={form.full_name} onChange={e => set('full_name', e.target.value)}
-                  placeholder="Sesuai KTP" autoComplete="name" />
-              </div>
-
-              <div className="form-row-2" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
+              <div className="space-y-5">
                 <div>
-                  <label style={lbl}>Email <span style={{ color: '#FF4F31' }}>*</span></label>
-                  <input type="email" style={inp} value={form.email} onChange={e => set('email', e.target.value)}
-                    placeholder="email@kamu.com" autoComplete="email" inputMode="email" />
+                  <label className="block text-[13px] font-bold text-gray-700 mb-2">Nama Lengkap <span className="text-red-500">*</span></label>
+                  <input className="apple-input" value={form.full_name} onChange={e => set('full_name', e.target.value)}
+                    placeholder="Sesuai identitas resmi" autoComplete="name" />
                 </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                  <div>
+                    <label className="block text-[13px] font-bold text-gray-700 mb-2">Email <span className="text-red-500">*</span></label>
+                    <input type="email" className="apple-input" value={form.email} onChange={e => set('email', e.target.value)}
+                      placeholder="email@kamu.com" autoComplete="email" inputMode="email" />
+                  </div>
+                  <div>
+                    <label className="block text-[13px] font-bold text-gray-700 mb-2">No. HP / WhatsApp <span className="text-red-500">*</span></label>
+                    <input className="apple-input" value={form.phone} onChange={e => set('phone', e.target.value)}
+                      placeholder="08xxxxxxxxxx" autoComplete="tel" inputMode="tel" />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                  <div>
+                    <label className="block text-[13px] font-bold text-gray-700 mb-2">Tanggal Lahir</label>
+                    <input type="date" className="apple-input" value={form.birth_date} onChange={e => set('birth_date', e.target.value)} />
+                  </div>
+                  <div>
+                    <label className="block text-[13px] font-bold text-gray-700 mb-2">Domisili Saat Ini <span className="text-red-500">*</span></label>
+                    <input className="apple-input" value={form.domicile} onChange={e => set('domicile', e.target.value)}
+                      placeholder="Kota, Kecamatan" />
+                  </div>
+                </div>
+
                 <div>
-                  <label style={lbl}>No. HP <span style={{ color: '#FF4F31' }}>*</span></label>
-                  <input style={inp} value={form.phone} onChange={e => set('phone', e.target.value)}
-                    placeholder="08xxxxxxxxxx" autoComplete="tel" inputMode="tel" />
+                  <label className="block text-[13px] font-bold text-gray-700 mb-2">Pendidikan Terakhir</label>
+                  <select className={`apple-input ${!form.education_level && 'text-gray-400'}`} 
+                    value={form.education_level} onChange={e => set('education_level', e.target.value)}>
+                    <option value="" disabled>Pilih tingkat pendidikan...</option>
+                    <option value="SMA" className="text-gray-900">SMA / SMK / Sederajat</option>
+                    <option value="D3" className="text-gray-900">Diploma (D3)</option>
+                    <option value="S1" className="text-gray-900">Sarjana (S1)</option>
+                    <option value="S2" className="text-gray-900">Magister (S2) ke atas</option>
+                  </select>
                 </div>
               </div>
 
-              <div className="form-row-2" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
-                <div>
-                  <label style={lbl}>Tanggal Lahir</label>
-                  <input type="date" style={inp} value={form.birth_date} onChange={e => set('birth_date', e.target.value)} />
-                </div>
-                <div>
-                  <label style={lbl}>Domisili <span style={{ color: '#FF4F31' }}>*</span></label>
-                  <input style={inp} value={form.domicile} onChange={e => set('domicile', e.target.value)}
-                    placeholder="Kota, Kecamatan" />
-                </div>
+              <div className="pt-6 mt-4 border-t border-gray-100 flex justify-end">
+                <button onClick={() => {
+                  if (!form.full_name || !form.email || !form.phone || !form.domicile) {
+                    alert('Mohon lengkapi data wajib (Nama, Email, HP, Domisili) terlebih dahulu.')
+                    return
+                  }
+                  setStep(2); window.scrollTo({ top: 0, behavior: 'smooth' })
+                }} className="apple-btn-primary w-full md:w-auto flex items-center justify-center gap-2 text-base px-8 py-3.5">
+                  Lanjutkan <ArrowRight size={18} />
+                </button>
               </div>
-
-              <div>
-                <label style={lbl}>Pendidikan Terakhir</label>
-                <select style={{ ...inp, color: form.education_level ? '#020000' : '#8A8A8D' }} value={form.education_level} onChange={e => set('education_level', e.target.value)}>
-                  <option value="">Pilih pendidikan...</option>
-                  <option value="SMA">SMA / SMK</option>
-                  <option value="D3">D3</option>
-                  <option value="S1">S1</option>
-                  <option value="S2">S2 ke atas</option>
-                </select>
-              </div>
-
-              <button onClick={() => {
-                if (!form.full_name || !form.email || !form.phone || !form.domicile) {
-                  alert('Lengkapi data wajib terlebih dahulu (Nama, Email, HP, Domisili)')
-                  return
-                }
-                setStep(2)
-                window.scrollTo({ top: 0, behavior: 'smooth' })
-              }} className="apply-primary" style={{ ...btn, backgroundColor: '#037894', color: '#fff', transition: 'background-color 0.15s' }}>
-                Lanjut ke Pengalaman →
-              </button>
             </div>
           )}
 
           {/* ── STEP 2: Pengalaman ── */}
           {step === 2 && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
-              <div>
-                <h2 style={{ fontSize: '20px', fontWeight: 800, color: '#020000', margin: '0 0 4px' }}>Pengalaman Kerja</h2>
-                <p style={{ fontSize: '13px', color: '#8A8A8D', margin: 0 }}>Tidak punya pengalaman? Tetap bisa melamar!</p>
+            <div className="space-y-6 animate-in fade-in slide-in-from-right-8 duration-500">
+              <div className="mb-8">
+                <h2 className="text-2xl font-extrabold text-gray-900 tracking-tight">Pengalaman Kerja</h2>
+                <p className="text-gray-500 text-sm mt-1">Belum punya pengalaman? Tidak masalah, Anda tetap bisa melamar.</p>
               </div>
 
-              {/* Cafe experience toggle */}
-              <div style={{ padding: '18px', borderRadius: '16px', backgroundColor: '#fff', border: '1.5px solid #E8E4E0' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <div>
-                    <p style={{ margin: '0 0 2px', fontSize: '15px', fontWeight: 700, color: '#020000' }}>Pengalaman di kafe / F&B?</p>
-                    <p style={{ margin: 0, fontSize: '12px', color: '#8A8A8D' }}>Termasuk restoran, coffee shop, hotel</p>
-                  </div>
-                  <button type="button" onClick={() => set('has_cafe_experience', !form.has_cafe_experience)}
-                    style={{ width: '52px', height: '30px', borderRadius: '15px', border: 'none', cursor: 'pointer', position: 'relative', backgroundColor: form.has_cafe_experience ? '#037894' : '#D4CFC9', flexShrink: 0, transition: 'background-color 0.2s' }}>
-                    <span style={{ position: 'absolute', top: '4px', width: '22px', height: '22px', backgroundColor: '#fff', borderRadius: '50%', transition: 'transform 0.2s', transform: form.has_cafe_experience ? 'translateX(24px)' : 'translateX(4px)', boxShadow: '0 1px 4px rgba(0,0,0,0.15)' }} />
-                  </button>
-                </div>
-                {form.has_cafe_experience && (
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', marginTop: '16px', paddingTop: '16px', borderTop: '1px solid #F0EEEC' }}>
+              <div className="space-y-5">
+                {/* Cafe experience toggle */}
+                <div className="p-5 rounded-2xl bg-gray-50 border border-gray-200/60 transition-all duration-300">
+                  <div className="flex items-center justify-between">
                     <div>
-                      <label style={lbl}>Berapa lama?</label>
-                      <select style={inp} value={form.cafe_experience_years} onChange={e => set('cafe_experience_years', parseFloat(e.target.value))}>
-                        <option value="0">Kurang dari 6 bulan</option>
-                        <option value="0.5">6 bulan – 1 tahun</option>
-                        <option value="1">1 tahun</option>
-                        <option value="1.5">1,5 tahun</option>
-                        <option value="2">2 tahun</option>
-                        <option value="3">3 tahun</option>
-                        <option value="4">4 tahun</option>
-                        <option value="5">5 tahun ke atas</option>
-                      </select>
+                      <p className="text-[15px] font-bold text-gray-900 mb-1">Pengalaman di F&B / Hospitality?</p>
+                      <p className="text-[13px] text-gray-500">Kafe, restoran, hotel, atau coffee shop.</p>
                     </div>
-                    <div>
-                      <label style={lbl}>Di mana saja?</label>
-                      <input style={inp} value={form.cafe_experience_detail} onChange={e => set('cafe_experience_detail', e.target.value)}
-                        placeholder="Nama tempat atau kota" />
+                    <label className="relative inline-flex items-center cursor-pointer">
+                      <input type="checkbox" className="sr-only peer" checked={form.has_cafe_experience} onChange={() => set('has_cafe_experience', !form.has_cafe_experience)} />
+                      <div className="w-14 h-8 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-6 peer-checked:after:border-white after:content-[''] after:absolute after:top-[4px] after:left-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-strada-blue"></div>
+                    </label>
+                  </div>
+                  
+                  {form.has_cafe_experience && (
+                    <div className="mt-5 pt-5 border-t border-gray-200/60 space-y-4 animate-in fade-in zoom-in-95 duration-300">
+                      <div>
+                        <label className="block text-[13px] font-bold text-gray-700 mb-2">Lama Pengalaman</label>
+                        <select className="apple-input" value={form.cafe_experience_years} onChange={e => set('cafe_experience_years', parseFloat(e.target.value))}>
+                          <option value="0">Kurang dari 6 bulan</option>
+                          <option value="0.5">6 bulan – 1 tahun</option>
+                          <option value="1">1 tahun</option>
+                          <option value="1.5">1,5 tahun</option>
+                          <option value="2">2 tahun</option>
+                          <option value="3">3 tahun</option>
+                          <option value="4">4 tahun</option>
+                          <option value="5">Lebih dari 5 tahun</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-[13px] font-bold text-gray-700 mb-2">Detail Tempat</label>
+                        <input className="apple-input" value={form.cafe_experience_detail} onChange={e => set('cafe_experience_detail', e.target.value)}
+                          placeholder="Contoh: Barista di Kopi Kenangan, Jakarta" />
+                      </div>
                     </div>
-                  </div>
-                )}
-              </div>
-
-              {/* Barista cert toggle */}
-              <div style={{ padding: '18px', borderRadius: '16px', backgroundColor: '#fff', border: '1.5px solid #E8E4E0' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <div>
-                    <p style={{ margin: '0 0 2px', fontSize: '15px', fontWeight: 700, color: '#020000' }}>Punya sertifikasi barista?</p>
-                    <p style={{ margin: 0, fontSize: '12px', color: '#8A8A8D' }}>SCA, SCAI, atau lainnya</p>
-                  </div>
-                  <button type="button" onClick={() => set('has_barista_cert', !form.has_barista_cert)}
-                    style={{ width: '52px', height: '30px', borderRadius: '15px', border: 'none', cursor: 'pointer', position: 'relative', backgroundColor: form.has_barista_cert ? '#037894' : '#D4CFC9', flexShrink: 0, transition: 'background-color 0.2s' }}>
-                    <span style={{ position: 'absolute', top: '4px', width: '22px', height: '22px', backgroundColor: '#fff', borderRadius: '50%', transition: 'transform 0.2s', transform: form.has_barista_cert ? 'translateX(24px)' : 'translateX(4px)', boxShadow: '0 1px 4px rgba(0,0,0,0.15)' }} />
-                  </button>
+                  )}
                 </div>
-                {form.has_barista_cert && (
-                  <div style={{ marginTop: '16px', paddingTop: '16px', borderTop: '1px solid #F0EEEC' }}>
-                    <label style={lbl}>Jenis sertifikasi</label>
-                    <input style={inp} value={form.cert_detail} onChange={e => set('cert_detail', e.target.value)}
-                      placeholder="e.g. SCA Barista Skills Foundation" />
+
+                {/* Barista cert toggle */}
+                <div className="p-5 rounded-2xl bg-gray-50 border border-gray-200/60 transition-all duration-300">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-[15px] font-bold text-gray-900 mb-1">Memiliki Sertifikasi Profesional?</p>
+                      <p className="text-[13px] text-gray-500">SCA, SCAI, BNSP, atau sejenisnya.</p>
+                    </div>
+                    <label className="relative inline-flex items-center cursor-pointer">
+                      <input type="checkbox" className="sr-only peer" checked={form.has_barista_cert} onChange={() => set('has_barista_cert', !form.has_barista_cert)} />
+                      <div className="w-14 h-8 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-6 peer-checked:after:border-white after:content-[''] after:absolute after:top-[4px] after:left-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-strada-blue"></div>
+                    </label>
                   </div>
-                )}
+                  
+                  {form.has_barista_cert && (
+                    <div className="mt-5 pt-5 border-t border-gray-200/60 animate-in fade-in zoom-in-95 duration-300">
+                      <label className="block text-[13px] font-bold text-gray-700 mb-2">Nama/Jenis Sertifikasi</label>
+                      <input className="apple-input" value={form.cert_detail} onChange={e => set('cert_detail', e.target.value)}
+                        placeholder="Contoh: SCA Barista Skills Foundation" />
+                    </div>
+                  )}
+                </div>
+
+                <div>
+                  <label className="block text-[13px] font-bold text-gray-700 mb-2 flex items-center gap-2">
+                    Profil Instagram <span className="text-[11px] font-bold text-gray-400 bg-gray-100 px-2 py-0.5 rounded-md">OPSIONAL</span>
+                  </label>
+                  <div className="relative">
+                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 font-medium">@</span>
+                    <input className="apple-input pl-9" value={form.instagram_url} onChange={e => set('instagram_url', e.target.value.replace('@',''))}
+                      placeholder="username" autoCapitalize="none" />
+                  </div>
+                </div>
               </div>
 
-              <div>
-                <label style={lbl}>Instagram <span style={{ fontSize: '12px', fontWeight: 500, color: '#8A8A8D' }}>(opsional)</span></label>
-                <input style={inp} value={form.instagram_url} onChange={e => set('instagram_url', e.target.value)}
-                  placeholder="@username" autoCapitalize="none" />
-              </div>
-
-              <div className="form-btn-row" style={{ display: 'flex', gap: '12px' }}>
+              <div className="pt-6 mt-4 border-t border-gray-100 flex flex-col-reverse md:flex-row justify-between gap-4">
                 <button onClick={() => { setStep(1); window.scrollTo({ top: 0, behavior: 'smooth' }) }}
-                  className="apply-secondary"
-                  style={{ ...btn, flex: 1, backgroundColor: '#F0EEEC', color: '#4C4845', transition: 'background-color 0.15s' }}>
-                  ← Kembali
+                  className="apple-btn-secondary w-full md:w-auto flex items-center justify-center gap-2 text-base px-8 py-3.5">
+                  <ArrowLeft size={18} /> Kembali
                 </button>
                 <button onClick={() => { setStep(3); window.scrollTo({ top: 0, behavior: 'smooth' }) }}
-                  className="apply-primary"
-                  style={{ ...btn, flex: 2, backgroundColor: '#037894', color: '#fff', transition: 'background-color 0.15s' }}>
-                  Lanjut →
+                  className="apple-btn-primary w-full md:w-auto flex items-center justify-center gap-2 text-base px-8 py-3.5">
+                  Lanjutkan <ArrowRight size={18} />
                 </button>
               </div>
             </div>
@@ -482,70 +460,74 @@ function ApplyContent() {
 
           {/* ── STEP 3: Motivasi & Submit ── */}
           {step === 3 && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
-              <div>
-                <h2 style={{ fontSize: '20px', fontWeight: 800, color: '#020000', margin: '0 0 4px' }}>Pesan untuk Tim HR</h2>
-                <p style={{ fontSize: '13px', color: '#8A8A8D', margin: 0 }}>Ceritakan sedikit tentang dirimu</p>
+            <div className="space-y-6 animate-in fade-in slide-in-from-right-8 duration-500">
+              <div className="mb-8">
+                <h2 className="text-2xl font-extrabold text-gray-900 tracking-tight">Motivasi & Penutup</h2>
+                <p className="text-gray-500 text-sm mt-1">Satu langkah lagi untuk mengirimkan lamaran Anda.</p>
               </div>
 
-              <div>
-                <label style={lbl}>Kenapa kamu tertarik bergabung dengan Strada Coffee?</label>
-                <textarea style={{ ...inp, resize: 'vertical', lineHeight: 1.6 }}
-                  value={form.hr_notes} onChange={e => set('hr_notes', e.target.value)}
-                  rows={5} placeholder="Ceritakan motivasimu, pengalaman yang relevan, atau hal lain yang ingin disampaikan ke tim HR Strada..." />
-                <p style={{ fontSize: '12px', color: '#8A8A8D', margin: '6px 0 0' }}>💡 Jawaban yang spesifik dan personal membuat lamaran kamu lebih menonjol</p>
-              </div>
+              <div className="space-y-6">
+                <div>
+                  <label className="block text-[14px] font-bold text-gray-900 mb-3">Mengapa Anda tertarik bergabung dengan Strada Coffee?</label>
+                  <textarea className="apple-input min-h-[120px] resize-y leading-relaxed text-[15px]"
+                    value={form.hr_notes} onChange={e => set('hr_notes', e.target.value)}
+                    placeholder="Ceritakan motivasi, harapan, atau hal unik tentang diri Anda..." />
+                  <p className="text-[12px] text-gray-500 font-medium mt-2 flex items-center gap-1.5">
+                    <span className="text-strada-amber">💡</span> Jawaban yang tulus dan personal akan menjadi nilai tambah.
+                  </p>
+                </div>
 
-              {/* Summary card */}
-              <div style={{ backgroundColor: '#fff', borderRadius: '16px', padding: '18px', border: '1.5px solid #E8E4E0' }}>
-                <p style={{ fontSize: '11px', fontWeight: 700, color: '#8A8A8D', textTransform: 'uppercase', letterSpacing: '1.5px', margin: '0 0 14px' }}>Ringkasan Lamaran</p>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                  {[
-                    ['Posisi', selectedJob?.title || form.position_applied, true],
-                    ['Nama', form.full_name, false],
-                    ['Email', form.email, false],
-                    ['HP', form.phone, false],
-                    ['Domisili', form.domicile, false],
-                    ['Pendidikan', form.education_level || '-', false],
-                    ['Pengalaman kafe', form.has_cafe_experience ? `${form.cafe_experience_years} tahun` : 'Belum ada', false],
-                    ['Sertifikasi', form.has_barista_cert ? (form.cert_detail || 'Ada') : 'Tidak ada', false],
-                  ].map(([label, value, highlight]) => (
-                    <div key={label as string} style={{ display: 'flex', gap: '10px', alignItems: 'flex-start', paddingBottom: '8px', borderBottom: '1px solid #F7F5F2' }}>
-                      <span className="apply-summary-label" style={{ fontSize: '12px', color: '#8A8A8D', width: '110px', flexShrink: 0, paddingTop: '1px' }}>{label as string}</span>
-                      <span className="apply-summary-value" style={{ fontSize: '13px', color: highlight ? '#037894' : '#020000', fontWeight: highlight ? 800 : 500, flex: 1, wordBreak: 'break-word' }}>{value as string}</span>
-                    </div>
-                  ))}
+                {/* Summary card */}
+                <div className="bg-gray-50 rounded-2xl p-6 border border-gray-200/60">
+                  <p className="text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-4">Ringkasan Lamaran</p>
+                  <div className="space-y-3">
+                    {[
+                      ['Posisi', selectedJob?.title || form.position_applied, true],
+                      ['Nama Lengkap', form.full_name, false],
+                      ['Email & HP', `${form.email} · ${form.phone}`, false],
+                      ['Domisili', form.domicile, false],
+                      ['Pengalaman F&B', form.has_cafe_experience ? `${form.cafe_experience_years} tahun` : 'Belum ada', false],
+                    ].map(([label, value, highlight], idx) => (
+                      <div key={idx} className="flex flex-col sm:flex-row sm:items-start gap-1 sm:gap-4 pb-3 border-b border-gray-200/50 last:border-0 last:pb-0">
+                        <span className="text-[13px] font-semibold text-gray-500 sm:w-32 shrink-0">{label as string}</span>
+                        <span className={`text-[14px] ${highlight ? 'font-extrabold text-strada-blue' : 'font-medium text-gray-900'} break-words`}>{value as string}</span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
 
-              <div className="form-btn-row" style={{ display: 'flex', gap: '12px' }}>
+              <div className="pt-6 mt-4 border-t border-gray-100 flex flex-col-reverse md:flex-row justify-between gap-4">
                 <button onClick={() => { setStep(2); window.scrollTo({ top: 0, behavior: 'smooth' }) }}
-                  className="apply-secondary"
-                  style={{ ...btn, flex: 1, backgroundColor: '#F0EEEC', color: '#4C4845', transition: 'background-color 0.15s' }}>
-                  ← Kembali
+                  className="apple-btn-secondary w-full md:w-auto flex items-center justify-center gap-2 text-base px-8 py-3.5">
+                  <ArrowLeft size={18} /> Kembali
                 </button>
-                <button onClick={handleSubmit} disabled={submitting} className="apply-submit"
-                  style={{ ...btn, flex: 2, backgroundColor: submitting ? '#8A8A8D' : '#020000', color: '#fff', cursor: submitting ? 'not-allowed' : 'pointer', transition: 'background-color 0.15s' }}>
-                  {submitting ? '⏳ Mengirim...' : '✓ Kirim Lamaran'}
+                <button onClick={handleSubmit} disabled={submitting} 
+                  className={`apple-btn-primary w-full md:w-auto flex items-center justify-center gap-2 text-base px-8 py-3.5 ${
+                    submitting ? 'opacity-70 cursor-not-allowed bg-strada-blue/80' : ''
+                  }`}>
+                  {submitting ? 'Mengirim Data...' : 'Kirim Lamaran Sekarang'} <CheckCircle2 size={18} />
                 </button>
               </div>
 
-              <p style={{ textAlign: 'center', fontSize: '12px', color: '#8A8A8D', margin: 0 }}>
-                Dengan mengirim lamaran, kamu menyetujui penggunaan data untuk keperluan rekrutmen Strada Coffee.
+              <p className="text-center text-[12px] font-medium text-gray-400 mt-6">
+                Dengan menekan tombol kirim, Anda menyetujui penggunaan data untuk keperluan rekrutmen internal.
               </p>
             </div>
           )}
         </div>
       </div>
-    </>
+    </div>
   )
 }
 
 export default function ApplyPage() {
   return (
     <Suspense fallback={
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', backgroundColor: '#F7F5F2' }}>
-        <p style={{ color: '#8A8A8D', fontSize: '15px', fontFamily: 'sans-serif' }}>Memuat...</p>
+      <div className="min-h-screen flex items-center justify-center bg-[#F5F5F7]">
+        <div className="flex flex-col items-center gap-3">
+          <div className="w-8 h-8 border-4 border-gray-200 border-t-strada-blue rounded-full animate-spin" />
+        </div>
       </div>
     }>
       <ApplyContent />

@@ -262,7 +262,7 @@ export default function ApplicantDetailClient({ applicant }: Props) {
             {editData.hr_notes && (
               <div style={{ backgroundColor: '#fff', borderRadius: '16px', padding: '24px', border: '1.5px solid #E8E4E0' }}>
                 <h3 style={{ fontSize: '14px', fontWeight: 700, color: '#020000', margin: '0 0 12px' }}>Motivasi</h3>
-                <p style={{ fontSize: '14px', color: '#4C4845', lineHeight: 1.7, margin: 0, fontStyle: 'italic' }}>"{editData.hr_notes}"</p>
+                <p style={{ fontSize: '14px', color: '#4C4845', lineHeight: 1.7, margin: 0, fontStyle: 'italic' }}>&quot;{editData.hr_notes}&quot;</p>
               </div>
             )}
 
@@ -437,7 +437,7 @@ export default function ApplicantDetailClient({ applicant }: Props) {
                   </div>
 
                   {latestScore.summary && (
-                    <p style={{ fontSize: '12px', color: 'rgba(228,222,216,0.6)', lineHeight: 1.5, margin: '0 0 12px', fontStyle: 'italic' }}>"{latestScore.summary}"</p>
+                    <p style={{ fontSize: '12px', color: 'rgba(228,222,216,0.6)', lineHeight: 1.5, margin: '0 0 12px', fontStyle: 'italic' }}>&quot;{latestScore.summary}&quot;</p>
                   )}
 
                   {latestScore.strengths && latestScore.strengths.length > 0 && (

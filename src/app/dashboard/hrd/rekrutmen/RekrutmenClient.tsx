@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { PIPELINE_STAGES, PipelineStage } from '@/lib/types'
-import { Search, Filter, ChevronDown } from 'lucide-react'
+import { Search, Filter, ChevronDown, RefreshCw, Play } from 'lucide-react'
 
 interface QuestScore {
   applicant_id?: string
@@ -72,19 +72,19 @@ function QuestScoreWidget({ applicantId, scoreData, onScored }: {
   // Spinning while scoring
   if (triggering || status === 'processing') {
     return (
-      <div style={{ display: 'flex', alignItems: 'center', gap: '4px', padding: '3px 9px', borderRadius: '20px', backgroundColor: '#E6F0F4', whiteSpace: 'nowrap' }}>
-        <span style={{ display: 'inline-block', animation: 'quest-spin 1s linear infinite', fontSize: '11px', lineHeight: 1 }}>⚙</span>
-        <span style={{ fontSize: '11px', fontWeight: 700, color: '#037894' }}>Scoring...</span>
+      <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 text-strada-blue shrink-0 border border-blue-100">
+        <RefreshCw size={12} className="animate-spin" />
+        <span className="text-[11px] font-bold">Scoring</span>
       </div>
     )
   }
 
   // Completed — show score number
   if (status === 'completed' && score) {
-    const bg = score >= 75 ? '#E6F4F1' : score >= 50 ? '#FEF8E6' : '#FFF0EE'
-    const color = score >= 75 ? '#005353' : score >= 50 ? '#DE9733' : '#FF4F31'
+    const bg = score >= 75 ? 'bg-teal-50 border-teal-100' : score >= 50 ? 'bg-amber-50 border-amber-100' : 'bg-red-50 border-red-100'
+    const color = score >= 75 ? 'text-teal-700' : score >= 50 ? 'text-amber-700' : 'text-red-600'
     return (
-      <div style={{ padding: '3px 9px', borderRadius: '20px', fontSize: '11px', fontWeight: 700, backgroundColor: bg, color, whiteSpace: 'nowrap' }}>
+      <div className={`px-2.5 py-1 rounded-full text-[11px] font-extrabold whitespace-nowrap border ${bg} ${color}`}>
         ✦ {score}
       </div>
     )
@@ -94,14 +94,13 @@ function QuestScoreWidget({ applicantId, scoreData, onScored }: {
   return (
     <button
       onClick={trigger}
-      className="rekr-score-btn"
-      style={{
-        padding: '3px 9px', borderRadius: '20px', fontSize: '11px', fontWeight: 700,
-        border: 'none', cursor: 'pointer', whiteSpace: 'nowrap', transition: 'opacity 0.15s',
-        backgroundColor: status === 'failed' ? '#FFF0EE' : '#020000',
-        color: status === 'failed' ? '#FF4F31' : '#8FC6C5',
-      }}>
-      {status === 'failed' ? '↻ Retry Score' : '✦ Run Score'}
+      className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold whitespace-nowrap transition-all duration-200 border ${
+        status === 'failed' 
+          ? 'bg-red-50 text-red-600 hover:bg-red-100 border-red-100' 
+          : 'bg-gray-900 text-white hover:bg-gray-800 border-gray-900'
+      }`}>
+      {status === 'failed' ? <RefreshCw size={12} /> : <Play size={10} fill="currentColor" />}
+      {status === 'failed' ? 'Retry' : 'Score'}
     </button>
   )
 }
@@ -180,39 +179,59 @@ export default function RekrutmenClient({ initialApplicants }: { initialApplican
 
   const activeStageInfo = PIPELINE_STAGES.find(s => s.key === activeStage)
 
-  const Sidebar = () => (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+  const sidebar = (
+    <div className="flex flex-col gap-1.5">
       <button onClick={() => { setActiveStage('semua'); setShowMobileFilter(false) }}
-        style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '9px 14px', borderRadius: '10px', border: 'none', cursor: 'pointer', fontSize: '13px', fontWeight: 600, textAlign: 'left', backgroundColor: activeStage === 'semua' ? '#037894' : 'transparent', color: activeStage === 'semua' ? '#fff' : '#020000' }}>
+        className={`w-full flex justify-between items-center px-4 py-2.5 rounded-xl text-[13px] font-bold text-left transition-all duration-200 ${
+          activeStage === 'semua' 
+            ? 'bg-strada-blue text-white shadow-sm' 
+            : 'text-gray-700 hover:bg-gray-100'
+        }`}>
         <span>Semua Pelamar</span>
-        <span style={{ fontSize: '12px', fontWeight: 700, padding: '1px 7px', borderRadius: '10px', backgroundColor: activeStage === 'semua' ? 'rgba(255,255,255,0.25)' : 'rgba(3,120,148,0.1)', color: activeStage === 'semua' ? '#fff' : '#037894' }}>{applicants.length}</span>
+        <span className={`text-[11px] px-2.5 py-0.5 rounded-full ${
+          activeStage === 'semua' ? 'bg-white/20 text-white' : 'bg-gray-200 text-gray-600'
+        }`}>{applicants.length}</span>
       </button>
+
       {STAGE_GROUPS.map(group => {
         const groupCount = countByGroup(group.stages)
         const isExpanded = expandedGroups.includes(group.label)
         return (
-          <div key={group.label}>
+          <div key={group.label} className="mt-2">
             <button onClick={() => toggleGroup(group.label)}
-              style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '7px 14px', border: 'none', cursor: 'pointer', fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px', backgroundColor: 'transparent', color: '#8A8A8D', textAlign: 'left' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <ChevronDown size={12} style={{ transform: isExpanded ? 'rotate(0deg)' : 'rotate(-90deg)', transition: 'transform 0.15s' }} />
+              className="w-full flex justify-between items-center px-3 py-2 text-[11px] font-extrabold uppercase tracking-widest text-gray-500 hover:text-gray-900 transition-colors">
+              <div className="flex items-center gap-2">
+                <ChevronDown size={14} className={`transition-transform duration-200 ${isExpanded ? 'rotate-0' : '-rotate-90'}`} />
                 {group.label}
               </div>
-              {groupCount > 0 && <span style={{ fontSize: '11px', fontWeight: 700, color: group.color }}>{groupCount}</span>}
+              {groupCount > 0 && <span style={{ color: group.color }}>{groupCount}</span>}
             </button>
-            {isExpanded && group.stages.map(stageKey => {
-              const stageInfo = PIPELINE_STAGES.find(s => s.key === stageKey)
-              if (!stageInfo) return null
-              const count = countByStage(stageKey)
-              const isActive = activeStage === stageKey
-              return (
-                <button key={stageKey} onClick={() => { setActiveStage(stageKey as PipelineStage); setShowMobileFilter(false) }}
-                  style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '7px 14px 7px 28px', borderRadius: '10px', border: 'none', cursor: 'pointer', fontSize: '13px', textAlign: 'left', backgroundColor: isActive ? `${stageInfo.color}15` : 'transparent', color: isActive ? stageInfo.color : '#4C4845', fontWeight: isActive ? 700 : 400 }}>
-                  <span>{stageInfo.label}</span>
-                  {count > 0 && <span style={{ fontSize: '11px', fontWeight: 700, padding: '1px 7px', borderRadius: '10px', backgroundColor: isActive ? `${stageInfo.color}25` : '#F0EEEC', color: isActive ? stageInfo.color : '#8A8A8D' }}>{count}</span>}
-                </button>
-              )
-            })}
+
+            {isExpanded && (
+              <div className="mt-1 space-y-0.5">
+                {group.stages.map(stageKey => {
+                  const stageInfo = PIPELINE_STAGES.find(s => s.key === stageKey)
+                  if (!stageInfo) return null
+                  const count = countByStage(stageKey)
+                  const isActive = activeStage === stageKey
+                  return (
+                    <button key={stageKey} onClick={() => { setActiveStage(stageKey as PipelineStage); setShowMobileFilter(false) }}
+                      className={`w-full flex justify-between items-center pl-9 pr-3 py-2.5 rounded-xl text-[13px] text-left transition-all duration-200 ${
+                        isActive ? 'font-bold bg-gray-50 shadow-sm' : 'font-medium text-gray-600 hover:bg-gray-50'
+                      }`}
+                      style={isActive ? { color: stageInfo.color } : {}}>
+                      <span className="truncate mr-2">{stageInfo.label}</span>
+                      {count > 0 && (
+                        <span className="text-[11px] font-bold px-2 py-0.5 rounded-full"
+                          style={{ backgroundColor: isActive ? `${stageInfo.color}15` : '#F3F4F6', color: isActive ? stageInfo.color : '#6B7280' }}>
+                          {count}
+                        </span>
+                      )}
+                    </button>
+                  )
+                })}
+              </div>
+            )}
           </div>
         )
       })}
@@ -220,128 +239,154 @@ export default function RekrutmenClient({ initialApplicants }: { initialApplican
   )
 
   return (
-    <>
-      <style>{`
-        @media (max-width: 768px) { .ats-layout { flex-direction: column !important; } .ats-sidebar-desktop { display: none !important; } .ats-cards { grid-template-columns: 1fr !important; } }
-        @media (min-width: 769px) { .ats-mobile-filter-btn { display: none !important; } .ats-mobile-sidebar { display: none !important; } }
-        @keyframes quest-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        .rekr-score-btn:hover { opacity: 0.85 !important; }
-        .rekr-portal-link:hover { background-color: rgba(3,120,148,0.08) !important; }
-      `}</style>
-      <div style={{ minHeight: '100vh', backgroundColor: '#F7F5F2' }}>
-        <div style={{ padding: '20px 24px', backgroundColor: '#E4DED8', borderBottom: '1px solid rgba(0,0,0,0.06)' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px', flexWrap: 'wrap', gap: '8px' }}>
+    <div className="min-h-screen bg-[#F5F5F7] flex flex-col">
+      {/* Top Header */}
+      <div className="bg-white/80 backdrop-blur-xl border-b border-gray-200/50 px-6 py-5 sticky top-0 z-20">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-5">
             <div>
-              <p style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '3px', color: '#037894', textTransform: 'uppercase', margin: '0 0 3px' }}>HRD · Rekrutmen</p>
-              <h1 style={{ fontSize: '22px', fontWeight: 800, color: '#020000', margin: 0 }}>Applicant Tracking</h1>
+              <p className="text-[10px] font-bold tracking-[0.2em] text-strada-blue uppercase mb-1">HRD · Rekrutmen</p>
+              <h1 className="text-2xl font-extrabold text-gray-900 tracking-tight">Applicant Tracking</h1>
             </div>
-            <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-              <button onClick={() => setShowMobileFilter(true)} className="ats-mobile-filter-btn"
-                style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '8px 14px', borderRadius: '10px', backgroundColor: '#020000', color: '#fff', fontSize: '13px', fontWeight: 600, border: 'none', cursor: 'pointer' }}>
-                <Filter size={14} /> Filter
+            <div className="flex gap-3 items-center">
+              <button onClick={() => setShowMobileFilter(true)} 
+                className="md:hidden flex items-center gap-2 px-4 py-2 rounded-xl bg-gray-900 text-white text-sm font-bold shadow-sm">
+                <Filter size={16} /> Filter
               </button>
-              <a href="/apply" target="_blank" rel="noreferrer" className="rekr-portal-link"
-                style={{ padding: '8px 16px', borderRadius: '10px', border: '1.5px solid #037894', color: '#037894', fontSize: '13px', fontWeight: 600, textDecoration: 'none', whiteSpace: 'nowrap', transition: 'background-color 0.15s' }}>
-                Portal ↗
+              <a href="/apply" target="_blank" rel="noreferrer" 
+                className="apple-btn-secondary flex items-center gap-2 py-2 px-4 text-sm bg-white">
+                Portal Karier ↗
               </a>
             </div>
           </div>
-          <div style={{ position: 'relative' }}>
-            <Search size={14} style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', color: '#8A8A8D' }} />
-            <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Cari nama, posisi..."
-              style={{ width: '100%', padding: '10px 14px 10px 36px', borderRadius: '12px', border: '1.5px solid rgba(76,72,69,0.15)', fontSize: '14px', backgroundColor: '#ffffff', outline: 'none', boxSizing: 'border-box' }} />
-          </div>
-          <div style={{ display: 'flex', gap: '6px', marginTop: '8px', alignItems: 'center' }}>
-            <span style={{ fontSize: '12px', color: '#8A8A8D' }}>Urutkan:</span>
-            {(['date', 'score'] as const).map(opt => (
-              <button key={opt} onClick={() => setSortBy(opt)}
-                style={{ padding: '5px 14px', borderRadius: '8px', fontSize: '12px', fontWeight: 600, border: 'none', cursor: 'pointer', backgroundColor: sortBy === opt ? '#020000' : '#fff', color: sortBy === opt ? '#fff' : '#4C4845', boxShadow: '0 1px 4px rgba(0,0,0,0.08)' }}>
-                {opt === 'date' ? 'Terbaru' : '✦ Quest Score'}
-              </button>
-            ))}
-          </div>
-        </div>
 
-        {showMobileFilter && (
-          <>
-            <div onClick={() => setShowMobileFilter(false)} style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.4)', zIndex: 40 }} />
-            <div className="ats-mobile-sidebar" style={{ position: 'fixed', left: 0, top: 0, bottom: 0, width: '280px', backgroundColor: '#fff', zIndex: 50, padding: '20px 16px', overflowY: 'auto', boxShadow: '4px 0 20px rgba(0,0,0,0.15)' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-                <h3 style={{ fontSize: '15px', fontWeight: 700, color: '#020000', margin: 0 }}>Filter Status</h3>
-                <button onClick={() => setShowMobileFilter(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '20px', color: '#8A8A8D' }}>×</button>
-              </div>
-              <Sidebar />
+          <div className="flex flex-col md:flex-row gap-4 items-center">
+            <div className="relative w-full md:max-w-md">
+              <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
+              <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Cari nama kandidat, posisi..."
+                className="w-full pl-11 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm font-medium text-gray-900 focus:bg-white focus:ring-2 focus:ring-strada-blue/20 outline-none transition-all duration-200 placeholder:text-gray-400" />
             </div>
-          </>
-        )}
-
-        <div style={{ display: 'flex', minHeight: 'calc(100vh - 180px)' }} className="ats-layout">
-          <div className="ats-sidebar-desktop" style={{ width: '240px', flexShrink: 0, padding: '20px 16px', backgroundColor: '#ffffff', borderRight: '1px solid #E8E4E0' }}>
-            <Sidebar />
-          </div>
-          <div style={{ flex: 1, padding: '20px 24px', overflowX: 'hidden' }}>
-            {activeStageInfo && activeStage !== 'semua' && (
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px', padding: '10px 16px', borderRadius: '12px', backgroundColor: `${activeStageInfo.color}12`, border: `1px solid ${activeStageInfo.color}25` }}>
-                <div style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: activeStageInfo.color }} />
-                <span style={{ fontSize: '14px', fontWeight: 700, color: activeStageInfo.color }}>{activeStageInfo.label}</span>
-                <span style={{ fontSize: '13px', color: '#8A8A8D' }}>— {filtered.length} kandidat</span>
-              </div>
-            )}
-            {activeStage === 'semua' && (
-              <p style={{ fontSize: '13px', color: '#8A8A8D', marginBottom: '16px' }}>
-                {filtered.length} dari {applicants.length} pelamar{search && ` · "${search}"`}
-              </p>
-            )}
-
-            {filtered.length === 0 ? (
-              <div style={{ textAlign: 'center', padding: '60px 20px', backgroundColor: '#fff', borderRadius: '16px', border: '1.5px solid #E8E4E0' }}>
-                <p style={{ fontSize: '32px', marginBottom: '10px' }}>📋</p>
-                <p style={{ fontSize: '15px', fontWeight: 600, color: '#020000', marginBottom: '4px' }}>Tidak ada pelamar</p>
-                <p style={{ fontSize: '13px', color: '#8A8A8D' }}>{search ? `Tidak ada hasil untuk "${search}"` : 'Belum ada pelamar di tahap ini.'}</p>
-              </div>
-            ) : (
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '12px' }} className="ats-cards">
-                {filtered.map(applicant => {
-                  const stage = PIPELINE_STAGES.find(s => s.key === (applicant.pipeline_stage || 'baru_masuk'))
-                  const scoreData = latestScore(applicant.applicant_quest_scores)
-                  return (
-                    <div key={applicant.id}
-                      onClick={() => router.push(`/dashboard/hrd/rekrutmen/${applicant.id}`)}
-                      style={{ backgroundColor: '#fff', border: '1.5px solid #E8E4E0', borderRadius: '14px', padding: '16px', cursor: 'pointer', transition: 'all 0.15s', position: 'relative' }}
-                      onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.borderColor = '#037894'; el.style.transform = 'translateY(-1px)'; el.style.boxShadow = '0 4px 16px rgba(3,120,148,0.1)' }}
-                      onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.borderColor = '#E8E4E0'; el.style.transform = 'none'; el.style.boxShadow = 'none' }}>
-
-                      {/* Top row: name + unified quest widget */}
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '8px', marginBottom: '8px' }}>
-                        <div style={{ flex: 1, minWidth: 0 }}>
-                          <p style={{ fontSize: '14px', fontWeight: 700, color: '#020000', margin: '0 0 2px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{applicant.full_name}</p>
-                          <p style={{ fontSize: '12px', color: '#037894', fontWeight: 600, margin: 0 }}>{applicant.position_applied}</p>
-                        </div>
-                        <div style={{ flexShrink: 0 }}>
-                          <QuestScoreWidget applicantId={applicant.id} scoreData={scoreData} onScored={handleScored} />
-                        </div>
-                      </div>
-
-                      {applicant.outlet_preference && <p style={{ fontSize: '11px', color: '#8A8A8D', margin: '0 0 8px' }}>{applicant.outlet_preference}</p>}
-
-                      {scoreData?.status === 'completed' && scoreData.summary && (
-                        <div style={{ padding: '8px 10px', borderRadius: '8px', backgroundColor: '#F7F5F2', marginBottom: '8px' }}>
-                          <p style={{ fontSize: '11px', color: '#4C4845', margin: 0, lineHeight: 1.5, overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>{scoreData.summary}</p>
-                        </div>
-                      )}
-
-                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '8px' }}>
-                        <span style={{ fontSize: '11px', padding: '3px 8px', borderRadius: '6px', fontWeight: 600, backgroundColor: `${stage?.color || '#8A8A8D'}18`, color: stage?.color || '#8A8A8D' }}>{stage?.label || 'Baru Masuk'}</span>
-                        <span style={{ fontSize: '11px', color: '#8A8A8D' }}>{new Date(applicant.created_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' })}</span>
-                      </div>
-                    </div>
-                  )
-                })}
-              </div>
-            )}
+            
+            <div className="flex items-center gap-2 w-full md:w-auto overflow-x-auto pb-1 md:pb-0 hide-scrollbar">
+              <span className="text-xs font-bold text-gray-400 uppercase tracking-wider whitespace-nowrap">Urutkan:</span>
+              {(['date', 'score'] as const).map(opt => (
+                <button key={opt} onClick={() => setSortBy(opt)}
+                  className={`px-4 py-2 rounded-xl text-xs font-bold transition-all duration-200 whitespace-nowrap shadow-sm border ${
+                    sortBy === opt 
+                      ? 'bg-gray-900 text-white border-gray-900' 
+                      : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50'
+                  }`}>
+                  {opt === 'date' ? 'Terbaru' : '✦ Quest Score'}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       </div>
-    </>
+
+      {/* Mobile Filter Overlay */}
+      {showMobileFilter && (
+        <div className="md:hidden fixed inset-0 z-50 flex">
+          <div className="absolute inset-0 bg-gray-900/40 backdrop-blur-sm" onClick={() => setShowMobileFilter(false)} />
+          <div className="relative w-[280px] bg-white h-full shadow-2xl flex flex-col">
+            <div className="p-5 border-b border-gray-100 flex justify-between items-center">
+              <h3 className="text-base font-extrabold text-gray-900">Filter Status</h3>
+              <button onClick={() => setShowMobileFilter(false)} className="p-2 -mr-2 text-gray-400 hover:text-gray-900 rounded-full">
+                ×
+              </button>
+            </div>
+            <div className="p-4 overflow-y-auto flex-1">
+              {sidebar}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Main Layout */}
+      <div className="flex-1 flex max-w-7xl mx-auto w-full">
+        {/* Desktop Sidebar */}
+        <div className="hidden md:block w-[260px] shrink-0 p-6 border-r border-gray-200/50 bg-white/30 backdrop-blur-sm">
+          {sidebar}
+        </div>
+
+        {/* Content Area */}
+        <div className="flex-1 p-6">
+          {activeStageInfo && activeStage !== 'semua' && (
+            <div className="flex items-center gap-3 mb-6 px-5 py-3 rounded-2xl bg-white border border-gray-200 shadow-sm"
+                 style={{ borderLeftColor: activeStageInfo.color, borderLeftWidth: '4px' }}>
+              <span className="text-sm font-extrabold" style={{ color: activeStageInfo.color }}>{activeStageInfo.label}</span>
+              <span className="text-xs font-bold text-gray-400 tracking-wider uppercase">— {filtered.length} kandidat</span>
+            </div>
+          )}
+          
+          {activeStage === 'semua' && (
+            <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-6">
+              Menampilkan {filtered.length} pelamar {search && <span className="text-strada-blue lowercase normal-case">hasil pencarian &quot;{search}&quot;</span>}
+            </p>
+          )}
+
+          {filtered.length === 0 ? (
+            <div className="apple-card p-12 text-center flex flex-col items-center justify-center min-h-[300px]">
+              <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mb-4">
+                <Search size={28} className="text-gray-300" />
+              </div>
+              <p className="text-lg font-extrabold text-gray-900 mb-2">Tidak ada kandidat</p>
+              <p className="text-sm text-gray-500 max-w-sm">{search ? `Tidak ada hasil untuk pencarian "${search}".` : 'Belum ada pelamar di tahapan ini.'}</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+              {filtered.map(applicant => {
+                const stage = PIPELINE_STAGES.find(s => s.key === (applicant.pipeline_stage || 'baru_masuk'))
+                const scoreData = latestScore(applicant.applicant_quest_scores)
+                
+                return (
+                  <div key={applicant.id}
+                    onClick={() => router.push(`/dashboard/hrd/rekrutmen/${applicant.id}`)}
+                    className="apple-card p-5 cursor-pointer apple-card-hover flex flex-col">
+
+                    {/* Header */}
+                    <div className="flex justify-between items-start gap-3 mb-3">
+                      <div className="flex-1 min-w-0">
+                        <p className="text-[15px] font-extrabold text-gray-900 mb-1 truncate">{applicant.full_name}</p>
+                        <p className="text-[12px] font-bold text-strada-blue truncate">{applicant.position_applied}</p>
+                      </div>
+                    </div>
+
+                    <div className="mb-4">
+                      <QuestScoreWidget applicantId={applicant.id} scoreData={scoreData} onScored={handleScored} />
+                    </div>
+
+                    {applicant.outlet_preference && (
+                      <p className="text-[11px] font-medium text-gray-500 flex items-center gap-1.5 mb-3">
+                        <span className="w-1.5 h-1.5 rounded-full bg-gray-300"></span> {applicant.outlet_preference}
+                      </p>
+                    )}
+
+                    {scoreData?.status === 'completed' && scoreData.summary && (
+                      <div className="px-3 py-2 rounded-xl bg-gray-50 border border-gray-100 mb-4 mt-auto">
+                        <p className="text-[11px] text-gray-600 leading-relaxed line-clamp-2 italic">&quot;{scoreData.summary}&quot;</p>
+                      </div>
+                    )}
+                    
+                    {!scoreData?.summary && <div className="mt-auto"></div>}
+
+                    {/* Footer */}
+                    <div className="flex items-center justify-between mt-2 pt-3 border-t border-gray-100">
+                      <span className="text-[10px] font-extrabold px-2 py-1 rounded-md tracking-wider uppercase truncate max-w-[120px]"
+                            style={{ backgroundColor: `${stage?.color || '#8A8A8D'}15`, color: stage?.color || '#8A8A8D' }}>
+                        {stage?.label || 'Baru Masuk'}
+                      </span>
+                      <span className="text-[11px] font-medium text-gray-400 whitespace-nowrap">
+                        {new Date(applicant.created_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' })}
+                      </span>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
   )
 }

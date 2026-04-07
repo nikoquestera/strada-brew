@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { JobPosting } from '@/lib/types'
-import { Plus, Users, MapPin, Clock, Zap, Edit2 } from 'lucide-react'
+import { Plus, Users, MapPin, Clock, Zap, Edit2, ExternalLink, Briefcase, FileText } from 'lucide-react'
 
 export default function JobsClient({ initialJobs }: { initialJobs: JobPosting[] }) {
   const supabase = createClient()
@@ -13,7 +13,7 @@ export default function JobsClient({ initialJobs }: { initialJobs: JobPosting[] 
   const [editingJob, setEditingJob] = useState<JobPosting | null>(null)
   const [saving, setSaving] = useState(false)
   const [saveError, setSaveError] = useState('')
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(false)
   const [togglingId, setTogglingId] = useState<string | null>(null)
 
   const emptyForm = {
@@ -79,264 +79,272 @@ export default function JobsClient({ initialJobs }: { initialJobs: JobPosting[] 
     setTogglingId(null)
   }
 
-  const inp = "w-full px-3 py-2.5 rounded-xl text-sm outline-none"
-  const ist = { border: '1.5px solid #E8E4E0', backgroundColor: '#FAFAF9', boxSizing: 'border-box' as const }
-  const lbl = { display: 'block', fontSize: '12px', fontWeight: 600, color: '#4C4845', marginBottom: '5px' } as const
-
   return (
-    <>
-      <style>{`
-        @media (max-width: 768px) {
-          .jobs-grid { grid-template-columns: 1fr !important; }
-          .form-grid-2 { grid-template-columns: 1fr !important; }
-          .form-grid-3 { grid-template-columns: 1fr !important; }
-        }
-        .jobs-edit-btn:hover { background-color: #F0EEEC !important; border-color: #4C4845 !important; }
-        .jobs-preview-btn:hover { background-color: rgba(3,120,148,0.12) !important; }
-      `}</style>
+    <div className="p-6 md:p-8 max-w-7xl mx-auto bg-[#F5F5F7] min-h-screen font-sans">
+      {/* Header */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+        <div>
+          <p className="text-[10px] font-bold tracking-[0.2em] text-strada-blue uppercase mb-1">HRD · Rekrutmen</p>
+          <h1 className="text-2xl md:text-3xl font-extrabold text-gray-900 tracking-tight">Job Posting</h1>
+          <p className="text-sm font-medium text-gray-500 mt-1">
+            {jobs.filter(j => j.is_active).length} aktif · {jobs.filter(j => !j.is_active).length} draf/nonaktif
+          </p>
+        </div>
+        <button onClick={openNew} className="apple-btn-primary flex items-center justify-center gap-2 whitespace-nowrap">
+          <Plus size={18} /> Buat Job Post
+        </button>
+      </div>
 
-      <div style={{ padding: '24px', minHeight: '100vh' }}>
-        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '24px', flexWrap: 'wrap', gap: '12px' }}>
-          <div>
-            <p style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '3px', color: '#037894', textTransform: 'uppercase', margin: '0 0 4px' }}>HRD · Rekrutmen</p>
-            <h1 style={{ fontSize: '24px', fontWeight: 800, color: '#020000', margin: 0 }}>Job Posting</h1>
-            <p style={{ fontSize: '13px', color: '#8A8A8D', margin: '4px 0 0' }}>{jobs.filter(j => j.is_active).length} aktif · {jobs.filter(j => !j.is_active).length} tidak aktif</p>
+      {loading ? (
+        <div className="text-center py-20">
+          <div className="w-8 h-8 border-4 border-gray-200 border-t-strada-blue rounded-full animate-spin mx-auto mb-4" />
+          <p className="text-gray-500 font-bold text-sm">Memuat data pekerjaan...</p>
+        </div>
+      ) : jobs.length === 0 ? (
+        <div className="apple-card p-12 text-center max-w-2xl mx-auto flex flex-col items-center">
+          <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mb-4">
+            <Briefcase size={28} className="text-gray-300" />
           </div>
-          <button onClick={openNew} className="brew-btn-teal"
-            style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 20px', borderRadius: '12px', backgroundColor: '#037894', color: '#fff', fontWeight: 700, fontSize: '13px', border: 'none', cursor: 'pointer', transition: 'background-color 0.15s' }}>
-            <Plus size={16} /> Buat Job Post
+          <p className="text-lg font-extrabold text-gray-900 mb-2">Belum ada job posting</p>
+          <p className="text-sm text-gray-500 mb-6">Buat lowongan pekerjaan pertama Anda untuk mulai menerima pelamar.</p>
+          <button onClick={openNew} className="apple-btn-primary flex items-center gap-2">
+            <Plus size={18} /> Buat Sekarang
           </button>
         </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          {jobs.map(job => (
+            <div key={job.id}
+              onClick={(e) => { if ((e.target as HTMLElement).closest('button, a')) return; router.push(`/dashboard/hrd/jobs/${job.id}`) }}
+              className={`apple-card p-6 cursor-pointer apple-card-hover flex flex-col h-full ${!job.is_active && 'opacity-75 bg-gray-50/50'}`}>
 
-        {loading ? (
-          <div style={{ textAlign: 'center', padding: '60px', color: '#8A8A8D', fontSize: '14px' }}>Memuat...</div>
-        ) : jobs.length === 0 ? (
-          <div style={{ textAlign: 'center', padding: '60px 20px', backgroundColor: '#fff', borderRadius: '16px', border: '1.5px solid #E8E4E0' }}>
-            <p style={{ fontSize: '32px', marginBottom: '12px' }}>📋</p>
-            <p style={{ fontSize: '15px', fontWeight: 600, color: '#020000', marginBottom: '4px' }}>Belum ada job posting</p>
-            <button onClick={openNew} style={{ padding: '10px 24px', borderRadius: '12px', backgroundColor: '#037894', color: '#fff', fontWeight: 700, fontSize: '13px', border: 'none', cursor: 'pointer' }}>+ Buat Sekarang</button>
-          </div>
-        ) : (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '14px' }} className="jobs-grid">
-            {jobs.map(job => (
-              <div key={job.id}
-                onClick={(e) => { if ((e.target as HTMLElement).closest('button, a')) return; router.push(`/dashboard/hrd/jobs/${job.id}`) }}
-                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = '#037894'; (e.currentTarget as HTMLElement).style.boxShadow = '0 2px 12px rgba(3,120,148,0.1)' }}
-                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = job.is_active ? '#E8E4E0' : 'rgba(255,79,49,0.2)'; (e.currentTarget as HTMLElement).style.boxShadow = 'none' }}
-                style={{ backgroundColor: '#fff', borderRadius: '16px', border: `1.5px solid ${job.is_active ? '#E8E4E0' : 'rgba(255,79,49,0.2)'}`, padding: '20px', cursor: 'pointer', opacity: job.is_active ? 1 : 0.8, transition: 'all 0.15s' }}>
-
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
-                  <div style={{ flex: 1, minWidth: 0, paddingRight: '12px' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '4px' }}>
-                      <span style={{ fontSize: '10px', fontWeight: 700, color: '#8A8A8D', letterSpacing: '1px' }}>{job.job_id}</span>
-                      {job.is_urgent && <span style={{ fontSize: '10px', fontWeight: 700, padding: '2px 8px', borderRadius: '6px', backgroundColor: '#FFF0EE', color: '#FF4F31' }}>URGENT</span>}
-                    </div>
-                    <h3 style={{ fontSize: '16px', fontWeight: 700, color: '#020000', margin: '0 0 3px', lineHeight: 1.2 }}>{job.title}</h3>
-                    <p style={{ fontSize: '13px', color: '#037894', margin: 0, fontWeight: 600 }}>{job.department}</p>
+              {/* Card Header */}
+              <div className="flex justify-between items-start gap-4 mb-4">
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 mb-2 flex-wrap">
+                    <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-md bg-gray-100 text-gray-500 tracking-widest uppercase">
+                      {job.job_id}
+                    </span>
+                    {job.is_urgent && (
+                      <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-md bg-red-50 text-red-600 tracking-widest uppercase">
+                        URGENT
+                      </span>
+                    )}
                   </div>
-
-                  {/* Active/Inactive toggle — clear visual */}
-                  <button
-                    onClick={(e) => { e.stopPropagation(); toggleActive(job) }}
-                    disabled={togglingId === job.id}
-                    title={job.is_active ? 'Klik untuk nonaktifkan' : 'Klik untuk aktifkan'}
-                    style={{
-                      flexShrink: 0,
-                      display: 'flex', alignItems: 'center', gap: '5px',
-                      padding: '5px 10px', borderRadius: '20px', border: 'none',
-                      cursor: togglingId === job.id ? 'not-allowed' : 'pointer',
-                      fontSize: '11px', fontWeight: 700,
-                      backgroundColor: job.is_active ? '#E6F4F1' : '#FFF0EE',
-                      color: job.is_active ? '#005353' : '#FF4F31',
-                      transition: 'all 0.2s',
-                      opacity: togglingId === job.id ? 0.6 : 1,
-                    }}>
-                    <span style={{
-                      width: '7px', height: '7px', borderRadius: '50%',
-                      backgroundColor: job.is_active ? '#005353' : '#FF4F31',
-                      flexShrink: 0,
-                    }} />
-                    {job.is_active ? 'Aktif' : 'Nonaktif'}
-                  </button>
+                  <h3 className="text-lg font-extrabold text-gray-900 leading-tight mb-1 truncate">{job.title}</h3>
+                  <p className="text-[13px] font-bold text-strada-blue truncate">{job.department}</p>
                 </div>
 
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '5px', marginBottom: '14px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <MapPin size={12} color="#8A8A8D" />
-                    <span style={{ fontSize: '12px', color: '#4C4845' }}>{job.location}{job.outlet ? ` · ${job.outlet}` : ''}</span>
-                  </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <Clock size={12} color="#8A8A8D" />
-                    <span style={{ fontSize: '12px', color: '#4C4845' }}>{job.employment_type}</span>
-                    {job.salary_display && <span style={{ fontSize: '12px', color: '#8A8A8D' }}>· {job.salary_display}</span>}
-                  </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <Users size={12} color="#8A8A8D" />
-                    <span style={{ fontSize: '12px', color: '#4C4845' }}>{job.applicant_count || 0} pelamar</span>
-                    {job.min_experience_years > 0 && <span style={{ fontSize: '12px', color: '#8A8A8D' }}>· Min. {job.min_experience_years} thn</span>}
-                  </div>
-                </div>
+                {/* Status Toggle */}
+                <button
+                  onClick={(e) => { e.stopPropagation(); toggleActive(job) }}
+                  disabled={togglingId === job.id}
+                  className={`shrink-0 flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-widest transition-all duration-200 ${
+                    job.is_active 
+                      ? 'bg-teal-50 text-teal-700 hover:bg-teal-100' 
+                      : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
+                  } ${togglingId === job.id ? 'opacity-50 cursor-not-allowed' : ''}`}>
+                  <span className={`w-1.5 h-1.5 rounded-full ${job.is_active ? 'bg-teal-500' : 'bg-gray-400'}`} />
+                  {job.is_active ? 'Aktif' : 'Draf'}
+                </button>
+              </div>
 
-                {job.ai_screening_notes && (
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '8px 12px', borderRadius: '8px', backgroundColor: 'rgba(3,120,148,0.05)', marginBottom: '12px' }}>
-                    <Zap size={12} color="#037894" />
-                    <span style={{ fontSize: '11px', color: '#037894', fontWeight: 600 }}>Quest AI criteria configured</span>
+              {/* Meta Info */}
+              <div className="space-y-2 mb-5">
+                <div className="flex items-center gap-2 text-[13px] text-gray-600 font-medium">
+                  <MapPin size={14} className="text-gray-400 shrink-0" />
+                  <span className="truncate">{job.location}{job.outlet ? ` · ${job.outlet}` : ''}</span>
+                </div>
+                <div className="flex items-center gap-2 text-[13px] text-gray-600 font-medium">
+                  <Clock size={14} className="text-gray-400 shrink-0" />
+                  <span className="truncate">{job.employment_type} {job.salary_display && <span className="text-gray-400">· {job.salary_display}</span>}</span>
+                </div>
+                <div className="flex items-center gap-2 text-[13px] text-gray-600 font-medium">
+                  <Users size={14} className="text-gray-400 shrink-0" />
+                  <span><strong className="text-gray-900">{job.applicant_count || 0}</strong> pelamar {job.min_experience_years > 0 && <span className="text-gray-400">· Min. {job.min_experience_years} thn</span>}</span>
+                </div>
+              </div>
+
+              <div className="mt-auto space-y-4">
+                {/* AI Badge */}
+                {job.ai_screening_notes ? (
+                  <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-blue-50/50 border border-blue-100">
+                    <Zap size={14} className="text-strada-blue" />
+                    <span className="text-[11px] font-bold text-strada-blue">AI Screening Aktif</span>
                   </div>
+                ) : (
+                  <div className="h-8"></div> /* Spacer */
                 )}
 
-                <div style={{ display: 'flex', gap: '8px' }}>
-                  <button onClick={() => openEdit(job)} className="jobs-edit-btn"
-                    style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', padding: '8px', borderRadius: '10px', border: '1.5px solid #E8E4E0', backgroundColor: 'transparent', color: '#4C4845', fontSize: '12px', fontWeight: 600, cursor: 'pointer', transition: 'all 0.15s' }}>
-                    <Edit2 size={12} /> Edit
+                {/* Actions */}
+                <div className="flex gap-2 pt-4 border-t border-gray-100">
+                  <button onClick={(e) => { e.stopPropagation(); openEdit(job) }} 
+                    className="flex-1 flex items-center justify-center gap-2 py-2 rounded-xl bg-gray-50 hover:bg-gray-100 text-gray-700 text-xs font-bold transition-colors">
+                    <Edit2 size={14} /> Edit
                   </button>
-                  <a
-                    href={`/dashboard/hrd/jobs/${job.id}`}
-                    target="_blank"
-                    rel="noreferrer"
-                    onClick={e => e.stopPropagation()}
-                    className="jobs-preview-btn"
-                    style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '8px', borderRadius: '10px', backgroundColor: 'rgba(3,120,148,0.06)', color: '#037894', fontSize: '12px', fontWeight: 600, textDecoration: 'none', border: '1.5px solid rgba(3,120,148,0.2)', transition: 'background-color 0.15s' }}>
-                    Preview ↗
+                  <a href={`/jobs/${job.job_id}`} target="_blank" rel="noreferrer" onClick={e => e.stopPropagation()}
+                    className="flex-1 flex items-center justify-center gap-2 py-2 rounded-xl bg-strada-blue/5 hover:bg-strada-blue/10 text-strada-blue text-xs font-bold transition-colors">
+                    <ExternalLink size={14} /> Preview
                   </a>
                 </div>
               </div>
-            ))}
-          </div>
-        )}
-      </div>
+            </div>
+          ))}
+        </div>
+      )}
 
       {/* Form Modal */}
       {showForm && (
-        <div style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 100, overflowY: 'auto', padding: '20px' }}>
-          <div style={{ backgroundColor: '#fff', borderRadius: '20px', padding: '28px', maxWidth: '720px', margin: '0 auto' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
-              <h2 style={{ fontSize: '18px', fontWeight: 800, color: '#020000', margin: 0 }}>
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6">
+          <div className="absolute inset-0 bg-gray-900/40 backdrop-blur-sm" onClick={() => setShowForm(false)} />
+          <div className="relative w-full max-w-3xl bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+            
+            {/* Modal Header */}
+            <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-white/80 backdrop-blur-xl sticky top-0 z-10">
+              <h2 className="text-lg font-extrabold text-gray-900">
                 {editingJob ? 'Edit Job Posting' : 'Buat Job Posting Baru'}
               </h2>
-              <button onClick={() => setShowForm(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '22px', color: '#8A8A8D', padding: '4px 8px' }}>×</button>
+              <button onClick={() => setShowForm(false)} className="p-2 -mr-2 text-gray-400 hover:text-gray-900 hover:bg-gray-100 rounded-full transition-colors">
+                <span className="text-xl leading-none">×</span>
+              </button>
             </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '12px' }} className="form-grid-2">
-                <div>
-                  <label style={lbl}>Job ID <span style={{ color: '#FF4F31' }}>*</span></label>
-                  <input className={inp} style={ist} value={form.job_id} onChange={e => set('job_id', e.target.value)} placeholder="STR-BAR-001" />
-                  <p style={{ fontSize: '11px', color: '#8A8A8D', margin: '3px 0 0' }}>Format: STR-[DEPT]-[NO]</p>
+            {/* Modal Body */}
+            <div className="p-6 overflow-y-auto flex-1 custom-scrollbar">
+              <div className="space-y-6">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+                  <div className="sm:col-span-1">
+                    <label className="block text-[12px] font-bold text-gray-700 mb-1.5">Job ID <span className="text-red-500">*</span></label>
+                    <input className="apple-input bg-gray-50" value={form.job_id} onChange={e => set('job_id', e.target.value)} placeholder="STR-BAR-001" />
+                    <p className="text-[10px] text-gray-400 font-medium mt-1.5">Format: STR-[DEPT]-[NO]</p>
+                  </div>
+                  <div className="sm:col-span-2">
+                    <label className="block text-[12px] font-bold text-gray-700 mb-1.5">Judul Posisi <span className="text-red-500">*</span></label>
+                    <input className="apple-input bg-gray-50" value={form.title} onChange={e => set('title', e.target.value)} placeholder="e.g. Barista, Store Manager" />
+                  </div>
                 </div>
-                <div>
-                  <label style={lbl}>Judul Posisi <span style={{ color: '#FF4F31' }}>*</span></label>
-                  <input className={inp} style={ist} value={form.title} onChange={e => set('title', e.target.value)} placeholder="e.g. Barista" />
-                </div>
-              </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '12px' }} className="form-grid-3">
-                <div>
-                  <label style={lbl}>Departemen</label>
-                  <input className={inp} style={ist} value={form.department} onChange={e => set('department', e.target.value)} placeholder="Operations" />
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+                  <div>
+                    <label className="block text-[12px] font-bold text-gray-700 mb-1.5">Departemen</label>
+                    <input className="apple-input bg-gray-50" value={form.department} onChange={e => set('department', e.target.value)} placeholder="Operations" />
+                  </div>
+                  <div>
+                    <label className="block text-[12px] font-bold text-gray-700 mb-1.5">Entity</label>
+                    <select className="apple-input bg-gray-50" value={form.entity} onChange={e => set('entity', e.target.value)}>
+                      <option value="CV_KTN">CV KTN (Jakarta)</option>
+                      <option value="CV_PRI">CV PRI (Semarang)</option>
+                      <option value="PT_BSB">PT BSB (Roastery)</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-[12px] font-bold text-gray-700 mb-1.5">Tipe Pekerjaan</label>
+                    <select className="apple-input bg-gray-50" value={form.employment_type} onChange={e => set('employment_type', e.target.value)}>
+                      <option>Full-time</option>
+                      <option>Part-time</option>
+                      <option>Contract</option>
+                      <option>Internship</option>
+                    </select>
+                  </div>
                 </div>
-                <div>
-                  <label style={lbl}>Entity</label>
-                  <select className={inp} style={ist} value={form.entity} onChange={e => set('entity', e.target.value)}>
-                    <option value="CV_KTN">CV KTN (Jakarta)</option>
-                    <option value="CV_PRI">CV PRI (Semarang)</option>
-                    <option value="PT_BSB">PT BSB (Roastery)</option>
-                  </select>
-                </div>
-                <div>
-                  <label style={lbl}>Tipe</label>
-                  <select className={inp} style={ist} value={form.employment_type} onChange={e => set('employment_type', e.target.value)}>
-                    <option>Full-time</option>
-                    <option>Part-time</option>
-                    <option>Contract</option>
-                    <option>Internship</option>
-                  </select>
-                </div>
-              </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }} className="form-grid-2">
-                <div>
-                  <label style={lbl}>Lokasi <span style={{ color: '#FF4F31' }}>*</span></label>
-                  <input className={inp} style={ist} value={form.location} onChange={e => set('location', e.target.value)} placeholder="Jakarta Utara" />
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                  <div>
+                    <label className="block text-[12px] font-bold text-gray-700 mb-1.5">Lokasi Utama <span className="text-red-500">*</span></label>
+                    <input className="apple-input bg-gray-50" value={form.location} onChange={e => set('location', e.target.value)} placeholder="Jakarta Utara" />
+                  </div>
+                  <div>
+                    <label className="block text-[12px] font-bold text-gray-700 mb-1.5">Outlet Spesifik <span className="text-[10px] text-gray-400 font-medium ml-1">(opsional)</span></label>
+                    <select className="apple-input bg-gray-50" value={form.outlet} onChange={e => set('outlet', e.target.value)}>
+                      <option value="">Pilih outlet (jika ada)</option>
+                      {['Kelapa Gading', 'MKG', 'BSD', 'SMS', 'SMB Gold Lounge', 'SMB2', 'Semarang', 'HO Jakarta', 'HO Semarang', 'Roastery', 'Academy'].map(o => (
+                        <option key={o} value={o}>{o}</option>
+                      ))}
+                    </select>
+                  </div>
                 </div>
-                <div>
-                  <label style={lbl}>Outlet</label>
-                  <select className={inp} style={ist} value={form.outlet} onChange={e => set('outlet', e.target.value)}>
-                    <option value="">Pilih outlet (opsional)</option>
-                    {['Kelapa Gading', 'MKG', 'BSD', 'SMS', 'SMB Gold Lounge', 'SMB2', 'Semarang', 'HO Jakarta', 'HO Semarang', 'Roastery', 'Academy'].map(o => (
-                      <option key={o} value={o}>{o}</option>
-                    ))}
-                  </select>
-                </div>
-              </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '12px' }} className="form-grid-3">
-                <div>
-                  <label style={lbl}>Tampilan Gaji</label>
-                  <input className={inp} style={ist} value={form.salary_display} onChange={e => set('salary_display', e.target.value)} placeholder="Rp 4–6 juta/bulan" />
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+                  <div>
+                    <label className="block text-[12px] font-bold text-gray-700 mb-1.5">Info Gaji <span className="text-[10px] text-gray-400 font-medium ml-1">(opsional)</span></label>
+                    <input className="apple-input bg-gray-50" value={form.salary_display} onChange={e => set('salary_display', e.target.value)} placeholder="e.g. Rp 4–6 juta/bulan" />
+                  </div>
+                  <div>
+                    <label className="block text-[12px] font-bold text-gray-700 mb-1.5">Min. Pengalaman (thn)</label>
+                    <input type="number" min="0" step="0.5" className="apple-input bg-gray-50" value={form.min_experience_years} onChange={e => set('min_experience_years', e.target.value)} />
+                  </div>
+                  <div>
+                    <label className="block text-[12px] font-bold text-gray-700 mb-1.5">Deadline <span className="text-[10px] text-gray-400 font-medium ml-1">(opsional)</span></label>
+                    <div className="flex items-center gap-2">
+                      <input type="date" className="apple-input bg-gray-50" value={form.deadline} onChange={e => set('deadline', e.target.value)} />
+                      {form.deadline && (
+                        <button type="button" onClick={() => set('deadline', '')} className="text-red-500 hover:text-red-700 p-2" title="Hapus deadline">×</button>
+                      )}
+                    </div>
+                  </div>
                 </div>
-                <div>
-                  <label style={lbl}>Min. Pengalaman (thn)</label>
-                  <input type="number" min="0" step="0.5" className={inp} style={ist} value={form.min_experience_years} onChange={e => set('min_experience_years', e.target.value)} />
-                </div>
-                <div>
-                  <label style={lbl}>Deadline <span style={{ fontSize: '10px', color: '#8A8A8D', fontWeight: 400 }}>(opsional)</span></label>
-                  <input type="date" className={inp} style={ist} value={form.deadline} onChange={e => set('deadline', e.target.value)} />
-                  {form.deadline && <button type="button" onClick={() => set('deadline', '')} style={{ fontSize: '11px', color: '#FF4F31', background: 'none', border: 'none', cursor: 'pointer', padding: '2px 0' }}>× Hapus deadline</button>}
-                </div>
-              </div>
 
-              <div>
-                <label style={lbl}>Deskripsi Posisi <span style={{ color: '#FF4F31' }}>*</span></label>
-                <textarea className={inp} style={{ ...ist, resize: 'vertical' as const }} value={form.description} onChange={e => set('description', e.target.value)} rows={4} placeholder="Deskripsi singkat tentang posisi ini..." />
-              </div>
-              <div>
-                <label style={lbl}>Tanggung Jawab <span style={{ color: '#FF4F31' }}>*</span></label>
-                <textarea className={inp} style={{ ...ist, resize: 'vertical' as const }} value={form.responsibilities} onChange={e => set('responsibilities', e.target.value)} rows={4} placeholder="- Membuat minuman sesuai SOP" />
-              </div>
-              <div>
-                <label style={lbl}>Persyaratan <span style={{ color: '#FF4F31' }}>*</span></label>
-                <textarea className={inp} style={{ ...ist, resize: 'vertical' as const }} value={form.requirements} onChange={e => set('requirements', e.target.value)} rows={4} placeholder="- Min. 1 tahun pengalaman kafe" />
-              </div>
-              <div>
-                <label style={lbl}>Benefit <span style={{ fontSize: '10px', color: '#8A8A8D', fontWeight: 400 }}>(opsional)</span></label>
-                <textarea className={inp} style={{ ...ist, resize: 'vertical' as const }} value={form.benefits} onChange={e => set('benefits', e.target.value)} rows={3} placeholder="- Gaji pokok + service charge" />
-              </div>
+                <hr className="border-gray-100" />
 
-              <div style={{ padding: '16px', borderRadius: '14px', border: '1.5px solid rgba(3,120,148,0.2)', backgroundColor: 'rgba(3,120,148,0.03)' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '8px' }}>
-                  <Zap size={14} color="#037894" />
-                  <label style={{ ...lbl, margin: 0, color: '#037894' }}>Catatan Screening Quest AI <span style={{ fontSize: '10px', fontWeight: 400, color: '#8A8A8D' }}>(opsional)</span></label>
-                </div>
-                <textarea className={inp} style={{ ...ist, resize: 'vertical' as const, backgroundColor: '#ffffff' }} value={form.ai_screening_notes} onChange={e => set('ai_screening_notes', e.target.value)} rows={4} placeholder="Prioritaskan kandidat dengan pengalaman specialty coffee..." />
-              </div>
-
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 16px', borderRadius: '12px', backgroundColor: '#F7F5F2' }}>
                 <div>
-                  <p style={{ fontSize: '14px', fontWeight: 600, color: '#020000', margin: '0 0 2px' }}>Tandai sebagai Urgent</p>
-                  <p style={{ fontSize: '12px', color: '#8A8A8D', margin: 0 }}>Badge merah di portal kandidat</p>
+                  <label className="block text-[12px] font-bold text-gray-700 mb-1.5">Deskripsi Posisi <span className="text-red-500">*</span></label>
+                  <textarea className="apple-input bg-gray-50 resize-y min-h-[100px]" value={form.description} onChange={e => set('description', e.target.value)} placeholder="Tuliskan overview menarik tentang posisi ini..." />
                 </div>
-                <button type="button" onClick={() => set('is_urgent', !form.is_urgent)}
-                  style={{ width: '46px', height: '26px', borderRadius: '13px', border: 'none', cursor: 'pointer', position: 'relative', backgroundColor: form.is_urgent ? '#FF4F31' : '#D4CFC9', flexShrink: 0 }}>
-                  <span style={{ position: 'absolute', top: '3px', width: '20px', height: '20px', backgroundColor: '#fff', borderRadius: '50%', boxShadow: '0 1px 3px rgba(0,0,0,0.2)', transition: 'transform 0.2s', transform: form.is_urgent ? 'translateX(23px)' : 'translateX(3px)' }} />
-                </button>
+                <div>
+                  <label className="block text-[12px] font-bold text-gray-700 mb-1.5">Tanggung Jawab <span className="text-red-500">*</span></label>
+                  <textarea className="apple-input bg-gray-50 resize-y min-h-[100px]" value={form.responsibilities} onChange={e => set('responsibilities', e.target.value)} placeholder="- Membuat minuman sesuai SOP&#10;- Melayani pelanggan dengan ramah" />
+                </div>
+                <div>
+                  <label className="block text-[12px] font-bold text-gray-700 mb-1.5">Persyaratan <span className="text-red-500">*</span></label>
+                  <textarea className="apple-input bg-gray-50 resize-y min-h-[100px]" value={form.requirements} onChange={e => set('requirements', e.target.value)} placeholder="- Usia max 28 tahun&#10;- Min. 1 tahun pengalaman sebagai Barista" />
+                </div>
+                <div>
+                  <label className="block text-[12px] font-bold text-gray-700 mb-1.5">Benefit <span className="text-[10px] text-gray-400 font-medium ml-1">(opsional)</span></label>
+                  <textarea className="apple-input bg-gray-50 resize-y min-h-[80px]" value={form.benefits} onChange={e => set('benefits', e.target.value)} placeholder="- Gaji Pokok&#10;- Service Charge&#10;- BPJS Kesehatan & Ketenagakerjaan" />
+                </div>
+
+                <div className="bg-blue-50/50 border border-blue-100 rounded-2xl p-5">
+                  <div className="flex items-center gap-2 mb-3">
+                    <Zap size={16} className="text-strada-blue" />
+                    <label className="text-[13px] font-extrabold text-strada-blue">Catatan Screening Quest AI <span className="text-[10px] text-blue-400 font-medium ml-1">(opsional)</span></label>
+                  </div>
+                  <textarea className="apple-input bg-white resize-y min-h-[80px]" value={form.ai_screening_notes} onChange={e => set('ai_screening_notes', e.target.value)} placeholder="Berikan instruksi khusus ke AI untuk screening posisi ini. e.g. Prioritaskan kandidat yang memiliki sertifikasi SCA atau pengalaman di roastery." />
+                </div>
+
+                <div className="flex items-center justify-between p-5 rounded-2xl bg-gray-50 border border-gray-100">
+                  <div>
+                    <p className="text-[14px] font-bold text-gray-900 mb-0.5">Tandai sebagai Urgent</p>
+                    <p className="text-[12px] text-gray-500">Akan memunculkan badge merah mencolok di portal kandidat</p>
+                  </div>
+                  <label className="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" className="sr-only peer" checked={form.is_urgent} onChange={() => set('is_urgent', !form.is_urgent)} />
+                    <div className="w-12 h-7 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-5 peer-checked:after:border-white after:content-[''] after:absolute after:top-[3px] after:left-[3px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-[22px] after:w-[22px] after:transition-all peer-checked:bg-red-500"></div>
+                  </label>
+                </div>
+
+                {saveError && (
+                  <div className="bg-red-50 border border-red-100 text-red-600 text-sm font-medium px-4 py-3 rounded-xl">
+                    ⚠ {saveError}
+                  </div>
+                )}
               </div>
             </div>
 
-            {saveError && <div style={{ padding: '12px 16px', borderRadius: '10px', backgroundColor: '#FFF0EE', color: '#FF4F31', fontSize: '13px', marginTop: '16px' }}>⚠ {saveError}</div>}
-
-            <div style={{ display: 'flex', gap: '10px', marginTop: '20px' }}>
+            {/* Modal Footer */}
+            <div className="px-6 py-4 border-t border-gray-100 bg-gray-50/50 flex flex-col sm:flex-row gap-3">
               <button onClick={() => setShowForm(false)}
-                style={{ flex: 1, padding: '14px', borderRadius: '12px', border: '1.5px solid #E8E4E0', backgroundColor: 'transparent', color: '#4C4845', fontWeight: 600, fontSize: '14px', cursor: 'pointer' }}>
+                className="apple-btn-secondary flex-1 sm:flex-none w-full sm:w-auto py-3">
                 Batal
               </button>
               <button onClick={handleSave} disabled={saving || !form.job_id || !form.title || !form.location || !form.description || !form.requirements || !form.responsibilities}
-                style={{ flex: 2, padding: '14px', borderRadius: '12px', backgroundColor: saving ? '#8A8A8D' : '#037894', color: '#fff', fontWeight: 700, fontSize: '14px', border: 'none', cursor: saving ? 'not-allowed' : 'pointer' }}>
-                {saving ? 'Menyimpan...' : editingJob ? 'Update Job Post' : 'Publish Job Post'}
+                className={`apple-btn-primary flex-1 py-3 ${saving ? 'opacity-70 cursor-not-allowed' : ''}`}>
+                {saving ? 'Menyimpan...' : editingJob ? 'Simpan Perubahan' : 'Publish Job Posting'}
               </button>
             </div>
+
           </div>
         </div>
       )}
-    </>
+    </div>
   )
 }

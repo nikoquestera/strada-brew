@@ -160,7 +160,7 @@ export default function WeightsClient({ initialWeights }: Props) {
             {weights.length === 0 && !editing && (
               <div style={{ backgroundColor: '#fff', borderRadius: '16px', padding: '40px', border: '1.5px solid #E8E4E0', textAlign: 'center' }}>
                 <Scale size={32} color="#E8E4E0" style={{ marginBottom: '12px' }} />
-                <p style={{ fontSize: '14px', color: '#8A8A8D', margin: 0 }}>Belum ada konfigurasi. Klik "+ Konfigurasi Baru" untuk membuat.</p>
+                <p style={{ fontSize: '14px', color: '#8A8A8D', margin: 0 }}>Belum ada konfigurasi. Klik &quot;+ Konfigurasi Baru&quot; untuk membuat.</p>
               </div>
             )}
 
@@ -205,7 +205,7 @@ export default function WeightsClient({ initialWeights }: Props) {
                   </div>
                 </div>
                 {w.custom_note && (
-                  <p style={{ fontSize: '12px', color: '#8A8A8D', margin: '10px 0 0', fontStyle: 'italic', borderTop: '1px solid #F0EEEC', paddingTop: '10px' }}>"{w.custom_note}"</p>
+                  <p style={{ fontSize: '12px', color: '#8A8A8D', margin: '10px 0 0', fontStyle: 'italic', borderTop: '1px solid #F0EEEC', paddingTop: '10px' }}>&quot;{w.custom_note}&quot;</p>
                 )}
               </div>
             ))}

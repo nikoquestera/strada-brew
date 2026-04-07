@@ -1,5 +1,5 @@
-@import "tailwindcss";
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+@import "tailwindcss";
 
 @theme {
   --font-sans: 'Plus Jakarta Sans', sans-serif;
@@ -15,67 +15,63 @@
   --color-strada-olive: #82A13B;
 }
 
-* { font-family: 'Plus Jakarta Sans', sans-serif; box-sizing: border-box; }
+@layer base {
+  * {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    box-sizing: border-box;
+  }
 
-body { background-color: #E4DED8; margin: 0; }
+  body {
+    background-color: #F5F5F7; /* Apple-like off-white */
+    color: #111827; /* text-gray-900 */
+    margin: 0;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+/* Base utility classes for Apple-like aesthetic to reuse if needed */
+@layer components {
+  .apple-card {
+    @apply bg-white rounded-2xl md:rounded-3xl border border-gray-200/50 shadow-sm transition-all duration-200;
+  }
+  .apple-btn-primary {
+    @apply bg-strada-blue text-white rounded-full px-5 py-2.5 font-medium shadow-sm transition-all duration-200 hover:bg-[#026a80] hover:-translate-y-0.5 active:translate-y-0 active:bg-strada-dark-teal focus:outline-none focus:ring-2 focus:ring-strada-blue focus:ring-offset-2;
+  }
+  .apple-btn-secondary {
+    @apply bg-white text-gray-700 border border-gray-200 rounded-full px-5 py-2.5 font-medium shadow-sm transition-all duration-200 hover:bg-gray-50 hover:-translate-y-0.5 active:translate-y-0 active:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 focus:ring-offset-2;
+  }
+  .apple-input {
+    @apply w-full bg-white border border-gray-200 text-gray-900 text-sm rounded-xl focus:ring-strada-blue focus:border-strada-blue block p-3 transition-all duration-200 shadow-sm placeholder-gray-400;
+  }
+}
 
 /* Mobile sidebar overlay */
 .sidebar-mobile-overlay {
   display: none;
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.5);
+  background: rgba(0,0,0,0.4);
+  backdrop-filter: blur(4px);
   z-index: 40;
+  transition: opacity 0.3s ease;
 }
-.sidebar-mobile-overlay.open { display: block; }
-
-/* ── Brew interactive hover states ────────────────────────── */
-
-/* Sidebar nav items */
-.brew-nav-btn:hover {
-  background: rgba(255,255,255,0.09) !important;
-  color: rgba(228,222,216,0.95) !important;
-}
-.brew-nav-btn:hover svg { opacity: 1 !important; }
-
-/* Primary teal buttons */
-.brew-btn-teal:hover { background-color: #026a80 !important; }
-/* Dark/black buttons */
-.brew-btn-dark:hover { background-color: #1c1a1a !important; }
-
-/* Table rows – click target feedback */
-.brew-table-row:hover { background-color: #F0EEEC !important; }
-.brew-table-row { transition: background-color 0.1s; }
-
-/* Clickable cards */
-.brew-card:hover {
-  border-color: #037894 !important;
-  box-shadow: 0 4px 18px rgba(3,120,148,0.12) !important;
-  transform: translateY(-1px);
-}
-.brew-card { transition: all 0.15s; }
-
-/* Quick-action links (overview page) */
-.brew-action-link {
-  transition: all 0.15s !important;
-  text-decoration: none !important;
-}
-.brew-action-link:hover {
-  background-color: #d6d0c9 !important;
-  color: #020000 !important;
-  transform: translateY(-1px);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+.sidebar-mobile-overlay.open {
+  display: block;
 }
 
-/* Generic text links inside dark surfaces */
-.brew-back-btn:hover { color: #E4DED8 !important; }
-
-/* Logout / icon buttons in sidebar */
-.brew-icon-btn:hover { color: rgba(228,222,216,0.75) !important; }
-
-/* Responsive table */
-@media (max-width: 768px) {
-  .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-  .hide-mobile { display: none !important; }
-  .stack-mobile { flex-direction: column !important; }
+/* Scrollbar styles for a cleaner look */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
 }

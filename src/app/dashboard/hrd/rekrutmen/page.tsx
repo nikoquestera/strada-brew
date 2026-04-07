@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import RekrutmenClient from './RekrutmenClient'
 
@@ -8,7 +8,7 @@ export default function RekrutmenPage() {
   const [applicants, setApplicants] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
 
-  async function fetchApplicants() {
+  const fetchApplicants = useCallback(async () => {
     const { data } = await supabase
       .from('applicants')
       .select(`
@@ -22,9 +22,10 @@ export default function RekrutmenPage() {
       .order('created_at', { ascending: false })
     if (data) setApplicants(data)
     setLoading(false)
-  }
+  }, [supabase])
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchApplicants()
 
     const channel = supabase
@@ -34,7 +35,7 @@ export default function RekrutmenPage() {
       .subscribe()
 
     return () => { supabase.removeChannel(channel) }
-  }, [])
+  }, [fetchApplicants, supabase])
 
   if (loading) return (
     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '60vh', flexDirection: 'column', gap: '12px' }}>

@@ -2,6 +2,7 @@
 import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
+import { Loader2 } from 'lucide-react'
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')
@@ -21,67 +22,64 @@ export default function LoginPage() {
   }
 
   return (
-    <>
-      <style>{`
-        @media (max-width: 480px) {
-          .login-card { padding: 28px 20px !important; }
-          .login-title { font-size: 26px !important; }
-        }
-      `}</style>
-      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#E4DED8', padding: '20px' }}>
-        <div style={{ width: '100%', maxWidth: '400px' }}>
-
-          {/* Logo */}
-          <div style={{ textAlign: 'center', marginBottom: '28px' }}>
-            <div style={{ marginBottom: '8px' }}>
-              <p style={{ fontSize: '30px', fontWeight: 800, color: '#020000', fontStyle: 'italic', margin: 0, lineHeight: 1 }} className="login-title">Strada</p>
-              <p style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '4px', color: '#037894', textTransform: 'uppercase', margin: '2px 0 0' }}>BREW</p>
-            </div>
-            <p style={{ fontSize: '13px', color: '#8A8A8D', margin: 0 }}>Internal Portal — Tim Strada Coffee</p>
+    <div className="min-h-screen flex items-center justify-center bg-[#F5F5F7] p-6">
+      <div className="w-full max-w-[420px]">
+        {/* Logo Section */}
+        <div className="text-center mb-10">
+          <div className="mb-2">
+            <p className="text-4xl font-extrabold text-gray-900 italic leading-none mb-1 tracking-tight">Strada</p>
+            <p className="text-[12px] font-bold tracking-[0.3em] text-strada-blue uppercase">BREW</p>
           </div>
-
-          {/* Card */}
-          <div className="login-card" style={{ backgroundColor: '#ffffff', borderRadius: '20px', padding: '36px', border: '1px solid rgba(76,72,69,0.12)', boxShadow: '0 4px 24px rgba(0,0,0,0.06)' }}>
-            <h2 style={{ fontSize: '16px', fontWeight: 700, color: '#020000', margin: '0 0 24px' }}>Masuk ke akun kamu</h2>
-
-            <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              <div>
-                <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: '#4C4845', marginBottom: '6px' }}>Email</label>
-                <input type="email" value={email} onChange={e => setEmail(e.target.value)} required
-                  style={{ width: '100%', padding: '12px 16px', borderRadius: '12px', border: '1.5px solid rgba(76,72,69,0.2)', fontSize: '14px', outline: 'none', backgroundColor: '#fafafa', boxSizing: 'border-box' }}
-                  placeholder="nama@stradacoffee.com"
-                  onFocus={e => e.target.style.borderColor = '#037894'}
-                  onBlur={e => e.target.style.borderColor = 'rgba(76,72,69,0.2)'}
-                />
-              </div>
-              <div>
-                <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: '#4C4845', marginBottom: '6px' }}>Password</label>
-                <input type="password" value={password} onChange={e => setPassword(e.target.value)} required
-                  style={{ width: '100%', padding: '12px 16px', borderRadius: '12px', border: '1.5px solid rgba(76,72,69,0.2)', fontSize: '14px', outline: 'none', backgroundColor: '#fafafa', boxSizing: 'border-box' }}
-                  placeholder="••••••••"
-                  onFocus={e => e.target.style.borderColor = '#037894'}
-                  onBlur={e => e.target.style.borderColor = 'rgba(76,72,69,0.2)'}
-                />
-              </div>
-
-              {error && (
-                <div style={{ backgroundColor: '#fff0ee', color: '#FF4F31', fontSize: '13px', padding: '12px 16px', borderRadius: '10px' }}>
-                  {error}
-                </div>
-              )}
-
-              <button type="submit" disabled={loading}
-                style={{ width: '100%', padding: '14px', borderRadius: '12px', backgroundColor: loading ? '#8A8A8D' : '#037894', color: '#fff', fontWeight: 700, fontSize: '15px', border: 'none', cursor: loading ? 'not-allowed' : 'pointer' }}>
-                {loading ? 'Masuk...' : 'Masuk'}
-              </button>
-            </form>
-          </div>
-
-          <p style={{ textAlign: 'center', fontSize: '12px', color: '#8A8A8D', marginTop: '20px' }}>
-            Akses terbatas untuk tim internal Strada Coffee
-          </p>
+          <p className="text-sm font-medium text-gray-500">Internal Portal — Tim Strada Coffee</p>
         </div>
+
+        {/* Login Card */}
+        <div className="bg-white/80 backdrop-blur-xl rounded-[28px] p-8 md:p-10 border border-white/50 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
+          <h2 className="text-xl font-bold text-gray-900 mb-8 text-center">Masuk ke akun Anda</h2>
+
+          <form onSubmit={handleLogin} className="space-y-5">
+            <div className="space-y-2">
+              <label className="block text-[13px] font-bold text-gray-700">Email</label>
+              <input type="email" value={email} onChange={e => setEmail(e.target.value)} required
+                className="w-full px-4 py-3.5 rounded-xl border border-gray-200/80 bg-gray-50 text-gray-900 text-sm focus:bg-white focus:ring-2 focus:ring-strada-blue/20 focus:border-strada-blue transition-all duration-200 outline-none placeholder:text-gray-400"
+                placeholder="nama@stradacoffee.com"
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="block text-[13px] font-bold text-gray-700">Password</label>
+              <input type="password" value={password} onChange={e => setPassword(e.target.value)} required
+                className="w-full px-4 py-3.5 rounded-xl border border-gray-200/80 bg-gray-50 text-gray-900 text-sm focus:bg-white focus:ring-2 focus:ring-strada-blue/20 focus:border-strada-blue transition-all duration-200 outline-none placeholder:text-gray-400"
+                placeholder="••••••••"
+              />
+            </div>
+
+            {error && (
+              <div className="bg-red-50 text-strada-coral text-[13px] font-medium px-4 py-3 rounded-xl border border-red-100 flex items-center gap-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-strada-coral shrink-0"></span>
+                {error}
+              </div>
+            )}
+
+            <button type="submit" disabled={loading}
+              className={`w-full py-3.5 rounded-xl font-bold text-[15px] transition-all duration-200 flex items-center justify-center gap-2 ${
+                loading 
+                  ? 'bg-gray-200 text-gray-400 cursor-not-allowed' 
+                  : 'bg-strada-blue text-white hover:bg-[#026a80] hover:-translate-y-0.5 shadow-sm hover:shadow-md active:translate-y-0'
+              }`}>
+              {loading ? (
+                <>
+                  <Loader2 size={18} className="animate-spin" />
+                  Memproses...
+                </>
+              ) : 'Masuk'}
+            </button>
+          </form>
+        </div>
+
+        <p className="text-center text-[13px] font-medium text-gray-400 mt-8">
+          Akses terbatas untuk tim internal Strada Coffee
+        </p>
       </div>
-    </>
+    </div>
   )
 }
