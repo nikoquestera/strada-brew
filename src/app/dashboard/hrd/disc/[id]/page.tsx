@@ -2,7 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { redirect, notFound } from 'next/navigation'
 import Link from 'next/link'
 import { DISC_DIMENSIONS, DISC_QUESTIONS, Dimension } from '@/lib/disc/data'
-import { DiscResults } from '@/lib/disc/scorer'
+import { computeDiscResults, DiscAnswers, DiscResults, validateAnswers } from '@/lib/disc/scorer'
 import { buildDiscReportCopy } from '@/lib/disc/report'
 import DiscRecomputeButton from '@/components/DiscRecomputeButton'
 
@@ -84,9 +84,38 @@ export default async function DiscResultPage({ params }: Props) {
     )
   }
 
-  const results = session.results as DiscResults
-  const answers = session.answers as Record<string, { most: string; least: string }>
+  const answers = (session.answers ?? {}) as Record<string, { most: string; least: string }>
+  const storedResults = session.results as DiscResults | null
+  const normalizedAnswers = answers as unknown as DiscAnswers
+  const canRecompute = validateAnswers(normalizedAnswers).valid
+  const results = storedResults?.primaryType
+    ? storedResults
+    : canRecompute
+      ? computeDiscResults(normalizedAnswers)
+      : null
   const appl = session.applicants as ApplicantInfo | null
+  if (!results) {
+    return (
+      <div style={{ maxWidth: '760px', margin: '80px auto', padding: '0 24px', fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
+        <div style={{ backgroundColor: '#fff', borderRadius: '20px', padding: '28px', border: '1.5px solid #E8E4E0' }}>
+          <h1 style={{ fontSize: '22px', fontWeight: 900, color: '#020000', margin: '0 0 10px' }}>Hasil DiSC belum bisa ditampilkan</h1>
+          <p style={{ fontSize: '14px', color: '#4C4845', margin: '0 0 14px', lineHeight: 1.7 }}>
+            Sesi ini sudah berstatus selesai, tetapi data hasil yang tersimpan belum lengkap dan jawaban yang ada juga belum cukup untuk dihitung ulang secara aman.
+          </p>
+          <p style={{ fontSize: '13px', color: '#8A8A8D', margin: '0 0 18px', lineHeight: 1.7 }}>
+            Gunakan tombol hitung ulang jika data jawaban sudah tersedia, atau cek kembali sesi/record lama ini di database.
+          </p>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
+            <Link href="/dashboard/hrd/disc" style={{ fontSize: '13px', color: '#037894', textDecoration: 'none', fontWeight: 700 }}>
+              ← Kembali ke daftar
+            </Link>
+            <DiscRecomputeButton scope="session" sessionId={session.id} label="Coba Hitung Ulang" compact />
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   const primary = results.primaryType
   const dim = DISC_DIMENSIONS[primary]
   const reportCopy = buildDiscReportCopy(results, appl)
