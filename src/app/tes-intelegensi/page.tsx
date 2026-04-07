@@ -41,7 +41,7 @@ export default function CfitEntryPage() {
     <div style={{ minHeight: '100vh', backgroundColor: '#F7F5F2', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '24px', fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
       <div style={{ width: '100%', maxWidth: '430px' }}>
         <div style={{ textAlign: 'center', marginBottom: '36px' }}>
-          <img src="/strada-logo.svg" alt="Strada Coffee" style={{ height: '36px', width: 'auto', filter: 'grayscale(1) contrast(2)', opacity: 0.85, marginBottom: '16px' }} />
+          <img src="/strada-logo.svg" alt="Strada Coffee" style={{ height: '48px', width: 'auto', filter: 'grayscale(1) contrast(2)', opacity: 0.85, marginBottom: '16px' }} />
           <p style={{ fontSize: '12px', fontWeight: 700, letterSpacing: '3px', textTransform: 'uppercase', color: '#8A8A8D', margin: 0 }}>Assessment Center</p>
         </div>
 

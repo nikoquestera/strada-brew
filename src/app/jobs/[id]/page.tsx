@@ -31,7 +31,7 @@ export default async function JobDetailPage({
         <Link href="/apply" className="p-2 -ml-2 text-gray-400 hover:text-gray-900 hover:bg-gray-100 rounded-full transition-colors flex items-center gap-2 font-semibold text-sm">
           <ArrowLeft size={20} /> Semua Lowongan
         </Link>
-        <img src="/strada-logo.svg" alt="Strada Coffee" className="h-6 w-auto filter grayscale contrast-200 ml-auto" />
+        <img src="/strada-logo.svg" alt="Strada Coffee" className="h-10 w-auto filter grayscale contrast-200 ml-auto" />
       </div>
 
       <div className="max-w-3xl mx-auto px-4 sm:px-6 pt-8">

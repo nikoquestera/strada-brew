@@ -5,7 +5,7 @@ export default function CfitSelesaiPage() {
         <div style={{ width: '84px', height: '84px', borderRadius: '50%', backgroundColor: '#E6F4F1', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 24px', fontSize: '36px' }}>
           ✓
         </div>
-        <img src="/strada-logo.svg" alt="Strada Coffee" style={{ height: '28px', width: 'auto', filter: 'grayscale(1) contrast(2)', opacity: 0.7, marginBottom: '24px' }} />
+        <img src="/strada-logo.svg" alt="Strada Coffee" style={{ height: '40px', width: 'auto', filter: 'grayscale(1) contrast(2)', opacity: 0.7, marginBottom: '24px' }} />
         <h1 style={{ fontSize: '26px', fontWeight: 900, color: '#020000', margin: '0 0 12px' }}>Tes Selesai</h1>
         <p style={{ fontSize: '15px', color: '#4C4845', margin: '0 0 28px', lineHeight: 1.7 }}>
           Terima kasih telah menyelesaikan Tes Intelegensi. Jawaban Anda telah tersimpan dan akan ditinjau oleh tim HRD Strada Coffee.

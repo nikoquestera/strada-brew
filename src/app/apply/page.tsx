@@ -169,9 +169,9 @@ function ApplyContent() {
   if (!selectedJob) return (
     <div className="min-h-screen bg-[#F5F5F7] font-sans">
       {/* Header */}
-      <div className="bg-white/80 backdrop-blur-xl border-b border-gray-200/50 sticky top-0 z-30 px-6 py-4 flex flex-col items-center shadow-sm">
-        <img src="/strada-logo.svg" alt="Strada Coffee" className="h-8 w-auto filter grayscale contrast-200 mb-1" />
-        <p className="text-[11px] font-bold text-gray-400 tracking-[0.2em] uppercase">Bergabunglah bersama tim kami</p>
+      <div className="bg-white/80 backdrop-blur-xl border-b border-gray-200/50 sticky top-0 z-30 px-6 py-6 flex flex-col items-center shadow-sm">
+        <img src="/strada-logo.svg" alt="Strada Coffee" className="h-12 w-auto filter grayscale contrast-200 mb-2" />
+        <p className="text-[11px] font-bold text-gray-400 tracking-[0.25em] uppercase">Bergabunglah bersama tim kami</p>
       </div>
 
       <div className="max-w-3xl mx-auto px-6 py-12 md:py-16">
@@ -242,12 +242,12 @@ function ApplyContent() {
   return (
     <div className="min-h-screen bg-[#F5F5F7] font-sans pb-20">
       {/* Header */}
-      <div className="bg-white/80 backdrop-blur-xl border-b border-gray-200/50 sticky top-0 z-30 px-4 py-3 flex items-center shadow-sm gap-4">
+      <div className="bg-white/80 backdrop-blur-xl border-b border-gray-200/50 sticky top-0 z-30 px-4 py-4 flex items-center shadow-sm gap-4">
         <button onClick={() => setSelectedJob(null)} 
           className="p-2 -ml-2 text-gray-400 hover:text-gray-900 hover:bg-gray-100 rounded-full transition-colors">
           <ArrowLeft size={20} />
         </button>
-        <img src="/strada-logo.svg" alt="Strada Coffee" className="h-6 w-auto filter grayscale contrast-200" />
+        <img src="/strada-logo.svg" alt="Strada Coffee" className="h-10 w-auto filter grayscale contrast-200" />
       </div>
 
       {/* Job banner */}

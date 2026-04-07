@@ -150,50 +150,62 @@ export default async function DiscResultPage({ params }: Props) {
         <DiscRecomputeButton scope="session" sessionId={session.id} label="Hitung Ulang Hasil Ini" compact />
       </div>
 
-      {/* Hero card */}
-      <div style={{ backgroundColor: '#020000', borderRadius: '24px', padding: '32px', marginBottom: '24px', position: 'relative', overflow: 'hidden' }}>
+      {/* Hero card — Revamped to white/blended style */}
+      <div style={{ 
+        backgroundColor: '#ffffff', 
+        borderRadius: '24px', 
+        padding: '32px', 
+        marginBottom: '24px', 
+        border: '1.5px solid #E8E4E0',
+        boxShadow: '0 10px 40px rgba(0,0,0,0.04)',
+        position: 'relative', 
+        overflow: 'hidden' 
+      }}>
         {/* Large dim letter watermark */}
-        <div style={{ position: 'absolute', right: '-10px', top: '-20px', fontSize: '160px', fontWeight: 900, color: dim.color, opacity: 0.12, lineHeight: 1, userSelect: 'none', pointerEvents: 'none' }}>
+        <div style={{ position: 'absolute', right: '-10px', top: '-20px', fontSize: '160px', fontWeight: 900, color: dim.color, opacity: 0.08, lineHeight: 1, userSelect: 'none', pointerEvents: 'none' }}>
           {primary}
         </div>
 
         <div style={{ position: 'relative', zIndex: 1 }}>
-          <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: '20px' }}>
-            <div>
-              <p style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '3px', textTransform: 'uppercase', color: '#8FC6C5', margin: '0 0 12px' }}>
-                Tes Kepribadian — {session.access_code}
+          <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: '24px' }}>
+            <div style={{ flex: 1, minWidth: '300px' }}>
+              <p style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '3px', textTransform: 'uppercase', color: '#037894', margin: '0 0 16px' }}>
+                Hasil Analisis DiSC — {session.access_code}
               </p>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '8px' }}>
-                <div style={{ width: '64px', height: '64px', borderRadius: '50%', border: `3px solid ${dim.color}`, backgroundColor: dim.lightBg + '20', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                  <span style={{ fontSize: '28px', fontWeight: 900, color: dim.color }}>{primary}</span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '20px', marginBottom: '20px' }}>
+                <div style={{ width: '72px', height: '72px', borderRadius: '50%', border: `4px solid ${dim.color}`, backgroundColor: dim.lightBg, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, boxShadow: `0 4px 12px ${dim.color}20` }}>
+                  <span style={{ fontSize: '32px', fontWeight: 900, color: dim.color }}>{primary}</span>
                 </div>
                 <div>
-                  <h1 style={{ fontSize: '28px', fontWeight: 900, color: '#fff', margin: '0 0 4px' }}>{results.pattern?.pattern || primary}</h1>
-                  <p style={{ fontSize: '14px', color: dim.color, fontWeight: 700, margin: 0 }}>{dim.label} — Tipe Utama</p>
+                  <h1 style={{ fontSize: '32px', fontWeight: 900, color: '#020000', margin: '0 0 4px', letterSpacing: '-0.5px' }}>{results.pattern?.pattern || primary}</h1>
+                  <p style={{ fontSize: '15px', color: dim.color, fontWeight: 800, margin: 0 }}>{dim.label} — Tipe Kepribadian Utama</p>
                 </div>
               </div>
-              <p style={{ fontSize: '13px', color: 'rgba(228,222,216,0.7)', margin: '16px 0 0', lineHeight: 1.7, maxWidth: '520px' }}>
+              <p style={{ fontSize: '14px', color: '#4C4845', margin: '16px 0 0', lineHeight: 1.8, maxWidth: '640px', fontWeight: 500 }}>
                 {results.pattern?.description}
               </p>
             </div>
 
-            <div style={{ textAlign: 'right' }}>
-              <p style={{ fontSize: '12px', color: '#8FC6C5', fontWeight: 700, margin: '0 0 4px' }}>{appl?.full_name}</p>
-              <p style={{ fontSize: '12px', color: 'rgba(228,222,216,0.5)', margin: '0 0 2px' }}>{appl?.position_applied}{appl?.outlet_preference ? ` · ${appl.outlet_preference}` : ''}</p>
-              <p style={{ fontSize: '11px', color: 'rgba(228,222,216,0.4)', margin: 0 }}>
-                Selesai {new Date(session.completed_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}
-              </p>
+            <div style={{ textAlign: 'right', backgroundColor: '#F7F5F2', padding: '16px 20px', borderRadius: '16px', border: '1px solid #E8E4E0' }}>
+              <p style={{ fontSize: '14px', color: '#020000', fontWeight: 800, margin: '0 0 4px' }}>{appl?.full_name}</p>
+              <p style={{ fontSize: '13px', color: '#4C4845', fontWeight: 600, margin: '0 0 8px' }}>{appl?.position_applied}{appl?.outlet_preference ? ` · ${appl.outlet_preference}` : ''}</p>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '6px' }}>
+                <Clock size={12} color="#8A8A8D" />
+                <p style={{ fontSize: '11px', color: '#8A8A8D', fontWeight: 600, margin: 0 }}>
+                  Selesai {new Date(session.completed_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}
+                </p>
+              </div>
             </div>
           </div>
 
           {/* Pattern keys */}
           {results.patternKey && (
-            <div style={{ marginTop: '20px', display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
-              <span style={{ fontSize: '11px', color: 'rgba(228,222,216,0.4)', fontWeight: 600, letterSpacing: '1px', textTransform: 'uppercase' }}>Dimensi:</span>
+            <div style={{ marginTop: '24px', display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap', paddingTop: '20px', borderTop: '1px solid #F0EDE9' }}>
+              <span style={{ fontSize: '11px', color: '#8A8A8D', fontWeight: 700, letterSpacing: '1px', textTransform: 'uppercase' }}>Dimensi Terukur:</span>
               {results.patternKey.split('-').map((d: string) => {
                 const dd = DISC_DIMENSIONS[d as Dimension]
                 return dd ? (
-                  <span key={d} style={{ padding: '3px 10px', borderRadius: '20px', border: `1.5px solid ${dd.color}`, color: dd.color, fontSize: '12px', fontWeight: 800 }}>
+                  <span key={d} style={{ padding: '4px 12px', borderRadius: '20px', border: `1.5px solid ${dd.color}40`, backgroundColor: dd.lightBg, color: dd.color, fontSize: '12px', fontWeight: 800 }}>
                     {d} {dd.label}
                   </span>
                 ) : null

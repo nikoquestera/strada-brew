@@ -34,7 +34,7 @@ export default function DiscEntry() {
       <div style={{ width: '100%', maxWidth: '420px' }}>
         {/* Logo */}
         <div style={{ textAlign: 'center', marginBottom: '40px' }}>
-          <img src="/strada-logo.svg" alt="Strada Coffee" style={{ height: '36px', width: 'auto', filter: 'grayscale(1) contrast(2)', opacity: 0.85, marginBottom: '16px' }} />
+          <img src="/strada-logo.svg" alt="Strada Coffee" style={{ height: '48px', width: 'auto', filter: 'grayscale(1) contrast(2)', opacity: 0.85, marginBottom: '16px' }} />
           <p style={{ fontSize: '12px', fontWeight: 700, letterSpacing: '3px', textTransform: 'uppercase', color: '#8A8A8D', margin: 0 }}>Assessment Center</p>
         </div>
 

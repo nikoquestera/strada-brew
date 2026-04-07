@@ -9,7 +9,7 @@ export default function DiscSelesai() {
         }}>
           ✓
         </div>
-        <img src="/strada-logo.svg" alt="Strada Coffee" style={{ height: '28px', width: 'auto', filter: 'grayscale(1) contrast(2)', opacity: 0.7, marginBottom: '24px' }} />
+        <img src="/strada-logo.svg" alt="Strada Coffee" style={{ height: '40px', width: 'auto', filter: 'grayscale(1) contrast(2)', opacity: 0.7, marginBottom: '24px' }} />
         <h1 style={{ fontSize: '24px', fontWeight: 800, color: '#020000', margin: '0 0 12px' }}>
           Test Selesai!
         </h1>

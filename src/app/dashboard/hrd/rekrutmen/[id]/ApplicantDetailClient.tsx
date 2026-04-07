@@ -327,38 +327,210 @@ export default function ApplicantDetailClient({ applicant }: Props) {
       <style>{`
         @keyframes quest-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         @media (max-width: 768px) { .detail-grid { grid-template-columns: 1fr !important; } .stage-select { font-size: 12px !important; padding: 8px 10px !important; } }
-        .appl-back:hover { color: rgba(228,222,216,0.9) !important; }
+        .appl-back:hover { background-color: #E8E4E0 !important; color: #020000 !important; }
         .appl-run-score:hover:not(:disabled) { opacity: 0.85 !important; }
       `}</style>
 
       <div style={{ minHeight: '100vh', backgroundColor: '#F7F5F2' }}>
-        {/* Top bar */}
-        <div style={{ backgroundColor: '#020000', padding: '16px 24px', display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap' }}>
+        {/* Top bar — Refined to light style */}
+        <div style={{ backgroundColor: '#ffffff', padding: '16px 24px', borderBottom: '1px solid #E8E4E0', display: 'flex', alignItems: 'center', gap: '20px', flexWrap: 'wrap', sticky: 'top', zIndex: 10 }}>
           <button onClick={() => router.back()} className="appl-back"
-            style={{ color: 'rgba(228,222,216,0.6)', background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px', padding: 0, transition: 'color 0.15s' }}>
+            style={{ color: '#8A8A8D', background: '#F7F5F2', border: '1px solid #E8E4E0', borderRadius: '10px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px', padding: '8px 16px', fontWeight: 700, transition: 'all 0.2s' }}>
             <ArrowLeft size={16} /> Kembali
           </button>
           <div style={{ flex: 1 }}>
-            <p style={{ color: '#ffffff', fontWeight: 700, fontSize: '16px', margin: 0 }}>{editData.full_name}</p>
-            <p style={{ color: '#8FC6C5', fontSize: '12px', margin: 0 }}>{editData.position_applied}{editData.outlet_preference ? ` · ${editData.outlet_preference}` : ''}</p>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <h1 style={{ color: '#020000', fontWeight: 800, fontSize: '18px', margin: 0 }}>{editData.full_name}</h1>
+              <span style={{ padding: '4px 10px', borderRadius: '8px', backgroundColor: `${stageInfo?.color || '#8A8A8D'}15`, color: stageInfo?.color || '#8A8A8D', fontSize: '11px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                {stageInfo?.label || 'Baru Masuk'}
+              </span>
+            </div>
+            <p style={{ color: '#037894', fontSize: '12px', fontWeight: 700, margin: '2px 0 0' }}>{editData.position_applied}{editData.outlet_preference ? ` · ${editData.outlet_preference}` : ''}</p>
           </div>
-          <button onClick={() => setShowEditModal(true)} className="appl-back"
-            style={{ color: 'rgba(228,222,216,0.6)', background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '8px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px', padding: '6px 12px', transition: 'all 0.15s' }}>
-            <Edit2 size={13} /> Edit Data
+          <button onClick={() => setShowEditModal(true)}
+            style={{ color: '#4C4845', background: '#ffffff', border: '1.5px solid #E8E4E0', borderRadius: '10px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', padding: '8px 16px', fontWeight: 700, transition: 'all 0.2s' }}>
+            <Edit2 size={14} /> Edit Data
           </button>
-          <select value={currentStage} onChange={e => handleStageChange(e.target.value as PipelineStage)}
-            disabled={changingStage} className="stage-select"
-            style={{ padding: '8px 14px', borderRadius: '10px', border: 'none', backgroundColor: stageInfo?.color || '#037894', color: '#fff', fontWeight: 700, fontSize: '13px', cursor: 'pointer', outline: 'none' }}>
-            {PIPELINE_STAGES.map(s => <option key={s.key} value={s.key}>{s.label}</option>)}
-          </select>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <span style={{ fontSize: '11px', fontWeight: 700, color: '#8A8A8D', textTransform: 'uppercase', letterSpacing: '1px' }}>Update Status:</span>
+            <select value={currentStage} onChange={e => handleStageChange(e.target.value as PipelineStage)}
+              disabled={changingStage} className="stage-select"
+              style={{ padding: '8px 14px', borderRadius: '10px', border: 'none', backgroundColor: stageInfo?.color || '#037894', color: '#fff', fontWeight: 700, fontSize: '13px', cursor: 'pointer', outline: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}>
+              {PIPELINE_STAGES.map(s => <option key={s.key} value={s.key}>{s.label}</option>)}
+            </select>
+          </div>
         </div>
 
-        <div style={{ padding: '24px', display: 'grid', gridTemplateColumns: '1fr 340px', gap: '20px', maxWidth: '1200px', margin: '0 auto' }} className="detail-grid">
+        <div style={{ padding: '24px', maxWidth: '1200px', margin: '0 auto' }}>
 
-          {/* LEFT COLUMN */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          {/* Quest AI Score Section — Repositioned to top, full width, blended style */}
+          <div style={{ 
+            backgroundColor: '#ffffff', 
+            borderRadius: '24px', 
+            padding: '32px', 
+            border: '1.5px solid #E8E4E0', 
+            marginBottom: '24px',
+            boxShadow: '0 10px 40px rgba(0,0,0,0.04)',
+            position: 'relative',
+            overflow: 'hidden'
+          }}>
+            {/* Subtle AI Gradient Accent */}
+            <div style={{ 
+              position: 'absolute', 
+              top: 0, 
+              left: 0, 
+              right: 0, 
+              height: '4px', 
+              background: 'linear-gradient(90deg, #037894 0%, #8FC6C5 100%)' 
+            }} />
 
-            {/* Contact */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '24px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <div style={{ backgroundColor: '#E6F4F8', padding: '8px', borderRadius: '12px' }}>
+                  <Star size={20} color="#037894" fill="#037894" />
+                </div>
+                <div>
+                  <h2 style={{ fontSize: '18px', fontWeight: 800, color: '#020000', margin: 0 }}>Quest AI Evaluation</h2>
+                  <p style={{ fontSize: '12px', color: '#8A8A8D', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '1px', marginTop: '2px' }}>Analis Profil Otomatis</p>
+                </div>
+              </div>
+              <button onClick={handleRunScore} disabled={isProcessing} className="appl-run-score"
+                style={{ padding: '8px 20px', borderRadius: '12px', border: 'none', cursor: isProcessing ? 'not-allowed' : 'pointer', fontSize: '13px', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '8px', backgroundColor: isProcessing ? '#F7F5F2' : '#020000', color: isProcessing ? '#8A8A8D' : '#fff', transition: 'all 0.2s', boxShadow: isProcessing ? 'none' : '0 4px 12px rgba(0,0,0,0.1)' }}>
+                {isProcessing
+                  ? <><span style={{ display: 'inline-block', animation: 'quest-spin 1s linear infinite' }}>⚙</span> Sedang Menganalisa...</>
+                  : scores.length > 0 ? '↻ Re-run AI Analysis' : '✦ Run Quest AI Scoring'}
+              </button>
+            </div>
+
+            {!latestScore ? (
+              <div style={{ padding: '40px 0', textAlign: 'center', backgroundColor: '#F9FBFB', borderRadius: '16px', border: '1px dashed #D1E5E9' }}>
+                <p style={{ color: '#037894', fontSize: '14px', fontWeight: 600, margin: 0 }}>Belum ada evaluasi AI. Klik "Run Quest AI Scoring" untuk memulai analisis otomatis.</p>
+              </div>
+            ) : latestScore.status === 'pending' ? (
+              <div style={{ padding: '40px 0', textAlign: 'center', backgroundColor: '#FEF8E6', borderRadius: '16px', border: '1px solid #F9EBC8' }}>
+                <p style={{ color: '#DE9733', fontSize: '15px', fontWeight: 700, margin: '0 0 4px' }}>⏳ Dalam Antrian</p>
+                <p style={{ color: '#8A6D3B', fontSize: '13px', margin: 0 }}>Quest AI akan segera memproses profil ini.</p>
+              </div>
+            ) : latestScore.status === 'processing' ? (
+              <div style={{ padding: '40px 0', textAlign: 'center', backgroundColor: '#E6F4F8', borderRadius: '16px', border: '1px solid #BFE0E9' }}>
+                <div style={{ display: 'inline-block', animation: 'quest-spin 2s linear infinite', marginBottom: '12px' }}>
+                  <Star size={32} color="#037894" />
+                </div>
+                <p style={{ color: '#037894', fontSize: '15px', fontWeight: 700, margin: '0 0 4px' }}>Sedang Menganalisa Profil...</p>
+                <p style={{ color: '#548894', fontSize: '13px', margin: 0 }}>Membandingkan pengalaman dan kualifikasi dengan kriteria outlet.</p>
+              </div>
+            ) : latestScore.status === 'failed' ? (
+              <div style={{ padding: '40px 0', textAlign: 'center', backgroundColor: '#FFF0EE', borderRadius: '16px', border: '1px solid #F9D7D5' }}>
+                <p style={{ color: '#FF4F31', fontSize: '15px', fontWeight: 700, margin: '0 0 4px' }}>⚠ Scoring Gagal</p>
+                <p style={{ color: '#A34B41', fontSize: '13px', margin: 0 }}>Terjadi kesalahan saat memproses. Silakan coba lagi.</p>
+              </div>
+            ) : (
+              <div style={{ display: 'grid', gridTemplateColumns: '280px 1fr', gap: '40px' }} className="detail-grid">
+                {/* Left: Big Score */}
+                <div style={{ paddingRight: '40px', borderRight: '1px solid #F0EDE9' }}>
+                  <div style={{ textAlign: 'center' }}>
+                    <div style={{ position: 'relative', display: 'inline-block' }}>
+                      <div style={{ fontSize: '72px', fontWeight: 900, color: '#020000', lineHeight: 1 }}>{latestScore.overall_score}</div>
+                      <div style={{ fontSize: '14px', color: '#8A8A8D', fontWeight: 700, marginTop: '4px' }}>DARI 100</div>
+                    </div>
+                    
+                    {latestScore.recommendation && (
+                      <div style={{ 
+                        marginTop: '20px', 
+                        display: 'block', 
+                        padding: '10px 16px', 
+                        borderRadius: '12px', 
+                        fontSize: '14px', 
+                        fontWeight: 800,
+                        backgroundColor: latestScore.recommendation === 'Highly Recommended' ? '#005353' : latestScore.recommendation === 'Recommended' ? '#037894' : latestScore.recommendation === 'Consider' ? '#DE9733' : '#FF4F31',
+                        color: '#fff',
+                        boxShadow: '0 4px 12px rgba(0,0,0,0.08)'
+                      }}>
+                        {latestScore.recommendation.toUpperCase()}
+                      </div>
+                    )}
+                    
+                    {latestScore.processed_at && (
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', marginTop: '16px' }}>
+                        <Clock size={12} color="#8A8A8D" />
+                        <span style={{ fontSize: '11px', color: '#8A8A8D', fontWeight: 500 }}>{formatTs(latestScore.processed_at)}</span>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Small Breakdown */}
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '32px' }}>
+                    {[
+                      { label: 'Pengalaman', value: latestScore.experience_score, max: 25 },
+                      { label: 'Sertifikasi', value: latestScore.certification_score, max: 20 },
+                      { label: 'Motivasi', value: latestScore.motivation_score, max: 20 },
+                      { label: 'Profil', value: latestScore.profile_score, max: 20 },
+                      { label: 'Kelengkapan', value: latestScore.completeness_score, max: 15 },
+                    ].map(item => (
+                      <div key={item.label}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
+                          <span style={{ fontSize: '11px', color: '#4C4845', fontWeight: 700 }}>{item.label}</span>
+                          <span style={{ fontSize: '11px', color: '#037894', fontWeight: 800 }}>{item.value || 0}/{item.max}</span>
+                        </div>
+                        <div style={{ height: '6px', borderRadius: '3px', backgroundColor: '#F0F4F5' }}>
+                          <div style={{ height: '100%', borderRadius: '3px', backgroundColor: '#037894', width: `${((item.value || 0) / item.max) * 100}%`, transition: 'width 0.5s cubic-bezier(0.4, 0, 0.2, 1)' }} />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Right: Detailed Text Results */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+                  {latestScore.summary && (
+                    <div>
+                      <h3 style={{ fontSize: '12px', fontWeight: 800, color: '#8A8A8D', textTransform: 'uppercase', letterSpacing: '1.5px', marginBottom: '10px' }}>Ringkasan Analisis</h3>
+                      <p style={{ fontSize: '15px', color: '#020000', lineHeight: 1.7, margin: 0, fontWeight: 500 }}>{latestScore.summary}</p>
+                    </div>
+                  )}
+
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
+                    {latestScore.strengths && latestScore.strengths.length > 0 && (
+                      <div style={{ backgroundColor: '#F4FAF9', padding: '20px', borderRadius: '16px', border: '1px solid #D1E9E4' }}>
+                        <h3 style={{ fontSize: '11px', fontWeight: 800, color: '#005353', textTransform: 'uppercase', letterSpacing: '1.5px', marginBottom: '12px' }}>Kekuatan Utama</h3>
+                        {latestScore.strengths.map((s: string, i: number) => (
+                          <div key={i} style={{ display: 'flex', gap: '10px', marginBottom: '8px' }}>
+                            <span style={{ color: '#005353', fontSize: '14px', fontWeight: 900, flexShrink: 0 }}>✓</span>
+                            <span style={{ fontSize: '13px', color: '#005353', lineHeight: 1.5, fontWeight: 600 }}>{s}</span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                    {latestScore.concerns && latestScore.concerns.length > 0 && (
+                      <div style={{ backgroundColor: '#FFF5F4', padding: '20px', borderRadius: '16px', border: '1px solid #F9D7D5' }}>
+                        <h3 style={{ fontSize: '11px', fontWeight: 800, color: '#A34B41', textTransform: 'uppercase', letterSpacing: '1.5px', marginBottom: '12px' }}>Hal Perlu Diperhatikan</h3>
+                        {latestScore.concerns.map((c: string, i: number) => (
+                          <div key={i} style={{ display: 'flex', gap: '10px', marginBottom: '8px' }}>
+                            <span style={{ color: '#FF4F31', fontSize: '14px', fontWeight: 900, flexShrink: 0 }}>!</span>
+                            <span style={{ fontSize: '13px', color: '#A34B41', lineHeight: 1.5, fontWeight: 600 }}>{c}</span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                  {latestScore.quest_notes && (
+                    <div style={{ backgroundColor: '#F7F5F2', padding: '16px 20px', borderRadius: '16px', border: '1px solid #E8E4E0' }}>
+                      <h3 style={{ fontSize: '11px', fontWeight: 800, color: '#8A8A8D', textTransform: 'uppercase', letterSpacing: '1.5px', marginBottom: '8px' }}>Instruksi Khusus HR</h3>
+                      <p style={{ fontSize: '13px', color: '#4C4845', lineHeight: 1.6, margin: 0, fontStyle: 'italic' }}>&quot;{latestScore.quest_notes}&quot;</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: '20px' }} className="detail-grid">
+
+            {/* LEFT COLUMN */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+
+              {/* Contact */}
             <div style={{ backgroundColor: '#fff', borderRadius: '16px', padding: '24px', border: '1.5px solid #E8E4E0' }}>
               <h3 style={{ fontSize: '14px', fontWeight: 700, color: '#020000', margin: '0 0 16px' }}>Informasi Kontak</h3>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
@@ -509,122 +681,6 @@ export default function ApplicantDetailClient({ applicant }: Props) {
 
           {/* RIGHT COLUMN */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-
-            {/* Quest AI Score card */}
-            <div style={{ backgroundColor: '#020000', borderRadius: '16px', padding: '24px', border: '1.5px solid rgba(3,120,148,0.3)' }}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <Star size={14} color="#037894" />
-                  <span style={{ fontSize: '12px', fontWeight: 700, color: '#8FC6C5', letterSpacing: '2px', textTransform: 'uppercase' }}>Quest AI</span>
-                </div>
-                <button onClick={handleRunScore} disabled={isProcessing} className="appl-run-score"
-                  style={{ padding: '5px 14px', borderRadius: '10px', border: 'none', cursor: isProcessing ? 'not-allowed' : 'pointer', fontSize: '11px', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '5px', backgroundColor: isProcessing ? 'rgba(3,120,148,0.15)' : '#037894', color: isProcessing ? '#037894' : '#fff', transition: 'opacity 0.15s' }}>
-                  {isProcessing
-                    ? <><span style={{ display: 'inline-block', animation: 'quest-spin 1s linear infinite' }}>⚙</span> Scoring...</>
-                    : scores.length > 0 ? '↻ Re-run Score' : '✦ Run Score'}
-                </button>
-              </div>
-
-              {/* Latest score display */}
-              {!latestScore && (
-                <p style={{ color: 'rgba(228,222,216,0.4)', fontSize: '13px', margin: 0 }}>Scoring belum dimulai.</p>
-              )}
-              {latestScore?.status === 'pending' && (
-                <div style={{ textAlign: 'center', padding: '12px 0' }}>
-                  <p style={{ color: '#DE9733', fontSize: '14px', fontWeight: 600, margin: '0 0 4px' }}>⏳ Dalam Antrian</p>
-                  <p style={{ color: 'rgba(228,222,216,0.4)', fontSize: '12px', margin: 0 }}>Klik Re-run Score untuk memulai</p>
-                </div>
-              )}
-              {latestScore?.status === 'processing' && (
-                <div style={{ textAlign: 'center', padding: '12px 0' }}>
-                  <p style={{ color: '#037894', fontSize: '14px', fontWeight: 600, margin: '0 0 4px' }}>
-                    <span style={{ display: 'inline-block', animation: 'quest-spin 1s linear infinite' }}>⚙</span> Sedang Dianalisa
-                  </p>
-                  <p style={{ color: 'rgba(228,222,216,0.4)', fontSize: '12px', margin: 0 }}>Quest AI sedang membaca profil...</p>
-                </div>
-              )}
-              {latestScore?.status === 'failed' && (
-                <div style={{ textAlign: 'center', padding: '12px 0' }}>
-                  <p style={{ color: '#FF4F31', fontSize: '13px', fontWeight: 600, margin: '0 0 4px' }}>⚠ Scoring gagal</p>
-                  <p style={{ color: 'rgba(228,222,216,0.4)', fontSize: '12px', margin: 0 }}>Klik Re-run Score untuk mencoba lagi</p>
-                </div>
-              )}
-              {latestScore?.status === 'completed' && (
-                <>
-                  <div style={{ textAlign: 'center', marginBottom: '16px' }}>
-                    <div style={{ fontSize: '52px', fontWeight: 800, color: '#ffffff', lineHeight: 1 }}>{latestScore.overall_score}</div>
-                    <div style={{ fontSize: '12px', color: 'rgba(228,222,216,0.4)', marginTop: '4px' }}>dari 100</div>
-                    {latestScore.recommendation && (
-                      <div style={{ marginTop: '10px', display: 'inline-block', padding: '4px 14px', borderRadius: '20px', fontSize: '12px', fontWeight: 700,
-                        backgroundColor: latestScore.recommendation === 'Highly Recommended' ? '#005353' : latestScore.recommendation === 'Recommended' ? '#037894' : latestScore.recommendation === 'Consider' ? '#DE9733' : '#FF4F31',
-                        color: '#fff' }}>
-                        {latestScore.recommendation}
-                      </div>
-                    )}
-                    {latestScore.processed_at && (
-                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px', marginTop: '8px' }}>
-                        <Clock size={10} color="rgba(228,222,216,0.3)" />
-                        <span style={{ fontSize: '10px', color: 'rgba(228,222,216,0.3)' }}>{formatTs(latestScore.processed_at)}</span>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Score breakdown */}
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '16px' }}>
-                    {[
-                      { label: 'Pengalaman', value: latestScore.experience_score, max: 25 },
-                      { label: 'Sertifikasi', value: latestScore.certification_score, max: 20 },
-                      { label: 'Motivasi', value: latestScore.motivation_score, max: 20 },
-                      { label: 'Profil', value: latestScore.profile_score, max: 20 },
-                      { label: 'Kelengkapan', value: latestScore.completeness_score, max: 15 },
-                    ].map(item => (
-                      <div key={item.label}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '3px' }}>
-                          <span style={{ fontSize: '11px', color: 'rgba(228,222,216,0.5)' }}>{item.label}</span>
-                          <span style={{ fontSize: '11px', color: 'rgba(228,222,216,0.7)', fontWeight: 600 }}>{item.value || 0}/{item.max}</span>
-                        </div>
-                        <div style={{ height: '4px', borderRadius: '2px', backgroundColor: 'rgba(255,255,255,0.1)' }}>
-                          <div style={{ height: '100%', borderRadius: '2px', backgroundColor: '#037894', width: `${((item.value || 0) / item.max) * 100}%`, transition: 'width 0.3s' }} />
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-
-                  {latestScore.summary && (
-                    <p style={{ fontSize: '12px', color: 'rgba(228,222,216,0.6)', lineHeight: 1.5, margin: '0 0 12px', fontStyle: 'italic' }}>&quot;{latestScore.summary}&quot;</p>
-                  )}
-
-                  {latestScore.strengths && latestScore.strengths.length > 0 && (
-                    <div style={{ marginBottom: '10px' }}>
-                      <p style={{ fontSize: '10px', fontWeight: 700, color: '#8FC6C5', textTransform: 'uppercase', letterSpacing: '1px', margin: '0 0 6px' }}>Kelebihan</p>
-                      {latestScore.strengths.map((s: string, i: number) => (
-                        <div key={i} style={{ display: 'flex', gap: '6px', marginBottom: '3px' }}>
-                          <span style={{ color: '#82A13B', fontSize: '12px', flexShrink: 0 }}>✓</span>
-                          <span style={{ fontSize: '12px', color: 'rgba(228,222,216,0.65)' }}>{s}</span>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                  {latestScore.concerns && latestScore.concerns.length > 0 && (
-                    <div style={{ marginBottom: '10px' }}>
-                      <p style={{ fontSize: '10px', fontWeight: 700, color: '#FF4F31', textTransform: 'uppercase', letterSpacing: '1px', margin: '0 0 6px' }}>Perhatian</p>
-                      {latestScore.concerns.map((c: string, i: number) => (
-                        <div key={i} style={{ display: 'flex', gap: '6px', marginBottom: '3px' }}>
-                          <span style={{ color: '#FF4F31', fontSize: '12px', flexShrink: 0 }}>!</span>
-                          <span style={{ fontSize: '12px', color: 'rgba(228,222,216,0.65)' }}>{c}</span>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                  {latestScore.quest_notes && (
-                    <div style={{ marginTop: '10px', padding: '12px', borderRadius: '10px', backgroundColor: 'rgba(255,255,255,0.05)' }}>
-                      <p style={{ fontSize: '10px', fontWeight: 700, color: '#8FC6C5', textTransform: 'uppercase', letterSpacing: '1px', margin: '0 0 6px' }}>Catatan HR</p>
-                      <p style={{ fontSize: '12px', color: 'rgba(228,222,216,0.55)', lineHeight: 1.6, margin: 0 }}>{latestScore.quest_notes}</p>
-                    </div>
-                  )}
-                </>
-              )}
-            </div>
 
             {/* Tes Kandidat */}
             <div style={{ backgroundColor: '#fff', borderRadius: '16px', padding: '20px', border: '1.5px solid #E8E4E0' }}>

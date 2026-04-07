@@ -35,11 +35,11 @@ export default function DashboardShell({ children, userEmail }: Props) {
   const sidebarContent = (
     <aside className="bg-white/80 backdrop-blur-xl border-r border-gray-200/50 flex flex-col h-full w-full">
       {/* Brand / Logo */}
-      <div className="px-6 py-5 border-b border-gray-100 flex items-center justify-between">
+      <div className="px-6 py-6 border-b border-gray-100 flex items-center justify-between">
         <img
           src="/strada-logo.svg"
           alt="Strada Coffee BREW"
-          className="h-8 w-auto block filter grayscale contrast-200 opacity-90"
+          className="h-10 w-auto block filter grayscale contrast-200 opacity-95 transition-opacity hover:opacity-100"
         />
         <button 
           onClick={() => setSidebarOpen(false)}
@@ -135,7 +135,7 @@ export default function DashboardShell({ children, userEmail }: Props) {
             className="text-gray-600 hover:text-gray-900 p-1.5 hover:bg-gray-100 rounded-lg transition-colors">
             <Menu size={20} />
           </button>
-          <img src="/strada-logo.svg" alt="Strada BREW" className="h-6 w-auto filter grayscale contrast-200 opacity-90" />
+          <img src="/strada-logo.svg" alt="Strada BREW" className="h-8 w-auto filter grayscale contrast-200 opacity-95" />
           <div className="w-8" /> {/* spacer for center alignment */}
         </div>
 
