@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic"
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
@@ -8,13 +9,24 @@ export default async function DiscSessionsPage() {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
-  const { data: sessions } = await supabase
-    .from('disc_sessions')
-    .select(`
-      id, access_code, status, sent_at, completed_at, expires_at, created_by, results,
-      applicants ( id, full_name, position_applied, outlet_preference )
-    `)
-    .order('sent_at', { ascending: false })
+  let sessions: any[] = []
+  let error: any = null
+
+  try {
+    const { data, error: fetchError } = await supabase
+      .from('disc_sessions')
+      .select(`
+        id, access_code, status, sent_at, completed_at, expires_at, created_by, results,
+        applicants ( id, full_name, position_applied, outlet_preference )
+      `)
+      .order('sent_at', { ascending: false })
+    
+    if (fetchError) throw fetchError
+    sessions = data || []
+  } catch (err: any) {
+    console.error('[disc] supabase error:', err)
+    error = err
+  }
 
   const statusLabel: Record<string, string> = {
     pending: 'Belum Dimulai',
@@ -33,6 +45,18 @@ export default async function DiscSessionsPage() {
     started: '#E6F4F8',
     completed: '#E6F4F1',
     expired: '#F0F0F0',
+  }
+
+  if (error) {
+    return (
+      <div style={{ padding: '40px', textAlign: 'center' }}>
+        <h2 style={{ color: '#D12E2E' }}>Error loading DiSC sessions</h2>
+        <p style={{ color: '#666' }}>{error.message || 'Unknown database error'}</p>
+        <button onClick={() => {}} style={{ marginTop: '20px', padding: '10px 20px', borderRadius: '8px', border: 'none', backgroundColor: '#037894', color: '#fff', cursor: 'pointer' }}>
+          Reload Page
+        </button>
+      </div>
+    )
   }
 
   return (
