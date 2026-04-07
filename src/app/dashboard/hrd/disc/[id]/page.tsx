@@ -10,6 +10,7 @@ const DIMS: Dimension[] = ['D', 'I', 'S', 'C']
 
 function GraphBar({ dim, value, max = 20, label }: { dim: Dimension; value: number; max?: number; label: string }) {
   const d = DISC_DIMENSIONS[dim]
+  const pct = Math.max(0, Math.min(100, ((value + max) / (max * 2)) * 100))
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px', flex: 1 }}>
       <span style={{ fontSize: '11px', fontWeight: 700, color: '#8A8A8D' }}>{value > 0 ? `+${value}` : value}</span>
@@ -56,7 +57,7 @@ export default async function DiscResultPage({ params }: Props) {
   const { data: session } = await supabase
     .from('disc_sessions')
     .select(`
-      id, access_code, status, completed_at, answers, results, created_by, created_at,
+      id, access_code, status, sent_at, completed_at, answers, results, created_by,
       applicants ( id, full_name, email, phone, position_applied, outlet_preference )
     `)
     .eq('id', id)
@@ -167,7 +168,7 @@ export default async function DiscResultPage({ params }: Props) {
         {/* Score breakdown */}
         <div style={{ backgroundColor: '#fff', borderRadius: '20px', padding: '24px', border: '1.5px solid #E8E4E0' }}>
           <h2 style={{ fontSize: '14px', fontWeight: 800, color: '#020000', margin: '0 0 4px' }}>Skor Mentah</h2>
-          <p style={{ fontSize: '12px', color: '#8A8A8D', margin: '0 0 20px' }}>Jumlah pilihan &quot;Paling&quot; (P) dan &quot;Kurang&quot; (K) per dimensi</p>
+          <p style={{ fontSize: '12px', color: '#8A8A8D', margin: '0 0 20px' }}>Jumlah pilihan "Paling" (P) dan "Kurang" (K) per dimensi</p>
 
           <div style={{ marginBottom: '20px' }}>
             <p style={{ fontSize: '11px', fontWeight: 700, color: '#037894', letterSpacing: '1px', textTransform: 'uppercase', margin: '0 0 10px' }}>Grafik I — Paling (Public Self)</p>

@@ -26,14 +26,14 @@ export default function JobsClient({ initialJobs }: { initialJobs: JobPosting[] 
   const [form, setForm] = useState(emptyForm)
   const set = (k: string, v: unknown) => setForm(f => ({ ...f, [k]: v }))
 
+  useEffect(() => { loadJobs() }, [])
+
   async function loadJobs() {
     setLoading(true)
     const { data } = await supabase.from('job_postings').select('*').order('created_at', { ascending: false })
     if (data) setJobs(data)
     setLoading(false)
   }
-
-  useEffect(() => { loadJobs() }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   function openNew() { setForm(emptyForm); setEditingJob(null); setSaveError(''); setShowForm(true) }
   function openEdit(job: JobPosting) {
