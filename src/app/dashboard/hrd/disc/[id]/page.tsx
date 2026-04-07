@@ -136,7 +136,7 @@ export default async function DiscResultPage({ params }: Props) {
       <div style={{ marginBottom: '24px', display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '16px', flexWrap: 'wrap' }}>
         <div>
           <Link href="/dashboard/hrd/disc" style={{ fontSize: '13px', color: '#8A8A8D', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '6px', fontWeight: 600 }}>
-            ← Semua Sesi DiSC
+            ← Semua Sesi Tes Kepribadian
           </Link>
           {appl?.id && (
             <span style={{ color: '#E8E4E0', margin: '0 8px' }}>|</span>
@@ -161,7 +161,7 @@ export default async function DiscResultPage({ params }: Props) {
           <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: '20px' }}>
             <div>
               <p style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '3px', textTransform: 'uppercase', color: '#8FC6C5', margin: '0 0 12px' }}>
-                DiSC Profile — {session.access_code}
+                Tes Kepribadian — {session.access_code}
               </p>
               <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '8px' }}>
                 <div style={{ width: '64px', height: '64px', borderRadius: '50%', border: `3px solid ${dim.color}`, backgroundColor: dim.lightBg + '20', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
@@ -263,7 +263,7 @@ export default async function DiscResultPage({ params }: Props) {
       {/* 3 Character Sections — Gambaran Karakter */}
       <div style={{ backgroundColor: '#fff', borderRadius: '20px', padding: '28px', border: '1.5px solid #E8E4E0', marginBottom: '20px' }}>
         <h2 style={{ fontSize: '14px', fontWeight: 800, color: '#020000', margin: '0 0 4px' }}>Gambaran Karakter</h2>
-        <p style={{ fontSize: '12px', color: '#8A8A8D', margin: '0 0 24px' }}>Tiga dimensi kepribadian dari hasil DiSC Assessment</p>
+        <p style={{ fontSize: '12px', color: '#8A8A8D', margin: '0 0 24px' }}>Tiga dimensi kepribadian dari hasil tes</p>
         <div className="disc-report-grid-3" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px' }}>
           {[
             { label: 'Kepribadian di Muka Umum', sub: 'Graph I — Public Self', p: results.pattern1, accent: '#037894', bg: '#E6F4F8' },

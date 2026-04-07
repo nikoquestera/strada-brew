@@ -40,7 +40,7 @@ export default function DiscEntry() {
 
         <div style={{ backgroundColor: '#fff', borderRadius: '24px', padding: '36px', border: '1.5px solid #E8E4E0', boxShadow: '0 4px 24px rgba(0,0,0,0.06)' }}>
           <div style={{ marginBottom: '28px' }}>
-            <h1 style={{ fontSize: '22px', fontWeight: 800, color: '#020000', margin: '0 0 8px' }}>DiSC Personality Test</h1>
+            <h1 style={{ fontSize: '22px', fontWeight: 800, color: '#020000', margin: '0 0 8px' }}>Tes Kepribadian</h1>
             <p style={{ fontSize: '14px', color: '#8A8A8D', margin: 0, lineHeight: 1.6 }}>
               Masukkan kode akses yang telah diberikan oleh tim HRD Strada untuk memulai asesmen.
             </p>
@@ -82,12 +82,12 @@ export default function DiscEntry() {
               transition: 'all 0.2s',
             }}
           >
-            {loading ? 'Memverifikasi...' : 'Mulai Test →'}
+            {loading ? 'Memverifikasi...' : 'Mulai Tes →'}
           </button>
         </div>
 
         <div style={{ marginTop: '28px', padding: '16px 20px', backgroundColor: 'rgba(3,120,148,0.06)', borderRadius: '14px', border: '1px solid rgba(3,120,148,0.15)' }}>
-          <p style={{ fontSize: '12px', color: '#037894', margin: '0 0 6px', fontWeight: 700 }}>Tentang DiSC Assessment</p>
+          <p style={{ fontSize: '12px', color: '#037894', margin: '0 0 6px', fontWeight: 700 }}>Tentang Tes Kepribadian</p>
           <p style={{ fontSize: '12px', color: '#4C4845', margin: 0, lineHeight: 1.7 }}>
             Test ini terdiri dari 24 pertanyaan. Setiap pertanyaan memiliki 4 pilihan kata — pilih kata yang paling menggambarkan diri Anda (<b>P</b>) dan kata yang paling tidak menggambarkan Anda (<b>K</b>).
             Tidak ada jawaban benar atau salah. Kode akses hanya bisa digunakan satu kali.

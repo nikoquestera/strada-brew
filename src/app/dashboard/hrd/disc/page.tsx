@@ -69,7 +69,7 @@ export default async function DiscSessionsPage() {
       <div style={{ marginBottom: '28px', display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px' }}>
         <div>
           <p style={{ fontSize: '11px', fontWeight: 700, color: '#037894', letterSpacing: '3px', textTransform: 'uppercase', margin: '0 0 6px' }}>Assessment</p>
-          <h1 style={{ fontSize: '26px', fontWeight: 800, color: '#020000', margin: 0 }}>DiSC Personality Test</h1>
+          <h1 style={{ fontSize: '26px', fontWeight: 800, color: '#020000', margin: 0 }}>Tes Kepribadian</h1>
           <p style={{ fontSize: '14px', color: '#8A8A8D', margin: '4px 0 0' }}>Semua sesi assessment yang telah dikirimkan kepada pelamar</p>
         </div>
         <div style={{ display: 'flex', gap: '8px', alignItems: 'flex-start', flexWrap: 'wrap', justifyContent: 'flex-end' }}>
@@ -102,14 +102,14 @@ export default async function DiscSessionsPage() {
         {list.length === 0 ? (
           <div style={{ padding: '60px', textAlign: 'center' }}>
             <p style={{ fontSize: '40px', margin: '0 0 12px' }}>📋</p>
-            <p style={{ fontSize: '16px', fontWeight: 700, color: '#4C4845', margin: '0 0 6px' }}>Belum ada sesi DiSC</p>
+            <p style={{ fontSize: '16px', fontWeight: 700, color: '#4C4845', margin: '0 0 6px' }}>Belum ada sesi Tes Kepribadian</p>
             <p style={{ fontSize: '13px', color: '#8A8A8D', margin: 0 }}>Kirim test dari halaman detail pelamar</p>
           </div>
         ) : (
           <table style={{ width: '100%', borderCollapse: 'collapse' }}>
             <thead>
               <tr style={{ borderBottom: '1.5px solid #E8E4E0', backgroundColor: '#FAFAF9' }}>
-                {['Pelamar', 'Kode Akses', 'Status', 'Profil DiSC', 'Dikirim', 'Selesai', ''].map(h => (
+                {['Pelamar', 'Kode Akses', 'Status', 'Profil Kepribadian', 'Dikirim', 'Selesai', ''].map(h => (
                   <th key={h} style={{ padding: '12px 16px', textAlign: 'left', fontSize: '11px', fontWeight: 700, color: '#8A8A8D', letterSpacing: '1px', textTransform: 'uppercase' }}>{h}</th>
                 ))}
               </tr>

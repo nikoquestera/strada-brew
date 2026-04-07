@@ -100,7 +100,7 @@ export default function DiscTestPage() {
         <div style={{ maxWidth: '800px', margin: '0 auto', padding: '14px 20px' }}>
           <div className="disc-header-inner" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px' }}>
             <div>
-              <p style={{ color: '#fff', fontWeight: 800, fontSize: '15px', margin: 0 }}>DiSC Personality Test</p>
+              <p style={{ color: '#fff', fontWeight: 800, fontSize: '15px', margin: 0 }}>Tes Kepribadian</p>
               <p style={{ color: '#8FC6C5', fontSize: '11px', margin: '2px 0 0', fontWeight: 600, letterSpacing: '1px' }}>
                 KODE: {code}
               </p>

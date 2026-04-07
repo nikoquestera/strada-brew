@@ -23,8 +23,104 @@ interface QuestScore {
   created_at?: string
 }
 
+interface DiscPatternResult {
+  pattern?: string
+}
+
+interface DiscSessionResult {
+  pattern?: DiscPatternResult
+}
+
+interface DiscSession {
+  id: string
+  access_code: string
+  status: string
+  sent_at?: string
+  completed_at?: string
+  results?: DiscSessionResult | null
+}
+
+interface IntelTest {
+  id: string
+  access_code: string
+  status: string
+  sent_at?: string
+  started_at?: string
+  completed_at?: string
+  score?: number | null
+  score_percentage?: number | null
+  total_points?: number | null
+  tests?: { title?: string | null }[] | { title?: string | null } | null
+}
+
+interface ApplicantActivity {
+  id: string
+  activity_type?: string | null
+  to_stage?: string | null
+  note?: string | null
+  created_at: string
+}
+
+interface ApplicantData {
+  id: string
+  full_name?: string | null
+  email?: string | null
+  phone?: string | null
+  birth_date?: string | null
+  domicile?: string | null
+  instagram_url?: string | null
+  position_applied?: string | null
+  outlet_preference?: string | null
+  source?: string | null
+  pipeline_stage?: PipelineStage
+  quest_score?: number | null
+  created_at: string
+  has_cafe_experience?: boolean | null
+  cafe_experience_years?: number | null
+  cafe_experience_detail?: string | null
+  has_barista_cert?: boolean | null
+  cert_detail?: string | null
+  education_level?: string | null
+  hr_notes?: string | null
+  status?: string | null
+  screening_notes?: string | null
+  applicant_quest_scores?: QuestScore[]
+  applicant_activities?: ApplicantActivity[]
+  disc_sessions?: DiscSession[]
+  applicant_tests?: IntelTest[]
+}
+
+type EditForm = {
+  full_name: string
+  email: string
+  phone: string
+  birth_date: string
+  domicile: string
+  position_applied: string
+  outlet_preference: string
+  education_level: string
+  has_cafe_experience: boolean
+  cafe_experience_years: number
+  cafe_experience_detail: string
+  has_barista_cert: boolean
+  cert_detail: string
+  instagram_url: string
+  hr_notes: string
+}
+
+type EditableTextKey =
+  | 'full_name'
+  | 'email'
+  | 'phone'
+  | 'birth_date'
+  | 'domicile'
+  | 'position_applied'
+  | 'outlet_preference'
+  | 'education_level'
+  | 'instagram_url'
+
 interface Props {
-  applicant: Record<string, any>
+  applicant: ApplicantData
 }
 
 function scoreColor(s: number) { return s >= 75 ? '#005353' : s >= 50 ? '#DE9733' : '#FF4F31' }
@@ -38,6 +134,7 @@ function formatTs(ts?: string) {
 export default function ApplicantDetailClient({ applicant }: Props) {
   const router = useRouter()
   const supabase = createClient()
+  const applicantActivities = applicant.applicant_activities || []
   const [currentStage, setCurrentStage] = useState<PipelineStage>(applicant.pipeline_stage || 'baru_masuk')
   const [changingStage, setChangingStage] = useState(false)
   const [showMessageModal, setShowMessageModal] = useState(false)
@@ -59,9 +156,12 @@ export default function ApplicantDetailClient({ applicant }: Props) {
   useEffect(() => { scoresRef.current = scores }, [scores])
 
   // DiSC Assessment
-  const [discSessions, setDiscSessions] = useState<any[]>(applicant.disc_sessions || [])
+  const [discSessions, setDiscSessions] = useState<DiscSession[]>(applicant.disc_sessions || [])
   const [sendingDisc, setSendingDisc] = useState(false)
   const [discSent, setDiscSent] = useState<string | null>(null)
+  const [intelTests, setIntelTests] = useState<IntelTest[]>(applicant.applicant_tests || [])
+  const [sendingIntel, setSendingIntel] = useState(false)
+  const [intelSent, setIntelSent] = useState<string | null>(null)
 
   async function handleSendDisc() {
     setSendingDisc(true)
@@ -82,6 +182,25 @@ export default function ApplicantDetailClient({ applicant }: Props) {
     }
   }
 
+  async function handleSendIntel() {
+    setSendingIntel(true)
+    setIntelSent(null)
+    try {
+      const res = await fetch('/api/cfit/send', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ applicant_id: applicant.id }),
+      })
+      const data = await res.json()
+      if (res.ok && data.session) {
+        setIntelTests((prev) => [data.session, ...prev])
+        setIntelSent(data.session.access_code)
+      }
+    } finally {
+      setSendingIntel(false)
+    }
+  }
+
   // Screening Notes
   const [screeningNotes, setScreeningNotes] = useState<string>(applicant.screening_notes || '')
   const [savingNotes, setSavingNotes] = useState(false)
@@ -97,7 +216,7 @@ export default function ApplicantDetailClient({ applicant }: Props) {
 
   // Edit applicant
   const [showEditModal, setShowEditModal] = useState(false)
-  const [editForm, setEditForm] = useState({
+  const [editForm, setEditForm] = useState<EditForm>({
     full_name: applicant.full_name || '',
     email: applicant.email || '',
     phone: applicant.phone || '',
@@ -115,8 +234,8 @@ export default function ApplicantDetailClient({ applicant }: Props) {
     hr_notes: applicant.hr_notes || '',
   })
   const [savingEdit, setSavingEdit] = useState(false)
-  const [editData, setEditData] = useState(applicant)
-  const setEdit = (k: string, v: any) => setEditForm(f => ({ ...f, [k]: v }))
+  const [editData, setEditData] = useState<ApplicantData>(applicant)
+  const setEdit = <K extends keyof EditForm>(key: K, value: EditForm[K]) => setEditForm((form) => ({ ...form, [key]: value }))
 
   async function handleSaveEdit() {
     setSavingEdit(true)
@@ -145,6 +264,17 @@ export default function ApplicantDetailClient({ applicant }: Props) {
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const stageInfo = PIPELINE_STAGES.find(s => s.key === currentStage)
+  const editableFields: Array<{ key: EditableTextKey; label: string; type: string }> = [
+    { key: 'full_name', label: 'Nama Lengkap', type: 'text' },
+    { key: 'email', label: 'Email', type: 'email' },
+    { key: 'phone', label: 'No. HP', type: 'tel' },
+    { key: 'birth_date', label: 'Tanggal Lahir', type: 'date' },
+    { key: 'domicile', label: 'Domisili', type: 'text' },
+    { key: 'position_applied', label: 'Posisi Dilamar', type: 'text' },
+    { key: 'outlet_preference', label: 'Outlet Preferensi', type: 'text' },
+    { key: 'education_level', label: 'Pendidikan', type: 'text' },
+    { key: 'instagram_url', label: 'Instagram', type: 'text' },
+  ]
 
   async function handleStageChange(newStage: PipelineStage) {
     setChangingStage(true)
@@ -352,11 +482,11 @@ export default function ApplicantDetailClient({ applicant }: Props) {
             )}
 
             {/* Activity timeline */}
-            {applicant.applicant_activities?.length > 0 && (
+            {applicantActivities.length > 0 && (
               <div style={{ backgroundColor: '#fff', borderRadius: '16px', padding: '24px', border: '1.5px solid #E8E4E0' }}>
                 <h3 style={{ fontSize: '14px', fontWeight: 700, color: '#020000', margin: '0 0 16px' }}>Timeline Aktivitas</h3>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                  {applicant.applicant_activities.slice(0, 10).map((act: Record<string, any>) => (
+                  {applicantActivities.slice(0, 10).map((act: ApplicantActivity) => (
                     <div key={act.id} style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
                       <div style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#037894', marginTop: '5px', flexShrink: 0 }} />
                       <div>
@@ -496,61 +626,99 @@ export default function ApplicantDetailClient({ applicant }: Props) {
               )}
             </div>
 
-            {/* DiSC Assessment */}
+            {/* Tes Kandidat */}
             <div style={{ backgroundColor: '#fff', borderRadius: '16px', padding: '20px', border: '1.5px solid #E8E4E0' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
                 <Brain size={14} color="#037894" />
-                <h3 style={{ fontSize: '13px', fontWeight: 700, color: '#020000', margin: 0 }}>DiSC Assessment</h3>
+                <h3 style={{ fontSize: '13px', fontWeight: 700, color: '#020000', margin: 0 }}>Tes Kandidat</h3>
               </div>
 
-              {/* Existing sessions */}
-              {discSessions.length > 0 && (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', marginBottom: '12px' }}>
-                  {discSessions.slice(0, 3).map((s: any) => {
-                    const statusColor: Record<string,string> = { pending: '#DE9733', started: '#037894', completed: '#005353', expired: '#8A8A8D' }
-                    const statusLabel: Record<string,string> = { pending: 'Menunggu', started: 'Dikerjakan', completed: 'Selesai', expired: 'Kadaluarsa' }
-                    return (
-                      <div key={s.id} style={{ padding: '10px 12px', borderRadius: '10px', backgroundColor: '#F7F5F2', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px' }}>
-                        <div>
-                          <code style={{ fontSize: '13px', fontWeight: 800, color: '#020000', letterSpacing: '2px' }}>{s.access_code}</code>
-                          {s.results?.pattern?.pattern && (
-                            <p style={{ fontSize: '11px', color: '#037894', fontWeight: 700, margin: '1px 0 0' }}>{s.results.pattern.pattern}</p>
-                          )}
-                        </div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                          <span style={{ fontSize: '10px', fontWeight: 700, color: statusColor[s.status] || '#8A8A8D', backgroundColor: statusColor[s.status] + '18', padding: '2px 8px', borderRadius: '6px' }}>
-                            {statusLabel[s.status] || s.status}
-                          </span>
-                          {s.status === 'completed' && (
-                            <a href={`/dashboard/hrd/disc/${s.id}`} style={{ fontSize: '10px', fontWeight: 700, color: '#037894', textDecoration: 'none', padding: '2px 8px', borderRadius: '6px', border: '1px solid #037894' }}>
-                              Hasil →
-                            </a>
-                          )}
-                        </div>
-                      </div>
-                    )
-                  })}
+              <div style={{ padding: '12px 12px 10px', borderRadius: '12px', backgroundColor: '#F7F5F2', marginBottom: '12px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '10px', marginBottom: '8px' }}>
+                  <div>
+                    <p style={{ fontSize: '12px', fontWeight: 800, color: '#020000', margin: 0 }}>Tes Kepribadian</p>
+                    <p style={{ fontSize: '11px', color: '#8A8A8D', margin: '2px 0 0' }}>Mekanisme DISC yang sudah ada</p>
+                  </div>
+                  <button
+                    onClick={handleSendDisc}
+                    disabled={sendingDisc}
+                    style={{ padding: '8px 12px', borderRadius: '10px', border: 'none', backgroundColor: sendingDisc ? '#E8E4E0' : '#020000', color: sendingDisc ? '#8A8A8D' : '#fff', cursor: sendingDisc ? 'not-allowed' : 'pointer', fontWeight: 700, fontSize: '12px' }}
+                  >
+                    {sendingDisc ? 'Membuat...' : 'Kirim'}
+                  </button>
                 </div>
-              )}
 
-              {/* New code display after send */}
-              {discSent && (
-                <div style={{ padding: '12px 14px', borderRadius: '10px', backgroundColor: '#E6F4F1', border: '1.5px solid #005353', marginBottom: '10px' }}>
-                  <p style={{ fontSize: '11px', fontWeight: 700, color: '#005353', margin: '0 0 4px', textTransform: 'uppercase', letterSpacing: '1px' }}>Kode Akses Dibuat</p>
-                  <code style={{ fontSize: '20px', fontWeight: 900, color: '#005353', letterSpacing: '4px' }}>{discSent}</code>
-                  <p style={{ fontSize: '11px', color: '#4C4845', margin: '6px 0 0' }}>Berikan kode ini kepada pelamar untuk mengakses test di <strong>brew.stradacoffee.com/disc</strong></p>
+                {discSessions.length > 0 && (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                    {discSessions.slice(0, 3).map((s: DiscSession) => {
+                      const statusColor: Record<string,string> = { pending: '#DE9733', started: '#037894', completed: '#005353', expired: '#8A8A8D' }
+                      const statusLabel: Record<string,string> = { pending: 'Menunggu', started: 'Dikerjakan', completed: 'Selesai', expired: 'Kadaluarsa' }
+                      return (
+                        <div key={s.id} style={{ padding: '10px 12px', borderRadius: '10px', backgroundColor: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px', border: '1px solid #E8E4E0' }}>
+                          <div>
+                            <code style={{ fontSize: '13px', fontWeight: 800, color: '#020000', letterSpacing: '2px' }}>{s.access_code}</code>
+                            {s.results?.pattern?.pattern && <p style={{ fontSize: '11px', color: '#037894', fontWeight: 700, margin: '1px 0 0' }}>{s.results.pattern.pattern}</p>}
+                          </div>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                            <span style={{ fontSize: '10px', fontWeight: 700, color: statusColor[s.status] || '#8A8A8D', backgroundColor: statusColor[s.status] + '18', padding: '2px 8px', borderRadius: '6px' }}>{statusLabel[s.status] || s.status}</span>
+                            {s.status === 'completed' && <a href={`/dashboard/hrd/disc/${s.id}`} style={{ fontSize: '10px', fontWeight: 700, color: '#037894', textDecoration: 'none', padding: '2px 8px', borderRadius: '6px', border: '1px solid #037894' }}>Hasil →</a>}
+                          </div>
+                        </div>
+                      )
+                    })}
+                  </div>
+                )}
+                {discSent && (
+                  <div style={{ padding: '10px 12px', borderRadius: '10px', backgroundColor: '#E6F4F1', border: '1px solid #005353', marginTop: '8px' }}>
+                    <p style={{ fontSize: '11px', fontWeight: 700, color: '#005353', margin: '0 0 4px', textTransform: 'uppercase', letterSpacing: '1px' }}>Kode Baru</p>
+                    <code style={{ fontSize: '18px', fontWeight: 900, color: '#005353', letterSpacing: '4px' }}>{discSent}</code>
+                  </div>
+                )}
+              </div>
+
+              <div style={{ padding: '12px 12px 10px', borderRadius: '12px', backgroundColor: '#F7F5F2' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '10px', marginBottom: '8px' }}>
+                  <div>
+                    <p style={{ fontSize: '12px', fontWeight: 800, color: '#020000', margin: 0 }}>Tes Intelegensi</p>
+                    <p style={{ fontSize: '11px', color: '#8A8A8D', margin: '2px 0 0' }}>CFIT 3B dengan timer per subtes</p>
+                  </div>
+                  <button
+                    onClick={handleSendIntel}
+                    disabled={sendingIntel}
+                    style={{ padding: '8px 12px', borderRadius: '10px', border: 'none', backgroundColor: sendingIntel ? '#E8E4E0' : '#037894', color: '#fff', cursor: sendingIntel ? 'not-allowed' : 'pointer', fontWeight: 700, fontSize: '12px' }}
+                  >
+                    {sendingIntel ? 'Membuat...' : 'Kirim'}
+                  </button>
                 </div>
-              )}
 
-              <button
-                onClick={handleSendDisc}
-                disabled={sendingDisc}
-                style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 16px', borderRadius: '10px', width: '100%', justifyContent: 'center', backgroundColor: sendingDisc ? '#E8E4E0' : '#020000', color: sendingDisc ? '#8A8A8D' : '#fff', border: 'none', cursor: sendingDisc ? 'not-allowed' : 'pointer', fontWeight: 700, fontSize: '13px', transition: 'all 0.15s' }}
-              >
-                <Brain size={14} />
-                {sendingDisc ? 'Membuat kode...' : 'Kirim DiSC Test'}
-              </button>
-              <p style={{ fontSize: '11px', color: '#8A8A8D', margin: '6px 0 0', textAlign: 'center' }}>Kode baru akan di-generate setiap kali</p>
+                {intelTests.length > 0 && (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                    {intelTests.slice(0, 3).map((s: IntelTest) => {
+                      const statusColor: Record<string,string> = { pending: '#DE9733', started: '#037894', completed: '#005353', expired: '#8A8A8D' }
+                      const statusLabel: Record<string,string> = { pending: 'Menunggu', started: 'Dikerjakan', completed: 'Selesai', expired: 'Kadaluarsa' }
+                      return (
+                        <div key={s.id} style={{ padding: '10px 12px', borderRadius: '10px', backgroundColor: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px', border: '1px solid #E8E4E0' }}>
+                          <div>
+                            <code style={{ fontSize: '13px', fontWeight: 800, color: '#020000', letterSpacing: '2px' }}>{s.access_code}</code>
+                            {typeof s.score === 'number' && <p style={{ fontSize: '11px', color: '#037894', fontWeight: 700, margin: '1px 0 0' }}>Skor {s.score}/{s.total_points || 50}</p>}
+                          </div>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                            <span style={{ fontSize: '10px', fontWeight: 700, color: statusColor[s.status] || '#8A8A8D', backgroundColor: statusColor[s.status] + '18', padding: '2px 8px', borderRadius: '6px' }}>{statusLabel[s.status] || s.status}</span>
+                            {s.status === 'completed' && <a href={`/dashboard/hrd/cfit/${s.id}`} style={{ fontSize: '10px', fontWeight: 700, color: '#037894', textDecoration: 'none', padding: '2px 8px', borderRadius: '6px', border: '1px solid #037894' }}>Hasil →</a>}
+                          </div>
+                        </div>
+                      )
+                    })}
+                  </div>
+                )}
+                {intelSent && (
+                  <div style={{ padding: '10px 12px', borderRadius: '10px', backgroundColor: '#E6F4F8', border: '1px solid #037894', marginTop: '8px' }}>
+                    <p style={{ fontSize: '11px', fontWeight: 700, color: '#037894', margin: '0 0 4px', textTransform: 'uppercase', letterSpacing: '1px' }}>Kode Baru</p>
+                    <code style={{ fontSize: '18px', fontWeight: 900, color: '#037894', letterSpacing: '4px' }}>{intelSent}</code>
+                    <p style={{ fontSize: '11px', color: '#4C4845', margin: '6px 0 0' }}>Link kandidat: <strong>{`brew.stradacoffee.com/tes-intelegensi/${intelSent}`}</strong></p>
+                  </div>
+                )}
+              </div>
             </div>
 
             {/* Actions */}
@@ -597,22 +765,12 @@ export default function ApplicantDetailClient({ applicant }: Props) {
               <button onClick={() => setShowEditModal(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '20px', color: '#8A8A8D' }}>×</button>
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-              {[
-                { key: 'full_name', label: 'Nama Lengkap', type: 'text' },
-                { key: 'email', label: 'Email', type: 'email' },
-                { key: 'phone', label: 'No. HP', type: 'tel' },
-                { key: 'birth_date', label: 'Tanggal Lahir', type: 'date' },
-                { key: 'domicile', label: 'Domisili', type: 'text' },
-                { key: 'position_applied', label: 'Posisi Dilamar', type: 'text' },
-                { key: 'outlet_preference', label: 'Outlet Preferensi', type: 'text' },
-                { key: 'education_level', label: 'Pendidikan', type: 'text' },
-                { key: 'instagram_url', label: 'Instagram', type: 'text' },
-              ].map(field => (
+              {editableFields.map(field => (
                 <div key={field.key}>
                   <label style={{ fontSize: '12px', fontWeight: 600, color: '#4C4845', display: 'block', marginBottom: '5px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>{field.label}</label>
                   <input
                     type={field.type}
-                    value={editForm[field.key as keyof typeof editForm] as string}
+                    value={editForm[field.key]}
                     onChange={e => setEdit(field.key, e.target.value)}
                     style={{ width: '100%', padding: '10px 12px', borderRadius: '10px', border: '1.5px solid #E8E4E0', fontSize: '13px', color: '#020000', boxSizing: 'border-box', outline: 'none' }}
                   />

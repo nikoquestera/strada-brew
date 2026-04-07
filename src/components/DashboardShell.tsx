@@ -17,7 +17,7 @@ const hrdNav = [
   { label: 'Dokumen', href: '/dashboard/hrd/dokumen', icon: FolderOpen },
   { label: 'Payroll', href: '/dashboard/hrd/payroll', icon: Calculator },
   { label: 'Scoring Weights', href: '/dashboard/hrd/rekrutmen/weights', icon: Scale },
-  { label: 'DiSC Assessment', href: '/dashboard/hrd/disc', icon: Brain },
+  { label: 'Tes Kepribadian', href: '/dashboard/hrd/disc', icon: Brain },
 ]
 
 export default function DashboardShell({ children, userEmail }: Props) {

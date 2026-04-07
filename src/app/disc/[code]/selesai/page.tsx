@@ -14,7 +14,7 @@ export default function DiscSelesai() {
           Test Selesai!
         </h1>
         <p style={{ fontSize: '15px', color: '#4C4845', margin: '0 0 32px', lineHeight: 1.7 }}>
-          Terima kasih telah menyelesaikan DiSC Personality Assessment. Jawaban Anda telah berhasil disimpan dan akan ditinjau oleh tim HRD Strada Coffee.
+          Terima kasih telah menyelesaikan Tes Kepribadian. Jawaban Anda telah berhasil disimpan dan akan ditinjau oleh tim HRD Strada Coffee.
         </p>
 
         <div style={{ backgroundColor: '#fff', borderRadius: '20px', padding: '24px', border: '1.5px solid #E8E4E0', textAlign: 'left' }}>
