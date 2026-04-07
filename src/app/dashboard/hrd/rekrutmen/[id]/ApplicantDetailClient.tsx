@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { PIPELINE_STAGES, PipelineStage } from '@/lib/types'
-import { ArrowLeft, Phone, Mail, AtSign, MapPin, Calendar, Briefcase, Star, MessageSquare, Send, Clock, Edit2 } from 'lucide-react'
+import { ArrowLeft, Phone, Mail, AtSign, MapPin, Calendar, Briefcase, Star, MessageSquare, Send, Clock, Edit2, Brain } from 'lucide-react'
 
 interface QuestScore {
   id: string
@@ -57,6 +57,30 @@ export default function ApplicantDetailClient({ applicant }: Props) {
   const [expandedHistory, setExpandedHistory] = useState(false)
   const scoresRef = useRef(scores)
   useEffect(() => { scoresRef.current = scores }, [scores])
+
+  // DiSC Assessment
+  const [discSessions, setDiscSessions] = useState<any[]>(applicant.disc_sessions || [])
+  const [sendingDisc, setSendingDisc] = useState(false)
+  const [discSent, setDiscSent] = useState<string | null>(null)
+
+  async function handleSendDisc() {
+    setSendingDisc(true)
+    setDiscSent(null)
+    try {
+      const res = await fetch('/api/disc/send', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ applicant_id: applicant.id }),
+      })
+      const data = await res.json()
+      if (res.ok && data.session) {
+        setDiscSessions(prev => [data.session, ...prev])
+        setDiscSent(data.session.access_code)
+      }
+    } finally {
+      setSendingDisc(false)
+    }
+  }
 
   // Screening Notes
   const [screeningNotes, setScreeningNotes] = useState<string>(applicant.screening_notes || '')
@@ -470,6 +494,63 @@ export default function ApplicantDetailClient({ applicant }: Props) {
                   )}
                 </>
               )}
+            </div>
+
+            {/* DiSC Assessment */}
+            <div style={{ backgroundColor: '#fff', borderRadius: '16px', padding: '20px', border: '1.5px solid #E8E4E0' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
+                <Brain size={14} color="#037894" />
+                <h3 style={{ fontSize: '13px', fontWeight: 700, color: '#020000', margin: 0 }}>DiSC Assessment</h3>
+              </div>
+
+              {/* Existing sessions */}
+              {discSessions.length > 0 && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', marginBottom: '12px' }}>
+                  {discSessions.slice(0, 3).map((s: any) => {
+                    const statusColor: Record<string,string> = { pending: '#DE9733', started: '#037894', completed: '#005353', expired: '#8A8A8D' }
+                    const statusLabel: Record<string,string> = { pending: 'Menunggu', started: 'Dikerjakan', completed: 'Selesai', expired: 'Kadaluarsa' }
+                    return (
+                      <div key={s.id} style={{ padding: '10px 12px', borderRadius: '10px', backgroundColor: '#F7F5F2', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px' }}>
+                        <div>
+                          <code style={{ fontSize: '13px', fontWeight: 800, color: '#020000', letterSpacing: '2px' }}>{s.access_code}</code>
+                          {s.results?.pattern?.pattern && (
+                            <p style={{ fontSize: '11px', color: '#037894', fontWeight: 700, margin: '1px 0 0' }}>{s.results.pattern.pattern}</p>
+                          )}
+                        </div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                          <span style={{ fontSize: '10px', fontWeight: 700, color: statusColor[s.status] || '#8A8A8D', backgroundColor: statusColor[s.status] + '18', padding: '2px 8px', borderRadius: '6px' }}>
+                            {statusLabel[s.status] || s.status}
+                          </span>
+                          {s.status === 'completed' && (
+                            <a href={`/dashboard/hrd/disc/${s.id}`} style={{ fontSize: '10px', fontWeight: 700, color: '#037894', textDecoration: 'none', padding: '2px 8px', borderRadius: '6px', border: '1px solid #037894' }}>
+                              Hasil →
+                            </a>
+                          )}
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>
+              )}
+
+              {/* New code display after send */}
+              {discSent && (
+                <div style={{ padding: '12px 14px', borderRadius: '10px', backgroundColor: '#E6F4F1', border: '1.5px solid #005353', marginBottom: '10px' }}>
+                  <p style={{ fontSize: '11px', fontWeight: 700, color: '#005353', margin: '0 0 4px', textTransform: 'uppercase', letterSpacing: '1px' }}>Kode Akses Dibuat</p>
+                  <code style={{ fontSize: '20px', fontWeight: 900, color: '#005353', letterSpacing: '4px' }}>{discSent}</code>
+                  <p style={{ fontSize: '11px', color: '#4C4845', margin: '6px 0 0' }}>Berikan kode ini kepada pelamar untuk mengakses test di <strong>brew.stradacoffee.com/disc</strong></p>
+                </div>
+              )}
+
+              <button
+                onClick={handleSendDisc}
+                disabled={sendingDisc}
+                style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 16px', borderRadius: '10px', width: '100%', justifyContent: 'center', backgroundColor: sendingDisc ? '#E8E4E0' : '#020000', color: sendingDisc ? '#8A8A8D' : '#fff', border: 'none', cursor: sendingDisc ? 'not-allowed' : 'pointer', fontWeight: 700, fontSize: '13px', transition: 'all 0.15s' }}
+              >
+                <Brain size={14} />
+                {sendingDisc ? 'Membuat kode...' : 'Kirim DiSC Test'}
+              </button>
+              <p style={{ fontSize: '11px', color: '#8A8A8D', margin: '6px 0 0', textAlign: 'center' }}>Kode baru akan di-generate setiap kali</p>
             </div>
 
             {/* Actions */}

@@ -2,7 +2,7 @@
 import { useState } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
-import { Users, FileText, Calculator, Home, LogOut, Menu, X, Briefcase, FolderOpen, Scale } from 'lucide-react'
+import { Users, FileText, Calculator, Home, LogOut, Menu, X, Briefcase, FolderOpen, Scale, Brain } from 'lucide-react'
 
 interface Props {
   children: React.ReactNode
@@ -17,6 +17,7 @@ const hrdNav = [
   { label: 'Dokumen', href: '/dashboard/hrd/dokumen', icon: FolderOpen },
   { label: 'Payroll', href: '/dashboard/hrd/payroll', icon: Calculator },
   { label: 'Scoring Weights', href: '/dashboard/hrd/rekrutmen/weights', icon: Scale },
+  { label: 'DiSC Assessment', href: '/dashboard/hrd/disc', icon: Brain },
 ]
 
 export default function DashboardShell({ children, userEmail }: Props) {

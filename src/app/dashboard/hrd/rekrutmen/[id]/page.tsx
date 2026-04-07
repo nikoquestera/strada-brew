@@ -21,7 +21,8 @@ export default async function ApplicantDetailPage({
       cafe_experience_detail, has_barista_cert, cert_detail,
       education_level, hr_notes, status, screening_notes,
       applicant_quest_scores (*),
-      applicant_activities (*)
+      applicant_activities (*),
+      disc_sessions ( id, access_code, status, sent_at, completed_at, results )
     `)
     .eq('id', id)
     .single()
