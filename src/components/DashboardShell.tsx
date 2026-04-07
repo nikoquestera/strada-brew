@@ -57,7 +57,11 @@ export default function DashboardShell({ children, userEmail }: Props) {
       <nav className="flex-1 px-3 py-2 flex flex-col gap-1 overflow-y-auto">
         {hrdNav.map(item => {
           const Icon = item.icon
-          const active = pathname === item.href || (item.href !== '/dashboard/hrd' && pathname.startsWith(item.href))
+          const active = pathname === item.href || (
+            item.href !== '/dashboard/hrd' && 
+            pathname.startsWith(item.href + '/') &&
+            !hrdNav.some(other => other.href !== item.href && other.href.startsWith(item.href + '/') && pathname.startsWith(other.href))
+          )
           return (
             <button key={item.href}
               onClick={() => { router.push(item.href); setSidebarOpen(false) }}
