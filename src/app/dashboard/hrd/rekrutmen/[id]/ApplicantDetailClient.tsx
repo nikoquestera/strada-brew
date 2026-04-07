@@ -333,7 +333,7 @@ export default function ApplicantDetailClient({ applicant }: Props) {
 
       <div style={{ minHeight: '100vh', backgroundColor: '#F7F5F2' }}>
         {/* Top bar — Refined to light style */}
-        <div style={{ backgroundColor: '#ffffff', padding: '16px 24px', borderBottom: '1px solid #E8E4E0', display: 'flex', alignItems: 'center', gap: '20px', flexWrap: 'wrap', sticky: 'top', zIndex: 10 }}>
+        <div style={{ backgroundColor: '#ffffff', padding: '16px 24px', borderBottom: '1px solid #E8E4E0', display: 'flex', alignItems: 'center', gap: '20px', flexWrap: 'wrap', position: 'sticky', top: 0, zIndex: 10 }}>
           <button onClick={() => router.back()} className="appl-back"
             style={{ color: '#8A8A8D', background: '#F7F5F2', border: '1px solid #E8E4E0', borderRadius: '10px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px', padding: '8px 16px', fontWeight: 700, transition: 'all 0.2s' }}>
             <ArrowLeft size={16} /> Kembali
@@ -945,6 +945,7 @@ export default function ApplicantDetailClient({ applicant }: Props) {
           </div>
         </div>
       )}
-    </>
-  )
+    </div>
+  </>
+)
 }
