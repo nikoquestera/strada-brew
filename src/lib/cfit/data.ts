@@ -5,6 +5,9 @@ export interface CfitVisual {
   src?: string
   promptSrc?: string
   optionsSrc?: string
+  layout?: 'stack' | 'split'
+  promptPanelMaxWidth?: number
+  optionsPanelMaxWidth?: number
 }
 
 export interface CfitSubtest {
@@ -32,10 +35,14 @@ export interface CfitQuestion {
 const ASSET = (name: string) => `/cfit/assets/${encodeURIComponent(name)}`
 
 function questionVisual(subtestId: 1 | 3 | 4, questionNo: number): CfitVisual {
+  const isCompactSplit = subtestId === 3 || subtestId === 4
   return {
     mode: 'stacked',
     promptSrc: ASSET(`subtes${subtestId}_q${questionNo}.png`),
     optionsSrc: ASSET(`subtes${subtestId}_options_q${questionNo}.png`),
+    layout: isCompactSplit ? 'split' : 'stack',
+    promptPanelMaxWidth: isCompactSplit ? (subtestId === 3 ? 220 : 180) : 760,
+    optionsPanelMaxWidth: isCompactSplit ? 680 : 860,
   }
 }
 

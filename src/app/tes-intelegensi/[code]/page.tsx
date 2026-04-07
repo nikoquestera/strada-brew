@@ -264,8 +264,37 @@ export default function CfitTestPage() {
 
   return (
     <div style={{ minHeight: '100vh', backgroundColor: '#F7F5F2', fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
+      <style>{`
+        @media (max-width: 640px) {
+          .cfit-testing-header {
+            padding: 12px 14px !important;
+          }
+          .cfit-testing-shell {
+            padding: 18px 14px 80px !important;
+          }
+          .cfit-question-card {
+            padding: 18px !important;
+            border-radius: 20px !important;
+            min-height: 0 !important;
+          }
+          .cfit-choice-row {
+            width: 100%;
+            justify-content: flex-start;
+          }
+          .cfit-choice-btn {
+            width: 42px !important;
+            height: 42px !important;
+            border-radius: 12px !important;
+            font-size: 14px !important;
+          }
+          .cfit-question-visual {
+            min-height: 0 !important;
+            margin-bottom: 16px !important;
+          }
+        }
+      `}</style>
       <div style={{ position: 'sticky', top: 0, zIndex: 40, backgroundColor: '#020000', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
-        <div style={{ maxWidth: '1080px', margin: '0 auto', padding: '16px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '16px', flexWrap: 'wrap' }}>
+        <div className="cfit-testing-header" style={{ maxWidth: '1080px', margin: '0 auto', padding: '16px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '16px', flexWrap: 'wrap' }}>
           <div>
             <p style={{ color: '#fff', fontWeight: 900, fontSize: '18px', margin: 0 }}>Tes Intelegensi</p>
             <p style={{ color: '#8FC6C5', fontSize: '12px', margin: '3px 0 0', fontWeight: 700 }}>
@@ -285,7 +314,7 @@ export default function CfitTestPage() {
         </div>
       </div>
 
-      <div style={{ maxWidth: '1080px', margin: '0 auto', padding: '28px 20px 120px' }}>
+      <div className="cfit-testing-shell" style={{ maxWidth: '1080px', margin: '0 auto', padding: '28px 20px 120px' }}>
         <div style={{ marginBottom: '16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px', flexWrap: 'wrap' }}>
           <div>
             <p style={{ fontSize: '12px', fontWeight: 700, color: '#037894', margin: '0 0 6px', letterSpacing: '2px', textTransform: 'uppercase' }}>
@@ -299,8 +328,8 @@ export default function CfitTestPage() {
         </div>
 
         {currentQuestion && (
-          <div style={{ backgroundColor: '#fff', borderRadius: '24px', padding: '24px', border: '1.5px solid #E8E4E0', boxShadow: '0 10px 30px rgba(0,0,0,0.04)' }}>
-            <div style={{ marginBottom: '20px' }}>
+          <div className="cfit-question-card" style={{ backgroundColor: '#fff', borderRadius: '24px', padding: '24px', border: '1.5px solid #E8E4E0', boxShadow: '0 10px 30px rgba(0,0,0,0.04)', minHeight: '720px', display: 'flex', flexDirection: 'column' }}>
+            <div className="cfit-question-visual" style={{ marginBottom: '20px', minHeight: '420px', display: 'flex', alignItems: 'center' }}>
               <CfitCropImage visual={currentQuestion.visual} alt={`${currentSubtest.title} nomor ${currentQuestion.questionNo}`} maxWidth={920} />
             </div>
 
@@ -310,11 +339,12 @@ export default function CfitTestPage() {
                   ? 'Pilih tepat 2 jawaban. Anda tidak bisa lanjut sebelum dua pilihan dipilih.'
                   : 'Pilih tepat 1 jawaban. Anda tidak bisa lanjut sebelum satu pilihan dipilih.'}
               </p>
-              <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+              <div className="cfit-choice-row" style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
                 {currentQuestion.choices.map((choice) => {
                   const active = selected.includes(choice)
                   return (
                     <button
+                      className="cfit-choice-btn"
                       key={choice}
                       onClick={() => pickChoice(choice)}
                       style={{
@@ -336,7 +366,7 @@ export default function CfitTestPage() {
               </div>
             </div>
 
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '14px', flexWrap: 'wrap' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '14px', flexWrap: 'wrap', marginTop: 'auto' }}>
               <div style={{ fontSize: '12px', color: '#8A8A8D' }}>
                 {canProceed
                   ? 'Jawaban lengkap. Anda bisa lanjut.'

@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect, notFound } from 'next/navigation'
 import Link from 'next/link'
+import { Clock } from 'lucide-react'
 import { DISC_DIMENSIONS, DISC_QUESTIONS, Dimension } from '@/lib/disc/data'
 import { computeDiscResults, DiscAnswers, DiscResults, validateAnswers } from '@/lib/disc/scorer'
 import { buildDiscReportCopy } from '@/lib/disc/report'
