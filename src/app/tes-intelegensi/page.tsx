@@ -38,15 +38,34 @@ export default function CfitEntryPage() {
   }
 
   return (
-    <div style={{ minHeight: '100vh', backgroundColor: '#F7F5F2', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '24px', fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
-      <div style={{ width: '100%', maxWidth: '430px' }}>
-        <div style={{ textAlign: 'center', marginBottom: '36px' }}>
-          <img src="/strada-logo.svg" alt="Strada Coffee" style={{ height: '48px', width: 'auto', filter: 'grayscale(1) contrast(2)', opacity: 0.85, marginBottom: '16px' }} />
-          <p style={{ fontSize: '12px', fontWeight: 700, letterSpacing: '3px', textTransform: 'uppercase', color: '#8A8A8D', margin: 0 }}>Assessment Center</p>
+    <div style={{ minHeight: '100vh', backgroundColor: '#F7F5F2', fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
+      <style>{`
+        @media (max-width: 640px) {
+          .cfit-entry-shell {
+            padding: 28px 16px 20px !important;
+          }
+          .cfit-entry-card {
+            padding: 24px 18px !important;
+            border-radius: 22px !important;
+          }
+          .cfit-entry-logo {
+            height: 52px !important;
+          }
+          .cfit-entry-title {
+            font-size: 22px !important;
+          }
+        }
+      `}</style>
+      <div className="cfit-entry-shell" style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '32px 24px', position: 'relative' }}>
+        <div style={{ width: '100%', maxWidth: '470px' }}>
+        <div style={{ textAlign: 'center', marginBottom: '30px' }}>
+          <img className="cfit-entry-logo" src="/strada-logo.svg" alt="Strada Coffee" style={{ height: '68px', width: 'auto', display: 'block', margin: '0 auto 18px', filter: 'grayscale(1) contrast(2)', opacity: 0.92, backgroundColor: 'transparent' }} />
+          <p style={{ fontSize: '12px', fontWeight: 700, letterSpacing: '3px', textTransform: 'uppercase', color: '#8A8A8D', margin: '0 0 8px' }}>Assessment Center</p>
+          <p style={{ fontSize: '14px', color: '#4C4845', margin: 0, lineHeight: 1.7 }}>Portal kandidat untuk Tes Intelegensi Strada Coffee</p>
         </div>
 
-        <div style={{ backgroundColor: '#fff', borderRadius: '24px', padding: '36px', border: '1.5px solid #E8E4E0', boxShadow: '0 4px 24px rgba(0,0,0,0.06)' }}>
-          <h1 style={{ fontSize: '24px', fontWeight: 900, color: '#020000', margin: '0 0 8px' }}>Tes Intelegensi</h1>
+        <div className="cfit-entry-card" style={{ backgroundColor: '#fff', borderRadius: '28px', padding: '36px', border: '1.5px solid #E8E4E0', boxShadow: '0 16px 40px rgba(0,0,0,0.05)' }}>
+          <h1 className="cfit-entry-title" style={{ fontSize: '26px', fontWeight: 900, color: '#020000', margin: '0 0 8px' }}>Tes Intelegensi</h1>
           <p style={{ fontSize: '14px', color: '#8A8A8D', margin: '0 0 24px', lineHeight: 1.7 }}>
             Masukkan kode akses dari tim HRD Strada untuk membuka CFIT Skala 3B.
           </p>
@@ -97,6 +116,7 @@ export default function CfitEntryPage() {
           >
             {loading ? 'Memverifikasi...' : 'Buka Tes →'}
           </button>
+        </div>
         </div>
       </div>
     </div>

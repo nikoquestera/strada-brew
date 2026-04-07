@@ -190,8 +190,27 @@ export default function CfitTestPage() {
           @media (max-width: 900px) {
             .cfit-intro-grid { grid-template-columns: 1fr !important; }
           }
+          @media (max-width: 640px) {
+            .cfit-intro-shell {
+              padding: 18px 14px 110px !important;
+            }
+            .cfit-intro-card {
+              padding: 18px !important;
+              border-radius: 20px !important;
+            }
+            .cfit-intro-bottom {
+              left: 14px;
+              right: 14px;
+              bottom: 14px;
+              position: fixed !important;
+              z-index: 50;
+            }
+            .cfit-intro-bottom button {
+              width: 100%;
+            }
+          }
         `}</style>
-        <div style={{ maxWidth: '1040px', margin: '0 auto' }}>
+        <div className="cfit-intro-shell" style={{ maxWidth: '1040px', margin: '0 auto' }}>
           <div style={{ marginBottom: '24px', display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '12px', flexWrap: 'wrap' }}>
             <div>
               <p style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '3px', color: '#037894', textTransform: 'uppercase', margin: '0 0 8px' }}>Tes Kandidat</p>
@@ -211,7 +230,7 @@ export default function CfitTestPage() {
           </div>
 
           <div className="cfit-intro-grid" style={{ display: 'grid', gridTemplateColumns: '1.05fr 0.95fr', gap: '18px', alignItems: 'start' }}>
-            <div style={{ backgroundColor: '#fff', borderRadius: '24px', padding: '24px', border: '1.5px solid #E8E4E0', boxShadow: '0 10px 30px rgba(0,0,0,0.04)' }}>
+            <div className="cfit-intro-card" style={{ backgroundColor: '#fff', borderRadius: '24px', padding: '24px', border: '1.5px solid #E8E4E0', boxShadow: '0 10px 30px rgba(0,0,0,0.04)' }}>
               <p style={{ fontSize: '12px', fontWeight: 700, color: '#037894', letterSpacing: '2px', textTransform: 'uppercase', margin: '0 0 10px' }}>
                 Ringkasan Instruksi
               </p>
@@ -233,7 +252,7 @@ export default function CfitTestPage() {
               </div>
             </div>
 
-            <div style={{ backgroundColor: '#fff', borderRadius: '24px', padding: '24px', border: '1.5px solid #E8E4E0', boxShadow: '0 10px 30px rgba(0,0,0,0.04)' }}>
+            <div className="cfit-intro-card" style={{ backgroundColor: '#fff', borderRadius: '24px', padding: '24px', border: '1.5px solid #E8E4E0', boxShadow: '0 10px 30px rgba(0,0,0,0.04)' }}>
               <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: '12px', flexWrap: 'wrap', marginBottom: '14px' }}>
                 <div>
                   <p style={{ fontSize: '12px', fontWeight: 700, color: '#037894', letterSpacing: '2px', textTransform: 'uppercase', margin: '0 0 4px' }}>Contoh {currentSubtest.title}</p>
@@ -247,7 +266,7 @@ export default function CfitTestPage() {
             </div>
           </div>
 
-          <div style={{ position: 'sticky', bottom: '24px', marginTop: '22px', backgroundColor: '#020000', borderRadius: '20px', padding: '18px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '14px', flexWrap: 'wrap' }}>
+          <div className="cfit-intro-bottom" style={{ position: 'sticky', bottom: '24px', marginTop: '22px', backgroundColor: '#020000', borderRadius: '20px', padding: '18px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '14px', flexWrap: 'wrap', boxShadow: '0 14px 32px rgba(0,0,0,0.18)' }}>
             <p style={{ fontSize: '13px', color: 'rgba(255,255,255,0.75)', margin: 0 }}>
               {subtestIndex === 0
                 ? 'Setelah Anda menekan tombol mulai, timer Subtes 1 langsung berjalan dan soal pertama akan tampil.'
@@ -267,15 +286,15 @@ export default function CfitTestPage() {
       <style>{`
         @media (max-width: 640px) {
           .cfit-testing-header {
-            padding: 12px 14px !important;
+            padding: 10px 14px !important;
           }
           .cfit-testing-shell {
-            padding: 18px 14px 80px !important;
+            padding: 14px 14px 100px !important;
           }
           .cfit-question-card {
-            padding: 18px !important;
+            padding: 16px !important;
             border-radius: 20px !important;
-            min-height: 0 !important;
+            min-height: 620px !important;
           }
           .cfit-choice-row {
             width: 100%;
@@ -288,8 +307,23 @@ export default function CfitTestPage() {
             font-size: 14px !important;
           }
           .cfit-question-visual {
-            min-height: 0 !important;
-            margin-bottom: 16px !important;
+            min-height: 280px !important;
+            margin-bottom: 14px !important;
+          }
+          .cfit-testing-progress {
+            width: 100%;
+            justify-content: space-between !important;
+          }
+          .cfit-testing-footer {
+            position: sticky;
+            bottom: 0;
+            background: linear-gradient(180deg, rgba(247,245,242,0) 0%, rgba(247,245,242,0.92) 24%, rgba(247,245,242,1) 100%);
+            padding-top: 14px;
+            margin-top: auto !important;
+          }
+          .cfit-next-btn {
+            width: 100%;
+            justify-content: center;
           }
         }
       `}</style>
@@ -301,7 +335,7 @@ export default function CfitTestPage() {
               {currentSubtest.title} • Soal {currentQuestion?.questionNo}/{currentSubtest.questions.length} • Kode {code}
             </p>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+          <div className="cfit-testing-progress" style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
             <div style={{ textAlign: 'right' }}>
               <p style={{ color: '#8FC6C5', fontSize: '11px', margin: '0 0 4px', fontWeight: 700, letterSpacing: '1px', textTransform: 'uppercase' }}>Progress</p>
               <p style={{ color: '#fff', fontSize: '15px', fontWeight: 900, margin: 0 }}>{answeredTotal}/{CFIT_QUESTIONS.length}</p>
@@ -366,7 +400,7 @@ export default function CfitTestPage() {
               </div>
             </div>
 
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '14px', flexWrap: 'wrap', marginTop: 'auto' }}>
+            <div className="cfit-testing-footer" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '14px', flexWrap: 'wrap', marginTop: 'auto' }}>
               <div style={{ fontSize: '12px', color: '#8A8A8D' }}>
                 {canProceed
                   ? 'Jawaban lengkap. Anda bisa lanjut.'
@@ -375,6 +409,7 @@ export default function CfitTestPage() {
                     : 'Pilih satu jawaban untuk lanjut.'}
               </div>
               <button
+                className="cfit-next-btn"
                 onClick={nextQuestion}
                 disabled={!canProceed || phase === 'submitting'}
                 style={{
