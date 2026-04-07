@@ -6,7 +6,7 @@ import CfitCropImage from '@/components/CfitCropImage'
 import { CFIT_QUESTIONS, CFIT_SUBTESTS, CfitChoice, CfitQuestion } from '@/lib/cfit/data'
 import { CfitAnswers } from '@/lib/cfit/scorer'
 
-type Phase = 'loading' | 'intro' | 'testing' | 'transition' | 'submitting' | 'error'
+type Phase = 'loading' | 'intro' | 'testing' | 'submitting' | 'error'
 
 function formatTime(totalSeconds: number) {
   const minutes = Math.floor(totalSeconds / 60)
@@ -32,8 +32,6 @@ export default function CfitTestPage() {
   const [subtestIndex, setSubtestIndex] = useState(0)
   const [questionIndex, setQuestionIndex] = useState(0)
   const [remainingSeconds, setRemainingSeconds] = useState(grouped[0].durationSeconds)
-  const [transitionCountdown, setTransitionCountdown] = useState(3)
-
   const currentSubtest = grouped[subtestIndex]
   const currentQuestion = currentSubtest?.questions[questionIndex] as CfitQuestion | undefined
 
@@ -60,7 +58,14 @@ export default function CfitTestPage() {
     checkCode()
   }, [code])
 
-  async function beginTest() {
+  async function beginSubtest() {
+    if (subtestIndex > 0) {
+      setQuestionIndex(0)
+      setRemainingSeconds(grouped[subtestIndex].durationSeconds)
+      setPhase('testing')
+      return
+    }
+
     try {
       const res = await fetch('/api/cfit/begin', {
         method: 'POST',
@@ -126,8 +131,9 @@ export default function CfitTestPage() {
         if (subtestIndex >= grouped.length - 1) {
           void submitAll()
         } else {
-          setPhase('transition')
-          setTransitionCountdown(3)
+          setSubtestIndex((value) => value + 1)
+          setQuestionIndex(0)
+          setPhase('intro')
         }
       }, 0)
       return () => window.clearTimeout(timer)
@@ -136,22 +142,6 @@ export default function CfitTestPage() {
     const timer = window.setTimeout(() => setRemainingSeconds((value) => value - 1), 1000)
     return () => window.clearTimeout(timer)
   }, [grouped.length, phase, remainingSeconds, subtestIndex, submitAll])
-
-  useEffect(() => {
-    if (phase !== 'transition') return
-    if (transitionCountdown <= 0) {
-      const timer = window.setTimeout(() => {
-        const nextIndex = subtestIndex + 1
-        setSubtestIndex(nextIndex)
-        setQuestionIndex(0)
-        setRemainingSeconds(grouped[nextIndex].durationSeconds)
-        setPhase('testing')
-      }, 0)
-      return () => window.clearTimeout(timer)
-    }
-    const timer = window.setTimeout(() => setTransitionCountdown((value) => value - 1), 1000)
-    return () => window.clearTimeout(timer)
-  }, [grouped, phase, subtestIndex, transitionCountdown])
 
   function nextQuestion() {
     if (!currentQuestion) return
@@ -168,8 +158,9 @@ export default function CfitTestPage() {
       return
     }
 
-    setPhase('transition')
-    setTransitionCountdown(3)
+    setSubtestIndex((value) => value + 1)
+    setQuestionIndex(0)
+    setPhase('intro')
   }
 
   const selected = currentQuestion ? (answers[currentQuestion.id] || []) : []
@@ -195,57 +186,76 @@ export default function CfitTestPage() {
   if (phase === 'intro') {
     return (
       <div style={{ minHeight: '100vh', backgroundColor: '#F7F5F2', padding: '24px', fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
-        <div style={{ maxWidth: '980px', margin: '0 auto' }}>
-          <div style={{ marginBottom: '24px' }}>
-            <p style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '3px', color: '#037894', textTransform: 'uppercase', margin: '0 0 8px' }}>Tes Kandidat</p>
-            <h1 style={{ fontSize: '30px', fontWeight: 900, color: '#020000', margin: '0 0 10px' }}>Tes Intelegensi</h1>
-            <p style={{ fontSize: '15px', color: '#4C4845', margin: 0, lineHeight: 1.7 }}>
-              Baca petunjuk setiap subtes dengan saksama. Setelah Anda menekan tombol <b>Mulai sekarang</b>, timer akan berjalan dan soal pertama langsung ditampilkan.
-            </p>
+        <style>{`
+          @media (max-width: 900px) {
+            .cfit-intro-grid { grid-template-columns: 1fr !important; }
+          }
+        `}</style>
+        <div style={{ maxWidth: '1040px', margin: '0 auto' }}>
+          <div style={{ marginBottom: '24px', display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '12px', flexWrap: 'wrap' }}>
+            <div>
+              <p style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '3px', color: '#037894', textTransform: 'uppercase', margin: '0 0 8px' }}>Tes Kandidat</p>
+              <h1 style={{ fontSize: '30px', fontWeight: 900, color: '#020000', margin: '0 0 10px' }}>Instruksi {currentSubtest.title}</h1>
+              <p style={{ fontSize: '15px', color: '#4C4845', margin: 0, lineHeight: 1.7 }}>
+                Bacalah petunjuk dengan perlahan. Timer baru akan berjalan setelah Anda menekan tombol untuk memulai subtes ini.
+              </p>
+            </div>
+            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', justifyContent: 'flex-end' }}>
+              <span style={{ padding: '8px 12px', borderRadius: '999px', backgroundColor: '#fff', border: '1px solid #E8E4E0', fontSize: '12px', fontWeight: 700, color: '#4C4845' }}>
+                Durasi {formatTime(currentSubtest.durationSeconds)}
+              </span>
+              <span style={{ padding: '8px 12px', borderRadius: '999px', backgroundColor: '#fff', border: '1px solid #E8E4E0', fontSize: '12px', fontWeight: 700, color: '#4C4845' }}>
+                {currentSubtest.answerCount === 2 ? 'Pilih 2 jawaban' : 'Pilih 1 jawaban'}
+              </span>
+            </div>
           </div>
 
-          <div style={{ display: 'grid', gap: '16px', marginBottom: '22px' }}>
-            {grouped.map((subtest) => (
-              <div key={subtest.id} style={{ backgroundColor: '#fff', borderRadius: '20px', padding: '20px', border: '1.5px solid #E8E4E0' }}>
-                <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: '12px', flexWrap: 'wrap', marginBottom: '14px' }}>
-                  <div>
-                    <h2 style={{ fontSize: '18px', fontWeight: 800, color: '#020000', margin: '0 0 4px' }}>{subtest.title}</h2>
-                    <p style={{ fontSize: '13px', color: '#8A8A8D', margin: 0 }}>{subtest.introSummary}</p>
-                  </div>
-                  <span style={{ padding: '6px 12px', borderRadius: '999px', backgroundColor: '#F7F5F2', border: '1px solid #E8E4E0', fontSize: '12px', fontWeight: 700, color: '#4C4845' }}>
-                    {formatTime(subtest.durationSeconds)}
-                  </span>
-                </div>
-                <img src={subtest.introImage} alt={`${subtest.title} instruksi`} style={{ width: '100%', display: 'block', borderRadius: '14px', border: '1px solid #E8E4E0' }} />
+          <div className="cfit-intro-grid" style={{ display: 'grid', gridTemplateColumns: '1.05fr 0.95fr', gap: '18px', alignItems: 'start' }}>
+            <div style={{ backgroundColor: '#fff', borderRadius: '24px', padding: '24px', border: '1.5px solid #E8E4E0', boxShadow: '0 10px 30px rgba(0,0,0,0.04)' }}>
+              <p style={{ fontSize: '12px', fontWeight: 700, color: '#037894', letterSpacing: '2px', textTransform: 'uppercase', margin: '0 0 10px' }}>
+                Ringkasan Instruksi
+              </p>
+              <h2 style={{ fontSize: '24px', fontWeight: 900, color: '#020000', margin: '0 0 8px' }}>{currentSubtest.introSummary}</h2>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', marginTop: '18px' }}>
+                {currentSubtest.instructionParagraphs.map((paragraph) => (
+                  <p key={paragraph} style={{ fontSize: '15px', color: '#4C4845', margin: 0, lineHeight: 1.8 }}>
+                    {paragraph}
+                  </p>
+                ))}
               </div>
-            ))}
+              <div style={{ marginTop: '18px', padding: '14px 16px', borderRadius: '16px', backgroundColor: '#F7F5F2', border: '1px solid #E8E4E0' }}>
+                <p style={{ fontSize: '11px', fontWeight: 700, color: '#8A8A8D', margin: '0 0 6px', textTransform: 'uppercase', letterSpacing: '1px' }}>Catatan Penting</p>
+                <p style={{ fontSize: '14px', color: '#4C4845', margin: 0, lineHeight: 1.7 }}>
+                  {currentSubtest.answerCount === 2
+                    ? 'Di Subtes 2, Anda wajib memilih tepat dua jawaban sebelum dapat lanjut ke soal berikutnya.'
+                    : 'Di subtes ini, Anda wajib memilih tepat satu jawaban sebelum dapat lanjut ke soal berikutnya.'}
+                </p>
+              </div>
+            </div>
+
+            <div style={{ backgroundColor: '#fff', borderRadius: '24px', padding: '24px', border: '1.5px solid #E8E4E0', boxShadow: '0 10px 30px rgba(0,0,0,0.04)' }}>
+              <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: '12px', flexWrap: 'wrap', marginBottom: '14px' }}>
+                <div>
+                  <p style={{ fontSize: '12px', fontWeight: 700, color: '#037894', letterSpacing: '2px', textTransform: 'uppercase', margin: '0 0 4px' }}>Contoh {currentSubtest.title}</p>
+                  <h3 style={{ fontSize: '18px', fontWeight: 800, color: '#020000', margin: 0 }}>Pelajari pola pada contoh berikut</h3>
+                </div>
+              </div>
+              <CfitCropImage crop={currentSubtest.exampleCrop} alt={`Contoh ${currentSubtest.title}`} maxWidth={560} />
+              <p style={{ fontSize: '13px', color: '#8A8A8D', margin: '14px 0 0', lineHeight: 1.7 }}>
+                {currentSubtest.exampleAnswersSummary}
+              </p>
+            </div>
           </div>
 
-          <div style={{ position: 'sticky', bottom: '24px', backgroundColor: '#020000', borderRadius: '20px', padding: '18px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '14px', flexWrap: 'wrap' }}>
+          <div style={{ position: 'sticky', bottom: '24px', marginTop: '22px', backgroundColor: '#020000', borderRadius: '20px', padding: '18px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '14px', flexWrap: 'wrap' }}>
             <p style={{ fontSize: '13px', color: 'rgba(255,255,255,0.75)', margin: 0 }}>
-              Total waktu efektif: <b style={{ color: '#fff' }}>12 menit 30 detik</b>. Kode hanya bisa dipakai satu kali.
+              {subtestIndex === 0
+                ? 'Setelah Anda menekan tombol mulai, timer Subtes 1 langsung berjalan dan soal pertama akan tampil.'
+                : `${currentSubtest.title} belum dimulai. Bacalah instruksinya sampai Anda siap mengerjakan.`}
             </p>
-            <button onClick={beginTest} style={{ padding: '12px 18px', borderRadius: '12px', border: 'none', backgroundColor: '#fff', color: '#020000', fontSize: '14px', fontWeight: 800, cursor: 'pointer' }}>
-              Mulai sekarang →
+            <button onClick={beginSubtest} style={{ padding: '12px 18px', borderRadius: '12px', border: 'none', backgroundColor: '#fff', color: '#020000', fontSize: '14px', fontWeight: 800, cursor: 'pointer' }}>
+              {subtestIndex === 0 ? 'Mulai Subtes 1 →' : `Mulai ${currentSubtest.title} →`}
             </button>
-          </div>
-        </div>
-      </div>
-    )
-  }
-
-  if (phase === 'transition') {
-    const nextSubtest = grouped[subtestIndex + 1]
-    return (
-      <div style={{ minHeight: '100vh', display: 'grid', placeItems: 'center', backgroundColor: '#020000', padding: '24px', fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
-        <div style={{ width: '100%', maxWidth: '620px', textAlign: 'center' }}>
-          <p style={{ fontSize: '12px', fontWeight: 700, letterSpacing: '3px', color: '#8FC6C5', textTransform: 'uppercase', margin: '0 0 10px' }}>Subtes Selesai</p>
-          <h1 style={{ fontSize: '34px', fontWeight: 900, color: '#fff', margin: '0 0 12px' }}>{currentSubtest.title} selesai</h1>
-          <p style={{ fontSize: '15px', color: 'rgba(255,255,255,0.72)', margin: '0 0 24px', lineHeight: 1.7 }}>
-            Bersiap ke {nextSubtest.title}. Timer berikutnya akan berjalan otomatis dalam {transitionCountdown} detik.
-          </p>
-          <div style={{ display: 'inline-flex', padding: '10px 16px', borderRadius: '999px', backgroundColor: 'rgba(255,255,255,0.1)', color: '#fff', fontWeight: 700 }}>
-            {nextSubtest.introSummary}
           </div>
         </div>
       </div>
