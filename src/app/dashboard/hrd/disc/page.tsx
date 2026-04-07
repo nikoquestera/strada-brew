@@ -3,6 +3,25 @@ import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { DISC_DIMENSIONS, Dimension } from '@/lib/disc/data'
+import DiscRecomputeButton from '@/components/DiscRecomputeButton'
+
+interface DiscSessionListItem {
+  id: string
+  access_code: string
+  status: string
+  sent_at?: string | null
+  completed_at?: string | null
+  results?: {
+    primaryType?: Dimension
+    pattern?: { pattern?: string }
+  } | null
+  applicants?: {
+    id?: string
+    full_name?: string
+    position_applied?: string
+    outlet_preference?: string
+  } | null
+}
 
 export default async function DiscSessionsPage() {
   const supabase = await createClient()
@@ -53,12 +72,13 @@ export default async function DiscSessionsPage() {
           <h1 style={{ fontSize: '26px', fontWeight: 800, color: '#020000', margin: 0 }}>DiSC Personality Test</h1>
           <p style={{ fontSize: '14px', color: '#8A8A8D', margin: '4px 0 0' }}>Semua sesi assessment yang telah dikirimkan kepada pelamar</p>
         </div>
-        <div style={{ display: 'flex', gap: '8px' }}>
+        <div style={{ display: 'flex', gap: '8px', alignItems: 'flex-start', flexWrap: 'wrap', justifyContent: 'flex-end' }}>
           {(['D','I','S','C'] as Dimension[]).map(d => (
             <div key={d} style={{ width: '32px', height: '32px', borderRadius: '50%', backgroundColor: DISC_DIMENSIONS[d].lightBg, border: `2px solid ${DISC_DIMENSIONS[d].color}`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <span style={{ fontSize: '12px', fontWeight: 800, color: DISC_DIMENSIONS[d].color }}>{d}</span>
             </div>
           ))}
+          <DiscRecomputeButton scope="all-completed" label="Hitung Ulang Data Tersimpan" compact />
         </div>
       </div>
 
@@ -95,7 +115,7 @@ export default async function DiscSessionsPage() {
               </tr>
             </thead>
             <tbody>
-              {list.map((s: any, i: number) => {
+              {(list as DiscSessionListItem[]).map((s, i) => {
                 const appl = s.applicants
                 const results = s.results
                 const primary = results?.primaryType as Dimension | undefined
