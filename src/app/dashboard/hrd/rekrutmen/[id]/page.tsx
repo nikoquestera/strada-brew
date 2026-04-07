@@ -22,7 +22,7 @@ export default async function ApplicantDetailPage({
       education_level, hr_notes, status, screening_notes,
       applicant_quest_scores (*),
       applicant_activities (*),
-      disc_sessions ( id, access_code, status, created_at, completed_at, results )
+      disc_sessions ( id, access_code, status, sent_at, completed_at, results )
     `)
     .eq('id', id)
     .single()

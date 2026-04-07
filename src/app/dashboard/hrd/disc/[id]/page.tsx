@@ -57,7 +57,7 @@ export default async function DiscResultPage({ params }: Props) {
   const { data: session } = await supabase
     .from('disc_sessions')
     .select(`
-      id, access_code, status, created_at, completed_at, answers, results, created_by,
+      id, access_code, status, sent_at, completed_at, answers, results, created_by,
       applicants ( id, full_name, email, phone, position_applied, outlet_preference )
     `)
     .eq('id', id)

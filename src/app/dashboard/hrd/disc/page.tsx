@@ -11,10 +11,10 @@ export default async function DiscSessionsPage() {
   const { data: sessions } = await supabase
     .from('disc_sessions')
     .select(`
-      id, access_code, status, created_at, completed_at, expires_at, created_by, results,
+      id, access_code, status, sent_at, completed_at, expires_at, created_by, results,
       applicants ( id, full_name, position_applied, outlet_preference )
     `)
-    .order('created_at', { ascending: false })
+    .order('sent_at', { ascending: false })
 
   const statusLabel: Record<string, string> = {
     pending: 'Belum Dimulai',
@@ -126,7 +126,7 @@ export default async function DiscSessionsPage() {
                       )}
                     </td>
                     <td style={{ padding: '14px 16px', fontSize: '12px', color: '#8A8A8D', whiteSpace: 'nowrap' }}>
-                      {new Date(s.created_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })}
+                      {new Date(s.sent_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })}
                     </td>
                     <td style={{ padding: '14px 16px', fontSize: '12px', color: '#8A8A8D', whiteSpace: 'nowrap' }}>
                       {s.completed_at ? new Date(s.completed_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }) : '—'}
