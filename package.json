@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "setup:finance": "pip install -r requirements-finance.txt && python3 -m playwright install chromium"
   },
   "dependencies": {
     "@supabase/ssr": "^0.10.0",
