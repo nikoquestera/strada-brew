@@ -1,7 +1,8 @@
 'use client'
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
+import { DEFAULT_STORE_NAMES } from '@/lib/stores/defaults'
 import { ArrowLeft, ChevronDown, ChevronUp } from 'lucide-react'
 
 
@@ -62,12 +63,12 @@ const Toggle = ({ k, label, form, set }: { k: string; label: string; form: Recor
   </div>
 )
 
-const OUTLETS = ['La Piazza', 'MKG', 'BSD', 'SMS', 'SMB', 'SMB Gold Lounge', 'SMB2', 'Back Office', 'Hibrida / Back Office', 'Roastery', 'Academy', 'Semarang HO']
 const POSITIONS = ['Barista', 'Senior Barista', 'Coordinator Bar', 'Head Bar', 'Trainer Academy', 'Waitress/Waiter', 'Kasir', 'Floor Coordinator', 'Head Floor', 'Cook Helper', 'Cook', 'Junior Cook', 'Kitchen Coordinator', 'Head Kitchen', 'Housekeeping', 'Senior Housekeeping', 'Steward', 'Supervisor', 'Area Manager', 'Admin HR', 'HR Manager', 'Admin Warehouse', 'Inventory Officer', 'Admin Purchasing', 'Staff Accounting', 'Admin Accounting', 'Coordinator Finance', 'Marketing', 'General Affair', 'Driver', 'Auditor', 'IT Staff', 'Head of Academy', 'Head of Marketing', 'Other']
 
 export default function KaryawanBaruPage() {
   const router = useRouter()
   const supabase = createClient()
+  const [outletOptions, setOutletOptions] = useState<string[]>([...DEFAULT_STORE_NAMES])
   const [saving, setSaving] = useState(false)
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [openSections, setOpenSections] = useState(['identitas', 'kontrak'])
@@ -104,6 +105,23 @@ export default function KaryawanBaruPage() {
   const set = (k: string, v: string | boolean) => {
     setForm(f => ({ ...f, [k]: v }))
     if (errors[k]) setErrors(e => ({ ...e, [k]: '' }))
+  }
+
+  useEffect(() => {
+    loadOutlets()
+  }, [])
+
+  async function loadOutlets() {
+    const { data, error } = await supabase
+      .from('stores')
+      .select('name')
+      .eq('is_active', true)
+      .order('sort_order', { ascending: true })
+      .order('name', { ascending: true })
+
+    if (!error && data && data.length > 0) {
+      setOutletOptions(data.map((row: { name: string }) => row.name))
+    }
   }
 
   function toggleSection(key: string) {
@@ -239,7 +257,7 @@ export default function KaryawanBaruPage() {
               ]} />
             </Grid2>
             <Grid2>
-              <Field form={form} set={set} errors={errors} k="outlet" label="Outlet" options={OUTLETS.map(o => ({ value: o, label: o }))} />
+              <Field form={form} set={set} errors={errors} k="outlet" label="Outlet" options={outletOptions.map(o => ({ value: o, label: o }))} />
               <Field form={form} set={set} errors={errors} k="employment_type" label="Tipe Kontrak" options={[
                 { value: 'PKWT', label: 'PKWT' },
                 { value: 'PKWTT', label: 'PKWTT (Tetap)' },

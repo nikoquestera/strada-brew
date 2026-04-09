@@ -1,7 +1,8 @@
 'use client'
-import { useState } from 'react'
-import { ChevronDown, Play, AlertCircle, CheckCircle2 } from 'lucide-react'
-import financeConfig from '@/lib/finance/config'
+import { useEffect, useState } from 'react'
+import { ChevronDown, Play, CheckCircle2 } from 'lucide-react'
+import { createClient } from '@/lib/supabase/client'
+import { DEFAULT_STORE_NAMES } from '@/lib/stores/defaults'
 
 interface ProcessingLog {
   timestamp: string
@@ -10,6 +11,8 @@ interface ProcessingLog {
 }
 
 export default function RevenueStoreClient() {
+  const supabase = createClient()
+  const [stores, setStores] = useState<string[]>([...DEFAULT_STORE_NAMES])
   const [selectedStores, setSelectedStores] = useState<string[]>([])
   const [selectedDate, setSelectedDate] = useState<string>(
     new Date().toISOString().split('T')[0]
@@ -18,6 +21,23 @@ export default function RevenueStoreClient() {
   const [logs, setLogs] = useState<ProcessingLog[]>([])
   const [result, setResult] = useState<any>(null)
   const [expandedStores, setExpandedStores] = useState(false)
+
+  useEffect(() => {
+    loadStores()
+  }, [])
+
+  async function loadStores() {
+    const { data, error } = await supabase
+      .from('stores')
+      .select('name')
+      .eq('is_active', true)
+      .order('sort_order', { ascending: true })
+      .order('name', { ascending: true })
+
+    if (!error && data && data.length > 0) {
+      setStores(data.map((row: { name: string }) => row.name))
+    }
+  }
 
   const addLog = (message: string, type: 'info' | 'success' | 'error' | 'warning' = 'info') => {
     const timestamp = new Date().toLocaleTimeString('id-ID')
@@ -33,10 +53,10 @@ export default function RevenueStoreClient() {
   }
 
   const toggleAllStores = () => {
-    if (selectedStores.length === financeConfig.stores.length) {
+    if (selectedStores.length === stores.length) {
       setSelectedStores([])
     } else {
-      setSelectedStores([...financeConfig.stores])
+      setSelectedStores([...stores])
     }
   }
 
@@ -123,7 +143,7 @@ export default function RevenueStoreClient() {
                   disabled={isProcessing}
                   className="text-xs text-strada-blue hover:underline disabled:text-gray-400"
                 >
-                  {selectedStores.length === financeConfig.stores.length ? 'Batal Semua' : 'Pilih Semua'}
+                  {selectedStores.length === stores.length ? 'Batal Semua' : 'Pilih Semua'}
                 </button>
               </div>
 
@@ -135,7 +155,7 @@ export default function RevenueStoreClient() {
                   disabled={isProcessing}
                 >
                   <span className="text-sm font-medium text-gray-700">
-                    {selectedStores.length} dari {financeConfig.stores.length} toko dipilih
+                    {selectedStores.length} dari {stores.length} toko dipilih
                   </span>
                   <ChevronDown
                     size={18}
@@ -145,7 +165,7 @@ export default function RevenueStoreClient() {
 
                 {expandedStores && (
                   <div className="max-h-48 overflow-y-auto border-t border-gray-200">
-                    {financeConfig.stores.map(store => (
+                    {stores.map(store => (
                       <label
                         key={store}
                         className="flex items-center px-4 py-3 hover:bg-gray-50 border-b border-gray-100 last:border-b-0 cursor-pointer"

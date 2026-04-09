@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
+import { DEFAULT_STORE_NAMES } from '@/lib/stores/defaults'
 import { JobPosting } from '@/lib/types'
 import { Plus, Users, MapPin, Clock, Zap, Edit2, ExternalLink, Briefcase, FileText } from 'lucide-react'
 
@@ -15,6 +16,7 @@ export default function JobsClient({ initialJobs }: { initialJobs: JobPosting[] 
   const [saveError, setSaveError] = useState('')
   const [loading, setLoading] = useState(false)
   const [togglingId, setTogglingId] = useState<string | null>(null)
+  const [outletOptions, setOutletOptions] = useState<string[]>([...DEFAULT_STORE_NAMES])
 
   const emptyForm = {
     job_id: '', title: '', department: '', entity: 'CV_KTN' as const,
@@ -26,13 +28,29 @@ export default function JobsClient({ initialJobs }: { initialJobs: JobPosting[] 
   const [form, setForm] = useState(emptyForm)
   const set = (k: string, v: unknown) => setForm(f => ({ ...f, [k]: v }))
 
-  useEffect(() => { loadJobs() }, [])
+  useEffect(() => {
+    loadJobs()
+    loadOutlets()
+  }, [])
 
   async function loadJobs() {
     setLoading(true)
     const { data } = await supabase.from('job_postings').select('*').order('created_at', { ascending: false })
     if (data) setJobs(data)
     setLoading(false)
+  }
+
+  async function loadOutlets() {
+    const { data, error } = await supabase
+      .from('stores')
+      .select('name')
+      .eq('is_active', true)
+      .order('sort_order', { ascending: true })
+      .order('name', { ascending: true })
+
+    if (!error && data && data.length > 0) {
+      setOutletOptions(data.map((row: { name: string }) => row.name))
+    }
   }
 
   function openNew() { setForm(emptyForm); setEditingJob(null); setSaveError(''); setShowForm(true) }
@@ -257,7 +275,7 @@ export default function JobsClient({ initialJobs }: { initialJobs: JobPosting[] 
                     <label className="block text-[12px] font-bold text-gray-700 mb-1.5">Outlet Spesifik <span className="text-[10px] text-gray-400 font-medium ml-1">(opsional)</span></label>
                     <select className="apple-input bg-gray-50" value={form.outlet} onChange={e => set('outlet', e.target.value)}>
                       <option value="">Pilih outlet (jika ada)</option>
-                      {['Kelapa Gading', 'MKG', 'BSD', 'SMS', 'SMB Gold Lounge', 'SMB2', 'Semarang', 'HO Jakarta', 'HO Semarang', 'Roastery', 'Academy'].map(o => (
+                      {outletOptions.map(o => (
                         <option key={o} value={o}>{o}</option>
                       ))}
                     </select>
