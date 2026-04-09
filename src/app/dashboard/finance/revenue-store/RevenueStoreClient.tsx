@@ -13,7 +13,7 @@ interface ProcessingLog {
 export default function RevenueStoreClient() {
   const supabase = createClient()
   const [stores, setStores] = useState<string[]>([...DEFAULT_STORE_NAMES])
-  const [selectedStores, setSelectedStores] = useState<string[]>([])
+  const [selectedStore, setSelectedStore] = useState<string>('')
   const [selectedDate, setSelectedDate] = useState<string>(
     new Date().toISOString().split('T')[0]
   )
@@ -44,25 +44,9 @@ export default function RevenueStoreClient() {
     setLogs(prev => [...prev, { timestamp, message, type }])
   }
 
-  const toggleStore = (store: string) => {
-    setSelectedStores(prev =>
-      prev.includes(store)
-        ? prev.filter(s => s !== store)
-        : [...prev, store]
-    )
-  }
-
-  const toggleAllStores = () => {
-    if (selectedStores.length === stores.length) {
-      setSelectedStores([])
-    } else {
-      setSelectedStores([...stores])
-    }
-  }
-
   const handleProses = async () => {
-    if (selectedStores.length === 0) {
-      addLog('❌ Pilih minimal satu toko', 'error')
+    if (!selectedStore) {
+      addLog('❌ Pilih satu toko', 'error')
       return
     }
 
@@ -73,7 +57,7 @@ export default function RevenueStoreClient() {
     try {
       addLog('🚀 Memulai proses revenue report...', 'info')
       addLog(`📅 Tanggal: ${selectedDate}`, 'info')
-      addLog(`🏪 Toko: ${selectedStores.join(', ')}`, 'info')
+      addLog(`🏪 Toko: ${selectedStore}`, 'info')
 
       // Call the API endpoint which now streams
       const response = await fetch('/api/finance/process-revenue', {
@@ -81,7 +65,7 @@ export default function RevenueStoreClient() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           date: selectedDate,
-          stores: selectedStores,
+          stores: [selectedStore], // API expects array
         }),
       })
 
@@ -167,84 +151,29 @@ export default function RevenueStoreClient() {
 
             {/* Store Selection */}
             <div className="mb-6">
-              <div className="flex items-center justify-between mb-3">
-                <label className="block text-sm font-medium text-gray-700">
-                  Pilih Toko
-                </label>
-                <button
-                  onClick={toggleAllStores}
-                  disabled={isProcessing}
-                  className="text-xs text-strada-blue hover:underline disabled:text-gray-400"
-                >
-                  {selectedStores.length === stores.length ? 'Batal Semua' : 'Pilih Semua'}
-                </button>
-              </div>
-
-              {/* Collapsed/Expanded Store List */}
-              <div className="border border-gray-200 rounded-lg overflow-hidden">
-                <button
-                  onClick={() => setExpandedStores(!expandedStores)}
-                  className="w-full px-4 py-3 flex items-center justify-between bg-gray-50 hover:bg-gray-100 transition-colors disabled:opacity-50"
-                  disabled={isProcessing}
-                >
-                  <span className="text-sm font-medium text-gray-700">
-                    {selectedStores.length} dari {stores.length} toko dipilih
-                  </span>
-                  <ChevronDown
-                    size={18}
-                    className={`transition-transform ${expandedStores ? 'rotate-180' : ''}`}
-                  />
-                </button>
-
-                {expandedStores && (
-                  <div className="max-h-48 overflow-y-auto border-t border-gray-200">
-                    {stores.map(store => (
-                      <label
-                        key={store}
-                        className="flex items-center px-4 py-3 hover:bg-gray-50 border-b border-gray-100 last:border-b-0 cursor-pointer"
-                      >
-                        <input
-                          type="checkbox"
-                          checked={selectedStores.includes(store)}
-                          onChange={() => toggleStore(store)}
-                          disabled={isProcessing}
-                          className="rounded border-gray-300 disabled:opacity-50"
-                        />
-                        <span className="ml-3 text-sm text-gray-700">{store}</span>
-                      </label>
-                    ))}
-                  </div>
-                )}
-              </div>
-
-              {/* Store Tags */}
-              {selectedStores.length > 0 && (
-                <div className="mt-3 flex flex-wrap gap-2">
-                  {selectedStores.map(store => (
-                    <span
-                      key={store}
-                      className="inline-flex items-center gap-1 bg-strada-blue text-white text-xs px-2 py-1 rounded-full"
-                    >
-                      {store}
-                      <button
-                        onClick={() => toggleStore(store)}
-                        disabled={isProcessing}
-                        className="hover:text-gray-200 disabled:opacity-50"
-                      >
-                        ×
-                      </button>
-                    </span>
-                  ))}
-                </div>
-              )}
+              <label htmlFor="store" className="block text-sm font-medium text-gray-700 mb-2">
+                Pilih Toko
+              </label>
+              <select
+                id="store"
+                value={selectedStore}
+                onChange={(e) => setSelectedStore(e.target.value)}
+                disabled={isProcessing}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-strada-blue disabled:bg-gray-50 disabled:text-gray-500"
+              >
+                <option value="" disabled>-- Pilih Toko --</option>
+                {stores.map(store => (
+                  <option key={store} value={store}>{store}</option>
+                ))}
+              </select>
             </div>
 
             {/* Process Button */}
             <button
               onClick={handleProses}
-              disabled={isProcessing || selectedStores.length === 0}
+              disabled={isProcessing || !selectedStore}
               className={`w-full py-3 rounded-lg font-semibold flex items-center justify-center gap-2 transition-all ${
-                isProcessing || selectedStores.length === 0
+                isProcessing || !selectedStore
                   ? 'bg-gray-200 text-gray-500 cursor-not-allowed'
                   : 'bg-strada-blue text-white hover:bg-strada-dark-teal'
               }`}
