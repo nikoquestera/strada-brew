@@ -75,7 +75,7 @@ export default function RevenueStoreClient() {
       addLog(`📅 Tanggal: ${selectedDate}`, 'info')
       addLog(`🏪 Toko: ${selectedStores.join(', ')}`, 'info')
 
-      // Call the API endpoint
+      // Call the API endpoint which now streams
       const response = await fetch('/api/finance/process-revenue', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -86,17 +86,50 @@ export default function RevenueStoreClient() {
       })
 
       if (!response.ok) {
-        throw new Error(`API Error: ${response.statusText}`)
+        const errText = await response.text()
+        try {
+           const errObj = JSON.parse(errText)
+           throw new Error(errObj.message || response.statusText)
+        } catch(e) {
+           throw new Error(`API Error: ${response.statusText}`)
+        }
       }
 
-      const data = await response.json()
+      if (!response.body) throw new Error('No body returned from API')
 
-      if (data.success) {
-        addLog('✅ Report berhasil diproses', 'success')
-        setResult(data.data)
-      } else {
-        addLog(`❌ Error: ${data.error}`, 'error')
+      const reader = response.body.getReader()
+      const decoder = new TextDecoder()
+      
+      let allResults = []
+      let buffer = ''
+
+      while (true) {
+        const { done, value } = await reader.read()
+        if (done) break
+        
+        buffer += decoder.decode(value, { stream: true })
+        const lines = buffer.split('\n')
+        
+        // Keep the last incomplete line in the buffer
+        buffer = lines.pop() || ''
+        
+        for (const line of lines) {
+          if (!line.trim()) continue
+          try {
+            const log = JSON.parse(line)
+            if (log.type === 'result') {
+              allResults.push(log.data)
+              setResult(log.data)
+            } else if (log.message) {
+              addLog(log.message, log.type || 'info')
+            }
+          } catch (e) {
+            console.log("Chunk parse error", e, line)
+          }
+        }
       }
+      
+      addLog('✅ Proses selesai', 'success')
     } catch (error: any) {
       addLog(`❌ Error: ${error.message}`, 'error')
     } finally {

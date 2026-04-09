@@ -1,209 +1,109 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextRequest } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
-import { createAdminClient } from '@/lib/supabase/admin'
-import { isFinanceUser } from '@/lib/auth/access'
-import { execSync } from 'child_process'
+import { spawn } from 'child_process'
 import path from 'path'
-import financeConfig from '@/lib/finance/config'
+import fs from 'fs'
 
-interface ProcessRevenueRequest {
-  date: string
-  stores: string[]
-}
-
-interface RevenueData {
-  date: string
-  store: string
-  bar_sales: number
-  coffee_beans_sales: number
-  kitchen_sales: number
-  konsinyasi_sales: number
-  total_sales: number
-  raw_json: Record<string, any>
-  processed_at: string
-}
-
-interface RevenueReportInsert {
-  date: string
-  store_name: string
-  bar_sales: number
-  coffee_beans_sales: number
-  kitchen_sales: number
-  konsinyasi_sales: number
-  total_sales: number
-  raw_json: Record<string, any>
-  processed_at: string
-}
-
-/**
- * Execute Python script to extract revenue from Quinos Cloud
- * POST /api/finance/process-revenue
- */
 export async function POST(request: NextRequest) {
   try {
-    const body: ProcessRevenueRequest = await request.json()
-    const { date, stores } = body
+    const { date, stores } = await request.json()
 
-    // Validate input
     if (!date || !Array.isArray(stores) || stores.length === 0) {
-      return NextResponse.json(
-        { success: false, error: 'Invalid input: date and stores are required' },
-        { status: 400 }
-      )
+      return new Response(JSON.stringify({ type: 'error', message: 'Invalid input' }), { status: 400 })
     }
 
-    // Check if Python is available
-    try {
-      execSync('python3 --version', { stdio: 'pipe' })
-    } catch {
-      return NextResponse.json(
-        { success: false, error: 'Python3 is not available on this system' },
-        { status: 500 }
-      )
-    }
-
-    // Verify playwright is installed
-    try {
-      execSync('python3 -m pip show playwright', { stdio: 'pipe' })
-    } catch {
-      return NextResponse.json(
-        { success: false, error: 'Playwright Python package is not installed. Run: pip install playwright' },
-        { status: 500 }
-      )
-    }
-
-    // Get Supabase client
     const supabase = await createClient()
     const { data: { user } } = await supabase.auth.getUser()
 
     if (!user) {
-      return NextResponse.json(
-        { success: false, error: 'Unauthorized' },
-        { status: 401 }
-      )
+      return new Response(JSON.stringify({ type: 'error', message: 'Unauthorized' }), { status: 401 })
     }
 
-    if (!isFinanceUser(user.email)) {
-      return NextResponse.json(
-        { success: false, error: 'Forbidden' },
-        { status: 403 }
-      )
-    }
+    const scriptPath = path.join(process.cwd(), 'scripts', 'revenue_quinos.py')
+    const venvPythonPath = path.join(process.cwd(), 'venv', 'bin', 'python')
+    const pythonExec = fs.existsSync(venvPythonPath) ? venvPythonPath : 'python3'
 
-    const adminSupabase = createAdminClient()
-
-    // Process each store
-    const results: RevenueData[] = []
-    const scriptPath = path.join(process.cwd(), 'scripts/finance/extract_revenue.py')
-
-    for (const store of stores) {
-      try {
-        console.log(`Processing revenue for ${store} on ${date}...`)
-
-        // Execute Python script
-        const command = `python3 "${scriptPath}" "${date}" "${store}" "${financeConfig.quinosCloud.email}" "${financeConfig.quinosCloud.password}" false`
-        
-        const output = execSync(command, {
-          encoding: 'utf-8',
-          stdio: ['pipe', 'pipe', 'pipe'],
-          maxBuffer: 10 * 1024 * 1024, // 10MB buffer
-        })
-
-        const scriptResult = JSON.parse(output)
-
-        if (scriptResult.success) {
-          // Save to Supabase
-          const revenueData: RevenueData = {
-            date,
-            store,
-            bar_sales: scriptResult.data.bar_sales || 0,
-            coffee_beans_sales: scriptResult.data.coffee_beans_sales || 0,
-            kitchen_sales: scriptResult.data.kitchen_sales || 0,
-            konsinyasi_sales: scriptResult.data.konsinyasi_sales || 0,
-            total_sales: (
-              (scriptResult.data.bar_sales || 0) +
-              (scriptResult.data.coffee_beans_sales || 0) +
-              (scriptResult.data.kitchen_sales || 0) +
-              (scriptResult.data.konsinyasi_sales || 0)
-            ),
-            raw_json: scriptResult,
-            processed_at: new Date().toISOString(),
-          }
-
-          const revenueInsert: RevenueReportInsert = {
-            date: revenueData.date,
-            store_name: revenueData.store,
-            bar_sales: revenueData.bar_sales,
-            coffee_beans_sales: revenueData.coffee_beans_sales,
-            kitchen_sales: revenueData.kitchen_sales,
-            konsinyasi_sales: revenueData.konsinyasi_sales,
-            total_sales: revenueData.total_sales,
-            raw_json: revenueData.raw_json,
-            processed_at: revenueData.processed_at,
-          }
-
-          const { error } = await adminSupabase
-            .from('revenue_reports')
-            .insert([revenueInsert])
-
-          if (error) {
-            console.error(`Supabase insert error for ${store}:`, error)
-            results.push({
-              ...revenueData,
-              raw_json: {
-                ...scriptResult,
-                supabase_error: error.message,
-              },
+    const encoder = new TextEncoder()
+    const stream = new ReadableStream({
+      async start(controller) {
+        for (const store of stores) {
+          controller.enqueue(encoder.encode(JSON.stringify({ type: 'info', message: `=== Memulai proses untuk toko: ${store} ===` }) + '\n'))
+          
+          await new Promise<void>((resolve) => {
+            const pythonProcess = spawn(pythonExec, [scriptPath, date, store], {
+              cwd: process.cwd(),
+              env: { ...process.env, PYTHONUNBUFFERED: '1' }
             })
-          } else {
-            results.push(revenueData)
-          }
-        } else {
-          console.error(`Script failed for ${store}:`, scriptResult.error)
-          results.push({
-            date,
-            store,
-            bar_sales: 0,
-            coffee_beans_sales: 0,
-            kitchen_sales: 0,
-            konsinyasi_sales: 0,
-            total_sales: 0,
-            raw_json: scriptResult,
-            processed_at: new Date().toISOString(),
+
+            pythonProcess.stdout.on('data', async (data) => {
+              const lines = data.toString().split('\n').filter(Boolean)
+              for (const line of lines) {
+                try {
+                  const log = JSON.parse(line)
+                  controller.enqueue(encoder.encode(line + '\n'))
+                  
+                  // Save to DB if we got the result
+                  if (log.type === 'result' && log.data) {
+                    controller.enqueue(encoder.encode(JSON.stringify({ type: 'info', message: 'Menyimpan data ke database Supabase...' }) + '\n'))
+                    const { error } = await supabase
+                      .from('daily_revenue')
+                      .upsert({
+                        store_name: log.data.store_name,
+                        transaction_date: log.data.transaction_date,
+                        penjualan_bar: log.data.penjualan_bar,
+                        penjualan_coffee_beans: log.data.penjualan_coffee_beans,
+                        penjualan_makanan: log.data.penjualan_makanan,
+                        penjualan_konsinyasi: log.data.penjualan_konsinyasi,
+                        piutang_usaha: log.data.piutang_usaha,
+                        piutang_usaha_gobiz: log.data.piutang_usaha_gobiz,
+                        potongan_penjualan: log.data.potongan_penjualan,
+                        diskon_penjualan: log.data.diskon_penjualan,
+                        hutang_service: log.data.hutang_service,
+                        hutang_pajak_pemkot: log.data.hutang_pajak_pemkot,
+                        updated_at: new Date().toISOString()
+                      }, { onConflict: 'store_name,transaction_date' })
+                      
+                    if (error) {
+                      controller.enqueue(encoder.encode(JSON.stringify({ type: 'error', message: `Gagal menyimpan ke database: ${error.message}` }) + '\n'))
+                    } else {
+                      controller.enqueue(encoder.encode(JSON.stringify({ type: 'success', message: '✅ Berhasil menyimpan ke database' }) + '\n'))
+                    }
+                  }
+                } catch (e) {
+                  // Not valid JSON from python script
+                  controller.enqueue(encoder.encode(JSON.stringify({ type: 'info', message: line }) + '\n'))
+                }
+              }
+            })
+
+            pythonProcess.stderr.on('data', (data) => {
+              const lines = data.toString().split('\n').filter(Boolean)
+              for (const line of lines) {
+                controller.enqueue(encoder.encode(JSON.stringify({ type: 'warning', message: line }) + '\n'))
+              }
+            })
+
+            pythonProcess.on('close', (code) => {
+              if (code !== 0) {
+                controller.enqueue(encoder.encode(JSON.stringify({ type: 'error', message: `Script exit dengan kode ${code}` }) + '\n'))
+              }
+              resolve()
+            })
           })
         }
-      } catch (storeError: any) {
-        console.error(`Error processing ${store}:`, storeError.message)
-        results.push({
-          date,
-          store,
-          bar_sales: 0,
-          coffee_beans_sales: 0,
-          kitchen_sales: 0,
-          konsinyasi_sales: 0,
-          total_sales: 0,
-          raw_json: {
-            error: storeError.message,
-            success: false,
-          },
-          processed_at: new Date().toISOString(),
-        })
+        controller.enqueue(encoder.encode(JSON.stringify({ type: 'success', message: '🎉 Semua proses telah selesai' }) + '\n'))
+        controller.close()
       }
-    }
+    })
 
-    return NextResponse.json({
-      success: true,
-      data: results,
-      message: `Processed ${results.length} store(s)`,
+    return new Response(stream, {
+      headers: {
+        'Content-Type': 'application/x-ndjson',
+        'Cache-Control': 'no-cache',
+        'Connection': 'keep-alive',
+      },
     })
   } catch (error: any) {
-    console.error('API Error:', error)
-    return NextResponse.json(
-      {
-        success: false,
-        error: error.message || 'Internal server error',
-      },
-      { status: 500 }
-    )
+    return new Response(JSON.stringify({ type: 'error', message: error.message }), { status: 500 })
   }
 }
