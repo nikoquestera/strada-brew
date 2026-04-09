@@ -1,6 +1,7 @@
 'use client'
 import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
+import { isFinanceUser } from '@/lib/auth/access'
 import { useRouter } from 'next/navigation'
 import { Loader2 } from 'lucide-react'
 
@@ -16,9 +17,10 @@ export default function LoginPage() {
     e.preventDefault()
     setLoading(true)
     setError('')
-    const { error } = await supabase.auth.signInWithPassword({ email, password })
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password })
     if (error) { setError('Email atau password salah.'); setLoading(false); return }
-    router.push('/dashboard/hrd')
+    const destination = isFinanceUser(data.user?.email) ? '/dashboard/finance' : '/dashboard/hrd'
+    router.push(destination)
   }
 
   return (

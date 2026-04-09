@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/admin'
+import { isFinanceUser } from '@/lib/auth/access'
 import { execSync } from 'child_process'
 import path from 'path'
 import financeConfig from '@/lib/finance/config'
@@ -12,6 +14,18 @@ interface ProcessRevenueRequest {
 interface RevenueData {
   date: string
   store: string
+  bar_sales: number
+  coffee_beans_sales: number
+  kitchen_sales: number
+  konsinyasi_sales: number
+  total_sales: number
+  raw_json: Record<string, any>
+  processed_at: string
+}
+
+interface RevenueReportInsert {
+  date: string
+  store_name: string
   bar_sales: number
   coffee_beans_sales: number
   kitchen_sales: number
@@ -69,6 +83,15 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    if (!isFinanceUser(user.email)) {
+      return NextResponse.json(
+        { success: false, error: 'Forbidden' },
+        { status: 403 }
+      )
+    }
+
+    const adminSupabase = createAdminClient()
+
     // Process each store
     const results: RevenueData[] = []
     const scriptPath = path.join(process.cwd(), 'scripts/finance/extract_revenue.py')
@@ -107,10 +130,21 @@ export async function POST(request: NextRequest) {
             processed_at: new Date().toISOString(),
           }
 
-          const { data, error } = await supabase
+          const revenueInsert: RevenueReportInsert = {
+            date: revenueData.date,
+            store_name: revenueData.store,
+            bar_sales: revenueData.bar_sales,
+            coffee_beans_sales: revenueData.coffee_beans_sales,
+            kitchen_sales: revenueData.kitchen_sales,
+            konsinyasi_sales: revenueData.konsinyasi_sales,
+            total_sales: revenueData.total_sales,
+            raw_json: revenueData.raw_json,
+            processed_at: revenueData.processed_at,
+          }
+
+          const { error } = await adminSupabase
             .from('revenue_reports')
-            .insert([revenueData])
-            .select()
+            .insert([revenueInsert])
 
           if (error) {
             console.error(`Supabase insert error for ${store}:`, error)
