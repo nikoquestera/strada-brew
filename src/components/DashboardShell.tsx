@@ -77,19 +77,6 @@ export default function DashboardShell({ children, userEmail }: Props) {
         })}
       </nav>
 
-      {/* Coming soon modules */}
-      <div className="px-6 py-5 border-t border-gray-100 bg-gray-50/50">
-        <p className="text-gray-400 text-[10px] font-bold tracking-[3px] uppercase mb-3">Segera Hadir</p>
-        <div className="flex flex-col gap-2.5">
-          {['Finance', 'Warehouse', 'Purchasing', 'Audit'].map(m => (
-            <div key={m} className="flex justify-between items-center">
-              <span className="text-gray-500 text-xs font-medium">{m}</span>
-              <span className="bg-gray-100 text-gray-400 px-1.5 py-0.5 rounded text-[9px] font-bold tracking-wider">SOON</span>
-            </div>
-          ))}
-        </div>
-      </div>
-
       {/* User section */}
       <div className="p-4 border-t border-gray-100 bg-white flex items-center gap-3">
         <div className="w-9 h-9 rounded-full bg-gradient-to-br from-strada-blue to-strada-dark-teal flex items-center justify-center shrink-0 shadow-sm">
