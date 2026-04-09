@@ -2,13 +2,6 @@ import { type NextRequest, NextResponse } from 'next/server'
 import { updateSession } from '@/lib/supabase/middleware'
 
 export async function proxy(request: NextRequest) {
-  const { pathname } = request.nextUrl
-
-  // Public routes — no auth needed
-  if (pathname.startsWith('/apply')) {
-    return NextResponse.next()
-  }
-
   return await updateSession(request)
 }
 
