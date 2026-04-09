@@ -27,11 +27,9 @@ export default function LoginPage() {
     <div className="min-h-screen flex items-center justify-center bg-[#F5F5F7] p-6">
       <div className="w-full max-w-[420px]">
         {/* Logo Section */}
-        <div className="text-center mb-10">
-          <div className="mb-2">
-            <p className="text-4xl font-extrabold text-gray-900 italic leading-none mb-1 tracking-tight">Strada</p>
-            <p className="text-[12px] font-bold tracking-[0.3em] text-strada-blue uppercase">BREW</p>
-          </div>
+        <div className="text-center mb-10 flex flex-col items-center">
+          <img src="/strada-logo.svg" alt="Strada Coffee" className="h-16 w-auto filter grayscale contrast-200 mb-4" />
+          <p className="text-[12px] font-bold tracking-[0.3em] text-strada-blue uppercase mb-2">BREW</p>
           <p className="text-sm font-medium text-gray-500">Internal Portal — Tim Strada Coffee</p>
         </div>
 
