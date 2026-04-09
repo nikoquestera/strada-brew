@@ -728,6 +728,7 @@ export default function ApplicantDetailClient({ applicant }: Props) {
                   <div style={{ padding: '10px 12px', borderRadius: '10px', backgroundColor: '#E6F4F1', border: '1px solid #005353', marginTop: '8px' }}>
                     <p style={{ fontSize: '11px', fontWeight: 700, color: '#005353', margin: '0 0 4px', textTransform: 'uppercase', letterSpacing: '1px' }}>Kode Baru</p>
                     <code style={{ fontSize: '18px', fontWeight: 900, color: '#005353', letterSpacing: '4px' }}>{discSent}</code>
+                    <p style={{ fontSize: '11px', color: '#4C4845', margin: '6px 0 0' }}>Link kandidat: <strong>{`brew.stradacoffee.com/disc/${discSent}`}</strong></p>
                   </div>
                 )}
               </div>
