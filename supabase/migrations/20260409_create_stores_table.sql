@@ -26,17 +26,10 @@ CREATE POLICY "Allow delete stores for service role" ON stores
 
 INSERT INTO stores (name, sort_order)
 VALUES
-    ('La Piazza', 10),
+    ('LA.PIAZZA', 10),
     ('MKG', 20),
-    ('BSD', 30),
-    ('SMS', 40),
-    ('SMB', 50),
-    ('SMB Gold Lounge', 60),
-    ('SMB2', 70),
-    ('Back Office', 80),
-    ('Hibrida / Back Office', 90),
-    ('Roastery', 100),
-    ('Academy', 110),
-    ('Semarang HO', 120)
+    ('SMB', 30),
+    ('SMB GOLD LOUNGE', 40),
+    ('SMS', 50)
 ON CONFLICT (name) DO NOTHING;
 

@@ -30,16 +30,18 @@ def main():
     
     with sync_playwright() as p:
         try:
-            log_progress("Membuka browser chrome (mode terlihat)...", "info")
-            browser = p.chromium.launch(headless=False)
+            log_progress("⏳ [0%] Inisialisasi sistem automation...", "info")
+            log_progress("Membuka browser di latar belakang (mode tersembunyi)...", "info")
+            # Changed to headless=True to run completely in the background
+            browser = p.chromium.launch(headless=True)
             context = browser.new_context(viewport={"width": 1280, "height": 800})
             page = context.new_page()
             
             # 1. Login to Quinos Cloud
-            log_progress("Tahap 1: Membuka halaman login Quinos Cloud di https://quinoscloud.com/cloud/login", "info")
+            log_progress("⏳ [10%] Tahap 1: Membuka halaman login Quinos Cloud (https://quinoscloud.com/cloud/login)...", "info")
             page.goto("https://quinoscloud.com/cloud/login", timeout=60000)
             
-            log_progress("Mengisi email: kopiterbaiknusantara1@gmail.com dan password...", "info")
+            log_progress("⏳ [15%] Mengamankan koneksi & Mengisi kredensial login rahasia...", "info")
             page.wait_for_selector('input[type="email"], input[name="email"], input[placeholder*="email" i], input[type="text"]', timeout=15000)
             email_input = page.locator('input[type="email"], input[name="email"], input[placeholder*="email" i], input[type="text"]').first
             email_input.fill("kopiterbaiknusantara1@gmail.com")
@@ -47,136 +49,167 @@ def main():
             password_input = page.locator('input[type="password"], input[name="password"], input[placeholder*="password" i]').first
             password_input.fill("strada123")
             
-            log_progress("Mengeklik tombol Login...", "info")
+            log_progress("⏳ [20%] Meminta akses masuk ke server Quinos...", "info")
             login_btn = page.locator('button:has-text("Login"), button:has-text("Sign In"), button:has-text("Sign in"), button[type="submit"], input[type="submit"], button.btn-primary').first
             login_btn.click()
             
             try:
                 page.wait_for_url("**/admin**", timeout=20000)
-                log_progress("✅ Tahap 1 Selesai: Berhasil login ke Quinos Cloud", "success")
+                log_progress("✅ [25%] Tahap 1 Selesai: Berhasil login ke Quinos Cloud! Akses disetujui.", "success")
             except PlaywrightTimeoutError:
-                log_progress("Timeout menunggu URL berubah ke admin, mencoba melanjutkan proses...", "warning")
+                log_progress("⚠️ Server Quinos merespon lambat, mencoba melanjutkan proses secara paksa...", "warning")
             
             # 2. Go to Summary Sales Report
-            log_progress("Tahap 2: Membuka URL Summary Sales Report (https://quinoscloud.com/cloud/admin#/report/summarySalesReport)", "info")
+            log_progress("⏳ [30%] Tahap 2: Menavigasi ke menu 'Summary Sales Report'...", "info")
             page.goto("https://quinoscloud.com/cloud/admin#/report/summarySalesReport", timeout=30000)
             
-            log_progress("Menunggu halaman report termuat...", "info")
-            time.sleep(10) # Let angular/vue render the page
+            log_progress("⏳ [35%] Menunggu halaman report selesai memuat semua komponen visualnya (Estimasi: 10 detik)...", "info")
+            for i in range(1, 6):
+                time.sleep(2)
+                log_progress(f"   Memuat... {i*20}% selesai", "info")
             
             # 3. Filtering
-            log_progress("Tahap 3: Melakukan Filtering Data", "info")
+            log_progress("⏳ [45%] Tahap 3: Melakukan Filtering Data Laporan...", "info")
             
             # Select Daily
-            log_progress("Mengubah dropdown periode (biasanya Monthly) menjadi 'Daily'...", "info")
+            log_progress("⏳ [50%] Mengubah periode laporan dari 'Monthly' menjadi 'Daily'...", "info")
             try:
-                dropdowns = page.locator('.el-select, select, .p-dropdown').all()
-                if dropdowns:
-                    period_dropdown = dropdowns[0]
-                    period_dropdown.click()
+                period_dropdown = page.locator('select').first
+                if period_dropdown.is_visible():
+                    period_dropdown.select_option(label="Daily")
+                    log_progress("✅ Berhasil mengatur laporan ke mode harian (Daily).", "success")
                     time.sleep(1)
-                    daily_option = page.locator('li:has-text("Daily"), option:has-text("Daily"), span:has-text("Daily")').first
-                    if daily_option.is_visible():
-                        daily_option.click()
-                        log_progress("Berhasil memilih opsi 'Daily'", "success")
-                    else:
-                        log_progress("Opsi 'Daily' tidak ditemukan, mungkin sudah berada di mode Daily.", "warning")
-                        page.keyboard.press("Escape")
+                else:
+                    dropdowns = page.locator('.el-select, .p-dropdown').all()
+                    if dropdowns:
+                        dropdowns[0].click()
+                        time.sleep(1)
+                        daily_option = page.locator('li:has-text("Daily"), option:has-text("Daily"), span:has-text("Daily")').first
+                        if daily_option.is_visible():
+                            daily_option.click()
+                            log_progress("✅ Berhasil mengatur laporan ke mode harian (Daily).", "success")
+                        else:
+                            log_progress("⚠️ Opsi 'Daily' tidak ditemukan, mungkin web sudah berada di mode Daily.", "warning")
+                            page.keyboard.press("Escape")
             except Exception as e:
-                log_progress(f"Gagal memanipulasi dropdown pertama: {e}", "warning")
+                log_progress(f"⚠️ Gagal mengubah dropdown periode: {e}", "warning")
 
             # Date Filter (2 boxes)
-            log_progress(f"Mencari 2 box kalender untuk diatur ke tanggal {target_date}...", "info")
+            log_progress(f"⏳ [55%] Mencari kolom kalender untuk mengatur rentang tanggal ke {target_date}...", "info")
             try:
-                date_inputs = page.locator('input.el-input__inner[placeholder*="Date" i], input.p-inputtext, input.date-picker').all()
+                date_inputs = page.locator('input.hasDatepicker').all()
                 date_inputs_to_click = [inp for inp in date_inputs if inp.is_visible()]
                 
+                if len(date_inputs_to_click) < 2:
+                    date_inputs = page.locator('input[ng-model="parameter.from"], input[ng-model="parameter.to"]').all()
+                    date_inputs_to_click = [inp for inp in date_inputs if inp.is_visible()]
+                
                 for i, date_input in enumerate(date_inputs_to_click[:2]):
-                    box_name = "Start Date" if i == 0 else "End Date"
-                    log_progress(f"Mengeklik kalender {box_name}...", "info")
+                    box_name = "Start Date (Dari)" if i == 0 else "End Date (Sampai)"
+                    log_progress(f"⏳ [60%] Membuka kalender {box_name}...", "info")
                     date_input.click()
                     time.sleep(1)
                     
-                    calendar_popup = page.locator('div.el-picker-panel, div.p-datepicker, div[role="dialog"], div[role="application"], body').last
+                    calendar_popup = page.locator('#ui-datepicker-div, div.ui-datepicker, div.el-picker-panel').last
+                    
                     day_cell = calendar_popup.locator(
-                        f'[role="gridcell"]:not(.is-outside-month):not(.p-disabled):not(.disabled):has-text("{day_str}"), '
-                        f'[role="gridcell"][aria-label*="{target_date}"], '
+                        f'td:not(.ui-datepicker-unselectable) a:text-is("{day_str}"), '
                         f'td.available:not(.prev-month):not(.next-month):has(span:text-is("{day_str}"))'
                     ).first
                     
                     if day_cell.is_visible():
                         day_cell.click()
-                        log_progress(f"✅ Berhasil memilih {target_date} di {box_name}", "success")
+                        log_progress(f"✅ Berhasil memilih tanggal {target_date} di kotak {box_name}.", "success")
                     else:
-                        log_progress(f"Sel tanggal di {box_name} tidak ditemukan, menggunakan input manual.", "warning")
+                        log_progress(f"⚠️ Angka tanggal di {box_name} tidak terlihat, mencoba mengetik secara manual...", "warning")
                         date_input.fill(target_date)
                         page.keyboard.press("Enter")
+                        
                     time.sleep(1)
             except Exception as e:
-                log_progress(f"Gagal mengatur tanggal kalender: {e}", "error")
+                log_progress(f"❌ Gagal mengatur tanggal kalender: {e}", "error")
 
             # Store Filter
-            log_progress(f"Mencari dropdown 'All Stores' untuk memilih toko '{store_name}'...", "info")
+            log_progress(f"⏳ [70%] Mencari pengaturan outlet untuk difilter ke toko '{store_name}'...", "info")
             try:
-                store_dropdown = page.locator('.el-select, select').filter(has_text="All Stores").first
-                if not store_dropdown.is_visible():
-                    # Fallback locator
-                    store_dropdown = page.locator('.el-select:has-text("Store"), select:has-text("Store")').first
-                
-                if store_dropdown.is_visible():
-                    store_dropdown.click()
-                    time.sleep(1)
-                    store_option = page.locator(f'li:has-text("{store_name}"), span:has-text("{store_name}")').first
-                    if store_option.is_visible():
-                        store_option.click()
-                        log_progress(f"✅ Berhasil memilih toko '{store_name}'", "success")
-                    else:
-                        log_progress(f"Toko '{store_name}' tidak terlihat langsung, mencoba mengetik...", "info")
-                        page.keyboard.type(store_name)
-                        page.keyboard.press("Enter")
+                selects = page.locator('select').all()
+                if len(selects) > 1 and selects[1].is_visible():
+                    try:
+                        selects[1].select_option(label=store_name)
+                        log_progress(f"✅ Outlet '{store_name}' berhasil dipilih.", "success")
+                        time.sleep(1)
+                    except:
+                        selects[1].select_option(value=store_name)
+                        log_progress(f"✅ Outlet '{store_name}' berhasil dipilih.", "success")
+                        time.sleep(1)
                 else:
-                    log_progress("Dropdown All Stores tidak ditemukan.", "warning")
+                    store_dropdown = page.locator('.el-select, select').filter(has_text="All Stores").first
+                    if not store_dropdown.is_visible():
+                        store_dropdown = page.locator('.el-select:has-text("Store"), select:has-text("Store")').first
+                    
+                    if store_dropdown.is_visible():
+                        store_dropdown.click()
+                        time.sleep(1)
+                        store_option = page.locator(f'li:has-text("{store_name}"), span:has-text("{store_name}")').first
+                        if store_option.is_visible():
+                            store_option.click()
+                            log_progress(f"✅ Outlet '{store_name}' berhasil dipilih.", "success")
+                        else:
+                            log_progress(f"⚠️ Toko '{store_name}' tidak ada di daftar instan, mencoba mencari manual...", "info")
+                            page.keyboard.type(store_name)
+                            page.keyboard.press("Enter")
+                    else:
+                        log_progress("⚠️ Dropdown All Stores tidak ditemukan.", "warning")
             except Exception as e:
-                log_progress(f"Gagal mengatur filter toko: {e}", "warning")
+                log_progress(f"⚠️ Gagal mengatur filter toko: {e}", "warning")
 
-            log_progress("Mengeklik tombol Generate Report...", "info")
+            log_progress("⏳ [75%] Memulai kalkulasi data di server Quinos...", "info")
             try:
                 generate_btn = page.locator('button:has-text("Generate"), button:has-text("Submit"), button:has-text("Search"), button:has-text("Process")').first
                 generate_btn.click()
-                log_progress("Permintaan Generate dikirim, menunggu report di-render (10 detik)...", "info")
-                time.sleep(10) 
+                log_progress("⏳ [80%] Permintaan Generate dikirim! Menunggu tabel data selesai dirender (Estimasi: 10 detik)...", "info")
+                for i in range(1, 6):
+                    time.sleep(2)
+                    log_progress(f"   Mengambil data... {i*20}% selesai", "info")
             except Exception as e:
-                log_progress(f"Gagal klik tombol Generate: {e}", "error")
+                log_progress(f"❌ Gagal menekan tombol Generate: {e}", "error")
 
             # 4. Parsing data
-            log_progress("Tahap 4: Mem-parsing halaman untuk mengekstrak nominal penjualan...", "info")
+            log_progress("⏳ [90%] Tahap 4: Membaca dan mengekstrak tabel laporan penjualan secara cerdas...", "info")
             
             def get_value(label):
                 try:
                     val_str = page.evaluate(f'''() => {{
-                        const elements = Array.from(document.querySelectorAll('td, th, span, div, p'));
-                        const match = elements.find(el => el.textContent.trim().toLowerCase() === '{label.lower()}' || el.textContent.trim().toLowerCase().includes('{label.lower()}'));
-                        if (!match) return '0';
+                        const rows = Array.from(document.querySelectorAll('tr'));
+                        const totalTarget = 'total ' + '{label.lower()}';
                         
-                        const td = match.closest('td') || match.closest('th');
-                        if (td) {{
-                            const row = td.closest('tr');
-                            if (row) {{
-                                const cells = Array.from(row.querySelectorAll('td, th'));
-                                const idx = cells.indexOf(td);
-                                if (idx >= 0 && idx + 1 < cells.length) {{
-                                    return cells[idx+1].textContent;
+                        // First try "Total X"
+                        for (let row of rows) {{
+                            const cells = Array.from(row.querySelectorAll('td, th'));
+                            if (cells.length > 1) {{
+                                if (cells[0].textContent.trim().toLowerCase() === totalTarget) {{
+                                    return cells[cells.length - 1].textContent.trim();
                                 }}
                             }}
                         }}
                         
-                        let next = match.nextElementSibling;
-                        if (next) return next.textContent;
+                        // Then try exact match, keep the one with max columns
+                        const exactTarget = '{label.lower()}';
+                        let bestMatch = '0';
+                        let maxCols = 0;
                         
-                        if (match.parentElement && match.parentElement.nextElementSibling) {{
-                            return match.parentElement.nextElementSibling.textContent;
+                        for (let row of rows) {{
+                            const cells = Array.from(row.querySelectorAll('td, th'));
+                            if (cells.length > 1) {{
+                                if (cells[0].textContent.trim().toLowerCase() === exactTarget) {{
+                                    if (cells.length >= maxCols) {{
+                                        bestMatch = cells[cells.length - 1].textContent.trim();
+                                        maxCols = cells.length;
+                                    }}
+                                }}
+                            }}
                         }}
-                        return '0';
+                        return bestMatch;
                     }}''')
                     
                     val_str = str(val_str)
@@ -185,7 +218,7 @@ def main():
                 except:
                     return 0.0
 
-            log_progress("Mengekstrak data dari kategori: Sales per Department, Payment Method, dan Revenue...", "info")
+            log_progress("⏳ [95%] Mengekstrak data dari kategori: Sales per Department, Payment Method, dan Revenue...", "info")
             
             # Sales per Department
             penjualan_bar = get_value("Bar")
@@ -221,13 +254,13 @@ def main():
             }
 
             # 5. Print results to display logging
-            log_progress("✅ Tahap 5: Berhasil parsing angka dari halaman. Berikut rinciannya:", "success")
+            log_progress("✅ [100%] Tahap 5: Berhasil memproses angka penjualan. Berikut adalah rincian transaksinya:", "success")
             
             log_progress("--- Sales per Department ---", "info")
-            log_progress(f"» Bar: Rp {data['penjualan_bar']:,.0f}", "info")
-            log_progress(f"» Coffee Beans: Rp {data['penjualan_coffee_beans']:,.0f}", "info")
-            log_progress(f"» Kitchen: Rp {data['penjualan_makanan']:,.0f}", "info")
-            log_progress(f"» Konsinyasi: Rp {data['penjualan_konsinyasi']:,.0f}", "info")
+            log_progress(f"» Penjualan Bar: Rp {data['penjualan_bar']:,.0f}", "info")
+            log_progress(f"» Penjualan Coffee Beans: Rp {data['penjualan_coffee_beans']:,.0f}", "info")
+            log_progress(f"» Penjualan Makanan: Rp {data['penjualan_makanan']:,.0f}", "info")
+            log_progress(f"» Penjualan Konsinyasi: Rp {data['penjualan_konsinyasi']:,.0f}", "info")
             
             log_progress("--- Payment Method ---", "info")
             log_progress(f"» Academy 100 Vouc: Rp {data['payment_academy_100_vouc']:,.0f}", "info")
@@ -244,13 +277,13 @@ def main():
             print(json.dumps({"type": "result", "data": data}), flush=True)
 
         except PlaywrightTimeoutError as e:
-            log_progress(f"Tahap Error (Timeout): Halaman atau elemen tidak merespon di Quinos Cloud ({str(e)})", "error")
+            log_progress(f"❌ Tahap Error (Timeout): Halaman atau elemen tidak merespon di Quinos Cloud ({str(e)})", "error")
             sys.exit(1)
         except Exception as e:
-            log_progress(f"Terjadi error yang tidak terduga saat mengeksekusi automation: {str(e)}", "error")
+            log_progress(f"❌ Terjadi error yang tidak terduga saat mengeksekusi automation: {str(e)}", "error")
             sys.exit(1)
         finally:
-            log_progress("Semua operasi UI automation selesai. Menutup browser...", "info")
+            log_progress("🧹 Semua operasi selesai. Menutup mesin virtual browser...", "info")
             if 'browser' in locals():
                 browser.close()
 

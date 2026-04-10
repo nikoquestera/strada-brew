@@ -1,0 +1,669 @@
+<!DOCTYPE html><html lang="en"><head><style type="text/css">@charset "UTF-8";[ng\:cloak],[ng-cloak],[data-ng-cloak],[x-ng-cloak],.ng-cloak,.x-ng-cloak,.ng-hide{display:none !important;}ng\:form{display:block;}.ng-animate-block-transitions{transition:0s all!important;-webkit-transition:0s all!important;}.ng-hide-add-active,.ng-hide-remove{display:block!important;}</style>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="../../assets/ico/favicon.ico">
+
+    <title>Quinos Point Of Sale - Cloud Head Office</title>
+
+    <!-- Bootstrap core CSS -->
+
+    <link rel="stylesheet" type="text/css" href="/cloud/css/../assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/cloud/css/../assets/jquery-ui/jquery-ui.css">
+    <!-- Custom styles for this template -->
+    <link rel="stylesheet" type="text/css" href="/cloud/css/../assets/ng-grid/ng-grid.min.css">    <link rel="stylesheet" type="text/css" href="/cloud/css/../assets/ng-grid/ng-grid.min.css">    <link rel="stylesheet" type="text/css" href="/cloud/css/../assets/pivottable/pivot.css">    <link rel="stylesheet" type="text/css" href="/cloud/css/../assets/angular-strap/angular-strap.min.css">  
+
+    <link rel="stylesheet" type="text/css" href="/cloud/css/../assets/select2-3.4.2/select2.css">  
+    <link rel="stylesheet" type="text/css" href="/cloud/css/../assets/ui-select/select.css">  
+    <link rel="stylesheet" type="text/css" href="/cloud/css/../assets/select2-3.4.2/select2-bootstrap3.css">  
+
+    <link rel="stylesheet" type="text/css" href="/cloud/css/../assets/loading-bar/loading-bar.css">
+    <link rel="stylesheet" type="text/css" href="/cloud/css/print-style.css">    <link rel="stylesheet" type="text/css" href="/cloud/css/cloud.css">
+    <!-- Just for debugging purposes. Don't actually copy this line! -->
+    <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+          <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+          <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+          <![endif]-->
+      <style id="holderjs-style" type="text/css"></style></head>
+
+      <body style="">
+
+         <div ng-app="cloud" class="auth-application ng-scope">
+
+            <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#">Quinos </a>
+    </div>
+    
+    <div class="navbar-collapse collapse">
+
+      <ul class="nav navbar-nav">
+
+        <li class=" dropdown">
+         <a href="" class="dropdown-toggle" data-toggle="dropdown"> Data Configuration <b class="caret"></b></a>
+         <ul class="dropdown-menu">
+          <li class="dropdown-header">POS Management</li>
+          <li><a href="#/items">Item Configuration</a></li>
+
+          <li><a href="#/categories">Categories</a></li>
+          <li><a href="#/departments"> Department </a></li>
+          <li><a href="#/discounts">Discount</a></li>
+          <li><a href="#/payments">Payment Methods</a></li>
+          <li><a href="#/folders">Page Folders</a></li>
+          <li><a href="#/salesTypes">Sales Type</a></li>
+          <li><a href="#/stores">Stores</a></li>
+          <li><a href="#/storeGroups">Store Group</a></li>
+          <li><a href="#/button">POS Button Setting</a></li>
+          <li class="divider"></li>
+          <li><a href="#/staffs">Staff</a></li>
+                    <li><a href="#/authorizations">Authorization</a></li>
+
+        </ul>
+      </li>
+
+      
+      <li class=" dropdown ">
+       <a href="" class="dropdown-toggle" data-toggle="dropdown"> CRM <b class="caret"></b></a>
+       <ul class="dropdown-menu">
+        <li><a href="#/customers">Customer Management</a></li>
+        <li><a href="#/memberships">Membership Group</a></li>
+        <li class="divider"></li>
+        <li class=""><a href="#/report/customerSummaryReport">Customer Transaction Report</a></li>
+        <li class=""><a href="#/report/customerTransactionReport">Customer Transaction Detail Report</a></li>
+        <li class=""><a href="#/report/customerReport">Customer Summary Report</a></li>
+        <li class=""><a href="#/report/customerVisitReport">Customer Visit Report</a></li>
+        <li class=""><a href="#/report/topSpendingCustomerReport">Top Spending Customer Report</a></li>
+        <li class=""><a href="#/report/frequentCustomerReport">Frequent Customer Report</a></li>
+        <li class=""><a href="#/report/customerBalance">Customer Balance Report</a></li>
+        <li class=""><a href="#/report/customerBirthdayReport">Customer Birthday Report</a></li>
+        <li class=""><a href="#/report/customerListReport">Customer List Report</a></li>
+        <li class=""><a href="#/report/pointSummaryReport">Point Summary Report</a></li>
+        <li class=""><a href="#/balanceHistory">Balance History</a></li>
+
+      </ul>
+    </li>
+    
+
+    
+
+        <li class=" dropdown">
+     <a href="" class="dropdown-toggle" data-toggle="dropdown"> Inventory <b class="caret"></b></a>
+     <ul class="dropdown-menu">
+      <li><a href="#/requests">Stock Request</a></li>
+      <li><a href="#/purchaseOrders">Purchase Order</a></li>
+      <li><a href="#/goodsReceipts">Goods Receipt</a></li>
+      <li><a href="#/goodsReleases">Goods Released</a></li>
+      <li><a href="#/transfers">Transfer Stock </a></li>
+      <li><a href="#/productions">Production</a></li>
+      <li><a href="#/wastes">Waste Stock Item</a></li>
+      <li><a href="#/adjustments">Stock Adjustment</a></li>
+      <li class="divider"></li>
+      <li><a href="#/warehouses">Warehouse</a></li>
+      <li><a href="#/suppliers">Supplier</a></li>
+      <li><a href="#/stockLevel">Set Stock Level</a></li>
+    </ul>
+  </li>
+
+<li class=" dropdown">
+ <a href="" class="dropdown-toggle" data-toggle="dropdown"> Sales Reports <b class="caret"></b></a>
+ <ul class="dropdown-menu">
+  <li class="hidden dropdown-header">Sales Report</li>
+
+  
+  
+
+<li class=""><a href="#/report/salesStoreReport">Sales per Store Report</a></li>
+<li class=""><a href="#/report/summarySalesReport">Summary Sales Report</a></li>
+<li class=""><a href="#/report/salesTrendReport">Sales Trend Report</a></li>
+<li class=""><a href="#/report/monthlyTransactionReport">Monthly Transaction Report</a></li>
+<li class=""><a href="#/report/hourlyReport">Hourly Transaction Report</a></li>
+<li class=""><a href="#/report/transactionReport">Sales Transaction Report</a></li>
+<li class=""><a href="#/report/transactionDetailReport">Transaction Detail Report</a></li>
+<li class=""><a href="#/report/salesDepartmentReport">Sales Department Report</a></li>
+<li class=""><a href="#/report/departmentAllReport">Department All Report</a></li>
+<li class=""><a href="#/report/monthToDateReport">Month To Date Report</a></li>
+<li class=""><a href="#/report/paymentReport">Payment Summary Report</a></li>
+<li class=""><a href="#/report/paymentDetailReport">Payment Detail Report</a></li>
+<li class=""><a href="#/report/paymentDailyReport">Payment Daily Report</a></li>
+<li class=""><a href="#/report/discountStoreReport">Discount per Store Report</a></li>
+<li class=""><a href="#/report/discountDetailReport">Discount Detail Report</a></li>
+<li class=""><a href="#/report/discountSummaryReport">Discount Summary Report</a></li>
+<li class=""><a href="#/report/discountAnalysisReport">Discount Analysis Report</a></li>
+<li class=""><a href="#/report/cashierReport">Cashier Report</a></li>
+<li class=""><a href="#/report/salesTypeReport">Sales Type Report</a></li>
+<li class=""><a href="#/report/tableSalesReport">Table Sales Report</a></li>
+<li class=""><a href="#/report/salesTypePerStore">Sales Type Per Store</a></li>
+<li class=""><a href="#/report/itemSalesReport">Item Sales Report</a></li>
+<li class=""><a href="#/report/itemSalesPerDepartment">Item Sales Per Department</a></li>
+<li class=""><a href="#/report/itemSalesTypeReport">Item Sales Type Report</a></li>
+<li class=""><a href="#/report/itemSalesReportAll">Item Sales Report All</a></li>
+<li class=""><a href="#/report/itemSalesPerHour">Hourly Item Sales Report</a></li>
+<li class=""><a href="#/report/hourlyItemCountReport">Hourly Item Count Report</a></li>
+
+<li class=""><a href="#/report/itemStoreReport">Item Store Report</a></li>
+<li class=""><a href="#/report/bestSellingReport">Best Selling Item Report</a></li>
+<li class=""><a href="#/report/zeroSalesReport">Zero Sales Report</a></li>
+<li class=""><a href="#/report/employeePerformanceReport">Employee Performance Report</a></li>
+
+
+<li class=""><a href="#/report/shiftSalesReport">Shift Sales Report</a></li>
+<li class=""><a href="#/report/voidItemReport">Void Item Report</a></li>
+<li class=""><a href="#/report/voidPaymentReport">Void Payment Report</a></li>
+<li class=""><a href="#/report/voidTransactionReport">Void Transaction Report</a></li>
+<li class=""><a href="#/report/voidTransactionDetailReport">Void Transaction Detail Report</a></li>
+<li class=""><a href="#/report/noSalesReport">No Sales Report</a></li>
+<li class=""><a href="#/report/noSalesItemReport">No Sales Item Report</a></li>
+<li class=""><a href="#/report/noSalesPaymentReport">No Sales Payment Report</a></li>
+<li class=""><a href="#/report/itemMixReport">Item Mix Report</a></li>
+<li class=""><a href="#/report/balanceSummaryReport">Point Balance Summary Report</a></li>
+<li class=""><a href="#/report/pivotTableReport">Sales Analysis</a></li>
+</ul>
+</li>
+
+<li class=" dropdown">
+ <a href="" class="dropdown-toggle" data-toggle="dropdown"> Inventory Reports <b class="caret"></b></a>
+ <ul class="dropdown-menu">
+  <li class="hidden dropdown-header">Inventory Report</li>
+
+  <li><a href="#/stockMovement">Stock Balance </a></li>
+
+  <li><a href="#/stockWarning">Stock Warning</a></li>
+  <li><a href="#/noRecipe">No Recipe Item</a></li>
+  <li><a href="#/recipeReport">Recipe Report</a></li>
+  <li><a href="#/averageCostReport">Average Cost Report</a></li>
+  <li><a href="#/report/stockRequestReport">Stock Request Report</a></li>
+  <li><a href="#/report/itemOrderReport">Purchase Order Report</a></li>
+  <li><a href="#/report/closedPoReport">Closed PO Report</a></li>
+  <li><a href="#/report/itemReceiptReport">Goods Receipt Report</a></li>
+  <li><a href="#/report/goodsReleaseReport">Goods Release Report</a></li>
+  <li><a href="#/report/purchaseSummaryReport">Purchase Summary Report</a></li>
+  <li><a href="#/report/vendorReceiptReport">Vendor Receipt Report</a></li>
+  <li><a href="#/report/itemTransferReport">Stock Transfer Report</a></li>
+  <li><a href="#/report/itemWasteReport">Waste Report</a></li>
+  <li><a href="#/report/itemProductionReport"> Production Report</a></li>
+  <li><a href="#/report/adjustmentReport">Adjustment Report</a></li>
+  <li><a href="#/report/stockConsumptionReport">Stock Consumption Detail</a></li>
+  <li><a href="#/report/stockConsumptionSummary">Stock Consumption Summary</a></li>
+</ul>
+</li>
+
+</ul>
+
+
+<ul class="nav navbar-nav navbar-right">
+  <li class=" dropdown">
+    <a href="" class="dropdown-toggle" data-toggle="dropdown"> Admin Strada <b class="caret"></b></a>
+    <ul class="dropdown-menu">
+      <li><a href="#/setting">Setting</a></li>
+      <li><a href="/cloud/staffs/logout">Logout</a></li>
+    </ul>
+  </li>
+</ul>
+
+
+
+
+
+</div>
+</div>
+</div>
+
+            <div class="container-fluid">
+
+                <div class="row">
+
+                    <!-- Main content -->
+                    <div class="col-sm-12 main">
+
+                        <div id="error"></div>
+
+                        <!-- Placeholder for partial view -->
+                        <!-- ngView:  --><div ng-view="" id="content" class="ng-scope"><div ng-init="initReport(); initListStore(); " class="ng-scope">
+
+	<div class="page-header hidden-print">
+		<div class="pull-right">
+			<form class="form-inline hidden-print ng-pristine ng-valid" novalidate="">
+				<div class="form-group ">
+					<select class="form-control ng-pristine ng-valid" ng-model="period" data-placeholder="">
+						<!-- ngRepeat: (k,v) in periods --><option ng-repeat="(k,v) in periods" value="0" class="ng-binding ng-scope">Daily</option><!-- end ngRepeat: (k,v) in periods --><option ng-repeat="(k,v) in periods" value="1" class="ng-binding ng-scope">Weekly</option><!-- end ngRepeat: (k,v) in periods --><option ng-repeat="(k,v) in periods" value="2" class="ng-binding ng-scope">Monthly</option><!-- end ngRepeat: (k,v) in periods -->
+					</select>
+				</div>
+				<div class="form-group ng-hide" ng-show="period ===&quot;0&quot;">
+					<input type="text" readonly="" ng-model="parameter.from" ui-date="dateOptions" ui-date-format="yy-m-d" class="form-control ng-pristine ng-valid hasDatepicker" id="dp1775783052834">
+				</div>
+				<div class="form-group">
+					<input type="text" readonly="" ng-model="parameter.to" ui-date="dateOptions" ui-date-format="yy-m-d" class="form-control ng-pristine ng-valid hasDatepicker" id="dp1775783052835">
+				</div>
+				
+				<div class="form-group ">
+					<select class="form-control ng-pristine ng-valid" ng-model="parameter.store" data-placeholder="">
+						<!-- ngRepeat: (k,v) in stores --><option ng-repeat="(k,v) in stores" value="" class="ng-binding ng-scope">-- All stores --</option><!-- end ngRepeat: (k,v) in stores --><option ng-repeat="(k,v) in stores" value="BSD" class="ng-binding ng-scope">BSD</option><!-- end ngRepeat: (k,v) in stores --><option ng-repeat="(k,v) in stores" value="LA.PIAZZA" class="ng-binding ng-scope">LA.PIAZZA</option><!-- end ngRepeat: (k,v) in stores --><option ng-repeat="(k,v) in stores" value="MKG" class="ng-binding ng-scope">MKG</option><!-- end ngRepeat: (k,v) in stores --><option ng-repeat="(k,v) in stores" value="SMB" class="ng-binding ng-scope">SMB</option><!-- end ngRepeat: (k,v) in stores --><option ng-repeat="(k,v) in stores" value="SMB GOLD LOUNGE" class="ng-binding ng-scope">SMB GOLD LOUNGE</option><!-- end ngRepeat: (k,v) in stores --><option ng-repeat="(k,v) in stores" value="SMS" class="ng-binding ng-scope">SMS</option><!-- end ngRepeat: (k,v) in stores -->
+					</select>
+				</div>
+				
+				<button ng-click="getTransactionSummaryReport()" type="submit" class="btn btn-default "><i class="icon-search"></i> Generate Report</button>
+				<a ng-click="generatePdf(&quot;preview&quot;,&quot;Summary Sales Report&quot;)" class="btn btn-default "> PDF</a> 
+				<a ng-click="csv(&quot;data&quot;)" class=" btn btn-default"> Excel (CSV)</a>  
+				<a class="btn btn-default" onclick="javascript:window.print();"><span class="glyphicon glyphicon-print"></span> Print</a> 
+			</form>
+		</div>
+		<h2 class="">Report</h2>
+	</div>
+
+	<div class="preview " id="preview">
+		<center>
+			<h3 class="">Summary Sales Report</h3>
+			<h4 class="ng-binding"> Apr 1, 2026 to Apr 10, 2026</h4>
+			<h4 class="ng-binding"></h4>
+		</center>
+
+
+
+		<small>
+
+			<div class="col-sm-4">
+
+				<div class="panel panel-default">
+
+					<div class="panel-heading">
+						<h3 class="panel-title">Revenue</h3>
+					</div>
+
+					<div class="panel-body">
+						<table class="table table-condensed ">
+							<tbody><tr>
+								<td>Subtotal</td>
+								<td class="text-right ng-binding"></td>
+							</tr>
+							<tr>
+								<td>Discount</td>
+								<td class="text-right ng-binding"></td>
+							</tr>
+							<tr>
+								<td>Service Charge</td>
+								<td class="text-right ng-binding"></td>
+							</tr>
+							<tr>
+								<td>Tax</td>
+								<td class="text-right ng-binding"></td>
+							</tr>
+							<tr ng-show="transaction.Transaction.additional_charge" class="ng-hide"> 
+								<td>Other Charge</td>
+								<td class="text-right ng-binding"></td>
+							</tr>
+							<tr>
+								<td>Rounding</td>
+								<td class="text-right ng-binding"></td>
+							</tr>
+							<tr>
+								<td><strong>Grand Total</strong></td>
+								<td class="text-right"><strong class="ng-binding"></strong></td>
+							</tr>
+						</tbody></table>
+
+					</div>
+				</div>
+
+				
+
+				<div class="panel panel-default">
+
+					<div class="panel-heading">
+						<h3 class="panel-title">Profit &amp; Loss</h3>
+					</div>
+
+					<div class="panel-body">
+						<table class="table table-condensed ">
+							<tbody><tr>
+								<td>Subtotal</td>
+								<td><br></td>
+								<td class="text-right ng-binding"></td>
+							</tr>
+							<tr>
+								<td>Discount</td>
+								<td><br></td>
+								<td class="text-right ng-binding"></td>
+							</tr>
+							<tr>
+								<td><strong>Cost of Goods Sold</strong></td>
+								<td><br></td>
+								<td class="text-right"></td>
+							</tr>
+							
+							<!-- ngRepeat: (d,line) in departments -->
+
+							<tr>
+								<td>TOTAL COGS</td>
+								<td><br></td>
+								<td class="text-right ng-binding">0.00</td>
+							</tr>
+							<tr>
+								<td><strong>Profit / Loss</strong></td>
+								<td><br></td>
+								<td class="text-right">
+									<strong class="ng-binding">0.00</strong>
+								</td>
+							</tr>
+						</tbody></table>
+
+					</div>
+				</div>
+
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h3 class="panel-title">Statistic</h3>
+					</div>
+					<div class="panel-body">
+						<table class="table table-condensed ">
+							<tbody><tr>
+								<td>Total Sales</td>
+								<td class="text-right"><strong class="ng-binding"></strong></td>
+							</tr>
+							<tr>
+								<td>No. of Transaction</td>
+								<td class="text-right ng-binding"></td>
+							</tr>
+							<tr>
+								<td>Average per Transaction</td>
+								<td class="text-right ng-binding"></td>
+							</tr>
+							<tr>
+								<td>Total Guests</td>
+								<td class="text-right ng-binding"></td>
+							</tr>
+							<tr>
+								<td>Average per Pax</td>
+								<td class="text-right ng-binding"></td>
+							</tr>
+
+							<tr>
+								<td>Average net per Pax</td>
+								<td class="text-right ng-binding"></td>
+							</tr>
+
+						</tbody></table>
+
+					</div>
+				</div>
+
+
+			</div>
+
+			<div class="col-sm-4">
+
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h3 class="panel-title">Payment Method</h3>
+					</div>
+					<div class="panel-body">
+						<table class="table table-condensed ">
+							<tbody><!-- ngRepeat: line in payments -->
+							<tr>
+								<td colspan="3">Total</td>
+								<td class="text-right ng-binding"> 0.00  </td>
+							</tr>
+
+						</tbody></table>
+
+					</div>
+				</div>
+
+				
+
+				
+
+
+
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h3 class="panel-title">Sales per Category</h3>
+					</div>
+					<div class="panel-body">
+						<table class="table table-condensed ">
+
+							<!-- ngRepeat: (d,line) in departments -->
+						</table>
+						
+					</div>
+				</div>
+
+				<div class="panel panel-default ng-hide" ng-show="nosales">
+					<div class="panel-heading">
+						<h3 class="panel-title">No Sales Report</h3>
+					</div>
+					<div class="panel-body">
+						<table class="table table-condensed ">
+							<tbody><!-- ngRepeat: line in nosales -->
+							<tr>
+								<td colspan="2">Total</td>
+								<td class="text-right ng-binding"> 0.00  </td>
+							</tr>
+
+						</tbody></table>
+
+					</div>
+				</div>
+
+			</div>
+
+			<div class="col-sm-4">
+
+
+
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h3 class="panel-title">Sales per Department</h3>
+					</div>
+					<div class="panel-body">
+						<table class="table table-condensed ">
+							<tbody><!-- ngRepeat: (d,line) in departments -->
+
+							<tr>
+								<td colspan="3">Total</td>
+								<td class="text-right ng-binding"> 0.00  </td>
+							</tr>
+						</tbody></table>
+
+					</div>
+				</div>
+
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h3 class="panel-title">Discounts</h3>
+					</div>
+					<div class="panel-body">
+						<table class="table table-condensed ">
+							<tbody><!-- ngRepeat: line in discounts -->
+
+
+						</tbody></table>
+
+					</div>
+				</div>
+			</div>		
+		</small>
+
+	</div>
+
+	<table style="visibility:hidden;" id="data">
+		<tbody><tr>
+			<td colspan="2">Revenue</td>
+		</tr>
+		<tr>
+			<td>Subtotal</td>
+		</tr>
+		<tr>
+			<td>Subtotal</td>
+			<td class="text-right ng-binding"></td>
+		</tr>
+		<tr>
+			<td>Discount</td>
+			<td class="text-right ng-binding"></td>
+		</tr>
+		<tr>
+			<td>Service Charge</td>
+			<td class="text-right ng-binding"></td>
+		</tr>
+		<tr>
+			<td>Tax</td>
+			<td class="text-right ng-binding"></td>
+		</tr>
+		<tr>
+			<td>Rounding</td>
+			<td class="text-right ng-binding"></td>
+		</tr>
+		<tr>
+			<td><strong>Grand Total</strong></td>
+			<td class="text-right"><strong class="ng-binding"></strong></td>
+		</tr>
+
+		<tr>
+			<td colspan="2">COGS</td>
+		</tr>
+		<tr>
+			<td>Subtotal</td>
+			<td class="text-right ng-binding"></td>
+		</tr>
+		<tr>
+			<td>Discount</td>
+			<td class="text-right ng-binding"></td>
+		</tr>
+		<tr>
+			<td><strong>Cost of Goods Sold</strong></td>
+			<td class="text-right"></td>
+		</tr>
+		<!-- ngRepeat: (d,line) in departments -->
+
+		<tr>
+			<td>TOTAL COGS</td>
+			<td><br></td>
+			<td class="text-right ng-binding">0.00</td>
+		</tr>
+		<tr>
+			<td><strong>Profit / Loss</strong></td>
+			<td class="text-right">
+				<strong class="ng-binding">0.00</strong>
+			</td>
+		</tr>
+
+		<tr>
+			<td colspan="2">Statistic</td>
+
+		</tr>
+		<tr>
+			<td>Total Sales</td>
+			<td class="text-right"><strong class="ng-binding"></strong></td>
+		</tr>
+		<tr>
+			<td>No. of Transaction</td>
+			<td class="text-right ng-binding"></td>
+		</tr>
+		<tr>
+			<td>Average per Transaction</td>
+			<td class="text-right ng-binding"></td>
+		</tr>
+		<tr>
+			<td>Total Guests</td>
+			<td class="text-right ng-binding"></td>
+		</tr>
+		<tr>
+			<td>Average per Pax</td>
+			<td class="text-right ng-binding"></td>
+		</tr>
+		<tr>
+			<td>Average net per Pax</td>
+			<td class="text-right ng-binding"></td>
+		</tr>
+
+
+		<tr>
+			<td colspan="2">Payment</td>
+		</tr>
+		<!-- ngRepeat: line in payments -->
+
+		<tr>
+			<td colspan="2">Category</td>
+		</tr>
+		<!-- ngRepeat: line in lines -->
+
+
+
+
+
+		<tr>
+			<td colspan="2">Department</td>
+		</tr>
+		<!-- ngRepeat: (d,line) in departments -->
+
+		<tr>
+			<td colspan="2">Discount</td>
+		</tr>
+		<!-- ngRepeat: line in discounts -->
+
+
+		<tr>
+			<td colspan="2">No Sales</td>
+		</tr>
+
+		<!-- ngRepeat: line in nosales -->
+	</tbody></table>
+
+
+
+</div></div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    
+    <script type="text/javascript" src="/cloud/js/../assets/jquery/jquery.1.10.2.js"></script>    <script type="text/javascript" src="/cloud/js/../assets/bootstrap/js/bootstrap.min.js"></script>    
+    <script type="text/javascript" src="/cloud/js/../assets/jquery-ui/jquery-ui.js"></script>
+    <script type="text/javascript" src="/cloud/js/../assets/docs.min.js"></script>    
+
+
+    <!-- Angular framework -->
+    <script type="text/javascript" src="/cloud/js/../assets/angular-1.2.26/angular.min.js"></script>    <script type="text/javascript" src="/cloud/js/../assets/angular-1.2.26/angular-route.min.js"></script>    <script type="text/javascript" src="/cloud/js/../assets/angular-1.2.26/angular-animate.min.js"></script>    <script type="text/javascript" src="/cloud/js/../assets/angular-1.2.26/angular-sanitize.min.js"></script>
+    <script type="text/javascript" src="/cloud/js/../assets/angular/http-auth-interceptor.js"></script>    <script type="text/javascript" src="/cloud/js/../assets/angular/angular-ui-date.js"></script>
+    <script type="text/javascript" src="/cloud/js/../assets/ng-grid/ng-grid-2.0.7.min.js"></script>    <script type="text/javascript" src="/cloud/js/../assets/angular-strap/angular-strap.js"></script>    <script type="text/javascript" src="/cloud/js/../assets/angular-strap/angular-strap.tpl.js"></script>
+    <script type="text/javascript" src="/cloud/js/../assets/select2-3.4.2/select2.min.js"></script>  
+    <script type="text/javascript" src="/cloud/js/../assets/select2-3.4.2/angular-ui-select2.js"></script>  
+
+    <script type="text/javascript" src="/cloud/js/../assets/ui-select/select.js"></script>  
+
+    <script type="text/javascript" src="/cloud/js/../assets/highcharts/highcharts.js"></script>  
+    <script type="text/javascript" src="/cloud/js/../assets/highcharts/highcharts-ng.js"></script>  
+
+    <script type="text/javascript" src="/cloud/js/../assets/loading-bar/loading-bar.js"></script>
+    <script type="text/javascript" src="/cloud/js/../assets/pivottable/pivot.js"></script>  
+
+    <script type="text/javascript" src="/cloud/js/../assets/date.js"></script>    
+    <script type="text/javascript" src="/cloud/js/../assets/angular/angular-file-upload.js"></script>
+    <!-- Application -->
+    <script type="text/javascript" src="/cloud/js/cloud-app.js"></script>    <script type="text/javascript" src="/cloud/js/cloud-controller.js"></script>    <script type="text/javascript" src="/cloud/js/cloud-service.js"></script>
+    <script type="text/javascript" src="/cloud/js/../assets/table2csv.js"></script>
+    <!-- Export report to CSV -->
+
+    <script src="https://unpkg.com/jspdf@latest/dist/jspdf.min.js"></script>
+    
+    
+
+
+<div id="ui-datepicker-div" class="ui-datepicker ui-widget ui-widget-content ui-helper-clearfix ui-corner-all"><div class="ui-datepicker-header ui-widget-header ui-helper-clearfix ui-corner-all"><a class="ui-datepicker-prev ui-corner-all" data-handler="prev" data-event="click" title="Prev"><span class="ui-icon ui-icon-circle-triangle-w">Prev</span></a><a class="ui-datepicker-next ui-corner-all" data-handler="next" data-event="click" title="Next"><span class="ui-icon ui-icon-circle-triangle-e">Next</span></a><div class="ui-datepicker-title"><span class="ui-datepicker-month">April</span>&nbsp;<span class="ui-datepicker-year">2026</span></div></div><table class="ui-datepicker-calendar"><thead><tr><th class="ui-datepicker-week-end"><span title="Sunday">Su</span></th><th><span title="Monday">Mo</span></th><th><span title="Tuesday">Tu</span></th><th><span title="Wednesday">We</span></th><th><span title="Thursday">Th</span></th><th><span title="Friday">Fr</span></th><th class="ui-datepicker-week-end"><span title="Saturday">Sa</span></th></tr></thead><tbody><tr><td class=" ui-datepicker-week-end ui-datepicker-other-month ui-datepicker-unselectable ui-state-disabled">&nbsp;</td><td class=" ui-datepicker-other-month ui-datepicker-unselectable ui-state-disabled">&nbsp;</td><td class=" ui-datepicker-other-month ui-datepicker-unselectable ui-state-disabled">&nbsp;</td><td class=" " data-handler="selectDay" data-event="click" data-month="3" data-year="2026"><a class="ui-state-default" href="#">1</a></td><td class=" " data-handler="selectDay" data-event="click" data-month="3" data-year="2026"><a class="ui-state-default" href="#">2</a></td><td class=" " data-handler="selectDay" data-event="click" data-month="3" data-year="2026"><a class="ui-state-default" href="#">3</a></td><td class=" ui-datepicker-week-end " data-handler="selectDay" data-event="click" data-month="3" data-year="2026"><a class="ui-state-default" href="#">4</a></td></tr><tr><td class=" ui-datepicker-week-end " data-handler="selectDay" data-event="click" data-month="3" data-year="2026"><a class="ui-state-default" href="#">5</a></td><td class=" " data-handler="selectDay" data-event="click" data-month="3" data-year="2026"><a class="ui-state-default" href="#">6</a></td><td class=" " data-handler="selectDay" data-event="click" data-month="3" data-year="2026"><a class="ui-state-default" href="#">7</a></td><td class=" " data-handler="selectDay" data-event="click" data-month="3" data-year="2026"><a class="ui-state-default" href="#">8</a></td><td class=" " data-handler="selectDay" data-event="click" data-month="3" data-year="2026"><a class="ui-state-default" href="#">9</a></td><td class=" ui-datepicker-days-cell-over  ui-datepicker-current-day ui-datepicker-today" data-handler="selectDay" data-event="click" data-month="3" data-year="2026"><a class="ui-state-default ui-state-highlight ui-state-active ui-state-hover" href="#">10</a></td><td class=" ui-datepicker-week-end " data-handler="selectDay" data-event="click" data-month="3" data-year="2026"><a class="ui-state-default" href="#">11</a></td></tr><tr><td class=" ui-datepicker-week-end " data-handler="selectDay" data-event="click" data-month="3" data-year="2026"><a class="ui-state-default" href="#">12</a></td><td class=" " data-handler="selectDay" data-event="click" data-month="3" data-year="2026"><a class="ui-state-default" href="#">13</a></td><td class=" " data-handler="selectDay" data-event="click" data-month="3" data-year="2026"><a class="ui-state-default" href="#">14</a></td><td class=" " data-handler="selectDay" data-event="click" data-month="3" data-year="2026"><a class="ui-state-default" href="#">15</a></td><td class=" " data-handler="selectDay" data-event="click" data-month="3" data-year="2026"><a class="ui-state-default" href="#">16</a></td><td class=" " data-handler="selectDay" data-event="click" data-month="3" data-year="2026"><a class="ui-state-default" href="#">17</a></td><td class=" ui-datepicker-week-end " data-handler="selectDay" data-event="click" data-month="3" data-year="2026"><a class="ui-state-default" href="#">18</a></td></tr><tr><td class=" ui-datepicker-week-end " data-handler="selectDay" data-event="click" data-month="3" data-year="2026"><a class="ui-state-default" href="#">19</a></td><td class=" " data-handler="selectDay" data-event="click" data-month="3" data-year="2026"><a class="ui-state-default" href="#">20</a></td><td class=" " data-handler="selectDay" data-event="click" data-month="3" data-year="2026"><a class="ui-state-default" href="#">21</a></td><td class=" " data-handler="selectDay" data-event="click" data-month="3" data-year="2026"><a class="ui-state-default" href="#">22</a></td><td class=" " data-handler="selectDay" data-event="click" data-month="3" data-year="2026"><a class="ui-state-default" href="#">23</a></td><td class=" " data-handler="selectDay" data-event="click" data-month="3" data-year="2026"><a class="ui-state-default" href="#">24</a></td><td class=" ui-datepicker-week-end " data-handler="selectDay" data-event="click" data-month="3" data-year="2026"><a class="ui-state-default" href="#">25</a></td></tr><tr><td class=" ui-datepicker-week-end " data-handler="selectDay" data-event="click" data-month="3" data-year="2026"><a class="ui-state-default" href="#">26</a></td><td class=" " data-handler="selectDay" data-event="click" data-month="3" data-year="2026"><a class="ui-state-default" href="#">27</a></td><td class=" " data-handler="selectDay" data-event="click" data-month="3" data-year="2026"><a class="ui-state-default" href="#">28</a></td><td class=" " data-handler="selectDay" data-event="click" data-month="3" data-year="2026"><a class="ui-state-default" href="#">29</a></td><td class=" " data-handler="selectDay" data-event="click" data-month="3" data-year="2026"><a class="ui-state-default" href="#">30</a></td><td class=" ui-datepicker-other-month ui-datepicker-unselectable ui-state-disabled">&nbsp;</td><td class=" ui-datepicker-week-end ui-datepicker-other-month ui-datepicker-unselectable ui-state-disabled">&nbsp;</td></tr></tbody></table></div></body></html>

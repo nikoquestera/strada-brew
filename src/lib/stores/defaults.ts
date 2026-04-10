@@ -1,15 +1,8 @@
 export const DEFAULT_STORE_NAMES = [
-  'La Piazza',
+  'LA.PIAZZA',
   'MKG',
-  'BSD',
-  'SMS',
   'SMB',
-  'SMB Gold Lounge',
-  'SMB2',
-  'Back Office',
-  'Hibrida / Back Office',
-  'Roastery',
-  'Academy',
-  'Semarang HO',
+  'SMB GOLD LOUNGE',
+  'SMS'
 ] as const
 
