@@ -22,6 +22,14 @@ export default function RevenueStoreClient() {
   const [result, setResult] = useState<any>(null)
   const [expandedStores, setExpandedStores] = useState(false)
 
+  // Bank and Payment Manual Inputs
+  const [bcaIncome, setBcaIncome] = useState<string>('')
+  const [gobizIncome, setGobizIncome] = useState<string>('')
+  const [paymentCreditBca, setPaymentCreditBca] = useState<string>('')
+  const [paymentDebitBca, setPaymentDebitBca] = useState<string>('')
+  const [paymentQris, setPaymentQris] = useState<string>('')
+  const [piutangGobiz, setPiutangGobiz] = useState<string>('')
+
   useEffect(() => {
     loadStores()
   }, [])
@@ -50,6 +58,12 @@ export default function RevenueStoreClient() {
       return
     }
 
+    // Validate bank inputs
+    if (!bcaIncome || !gobizIncome) {
+      addLog('❌ Mohon isi Uang Masuk Bank BCA dan Uang Masuk Gobiz', 'error')
+      return
+    }
+
     setIsProcessing(true)
     setLogs([])
     setResult(null)
@@ -65,7 +79,15 @@ export default function RevenueStoreClient() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           date: selectedDate,
-          stores: [selectedStore], // API expects array
+          stores: [selectedStore],
+          bankData: {
+            bca_income: parseFloat(bcaIncome) || 0,
+            gobiz_income: parseFloat(gobizIncome) || 0,
+            payment_credit_bca: parseFloat(paymentCreditBca) || 0,
+            payment_debit_bca: parseFloat(paymentDebitBca) || 0,
+            payment_qris: parseFloat(paymentQris) || 0,
+            piutang_gobiz: parseFloat(piutangGobiz) || 0,
+          },
         }),
       })
 
@@ -168,6 +190,113 @@ export default function RevenueStoreClient() {
               </select>
             </div>
 
+            {/* Bank BCA Input */}
+            <div className="mb-6">
+              <label htmlFor="bca-income" className="block text-sm font-medium text-gray-700 mb-2">
+                💰 Uang Masuk Bank BCA
+              </label>
+              <input
+                id="bca-income"
+                type="number"
+                value={bcaIncome}
+                onChange={(e) => setBcaIncome(e.target.value)}
+                disabled={isProcessing}
+                placeholder="Masukkan dari bank statement"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-strada-blue disabled:bg-gray-50 disabled:text-gray-500"
+              />
+              <p className="text-xs text-gray-500 mt-1">Dari bank statement BCA</p>
+            </div>
+
+            {/* Gobiz Income Input */}
+            <div className="mb-6">
+              <label htmlFor="gobiz-income" className="block text-sm font-medium text-gray-700 mb-2">
+                💰 Uang Masuk Gobiz
+              </label>
+              <input
+                id="gobiz-income"
+                type="number"
+                value={gobizIncome}
+                onChange={(e) => setGobizIncome(e.target.value)}
+                disabled={isProcessing}
+                placeholder="Masukkan dari Gobiz statement"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-strada-blue disabled:bg-gray-50 disabled:text-gray-500"
+              />
+              <p className="text-xs text-gray-500 mt-1">Dari Gobiz statement</p>
+            </div>
+
+            {/* Payment Details - Optional */}
+            <details className="mb-6 border border-gray-200 rounded-lg p-3 bg-gray-50">
+              <summary className="cursor-pointer font-medium text-gray-700 text-sm">
+                📊 Detail Pembayaran (Opsional)
+              </summary>
+              
+              <div className="mt-4 space-y-4">
+                {/* Payment Credit BCA */}
+                <div>
+                  <label htmlFor="payment-credit" className="block text-xs font-medium text-gray-700 mb-1">
+                    Payment Credit BCA
+                  </label>
+                  <input
+                    id="payment-credit"
+                    type="number"
+                    value={paymentCreditBca}
+                    onChange={(e) => setPaymentCreditBca(e.target.value)}
+                    disabled={isProcessing}
+                    placeholder="0"
+                    className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-strada-blue disabled:bg-gray-50 disabled:text-gray-500"
+                  />
+                </div>
+
+                {/* Payment Debit BCA */}
+                <div>
+                  <label htmlFor="payment-debit" className="block text-xs font-medium text-gray-700 mb-1">
+                    Payment Debit BCA
+                  </label>
+                  <input
+                    id="payment-debit"
+                    type="number"
+                    value={paymentDebitBca}
+                    onChange={(e) => setPaymentDebitBca(e.target.value)}
+                    disabled={isProcessing}
+                    placeholder="0"
+                    className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-strada-blue disabled:bg-gray-50 disabled:text-gray-500"
+                  />
+                </div>
+
+                {/* Payment QRIS */}
+                <div>
+                  <label htmlFor="payment-qris" className="block text-xs font-medium text-gray-700 mb-1">
+                    Payment QRIS
+                  </label>
+                  <input
+                    id="payment-qris"
+                    type="number"
+                    value={paymentQris}
+                    onChange={(e) => setPaymentQris(e.target.value)}
+                    disabled={isProcessing}
+                    placeholder="0"
+                    className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-strada-blue disabled:bg-gray-50 disabled:text-gray-500"
+                  />
+                </div>
+
+                {/* Piutang Gobiz */}
+                <div>
+                  <label htmlFor="piutang-gobiz" className="block text-xs font-medium text-gray-700 mb-1">
+                    Piutang Gobiz
+                  </label>
+                  <input
+                    id="piutang-gobiz"
+                    type="number"
+                    value={piutangGobiz}
+                    onChange={(e) => setPiutangGobiz(e.target.value)}
+                    disabled={isProcessing}
+                    placeholder="0"
+                    className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-strada-blue disabled:bg-gray-50 disabled:text-gray-500"
+                  />
+                </div>
+              </div>
+            </details>
+
             {/* Process Button */}
             <button
               onClick={handleProses}
@@ -228,9 +357,26 @@ export default function RevenueStoreClient() {
             Hasil Report
           </h2>
 
+          {/* Store & Date Summary */}
+          <div className="grid grid-cols-2 gap-4 mb-6 bg-blue-50 p-4 rounded-lg border border-blue-200">
+            <div>
+              <p className="text-xs font-medium text-gray-600 uppercase">Toko</p>
+              <p className="text-lg font-bold text-gray-900">{result.store}</p>
+            </div>
+            <div>
+              <p className="text-xs font-medium text-gray-600 uppercase">Tanggal</p>
+              <p className="text-lg font-bold text-gray-900">{result.date}</p>
+            </div>
+          </div>
+
+          {/* Revenue Data */}
+          <h3 className="text-sm font-semibold text-gray-700 mb-3">📊 Data Penjualan Quinos Cloud</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
             {Object.entries(result).map(([key, value]: [string, any]) => {
-              if (key === 'date' || key === 'store' || key === 'raw_json') return null
+              // Skip non-currency fields
+              if (['date', 'store', 'raw_json', 'id', 'created_at', 'updated_at', 'processed_at', 'bca_income', 'gobiz_income', 'biaya_admin_bank', 'biaya_penjualan_merchant_online', 'payment_credit_bca', 'payment_debit_bca', 'payment_qris', 'piutang_gobiz'].includes(key)) {
+                return null
+              }
               return (
                 <div key={key} className="bg-gray-50 rounded-lg p-4 border border-gray-200">
                   <p className="text-gray-600 text-sm mb-1 capitalize">
@@ -244,8 +390,55 @@ export default function RevenueStoreClient() {
             })}
           </div>
 
+          {/* Bank Data Section */}
+          {(result.bca_income || result.gobiz_income || result.biaya_admin_bank || result.biaya_penjualan_merchant_online) && (
+            <>
+              <h3 className="text-sm font-semibold text-gray-700 mb-3 mt-6">🏦 Data Bank & Pembayaran</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                {result.bca_income !== undefined && (
+                  <div className="bg-green-50 rounded-lg p-4 border border-green-200">
+                    <p className="text-gray-600 text-sm mb-1">Uang Masuk BCA</p>
+                    <p className="text-2xl font-bold text-green-600">
+                      Rp {parseFloat(result.bca_income || 0).toLocaleString('id-ID')}
+                    </p>
+                  </div>
+                )}
+                {result.gobiz_income !== undefined && (
+                  <div className="bg-green-50 rounded-lg p-4 border border-green-200">
+                    <p className="text-gray-600 text-sm mb-1">Uang Masuk Gobiz</p>
+                    <p className="text-2xl font-bold text-green-600">
+                      Rp {parseFloat(result.gobiz_income || 0).toLocaleString('id-ID')}
+                    </p>
+                  </div>
+                )}
+                {result.biaya_admin_bank !== undefined && (
+                  <div className="bg-orange-50 rounded-lg p-4 border border-orange-200">
+                    <p className="text-gray-600 text-sm mb-1">Biaya Admin Bank</p>
+                    <p className="text-2xl font-bold text-orange-600">
+                      Rp {parseFloat(result.biaya_admin_bank || 0).toLocaleString('id-ID')}
+                    </p>
+                    <p className="text-xs text-gray-500 mt-2">
+                      = (Credit + Debit + QRIS) - BCA
+                    </p>
+                  </div>
+                )}
+                {result.biaya_penjualan_merchant_online !== undefined && (
+                  <div className="bg-orange-50 rounded-lg p-4 border border-orange-200">
+                    <p className="text-gray-600 text-sm mb-1">Biaya Merchant Online</p>
+                    <p className="text-2xl font-bold text-orange-600">
+                      Rp {parseFloat(result.biaya_penjualan_merchant_online || 0).toLocaleString('id-ID')}
+                    </p>
+                    <p className="text-xs text-gray-500 mt-2">
+                      = Piutang Gobiz - Gobiz
+                    </p>
+                  </div>
+                )}
+              </div>
+            </>
+          )}
+
           {/* Raw JSON */}
-          <details className="border-t border-gray-200 pt-4">
+          <details className="border-t border-gray-200 pt-4 mt-6">
             <summary className="cursor-pointer font-medium text-gray-700 hover:text-gray-900">
               📄 Raw JSON Data
             </summary>
