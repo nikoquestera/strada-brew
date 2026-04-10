@@ -54,12 +54,13 @@ export async function POST(request: NextRequest) {
                         penjualan_coffee_beans: log.data.penjualan_coffee_beans,
                         penjualan_makanan: log.data.penjualan_makanan,
                         penjualan_konsinyasi: log.data.penjualan_konsinyasi,
-                        piutang_usaha: log.data.piutang_usaha,
-                        piutang_usaha_gobiz: log.data.piutang_usaha_gobiz,
-                        potongan_penjualan: log.data.potongan_penjualan,
-                        diskon_penjualan: log.data.diskon_penjualan,
-                        hutang_service: log.data.hutang_service,
-                        hutang_pajak_pemkot: log.data.hutang_pajak_pemkot,
+                        payment_academy_100_vouc: log.data.payment_academy_100_vouc,
+                        payment_credit_bca: log.data.payment_credit_bca,
+                        payment_debit_bca: log.data.payment_debit_bca,
+                        payment_gobiz: log.data.payment_gobiz,
+                        payment_qris: log.data.payment_qris,
+                        payment_strada_reward: log.data.payment_strada_reward,
+                        revenue_discount: log.data.revenue_discount,
                         updated_at: new Date().toISOString()
                       }, { onConflict: 'store_name,transaction_date' })
                       

@@ -40,22 +40,21 @@ def main():
             page.goto("https://quinoscloud.com/cloud/login", timeout=60000)
             
             log_progress("Mengisi email: kopiterbaiknusantara1@gmail.com dan password...", "info")
-            page.wait_for_selector('input[type="email"], input[name="email"], input[placeholder*="email" i]', timeout=15000)
-            email_input = page.locator('input[type="email"], input[name="email"], input[placeholder*="email" i]').first
+            page.wait_for_selector('input[type="email"], input[name="email"], input[placeholder*="email" i], input[type="text"]', timeout=15000)
+            email_input = page.locator('input[type="email"], input[name="email"], input[placeholder*="email" i], input[type="text"]').first
             email_input.fill("kopiterbaiknusantara1@gmail.com")
             
             password_input = page.locator('input[type="password"], input[name="password"], input[placeholder*="password" i]').first
             password_input.fill("strada123")
             
             log_progress("Mengeklik tombol Login...", "info")
-            login_btn = page.locator('button:has-text("Login"), button:has-text("Sign In"), button[type="submit"], input[type="submit"]').first
+            login_btn = page.locator('button:has-text("Login"), button:has-text("Sign In"), button:has-text("Sign in"), button[type="submit"], input[type="submit"], button.btn-primary').first
             login_btn.click()
             
             try:
                 page.wait_for_url("**/admin**", timeout=20000)
                 log_progress("✅ Tahap 1 Selesai: Berhasil login ke Quinos Cloud", "success")
             except PlaywrightTimeoutError:
-                # Kadang dashboard admin butuh waktu loading agak lama
                 log_progress("Timeout menunggu URL berubah ke admin, mencoba melanjutkan proses...", "warning")
             
             # 2. Go to Summary Sales Report
@@ -63,41 +62,42 @@ def main():
             page.goto("https://quinoscloud.com/cloud/admin#/report/summarySalesReport", timeout=30000)
             
             log_progress("Menunggu halaman report termuat...", "info")
-            page.wait_for_selector('input, select, .calendar, .datepicker, button', timeout=20000)
+            time.sleep(10) # Let angular/vue render the page
             
             # 3. Filtering
             log_progress("Tahap 3: Melakukan Filtering Data", "info")
             
             # Select Daily
-            log_progress("Memilih opsi 'Daily' di kotak dropdown pertama...", "info")
+            log_progress("Mengubah dropdown periode (biasanya Monthly) menjadi 'Daily'...", "info")
             try:
-                # Biasanya dropdown pertama adalah periode waktu
-                period_dropdown = page.locator('select, input.el-select__inner, div.el-select').first
-                if period_dropdown.is_visible():
-                    # Coba klik kalau bentuknya custom UI
+                dropdowns = page.locator('.el-select, select, .p-dropdown').all()
+                if dropdowns:
+                    period_dropdown = dropdowns[0]
                     period_dropdown.click()
                     time.sleep(1)
-                    # Cari opsi Daily dan klik
                     daily_option = page.locator('li:has-text("Daily"), option:has-text("Daily"), span:has-text("Daily")').first
                     if daily_option.is_visible():
                         daily_option.click()
                         log_progress("Berhasil memilih opsi 'Daily'", "success")
                     else:
-                        log_progress("Opsi 'Daily' tidak ditemukan di dropdown, asumsikan sudah terpilih secara default", "warning")
+                        log_progress("Opsi 'Daily' tidak ditemukan, mungkin sudah berada di mode Daily.", "warning")
+                        page.keyboard.press("Escape")
             except Exception as e:
-                log_progress(f"Gagal memilih 'Daily' di dropdown pertama: {e}", "warning")
+                log_progress(f"Gagal memanipulasi dropdown pertama: {e}", "warning")
 
-            # Date Filter
-            log_progress(f"Membuka kalender untuk memilih tanggal {day_str}...", "info")
+            # Date Filter (2 boxes)
+            log_progress(f"Mencari 2 box kalender untuk diatur ke tanggal {target_date}...", "info")
             try:
-                date_input = page.locator('input[placeholder*="Date" i], input.date-picker, input.el-input__inner, input.p-inputtext').first
-                if date_input.is_visible():
+                date_inputs = page.locator('input.el-input__inner[placeholder*="Date" i], input.p-inputtext, input.date-picker').all()
+                date_inputs_to_click = [inp for inp in date_inputs if inp.is_visible()]
+                
+                for i, date_input in enumerate(date_inputs_to_click[:2]):
+                    box_name = "Start Date" if i == 0 else "End Date"
+                    log_progress(f"Mengeklik kalender {box_name}...", "info")
                     date_input.click()
-                    time.sleep(1) # wait for calendar popup animation
+                    time.sleep(1)
                     
-                    # Robust selector for the date cell inside a grid container
                     calendar_popup = page.locator('div.el-picker-panel, div.p-datepicker, div[role="dialog"], div[role="application"], body').last
-                    
                     day_cell = calendar_popup.locator(
                         f'[role="gridcell"]:not(.is-outside-month):not(.p-disabled):not(.disabled):has-text("{day_str}"), '
                         f'[role="gridcell"][aria-label*="{target_date}"], '
@@ -106,31 +106,36 @@ def main():
                     
                     if day_cell.is_visible():
                         day_cell.click()
-                        log_progress(f"Berhasil memilih tanggal {target_date} di kalender (grid layout)", "success")
+                        log_progress(f"✅ Berhasil memilih {target_date} di {box_name}", "success")
                     else:
-                        log_progress("Sel kalender tidak ditemukan. Menggunakan input manual (fallback).", "warning")
+                        log_progress(f"Sel tanggal di {box_name} tidak ditemukan, menggunakan input manual.", "warning")
                         date_input.fill(target_date)
                         page.keyboard.press("Enter")
+                    time.sleep(1)
             except Exception as e:
                 log_progress(f"Gagal mengatur tanggal kalender: {e}", "error")
 
             # Store Filter
-            log_progress(f"Memilih toko '{store_name}'...", "info")
+            log_progress(f"Mencari dropdown 'All Stores' untuk memilih toko '{store_name}'...", "info")
             try:
-                # Cari input yang biasa untuk milih outlet/toko
-                store_input = page.locator('input[placeholder*="Store" i], input[placeholder*="Outlet" i], div.el-select:has-text("Outlet")').first
-                if store_input.is_visible():
-                    store_input.click()
+                store_dropdown = page.locator('.el-select, select').filter(has_text="All Stores").first
+                if not store_dropdown.is_visible():
+                    # Fallback locator
+                    store_dropdown = page.locator('.el-select:has-text("Store"), select:has-text("Store")').first
+                
+                if store_dropdown.is_visible():
+                    store_dropdown.click()
                     time.sleep(1)
                     store_option = page.locator(f'li:has-text("{store_name}"), span:has-text("{store_name}")').first
                     if store_option.is_visible():
                         store_option.click()
-                        log_progress(f"Berhasil memilih toko '{store_name}'", "success")
+                        log_progress(f"✅ Berhasil memilih toko '{store_name}'", "success")
                     else:
-                        # Fallback input
-                        store_input.fill(store_name)
+                        log_progress(f"Toko '{store_name}' tidak terlihat langsung, mencoba mengetik...", "info")
+                        page.keyboard.type(store_name)
                         page.keyboard.press("Enter")
-                        log_progress(f"Mengisi manual toko '{store_name}'", "info")
+                else:
+                    log_progress("Dropdown All Stores tidak ditemukan.", "warning")
             except Exception as e:
                 log_progress(f"Gagal mengatur filter toko: {e}", "warning")
 
@@ -138,13 +143,13 @@ def main():
             try:
                 generate_btn = page.locator('button:has-text("Generate"), button:has-text("Submit"), button:has-text("Search"), button:has-text("Process")').first
                 generate_btn.click()
-                log_progress("Permintaan Generate dikirim, menunggu loading data...", "info")
-                time.sleep(8) # Memberikan waktu agar network / DOM update report secara penuh
+                log_progress("Permintaan Generate dikirim, menunggu report di-render (10 detik)...", "info")
+                time.sleep(10) 
             except Exception as e:
                 log_progress(f"Gagal klik tombol Generate: {e}", "error")
 
             # 4. Parsing data
-            log_progress("Tahap 4: Mengekstrak angka penjualan dan department dari laporan yang di-generate...", "info")
+            log_progress("Tahap 4: Mem-parsing halaman untuk mengekstrak nominal penjualan...", "info")
             
             def get_value(label):
                 try:
@@ -153,7 +158,6 @@ def main():
                         const match = elements.find(el => el.textContent.trim().toLowerCase() === '{label.lower()}' || el.textContent.trim().toLowerCase().includes('{label.lower()}'));
                         if (!match) return '0';
                         
-                        // Check table context
                         const td = match.closest('td') || match.closest('th');
                         if (td) {{
                             const row = td.closest('tr');
@@ -181,33 +185,60 @@ def main():
                 except:
                     return 0.0
 
+            log_progress("Mengekstrak data dari kategori: Sales per Department, Payment Method, dan Revenue...", "info")
+            
+            # Sales per Department
+            penjualan_bar = get_value("Bar")
+            penjualan_coffee_beans = get_value("Coffee Beans")
+            penjualan_kitchen = get_value("Kitchen")
+            penjualan_konsinyasi = get_value("Konsinyasi")
+            
+            # Payment Method
+            payment_academy = get_value("Academy 100 Vouc")
+            payment_credit_bca = get_value("CREDIT BCA")
+            payment_debit_bca = get_value("DEBIT BCA")
+            payment_gobiz = get_value("GOBIZ")
+            payment_qris = get_value("QRIS")
+            payment_strada_reward = get_value("STRADA + REWARD")
+            
+            # Revenue
+            revenue_discount = get_value("Discount")
+
             data = {
                 "store_name": store_name,
                 "transaction_date": target_date,
-                "penjualan_bar": get_value("Bar") or get_value("Penjualan Bar"),
-                "penjualan_coffee_beans": get_value("Coffee Beans") or get_value("Beans"),
-                "penjualan_makanan": get_value("Kitchen") or get_value("Makanan"),
-                "penjualan_konsinyasi": get_value("Konsinyasi") or get_value("Penjualan Konsinyasi"),
-                "potongan_penjualan": get_value("Potongan"),
-                "diskon_penjualan": get_value("Diskon"),
-                "piutang_usaha": get_value("Piutang Usaha") or get_value("A/R") or get_value("AR"),
-                "piutang_usaha_gobiz": get_value("Gobiz") or get_value("Go-biz"),
-                "hutang_service": get_value("Hutang Service") or get_value("Service Charge") or get_value("SC"),
-                "hutang_pajak_pemkot": get_value("Pajak") or get_value("PB1") or get_value("Pemkot")
+                "penjualan_bar": penjualan_bar,
+                "penjualan_coffee_beans": penjualan_coffee_beans,
+                "penjualan_makanan": penjualan_kitchen,
+                "penjualan_konsinyasi": penjualan_konsinyasi,
+                "payment_academy_100_vouc": payment_academy,
+                "payment_credit_bca": payment_credit_bca,
+                "payment_debit_bca": payment_debit_bca,
+                "payment_gobiz": payment_gobiz,
+                "payment_qris": payment_qris,
+                "payment_strada_reward": payment_strada_reward,
+                "revenue_discount": revenue_discount
             }
 
             # 5. Print results to display logging
-            log_progress("Tahap 5: Berhasil parsing angka penjualan:", "success")
-            log_progress(f"» Penjualan Bar: Rp {data['penjualan_bar']:,.0f}", "info")
-            log_progress(f"» Penjualan Coffee Beans: Rp {data['penjualan_coffee_beans']:,.0f}", "info")
-            log_progress(f"» Penjualan Makanan: Rp {data['penjualan_makanan']:,.0f}", "info")
-            log_progress(f"» Penjualan Konsinyasi: Rp {data['penjualan_konsinyasi']:,.0f}", "info")
-            log_progress(f"» Potongan Penjualan: Rp {data['potongan_penjualan']:,.0f}", "info")
-            log_progress(f"» Diskon Penjualan: Rp {data['diskon_penjualan']:,.0f}", "info")
-            log_progress(f"» Piutang Usaha: Rp {data['piutang_usaha']:,.0f}", "info")
-            log_progress(f"» Piutang Usaha Gobiz: Rp {data['piutang_usaha_gobiz']:,.0f}", "info")
-            log_progress(f"» Hutang Service: Rp {data['hutang_service']:,.0f}", "info")
-            log_progress(f"» Hutang Pajak Pemkot: Rp {data['hutang_pajak_pemkot']:,.0f}", "info")
+            log_progress("✅ Tahap 5: Berhasil parsing angka dari halaman. Berikut rinciannya:", "success")
+            
+            log_progress("--- Sales per Department ---", "info")
+            log_progress(f"» Bar: Rp {data['penjualan_bar']:,.0f}", "info")
+            log_progress(f"» Coffee Beans: Rp {data['penjualan_coffee_beans']:,.0f}", "info")
+            log_progress(f"» Kitchen: Rp {data['penjualan_makanan']:,.0f}", "info")
+            log_progress(f"» Konsinyasi: Rp {data['penjualan_konsinyasi']:,.0f}", "info")
+            
+            log_progress("--- Payment Method ---", "info")
+            log_progress(f"» Academy 100 Vouc: Rp {data['payment_academy_100_vouc']:,.0f}", "info")
+            log_progress(f"» CREDIT BCA: Rp {data['payment_credit_bca']:,.0f}", "info")
+            log_progress(f"» DEBIT BCA: Rp {data['payment_debit_bca']:,.0f}", "info")
+            log_progress(f"» GOBIZ: Rp {data['payment_gobiz']:,.0f}", "info")
+            log_progress(f"» QRIS: Rp {data['payment_qris']:,.0f}", "info")
+            log_progress(f"» STRADA + REWARD: Rp {data['payment_strada_reward']:,.0f}", "info")
+            
+            log_progress("--- Revenue ---", "info")
+            log_progress(f"» Discount: Rp {data['revenue_discount']:,.0f}", "info")
             
             # Send final structured result to node process
             print(json.dumps({"type": "result", "data": data}), flush=True)
