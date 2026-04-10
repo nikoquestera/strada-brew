@@ -85,7 +85,6 @@ export default function RevenueStoreClient() {
             payment_credit_bca: parseFloat(paymentCreditBca) || 0,
             payment_debit_bca: parseFloat(paymentDebitBca) || 0,
             payment_qris: parseFloat(paymentQris) || 0,
-            piutang_gobiz: parseFloat(piutangGobiz) || 0,
           },
         }),
       })
