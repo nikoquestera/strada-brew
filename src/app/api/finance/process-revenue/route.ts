@@ -30,19 +30,28 @@ export async function POST(request: NextRequest) {
           controller.enqueue(encoder.encode(JSON.stringify({ type: 'info', message: `=== Memulai proses untuk toko: ${store} ===` }) + '\n'))
           
           await new Promise<void>((resolve) => {
+            let buffer = ''
             const pythonProcess = spawn(pythonExec, [scriptPath, date, store], {
               cwd: process.cwd(),
               env: { ...process.env, PYTHONUNBUFFERED: '1' }
             })
 
+            pythonProcess.on('error', (err) => {
+              controller.enqueue(encoder.encode(JSON.stringify({ type: 'error', message: `Gagal menjalankan skrip Python: ${err.message}` }) + '\n'))
+              resolve()
+            })
+
             pythonProcess.stdout.on('data', async (data) => {
-              const lines = data.toString().split('\n').filter(Boolean)
+              buffer += data.toString()
+              const lines = buffer.split('\n')
+              buffer = lines.pop() || ''
+              
               for (const line of lines) {
+                if (!line.trim()) continue
                 try {
                   const log = JSON.parse(line)
                   controller.enqueue(encoder.encode(line + '\n'))
                   
-                  // Save to DB if we got the result
                   if (log.type === 'result' && log.data) {
                     controller.enqueue(encoder.encode(JSON.stringify({ type: 'info', message: 'Menyimpan data ke database Supabase...' }) + '\n'))
                     const { error } = await supabase
@@ -71,20 +80,30 @@ export async function POST(request: NextRequest) {
                     }
                   }
                 } catch (e) {
-                  // Not valid JSON from python script
                   controller.enqueue(encoder.encode(JSON.stringify({ type: 'info', message: line }) + '\n'))
                 }
               }
             })
 
+            let errBuffer = ''
             pythonProcess.stderr.on('data', (data) => {
-              const lines = data.toString().split('\n').filter(Boolean)
+              errBuffer += data.toString()
+              const lines = errBuffer.split('\n')
+              errBuffer = lines.pop() || ''
+              
               for (const line of lines) {
+                if (!line.trim()) continue
                 controller.enqueue(encoder.encode(JSON.stringify({ type: 'warning', message: line }) + '\n'))
               }
             })
 
             pythonProcess.on('close', (code) => {
+              if (buffer.trim()) {
+                controller.enqueue(encoder.encode(JSON.stringify({ type: 'info', message: buffer.trim() }) + '\n'))
+              }
+              if (errBuffer.trim()) {
+                controller.enqueue(encoder.encode(JSON.stringify({ type: 'warning', message: errBuffer.trim() }) + '\n'))
+              }
               if (code !== 0) {
                 controller.enqueue(encoder.encode(JSON.stringify({ type: 'error', message: `Script exit dengan kode ${code}` }) + '\n'))
               }
