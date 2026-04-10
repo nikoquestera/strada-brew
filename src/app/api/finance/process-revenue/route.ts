@@ -56,11 +56,11 @@ export async function POST(request: NextRequest) {
             const paymentCreditBca = bankData?.payment_credit_bca || result.payment_credit_bca || 0
             const paymentDebitBca = bankData?.payment_debit_bca || result.payment_debit_bca || 0
             const paymentQris = bankData?.payment_qris || result.payment_qris || 0
-            const piutangGobiz = bankData?.piutang_gobiz || 0
+            const paymentGobiz = result.payment_gobiz || 0
 
             // Calculate fees
             const biayaAdminBank = (paymentCreditBca + paymentDebitBca + paymentQris) - bcaIncome
-            const biayaPenjualanMerchantOnline = piutangGobiz - gobizIncome
+            const biayaPenjualanMerchantOnline = paymentGobiz - gobizIncome
 
             if (bankData?.bca_income !== undefined) {
               controller.enqueue(encoder.encode(JSON.stringify({ type: 'info', message: '--- Bank & Payment Data ---' }) + '\n'))
@@ -116,7 +116,6 @@ export async function POST(request: NextRequest) {
               ...(bankData?.bca_income !== undefined && {
                 bca_income: bcaIncome,
                 gobiz_income: gobizIncome,
-                piutang_gobiz: piutangGobiz,
                 biaya_admin_bank: biayaAdminBank,
                 biaya_penjualan_merchant_online: biayaPenjualanMerchantOnline,
               }),

@@ -28,7 +28,6 @@ export default function RevenueStoreClient() {
   const [paymentCreditBca, setPaymentCreditBca] = useState<string>('')
   const [paymentDebitBca, setPaymentDebitBca] = useState<string>('')
   const [paymentQris, setPaymentQris] = useState<string>('')
-  const [piutangGobiz, setPiutangGobiz] = useState<string>('')
 
   useEffect(() => {
     loadStores()
@@ -279,21 +278,6 @@ export default function RevenueStoreClient() {
                   />
                 </div>
 
-                {/* Piutang Gobiz */}
-                <div>
-                  <label htmlFor="piutang-gobiz" className="block text-xs font-medium text-gray-700 mb-1">
-                    Piutang Gobiz
-                  </label>
-                  <input
-                    id="piutang-gobiz"
-                    type="number"
-                    value={piutangGobiz}
-                    onChange={(e) => setPiutangGobiz(e.target.value)}
-                    disabled={isProcessing}
-                    placeholder="0"
-                    className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-strada-blue disabled:bg-gray-50 disabled:text-gray-500"
-                  />
-                </div>
               </div>
             </details>
 
@@ -429,7 +413,7 @@ export default function RevenueStoreClient() {
                       Rp {parseFloat(result.biaya_penjualan_merchant_online || 0).toLocaleString('id-ID')}
                     </p>
                     <p className="text-xs text-gray-500 mt-2">
-                      = Piutang Gobiz - Gobiz
+                      = Payment Gobiz - Gobiz
                     </p>
                   </div>
                 )}
