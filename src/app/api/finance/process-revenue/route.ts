@@ -93,7 +93,7 @@ export async function POST(request: NextRequest) {
             if (bankData?.bca_income !== undefined) {
               recordData.bca_income = bcaIncome
               recordData.gobiz_income = gobizIncome
-              recordData.piutang_gobiz = piutangGobiz
+              recordData.piutang_gobiz = paymentGobiz - gobizIncome
               recordData.biaya_admin_bank = biayaAdminBank
               recordData.biaya_penjualan_merchant_online = biayaPenjualanMerchantOnline
             }

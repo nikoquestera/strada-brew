@@ -82,8 +82,10 @@ export async function {func_name}(params: any) {{
 """
             # Note: Accurate usually expects data in the body for POST, and as query params for GET.
             # Axios handles second arg as body for POST, and config for GET.
+            client_import_path = '../../client' if len(parts) > 1 else '../client'
+            
             if method == 'get':
-                content = f"""import {{ accurateClient }} from '../../client';
+                content = f"""import {{ accurateClient }} from '{client_import_path}';
 
 /**
  * {summary}
@@ -94,7 +96,7 @@ export async function {func_name}(params: any) {{
 }}
 """
             elif method == 'post':
-                content = f"""import {{ accurateClient }} from '../../client';
+                content = f"""import {{ accurateClient }} from '{client_import_path}';
 
 /**
  * {summary}

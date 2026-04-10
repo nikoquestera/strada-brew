@@ -1,4 +1,4 @@
-import { accurateClient } from '../../client';
+import { accurateClient } from '../client';
 
 /**
  * /api/db-check-session.do
