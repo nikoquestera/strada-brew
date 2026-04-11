@@ -14,6 +14,8 @@ export interface QuinosRevenueData {
   payment_gobiz: number
   payment_qris: number
   payment_strada_reward: number
+  payment_ovo: number
+  payment_transfer: number
   revenue_discount: number
   hutang_service: number
   hutang_pajak_pemkot: number
@@ -136,6 +138,8 @@ export async function fetchQuinosRevenue(date: string, store: string, onProgress
     payment_gobiz: findPayment('GOBIZ'),
     payment_qris: findPayment('QRIS'),
     payment_strada_reward: findPayment('STRADA + REWARD'),
+    payment_ovo: findPayment('OVO'),
+    payment_transfer: findPayment('TRANSFER'),
     revenue_discount: parseFloat(transObj.discount) || 0,
     hutang_service: parseFloat(transObj.service_charge) || 0,
     hutang_pajak_pemkot: parseFloat(transObj.tax) || 0

@@ -25,6 +25,7 @@ export default function RevenueStoreClient() {
   // Bank and Payment Manual Inputs
   const [bcaIncome, setBcaIncome] = useState<string>('')
   const [gobizIncome, setGobizIncome] = useState<string>('')
+  const [ovoIncome, setOvoIncome] = useState<string>('')
   const [paymentCreditBca, setPaymentCreditBca] = useState<string>('')
   const [paymentDebitBca, setPaymentDebitBca] = useState<string>('')
   const [paymentQris, setPaymentQris] = useState<string>('')
@@ -73,8 +74,8 @@ export default function RevenueStoreClient() {
     }
 
     // Validate bank inputs
-    if (!bcaIncome || !gobizIncome) {
-      addLog('❌ Mohon isi Uang Masuk Bank BCA dan Uang Masuk Gobiz', 'error')
+    if (!bcaIncome || !gobizIncome || !ovoIncome) {
+      addLog('❌ Mohon isi Uang Masuk Bank BCA, Gobiz, dan OVO', 'error')
       return
     }
 
@@ -97,6 +98,7 @@ export default function RevenueStoreClient() {
           bankData: {
             bca_income: parseCurrencyInput(bcaIncome),
             gobiz_income: parseCurrencyInput(gobizIncome),
+            ovo_income: parseCurrencyInput(ovoIncome),
             payment_credit_bca: parseCurrencyInput(paymentCreditBca),
             payment_debit_bca: parseCurrencyInput(paymentDebitBca),
             payment_qris: parseCurrencyInput(paymentQris),
@@ -237,63 +239,22 @@ export default function RevenueStoreClient() {
               <p className="text-xs text-gray-500 mt-1">Dari Gobiz statement</p>
             </div>
 
-            {/* Payment Details - Optional */}
-            <details className="mb-6 border border-gray-200 rounded-lg p-3 bg-gray-50">
-              <summary className="cursor-pointer font-medium text-gray-700 text-sm">
-                📊 Detail Pembayaran (Opsional)
-              </summary>
-              
-              <div className="mt-4 space-y-4">
-                {/* Payment Credit BCA */}
-                <div>
-                  <label htmlFor="payment-credit" className="block text-xs font-medium text-gray-700 mb-1">
-                    Payment Credit BCA
-                  </label>
-                  <input
-                    id="payment-credit"
-                    type="text"
-                    value={paymentCreditBca}
-                    onChange={(e) => setPaymentCreditBca(formatCurrencyInput(e.target.value))}
-                    disabled={isProcessing}
-                    placeholder="0"
-                    className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-strada-blue disabled:bg-gray-50 disabled:text-gray-500"
-                  />
-                </div>
-
-                {/* Payment Debit BCA */}
-                <div>
-                  <label htmlFor="payment-debit" className="block text-xs font-medium text-gray-700 mb-1">
-                    Payment Debit BCA
-                  </label>
-                  <input
-                    id="payment-debit"
-                    type="text"
-                    value={paymentDebitBca}
-                    onChange={(e) => setPaymentDebitBca(formatCurrencyInput(e.target.value))}
-                    disabled={isProcessing}
-                    placeholder="0"
-                    className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-strada-blue disabled:bg-gray-50 disabled:text-gray-500"
-                  />
-                </div>
-
-                {/* Payment QRIS */}
-                <div>
-                  <label htmlFor="payment-qris" className="block text-xs font-medium text-gray-700 mb-1">
-                    Payment QRIS
-                  </label>
-                  <input
-                    id="payment-qris"
-                    type="text"
-                    value={paymentQris}
-                    onChange={(e) => setPaymentQris(formatCurrencyInput(e.target.value))}
-                    disabled={isProcessing}
-                    placeholder="0"
-                    className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-strada-blue disabled:bg-gray-50 disabled:text-gray-500"
-                  />
-                </div>
-
-              </div>
-            </details>
+            {/* OVO Income Input */}
+            <div className="mb-6">
+              <label htmlFor="ovo-income" className="block text-sm font-medium text-gray-700 mb-2">
+                💰 Uang Masuk OVO
+              </label>
+              <input
+                id="ovo-income"
+                type="text"
+                value={ovoIncome}
+                onChange={(e) => setOvoIncome(formatCurrencyInput(e.target.value))}
+                disabled={isProcessing}
+                placeholder="Masukkan dari OVO statement"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-strada-blue disabled:bg-gray-50 disabled:text-gray-500"
+              />
+              <p className="text-xs text-gray-500 mt-1">Dari OVO statement</p>
+            </div>
 
             {/* Process Button */}
             <button
@@ -390,14 +351,16 @@ export default function RevenueStoreClient() {
 
             <div>
               <h3 className="text-sm font-semibold text-gray-700 mb-3">💳 Payment Method</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 {[
                   { label: 'Academy 100 Vouc', value: result.payment_academy_100_vouc },
                   { label: 'CREDIT BCA', value: result.payment_credit_bca },
                   { label: 'DEBIT BCA', value: result.payment_debit_bca },
                   { label: 'GOBIZ', value: result.payment_gobiz },
+                  { label: 'OVO', value: result.payment_ovo },
                   { label: 'QRIS', value: result.payment_qris },
                   { label: 'STRADA + REWARD', value: result.payment_strada_reward },
+                  { label: 'TRANSFER', value: result.payment_transfer },
                 ].map(item => (
                   <div key={item.label} className="bg-gray-50 rounded-lg p-4 border border-gray-200">
                     <p className="text-gray-600 text-sm mb-1">{item.label}</p>
@@ -430,7 +393,7 @@ export default function RevenueStoreClient() {
           </div>
 
           {/* Bank Data Section */}
-          {(result.bca_income || result.gobiz_income || result.biaya_admin_bank || result.biaya_penjualan_merchant_online) && (
+          {(result.bca_income !== undefined || result.gobiz_income !== undefined || result.ovo_income !== undefined) && (
             <>
               <h3 className="text-sm font-semibold text-gray-700 mb-3 mt-6">🏦 Data Bank & Pembayaran</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -450,6 +413,14 @@ export default function RevenueStoreClient() {
                     </p>
                   </div>
                 )}
+                {result.ovo_income !== undefined && (
+                  <div className="bg-green-50 rounded-lg p-4 border border-green-200">
+                    <p className="text-gray-600 text-sm mb-1">Uang Masuk OVO</p>
+                    <p className="text-2xl font-bold text-green-600">
+                      Rp {parseFloat(result.ovo_income || 0).toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                    </p>
+                  </div>
+                )}
                 {result.biaya_admin_bank !== undefined && (
                   <div className="bg-orange-50 rounded-lg p-4 border border-orange-200">
                     <p className="text-gray-600 text-sm mb-1">Biaya Admin Bank</p>
@@ -457,7 +428,7 @@ export default function RevenueStoreClient() {
                       Rp {parseFloat(result.biaya_admin_bank || 0).toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </p>
                     <p className="text-xs text-gray-500 mt-2">
-                      = (Credit + Debit + QRIS) - BCA + Gobiz
+                      = (Credit + Debit + QRIS) - BCA + Gobiz + OVO
                     </p>
                   </div>
                 )}
@@ -468,7 +439,7 @@ export default function RevenueStoreClient() {
                       Rp {parseFloat(result.biaya_penjualan_merchant_online || 0).toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </p>
                     <p className="text-xs text-gray-500 mt-2">
-                      = Payment Gobiz - Gobiz
+                      = (Gobiz + OVO) - (Masuk Gobiz + Masuk OVO)
                     </p>
                   </div>
                 )}

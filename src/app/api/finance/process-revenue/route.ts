@@ -49,23 +49,28 @@ export async function POST(request: NextRequest) {
             controller.enqueue(encoder.encode(JSON.stringify({ type: 'info', message: `» DEBIT BCA: Rp ${result.payment_debit_bca.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` }) + '\n'))
             controller.enqueue(encoder.encode(JSON.stringify({ type: 'info', message: `» QRIS: Rp ${result.payment_qris.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` }) + '\n'))
             controller.enqueue(encoder.encode(JSON.stringify({ type: 'info', message: `» GOBIZ: Rp ${result.payment_gobiz.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` }) + '\n'))
+            controller.enqueue(encoder.encode(JSON.stringify({ type: 'info', message: `» OVO: Rp ${result.payment_ovo.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` }) + '\n'))
+            controller.enqueue(encoder.encode(JSON.stringify({ type: 'info', message: `» TRANSFER: Rp ${result.payment_transfer.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` }) + '\n'))
 
             // Process bank data if provided
             const bcaIncome = bankData?.bca_income || 0
             const gobizIncome = bankData?.gobiz_income || 0
+            const ovoIncome = bankData?.ovo_income || 0
             const paymentCreditBca = bankData?.payment_credit_bca || result.payment_credit_bca || 0
             const paymentDebitBca = bankData?.payment_debit_bca || result.payment_debit_bca || 0
             const paymentQris = bankData?.payment_qris || result.payment_qris || 0
             const paymentGobiz = result.payment_gobiz || 0
+            const paymentOvo = result.payment_ovo || 0
 
             // Calculate fees
-            const biayaAdminBank = (paymentCreditBca + paymentDebitBca + paymentQris) - bcaIncome + gobizIncome
-            const biayaPenjualanMerchantOnline = paymentGobiz - gobizIncome
+            const biayaAdminBank = (paymentCreditBca + paymentDebitBca + paymentQris) - bcaIncome + gobizIncome + ovoIncome
+            const biayaPenjualanMerchantOnline = (paymentGobiz + paymentOvo) - (gobizIncome + ovoIncome)
 
             if (bankData?.bca_income !== undefined) {
               controller.enqueue(encoder.encode(JSON.stringify({ type: 'info', message: '--- Bank & Payment Data ---' }) + '\n'))
               controller.enqueue(encoder.encode(JSON.stringify({ type: 'info', message: `» Uang Masuk BCA: Rp ${bcaIncome.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` }) + '\n'))
               controller.enqueue(encoder.encode(JSON.stringify({ type: 'info', message: `» Uang Masuk Gobiz: Rp ${gobizIncome.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` }) + '\n'))
+              controller.enqueue(encoder.encode(JSON.stringify({ type: 'info', message: `» Uang Masuk OVO: Rp ${ovoIncome.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` }) + '\n'))
               controller.enqueue(encoder.encode(JSON.stringify({ type: 'info', message: `» Biaya Admin Bank: Rp ${biayaAdminBank.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` }) + '\n'))
               controller.enqueue(encoder.encode(JSON.stringify({ type: 'info', message: `» Biaya Penjualan Merchant: Rp ${biayaPenjualanMerchantOnline.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` }) + '\n'))
             }
@@ -85,6 +90,8 @@ export async function POST(request: NextRequest) {
               payment_gobiz: result.payment_gobiz,
               payment_qris: paymentQris,
               payment_strada_reward: result.payment_strada_reward,
+              payment_ovo: result.payment_ovo,
+              payment_transfer: result.payment_transfer,
               revenue_discount: result.revenue_discount,
               updated_at: new Date().toISOString(),
             }
@@ -93,6 +100,7 @@ export async function POST(request: NextRequest) {
             if (bankData?.bca_income !== undefined) {
               recordData.bca_income = bcaIncome
               recordData.gobiz_income = gobizIncome
+              recordData.ovo_income = ovoIncome
               recordData.piutang_gobiz = paymentGobiz - gobizIncome
               recordData.biaya_admin_bank = biayaAdminBank
               recordData.biaya_penjualan_merchant_online = biayaPenjualanMerchantOnline
