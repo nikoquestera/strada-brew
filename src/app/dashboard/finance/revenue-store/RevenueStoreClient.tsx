@@ -23,6 +23,7 @@ export default function RevenueStoreClient() {
   const [expandedStores, setExpandedStores] = useState(false)
   const [isVerified, setIsVerified] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [accurateConnected, setAccurateConnected] = useState(false)
 
   // Bank and Payment Manual Inputs
   const [bcaKreditIncome, setBcaKreditIncome] = useState<string>('')
@@ -36,7 +37,17 @@ export default function RevenueStoreClient() {
 
   useEffect(() => {
     loadStores()
+    checkAccurateConnection()
   }, [])
+
+  async function checkAccurateConnection() {
+    const { data } = await supabase.from('accurate_tokens').select('id').maybeSingle()
+    setAccurateConnected(!!data)
+  }
+
+  const handleConnectAccurate = () => {
+    window.location.href = '/api/accurate/auth'
+  }
 
   async function loadStores() {
     const { data, error } = await supabase
@@ -209,7 +220,27 @@ export default function RevenueStoreClient() {
 
       <div className="max-w-2xl">
         {/* Form Section */}
-        <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-6">
+        <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-6 mb-6">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-lg font-semibold text-gray-900">Integrasi Accurate</h2>
+            {!accurateConnected ? (
+              <button
+                onClick={handleConnectAccurate}
+                className="px-4 py-2 bg-orange-500 text-white rounded-lg text-sm font-bold hover:bg-orange-600 transition-colors shadow-sm"
+              >
+                🔌 Hubungkan ke Accurate
+              </button>
+            ) : (
+              <span className="flex items-center gap-2 text-green-600 text-sm font-bold bg-green-50 px-3 py-1.5 rounded-lg border border-green-100">
+                <CheckCircle2 size={16} /> Terhubung ke Accurate
+              </span>
+            )}
+          </div>
+          <p className="text-xs text-gray-500 -mt-4 mb-6">
+            Otorisasi diperlukan sekali untuk mengizinkan portal mengirim jurnal otomatis.
+          </p>
+          <hr className="border-gray-100 mb-6" />
+          
           <h2 className="text-lg font-semibold text-gray-900 mb-6">Filter Report</h2>
 
             {/* Date Input */}
@@ -378,7 +409,13 @@ export default function RevenueStoreClient() {
                   { label: 'Coffee Beans', value: result.penjualan_coffee_beans },
                   { label: 'Kitchen', value: result.penjualan_makanan },
                   { label: 'Konsinyasi', value: result.penjualan_konsinyasi },
-                ].map(item => (
+                  { label: 'Bundling', value: result.penjualan_bundling },
+                  { label: 'Inventory', value: result.penjualan_inventory },
+                  { label: 'Modifier', value: result.penjualan_modifier },
+                  { label: 'Konsiyasi No Brand', value: result.penjualan_konsinyasi_no_brand },
+                ]
+                .filter(item => item.value > 0)
+                .map(item => (
                   <div key={item.label} className="bg-gray-50 rounded-lg p-4 border border-gray-200">
                     <p className="text-gray-600 text-sm mb-1">{item.label}</p>
                     <p className="text-2xl font-bold text-gray-900">
@@ -394,19 +431,39 @@ export default function RevenueStoreClient() {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 {[
                   { label: 'Academy 100 Vouc', value: result.payment_academy_100_vouc },
+                  { label: 'Academy 50 Vouch', value: result.payment_academy_50_vouch },
                   { label: 'CASH', value: result.payment_cash },
+                  { label: 'CL UPPERWEST', value: result.payment_cl_upperwest },
                   { label: 'CREDIT BCA', value: result.payment_credit_bca },
                   { label: 'DEBIT BCA', value: result.payment_debit_bca },
+                  { label: 'Go Dine In Vou', value: result.payment_go_dine_in_vou },
                   { label: 'GOBIZ', value: result.payment_gobiz },
                   { label: 'OVO', value: result.payment_ovo },
                   { label: 'QRIS', value: result.payment_qris },
+                  { label: 'Strada+ Gift Vou', value: result.payment_strada_gift_vou },
                   { label: 'STRADA + REWARD', value: result.payment_strada_reward },
                   { label: 'TRANSFER', value: result.payment_transfer },
-                ].map(item => (
+                  { label: 'Voucher 50 SMB', value: result.payment_voucher_50_smb },
+                  { label: 'BSD Workshop Vou', value: result.payment_bsd_workshop_vou },
+                  { label: 'Voucher Bogo', value: result.payment_voucher_bogo },
+                  { label: 'Voucher CKT 50.0', value: result.payment_voucher_ckt_50_0 },
+                  { label: 'Voucher Chope', value: result.payment_voucher_chope },
+                  { label: 'Voucher Florist', value: result.payment_voucher_florist },
+                  { label: 'Voucher Harris P', value: result.payment_voucher_harris_p },
+                  { label: 'Voucher JustYoga', value: result.payment_voucher_justyoga },
+                  { label: 'Voucher Padel Sp', value: result.payment_voucher_padel_sp },
+                  { label: 'Voucher SMKG', value: result.payment_voucher_smkg },
+                  { label: 'Voucher Telkomsel', value: result.payment_voucher_telkomsel },
+                  { label: 'Voucher Timezone', value: result.payment_voucher_timezone },
+                  { label: 'Voucher Workshop', value: result.payment_voucher_workshop },
+                  { label: 'Workshop SMS Vou', value: result.payment_workshop_sms_voucher },
+                ]
+                .filter(item => item.value > 0) // Only show active payment methods to avoid UI clutter
+                .map(item => (
                   <div key={item.label} className="bg-gray-50 rounded-lg p-4 border border-gray-200">
                     <p className="text-gray-600 text-sm mb-1">{item.label}</p>
                     <p className="text-2xl font-bold text-gray-900">
-                      Rp {parseFloat(item.value || 0).toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                      Rp {parseFloat(item.value as any || 0).toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </p>
                   </div>
                 ))}

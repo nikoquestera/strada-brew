@@ -43,6 +43,10 @@ export async function POST(request: NextRequest) {
             controller.enqueue(encoder.encode(JSON.stringify({ type: 'info', message: `» Coffee Beans: Rp ${result.penjualan_coffee_beans.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` }) + '\n'))
             controller.enqueue(encoder.encode(JSON.stringify({ type: 'info', message: `» Kitchen: Rp ${result.penjualan_makanan.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` }) + '\n'))
             controller.enqueue(encoder.encode(JSON.stringify({ type: 'info', message: `» Konsinyasi: Rp ${result.penjualan_konsinyasi.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` }) + '\n'))
+            controller.enqueue(encoder.encode(JSON.stringify({ type: 'info', message: `» Bundling Kitchen and Bar: Rp ${result.penjualan_bundling.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` }) + '\n'))
+            controller.enqueue(encoder.encode(JSON.stringify({ type: 'info', message: `» Inventory: Rp ${result.penjualan_inventory.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` }) + '\n'))
+            controller.enqueue(encoder.encode(JSON.stringify({ type: 'info', message: `» Modifier: Rp ${result.penjualan_modifier.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` }) + '\n'))
+            controller.enqueue(encoder.encode(JSON.stringify({ type: 'info', message: `» Konsiyasi No Brand: Rp ${result.penjualan_konsinyasi_no_brand.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` }) + '\n'))
             
             controller.enqueue(encoder.encode(JSON.stringify({ type: 'info', message: '--- Payment Method ---' }) + '\n'))
             controller.enqueue(encoder.encode(JSON.stringify({ type: 'info', message: `» CREDIT BCA: Rp ${result.payment_credit_bca.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` }) + '\n'))
@@ -52,6 +56,25 @@ export async function POST(request: NextRequest) {
             controller.enqueue(encoder.encode(JSON.stringify({ type: 'info', message: `» OVO: Rp ${result.payment_ovo.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` }) + '\n'))
             controller.enqueue(encoder.encode(JSON.stringify({ type: 'info', message: `» TRANSFER: Rp ${result.payment_transfer.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` }) + '\n'))
             controller.enqueue(encoder.encode(JSON.stringify({ type: 'info', message: `» CASH: Rp ${result.payment_cash.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` }) + '\n'))
+            controller.enqueue(encoder.encode(JSON.stringify({ type: 'info', message: `» Academy 100 Vouc: Rp ${result.payment_academy_100_vouc.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` }) + '\n'))
+            controller.enqueue(encoder.encode(JSON.stringify({ type: 'info', message: `» Academy 50 Vouch: Rp ${result.payment_academy_50_vouch.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` }) + '\n'))
+            controller.enqueue(encoder.encode(JSON.stringify({ type: 'info', message: `» Go Dine In Vou: Rp ${result.payment_go_dine_in_vou.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` }) + '\n'))
+            controller.enqueue(encoder.encode(JSON.stringify({ type: 'info', message: `» CL UPPERWEST: Rp ${result.payment_cl_upperwest.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` }) + '\n'))
+            controller.enqueue(encoder.encode(JSON.stringify({ type: 'info', message: `» Strada+ Gift Vou: Rp ${result.payment_strada_gift_vou.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` }) + '\n'))
+            controller.enqueue(encoder.encode(JSON.stringify({ type: 'info', message: `» Voucher CKT 50.0: Rp ${result.payment_voucher_ckt_50_0.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` }) + '\n'))
+            controller.enqueue(encoder.encode(JSON.stringify({ type: 'info', message: `» Voucher Florist: Rp ${result.payment_voucher_florist.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` }) + '\n'))
+            controller.enqueue(encoder.encode(JSON.stringify({ type: 'info', message: `» Voucher Harris P: Rp ${result.payment_voucher_harris_p.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` }) + '\n'))
+            controller.enqueue(encoder.encode(JSON.stringify({ type: 'info', message: `» Voucher JustYoga: Rp ${result.payment_voucher_justyoga.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` }) + '\n'))
+            controller.enqueue(encoder.encode(JSON.stringify({ type: 'info', message: `» Voucher Padel Sp: Rp ${result.payment_voucher_padel_sp.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` }) + '\n'))
+            controller.enqueue(encoder.encode(JSON.stringify({ type: 'info', message: `» Voucher SMKG: Rp ${result.payment_voucher_smkg.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` }) + '\n'))
+            controller.enqueue(encoder.encode(JSON.stringify({ type: 'info', message: `» Voucher Timezone: Rp ${result.payment_voucher_timezone.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` }) + '\n'))
+            controller.enqueue(encoder.encode(JSON.stringify({ type: 'info', message: `» Voucher Workshop: Rp ${result.payment_voucher_workshop.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` }) + '\n'))
+            controller.enqueue(encoder.encode(JSON.stringify({ type: 'info', message: `» Voucher 50 SMB: Rp ${result.payment_voucher_50_smb.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` }) + '\n'))
+            controller.enqueue(encoder.encode(JSON.stringify({ type: 'info', message: `» BSD Workshop Vou: Rp ${result.payment_bsd_workshop_vou.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` }) + '\n'))
+            controller.enqueue(encoder.encode(JSON.stringify({ type: 'info', message: `» Voucher Bogo: Rp ${result.payment_voucher_bogo.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` }) + '\n'))
+            controller.enqueue(encoder.encode(JSON.stringify({ type: 'info', message: `» Voucher Chope: Rp ${result.payment_voucher_chope.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` }) + '\n'))
+            controller.enqueue(encoder.encode(JSON.stringify({ type: 'info', message: `» Voucher Telkomsel: Rp ${result.payment_voucher_telkomsel.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` }) + '\n'))
+            controller.enqueue(encoder.encode(JSON.stringify({ type: 'info', message: `» Workshop SMS Voucher: Rp ${result.payment_workshop_sms_voucher.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` }) + '\n'))
 
             // Process bank data if provided
             const bcaKreditIncome = bankData?.bca_kredit_income || 0
@@ -98,7 +121,29 @@ export async function POST(request: NextRequest) {
               penjualan_coffee_beans: result.penjualan_coffee_beans,
               penjualan_makanan: result.penjualan_makanan,
               penjualan_konsinyasi: result.penjualan_konsinyasi,
+              penjualan_bundling: result.penjualan_bundling,
+              penjualan_inventory: result.penjualan_inventory,
+              penjualan_modifier: result.penjualan_modifier,
+              penjualan_konsinyasi_no_brand: result.penjualan_konsinyasi_no_brand,
               payment_academy_100_vouc: result.payment_academy_100_vouc,
+              payment_academy_50_vouch: result.payment_academy_50_vouch,
+              payment_go_dine_in_vou: result.payment_go_dine_in_vou,
+              payment_cl_upperwest: result.payment_cl_upperwest,
+              payment_strada_gift_vou: result.payment_strada_gift_vou,
+              payment_voucher_ckt_50_0: result.payment_voucher_ckt_50_0,
+              payment_voucher_florist: result.payment_voucher_florist,
+              payment_voucher_harris_p: result.payment_voucher_harris_p,
+              payment_voucher_justyoga: result.payment_voucher_justyoga,
+              payment_voucher_padel_sp: result.payment_voucher_padel_sp,
+              payment_voucher_smkg: result.payment_voucher_smkg,
+              payment_voucher_timezone: result.payment_voucher_timezone,
+              payment_voucher_workshop: result.payment_voucher_workshop,
+              payment_voucher_50_smb: result.payment_voucher_50_smb,
+              payment_bsd_workshop_vou: result.payment_bsd_workshop_vou,
+              payment_voucher_bogo: result.payment_voucher_bogo,
+              payment_voucher_chope: result.payment_voucher_chope,
+              payment_voucher_telkomsel: result.payment_voucher_telkomsel,
+              payment_workshop_sms_voucher: result.payment_workshop_sms_voucher,
               payment_credit_bca: paymentCreditBca,
               payment_debit_bca: paymentDebitBca,
               payment_gobiz: paymentGobiz,

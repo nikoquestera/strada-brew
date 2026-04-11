@@ -8,7 +8,29 @@ export interface QuinosRevenueData {
   penjualan_coffee_beans: number
   penjualan_makanan: number
   penjualan_konsinyasi: number
+  penjualan_bundling: number
+  penjualan_inventory: number
+  penjualan_modifier: number
+  penjualan_konsinyasi_no_brand: number
   payment_academy_100_vouc: number
+  payment_academy_50_vouch: number
+  payment_go_dine_in_vou: number
+  payment_cl_upperwest: number
+  payment_strada_gift_vou: number
+  payment_voucher_ckt_50_0: number
+  payment_voucher_florist: number
+  payment_voucher_harris_p: number
+  payment_voucher_justyoga: number
+  payment_voucher_padel_sp: number
+  payment_voucher_smkg: number
+  payment_voucher_timezone: number
+  payment_voucher_workshop: number
+  payment_voucher_50_smb: number
+  payment_bsd_workshop_vou: number
+  payment_voucher_bogo: number
+  payment_voucher_chope: number
+  payment_voucher_telkomsel: number
+  payment_workshop_sms_voucher: number
   payment_credit_bca: number
   payment_debit_bca: number
   payment_gobiz: number
@@ -133,7 +155,29 @@ export async function fetchQuinosRevenue(date: string, store: string, onProgress
     penjualan_coffee_beans: deptTotals['Coffee Beans'] || 0,
     penjualan_makanan: deptTotals['Kitchen'] || 0,
     penjualan_konsinyasi: deptTotals['Konsinyasi'] || 0,
+    penjualan_bundling: deptTotals['Bundling Kitchen and Bar'] || 0,
+    penjualan_inventory: deptTotals['Inventory'] || 0,
+    penjualan_modifier: deptTotals['Modifier'] || 0,
+    penjualan_konsinyasi_no_brand: deptTotals['Konsiyasi No Brand'] || 0,
     payment_academy_100_vouc: findPayment('Academy 100 Vouc'),
+    payment_academy_50_vouch: findPayment('Academy 50 Vouch'),
+    payment_go_dine_in_vou: findPayment('Go Dine In Vou'),
+    payment_cl_upperwest: findPayment('CL UPPERWEST'),
+    payment_strada_gift_vou: findPayment('Strada+ Gift Vou'),
+    payment_voucher_ckt_50_0: findPayment('Voucher CKT 50.0'),
+    payment_voucher_florist: findPayment('Voucher Florist'),
+    payment_voucher_harris_p: findPayment('Voucher Harris P'),
+    payment_voucher_justyoga: findPayment('Voucher JustYoga'),
+    payment_voucher_padel_sp: findPayment('Voucher Padel Sp'),
+    payment_voucher_smkg: findPayment('Voucher SMKG'),
+    payment_voucher_timezone: findPayment('Voucher Timezone'),
+    payment_voucher_workshop: findPayment('Voucher Workshop'),
+    payment_voucher_50_smb: findPayment('Voucher 50 SMB'),
+    payment_bsd_workshop_vou: findPayment('BSD Workshop Vou'),
+    payment_voucher_bogo: findPayment('Voucher Bogo'),
+    payment_voucher_chope: findPayment('Voucher Chope'),
+    payment_voucher_telkomsel: findPayment('Voucher Telkomsel'),
+    payment_workshop_sms_voucher: findPayment('Workshop SMS Voucher'),
     payment_credit_bca: findPayment('CREDIT BCA'),
     payment_debit_bca: findPayment('DEBIT BCA'),
     payment_gobiz: findPayment('GOBIZ'),
