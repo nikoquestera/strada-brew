@@ -268,6 +268,7 @@ export default function RevenueStoreClient() {
       const decoder = new TextDecoder()
       let buffer = ''
 
+      let hasError = false
       while (true) {
         const { done, value } = await reader.read()
         if (done) break
@@ -280,6 +281,8 @@ export default function RevenueStoreClient() {
           if (!line.trim()) continue
           try {
             const log = JSON.parse(line)
+            if (log.type === 'error') hasError = true
+            
             if (log.message) {
               addLog(log.message, log.type || 'info')
             }
@@ -289,7 +292,11 @@ export default function RevenueStoreClient() {
         }
       }
       
-      addLog('✅ Semua proses Accurate selesai', 'success')
+      if (!hasError) {
+        addLog('✅ Semua proses Accurate berhasil terkirim!', 'success')
+      } else {
+        addLog('⚠️ Proses Accurate selesai dengan beberapa kesalahan.', 'warning')
+      }
     } catch (error: any) {
       addLog(`❌ Error Accurate: ${error.message}`, 'error')
     } finally {

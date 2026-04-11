@@ -108,6 +108,7 @@ export async function POST(request: NextRequest) {
           
           const sessionId = sessionRes.data.session
           const host = sessionRes.data.host
+          const apiBaseUrl = `${host}/accurate`
           sendLog('✅ [60%] Sesi database berhasil dibuka.', 'success')
 
           // Helper to add detail rows
@@ -117,17 +118,32 @@ export async function POST(request: NextRequest) {
             const roundedAmount = Math.round(amount * 100) / 100
             if (roundedAmount <= 0) return
             
-            details.push({
+            const detail: any = {
               accountNo: trimmedAccount,
               amountType: type,
               amount: roundedAmount
-            })
+            }
+
+            // Add customer/vendor if mapped (required for Piutang/Hutang accounts)
+            const customerNo = ACCURATE_MAPPING.CUSTOMER_MAPPING[trimmedAccount]
+            if (customerNo) {
+              detail.customerNo = customerNo
+              detail.subsidiaryType = 'CUSTOMER'
+            }
+
+            const vendorNo = ACCURATE_MAPPING.VENDOR_MAPPING[trimmedAccount]
+            if (vendorNo) {
+              detail.vendorNo = vendorNo
+              detail.subsidiaryType = 'VENDOR'
+            }
+            
+            details.push(detail)
           }
 
           const dateParts = resultData.transaction_date.split('-')
           const accurateDate = `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`
-          const memoPenjualan = `Penjualan cafe ${resultData.store_name} tanggal ${accurateDate}`
-          const memoUangMasuk = `Uang masuk penjualan cafe ${resultData.store_name} tanggal ${accurateDate}`
+          const memoPenjualan = `BREW - Penjualan cafe ${resultData.store_name} tanggal ${accurateDate}`
+          const memoUangMasuk = `BREW - Uang masuk penjualan cafe ${resultData.store_name} tanggal ${accurateDate}`
 
           // POST Logic
           const postToAccurate = async (memo: string, details: any[]) => {
@@ -135,16 +151,20 @@ export async function POST(request: NextRequest) {
             const credits = details.filter(d => d.amountType === 'CREDIT').reduce((s, d) => s + d.amount, 0)
             
             const diff = Math.abs(debits - credits)
-            if (diff > 0.01) {
+            if (diff > 1) { // 1 Rupiah tolerance
               throw new Error(`Jurnal "${memo}" tidak balance! (Selisih: ${diff.toFixed(2)}, D: ${debits.toFixed(2)}, K: ${credits.toFixed(2)})`)
             }
 
-            const response = await axios.post(`${host}/api/journal-voucher/save.do`, {
+            const payload = {
               transDate: accurateDate,
               description: memo,
               detailJournalVoucher: details
-            }, {
-              headers: { 
+            }
+
+            console.log(`[Accurate Request] POST ${apiBaseUrl}/api/journal-voucher/save.do`)
+            console.log('Payload:', JSON.stringify(payload, null, 2))
+
+            const response = await axios.post(`${apiBaseUrl}/api/journal-voucher/save.do`, payload, {              headers: { 
                 'Authorization': `Bearer ${accessToken}`,
                 'X-Session-ID': sessionId,
                 'Content-Type': 'application/json'
@@ -185,8 +205,6 @@ export async function POST(request: NextRequest) {
             if (mapping.payment_cl_upperwest) addDetail(detailsPenjualan, mapping.payment_cl_upperwest, 'DEBIT', (resultData.payment_cl_upperwest || 0))
 
             addDetail(detailsPenjualan, mapping.discount, 'DEBIT', (resultData.revenue_discount || 0))
-            addDetail(detailsPenjualan, ACCURATE_MAPPING.GLOBAL.admin_bank, 'DEBIT', (resultData.biaya_admin_bank || 0))
-            addDetail(detailsPenjualan, ACCURATE_MAPPING.GLOBAL.admin_merchant, 'DEBIT', (resultData.biaya_penjualan_merchant_online || 0))
 
             addDetail(detailsPenjualan, mapping.sales_bar, 'CREDIT', (resultData.penjualan_bar || 0))
             addDetail(detailsPenjualan, mapping.sales_beans, 'CREDIT', (resultData.penjualan_coffee_beans || 0))
@@ -208,7 +226,23 @@ export async function POST(request: NextRequest) {
           if (submitUangMasuk) {
             sendLog('⏳ [90%] Menyusun Jurnal Uang Masuk Cafe...')
             const detailsUangMasuk: any[] = []
-            addDetail(detailsUangMasuk, mapping.settlement_bca, 'DEBIT', (resultData.total_payment_quinos || 0))
+            
+            // Calculate Total NET Receipt (Bank Statement values)
+            const totalNetReceipt = 
+              (resultData.bca_kredit_income || 0) + 
+              (resultData.bca_debit_income || 0) + 
+              (resultData.bca_qris_income || 0) + 
+              (resultData.gobiz_income || 0) + 
+              (resultData.ovo_income || 0) + 
+              (resultData.payment_cash || 0) + 
+              (resultData.payment_transfer || 0)
+
+            // DEBIT: Settlement BCA (Actual cash/bank received)
+            addDetail(detailsUangMasuk, mapping.settlement_bca, 'DEBIT', totalNetReceipt)
+            
+            // DEBIT: Fees (Selisih)
+            addDetail(detailsUangMasuk, ACCURATE_MAPPING.GLOBAL.admin_bank, 'DEBIT', (resultData.biaya_admin_bank || 0))
+            addDetail(detailsUangMasuk, ACCURATE_MAPPING.GLOBAL.admin_merchant, 'DEBIT', (resultData.biaya_penjualan_merchant_online || 0))
             
             const allPaymentKeys = Object.keys(resultData).filter(k => k.startsWith('payment_'))
             for (const key of allPaymentKeys) {
