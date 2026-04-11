@@ -68,12 +68,57 @@ export default function RevenueStoreClient() {
   }
 
   const formatCurrencyInput = (val: string) => {
-    let cleaned = val.replace(/[^\d,-]/g, '')
-    if (!cleaned) return ''
-    const parts = cleaned.split(',')
-    if (parts.length > 2) parts.length = 2
-    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, '.')
-    return parts.join(',')
+    if (!val) return ''
+    
+    // Remove characters that aren't digits, comma, dot, or minus
+    let cleaned = val.replace(/[^\d.,-]/g, '')
+    if (cleaned === '-' || !cleaned) return cleaned
+
+    // Find all separators
+    const lastDot = cleaned.lastIndexOf('.')
+    const lastComma = cleaned.lastIndexOf(',')
+    
+    let integerPart = ''
+    let decimalPart = ''
+    
+    // Determine which is the decimal separator
+    if (lastComma > -1 && lastDot > -1) {
+      if (lastComma > lastDot) {
+        integerPart = cleaned.substring(0, lastComma).replace(/\D/g, '')
+        decimalPart = cleaned.substring(lastComma + 1).replace(/\D/g, '')
+      } else {
+        integerPart = cleaned.substring(0, lastDot).replace(/\D/g, '')
+        decimalPart = cleaned.substring(lastDot + 1).replace(/\D/g, '')
+      }
+    } else if (lastComma > -1) {
+      const count = (cleaned.match(/,/g) || []).length
+      if (count === 1 && cleaned.length - lastComma <= 3) {
+        integerPart = cleaned.substring(0, lastComma).replace(/\D/g, '')
+        decimalPart = cleaned.substring(lastComma + 1).replace(/\D/g, '')
+      } else {
+        integerPart = cleaned.replace(/\D/g, '')
+        decimalPart = ''
+      }
+    } else if (lastDot > -1) {
+      const count = (cleaned.match(/\./g) || []).length
+      if (count === 1 && cleaned.length - lastDot <= 3) {
+        integerPart = cleaned.substring(0, lastDot).replace(/\D/g, '')
+        decimalPart = cleaned.substring(lastDot + 1).replace(/\D/g, '')
+      } else {
+        integerPart = cleaned.replace(/\D/g, '')
+        decimalPart = ''
+      }
+    } else {
+      integerPart = cleaned.replace(/\D/g, '')
+      decimalPart = ''
+    }
+
+    let result = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+    if (val.includes(',') || (val.includes('.') && decimalPart)) {
+      result += ',' + decimalPart.substring(0, 2)
+    }
+    
+    return val.startsWith('-') ? '-' + result : result
   }
 
   const parseCurrencyInput = (val: string) => {
@@ -218,7 +263,7 @@ export default function RevenueStoreClient() {
         <p className="text-gray-500 mt-2">Otomatis tarik laporan penjualan dari Quinos Cloud</p>
       </div>
 
-      <div className="max-w-2xl">
+      <div className="w-full">
         {/* Form Section */}
         <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-6 mb-6">
           <div className="flex items-center justify-between mb-6">
@@ -477,7 +522,7 @@ export default function RevenueStoreClient() {
                   { label: 'Discount', value: result.revenue_discount },
                   { label: 'Hutang Service', value: result.hutang_service },
                   { label: 'Hutang Pajak Pemkot', value: result.hutang_pajak_pemkot },
-                  { label: 'Total Penjualan', value: result.total_payment_quinos || 0 },
+                  { label: 'Total Penjualan', value: (parseFloat(result.payment_credit_bca || 0) + parseFloat(result.payment_debit_bca || 0) + parseFloat(result.payment_qris || 0)) },
                 ].map(item => (
                   <div key={item.label} className="bg-gray-50 rounded-lg p-4 border border-gray-200">
                     <p className="text-gray-600 text-sm mb-1">{item.label}</p>
@@ -495,6 +540,12 @@ export default function RevenueStoreClient() {
             <>
               <h3 className="text-sm font-semibold text-gray-700 mb-3 mt-6">🏦 Data Bank & Pembayaran</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div className="bg-blue-50 rounded-lg p-4 border border-blue-200 lg:col-span-2">
+                  <p className="text-gray-600 text-sm mb-1 font-semibold text-blue-900">Total Uang Masuk (Semua Metode Quinos)</p>
+                  <p className="text-3xl font-bold text-blue-700">
+                    Rp {parseFloat(result.total_payment_quinos || 0).toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                  </p>
+                </div>
                 {result.bca_kredit_income !== undefined && (
                   <div className="bg-green-50 rounded-lg p-4 border border-green-200">
                     <p className="text-gray-600 text-sm mb-1">Uang Masuk KREDIT BCA</p>
