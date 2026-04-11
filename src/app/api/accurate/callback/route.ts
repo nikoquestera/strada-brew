@@ -24,7 +24,8 @@ export async function GET(request: NextRequest) {
 
   const clientId = process.env.ACCURATE_OAUTH_CLIENT_ID
   const clientSecret = process.env.ACCURATE_OAUTH_CLIENT_SECRET
-  const redirectUri = `${process.env.NEXT_PUBLIC_APP_URL || 'https://brew.stradacoffee.com'}/api/accurate/callback`
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://brew.stradacoffee.com'
+  const redirectUri = `${appUrl}/api/accurate/callback`
 
   try {
     const authHeader = Buffer.from(`${clientId}:${clientSecret}`).toString('base64')
@@ -61,7 +62,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Redirect back to finance dashboard
-    return NextResponse.redirect(`${process.env.NEXT_PUBLIC_APP_URL || 'https://brew.stradacoffee.com'}/dashboard/finance/revenue-store?accurate=connected`)
+    return NextResponse.redirect(`${appUrl}/dashboard/finance/revenue-store?accurate=connected`)
 
   } catch (err: any) {
     console.error('Accurate Callback Error:', err.response?.data || err.message)
