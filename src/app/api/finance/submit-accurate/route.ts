@@ -227,14 +227,14 @@ export async function POST(request: NextRequest) {
             sendLog('⏳ [90%] Menyusun Jurnal Uang Masuk Cafe...')
             const detailsUangMasuk: any[] = []
             
-            // Calculate Total NET Receipt (Bank Statement values)
+            // Calculate Total NET Receipt (Bank Statement values + Manual Cash)
             const totalNetReceipt = 
               (resultData.bca_kredit_income || 0) + 
               (resultData.bca_debit_income || 0) + 
               (resultData.bca_qris_income || 0) + 
               (resultData.gobiz_income || 0) + 
               (resultData.ovo_income || 0) + 
-              (resultData.payment_cash || 0) + 
+              (resultData.cash_income || 0) + 
               (resultData.payment_transfer || 0)
 
             // DEBIT: Settlement BCA (Actual cash/bank received)
@@ -244,8 +244,18 @@ export async function POST(request: NextRequest) {
             addDetail(detailsUangMasuk, ACCURATE_MAPPING.GLOBAL.admin_bank, 'DEBIT', (resultData.biaya_admin_bank || 0))
             addDetail(detailsUangMasuk, ACCURATE_MAPPING.GLOBAL.admin_merchant, 'DEBIT', (resultData.biaya_penjualan_merchant_online || 0))
             
-            const allPaymentKeys = Object.keys(resultData).filter(k => k.startsWith('payment_'))
-            for (const key of allPaymentKeys) {
+            // KREDIT: Only clear the 7 core Piutang/Payment accounts that were added to the Debit side
+            const corePaymentKeys = [
+              'payment_cash',
+              'payment_transfer',
+              'payment_credit_bca',
+              'payment_debit_bca',
+              'payment_qris',
+              'payment_gobiz',
+              'payment_ovo'
+            ]
+
+            for (const key of corePaymentKeys) {
               const amount = resultData[key] || 0
               if (amount > 0) {
                 const account = mapping[key] || ACCURATE_MAPPING.GLOBAL[key]

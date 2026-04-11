@@ -82,6 +82,7 @@ export async function POST(request: NextRequest) {
             const bcaQrisIncome = bankData?.bca_qris_income || 0
             const gobizIncome = bankData?.gobiz_income || 0
             const ovoIncome = bankData?.ovo_income || 0
+            const cashIncome = bankData?.cash_income || 0
 
             const paymentCreditBca = result.payment_credit_bca || 0
             const paymentDebitBca = result.payment_debit_bca || 0
@@ -93,10 +94,8 @@ export async function POST(request: NextRequest) {
             const biayaAdminBank = (paymentCreditBca - bcaKreditIncome) + (paymentDebitBca - bcaDebitIncome) + (paymentQris - bcaQrisIncome)
             const biayaPenjualanMerchantOnline = (paymentGobiz + paymentOvo) - (gobizIncome + ovoIncome)
             
-            // Calculate total SUM of ALL payment methods from Quinos
-            const totalPaymentQuinos = Object.entries(result)
-              .filter(([key]) => key.startsWith('payment_'))
-              .reduce((sum, [_, val]) => sum + (val as number || 0), 0)
+            // Calculate total SUM of core bank methods (BCA, Gobiz, OVO)
+            const totalPaymentQuinos = paymentCreditBca + paymentDebitBca + paymentQris + paymentGobiz + paymentOvo
 
             // Percentages
             const pctCredit = paymentCreditBca ? ((paymentCreditBca - bcaKreditIncome) / paymentCreditBca * 100) : 0
@@ -110,9 +109,10 @@ export async function POST(request: NextRequest) {
               controller.enqueue(encoder.encode(JSON.stringify({ type: 'info', message: `» Uang Masuk QRIS BCA: Rp ${bcaQrisIncome.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` }) + '\n'))
               controller.enqueue(encoder.encode(JSON.stringify({ type: 'info', message: `» Uang Masuk Gobiz: Rp ${gobizIncome.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` }) + '\n'))
               controller.enqueue(encoder.encode(JSON.stringify({ type: 'info', message: `» Uang Masuk OVO: Rp ${ovoIncome.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` }) + '\n'))
+              controller.enqueue(encoder.encode(JSON.stringify({ type: 'info', message: `» Uang Masuk CASH (Manual): Rp ${cashIncome.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` }) + '\n'))
               controller.enqueue(encoder.encode(JSON.stringify({ type: 'info', message: `» Biaya Admin Bank: Rp ${biayaAdminBank.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` }) + '\n'))
               controller.enqueue(encoder.encode(JSON.stringify({ type: 'info', message: `» Biaya Penjualan Merchant: Rp ${biayaPenjualanMerchantOnline.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` }) + '\n'))
-              controller.enqueue(encoder.encode(JSON.stringify({ type: 'info', message: `» Total Payment (Semua Metode Quinos): Rp ${totalPaymentQuinos.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` }) + '\n'))
+              controller.enqueue(encoder.encode(JSON.stringify({ type: 'info', message: `» Total Uang Masuk (BCA + Gobiz + OVO Gross): Rp ${totalPaymentQuinos.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` }) + '\n'))
             }
 
             controller.enqueue(encoder.encode(JSON.stringify({ type: 'info', message: 'Menyimpan data ke database Supabase...' }) + '\n'))
@@ -166,6 +166,7 @@ export async function POST(request: NextRequest) {
               recordData.bca_qris_income = bcaQrisIncome
               recordData.gobiz_income = gobizIncome
               recordData.ovo_income = ovoIncome
+              recordData.cash_income = cashIncome
               recordData.piutang_gobiz = paymentGobiz - gobizIncome
               recordData.biaya_admin_bank = biayaAdminBank
               recordData.biaya_penjualan_merchant_online = biayaPenjualanMerchantOnline
@@ -192,6 +193,7 @@ export async function POST(request: NextRequest) {
                 bca_qris_income: bcaQrisIncome,
                 gobiz_income: gobizIncome,
                 ovo_income: ovoIncome,
+                cash_income: cashIncome,
                 biaya_admin_bank: biayaAdminBank,
                 biaya_penjualan_merchant_online: biayaPenjualanMerchantOnline,
                 total_payment_quinos: totalPaymentQuinos,

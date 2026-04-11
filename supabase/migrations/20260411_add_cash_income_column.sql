@@ -1,0 +1,2 @@
+ALTER TABLE daily_revenue 
+ADD COLUMN IF NOT EXISTS cash_income NUMERIC DEFAULT 0;
