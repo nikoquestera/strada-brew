@@ -353,24 +353,64 @@ export default function RevenueStoreClient() {
           </div>
 
           {/* Revenue Data */}
-          <h3 className="text-sm font-semibold text-gray-700 mb-3">📊 Data Penjualan Quinos Cloud</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-            {Object.entries(result).map(([key, value]: [string, any]) => {
-              // Skip non-currency fields
-              if (['date', 'store', 'raw_json', 'id', 'created_at', 'updated_at', 'processed_at', 'bca_income', 'gobiz_income', 'biaya_admin_bank', 'biaya_penjualan_merchant_online', 'payment_credit_bca', 'payment_debit_bca', 'payment_qris', 'piutang_gobiz'].includes(key)) {
-                return null
-              }
-              return (
-                <div key={key} className="bg-gray-50 rounded-lg p-4 border border-gray-200">
-                  <p className="text-gray-600 text-sm mb-1 capitalize">
-                    {key.replace(/_/g, ' ')}
-                  </p>
-                  <p className="text-2xl font-bold text-gray-900">
-                    Rp {parseFloat(value || 0).toLocaleString('id-ID')}
-                  </p>
-                </div>
-              )
-            })}
+          <div className="space-y-6">
+            <div>
+              <h3 className="text-sm font-semibold text-gray-700 mb-3">🛒 Sales per Department</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                {[
+                  { label: 'Bar', value: result.penjualan_bar },
+                  { label: 'Coffee Beans', value: result.penjualan_coffee_beans },
+                  { label: 'Kitchen', value: result.penjualan_makanan },
+                  { label: 'Konsinyasi', value: result.penjualan_konsinyasi },
+                ].map(item => (
+                  <div key={item.label} className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                    <p className="text-gray-600 text-sm mb-1">{item.label}</p>
+                    <p className="text-2xl font-bold text-gray-900">
+                      Rp {parseFloat(item.value || 0).toLocaleString('id-ID')}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <h3 className="text-sm font-semibold text-gray-700 mb-3">💳 Payment Method</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {[
+                  { label: 'Academy 100 Vouc', value: result.payment_academy_100_vouc },
+                  { label: 'CREDIT BCA', value: result.payment_credit_bca },
+                  { label: 'DEBIT BCA', value: result.payment_debit_bca },
+                  { label: 'GOBIZ', value: result.payment_gobiz },
+                  { label: 'QRIS', value: result.payment_qris },
+                  { label: 'STRADA + REWARD', value: result.payment_strada_reward },
+                ].map(item => (
+                  <div key={item.label} className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                    <p className="text-gray-600 text-sm mb-1">{item.label}</p>
+                    <p className="text-2xl font-bold text-gray-900">
+                      Rp {parseFloat(item.value || 0).toLocaleString('id-ID')}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <h3 className="text-sm font-semibold text-gray-700 mb-3">💰 Revenue & Potongan</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                {[
+                  { label: 'Discount', value: result.revenue_discount },
+                  { label: 'Hutang Service', value: result.hutang_service },
+                  { label: 'Hutang Pajak Pemkot', value: result.hutang_pajak_pemkot },
+                ].map(item => (
+                  <div key={item.label} className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                    <p className="text-gray-600 text-sm mb-1">{item.label}</p>
+                    <p className="text-2xl font-bold text-gray-900">
+                      Rp {parseFloat(item.value || 0).toLocaleString('id-ID')}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
 
           {/* Bank Data Section */}

@@ -26,6 +26,7 @@ CREATE POLICY "Allow delete stores for service role" ON stores
 
 INSERT INTO stores (name, sort_order)
 VALUES
+    ('BSD', 5),
     ('LA.PIAZZA', 10),
     ('MKG', 20),
     ('SMB', 30),
