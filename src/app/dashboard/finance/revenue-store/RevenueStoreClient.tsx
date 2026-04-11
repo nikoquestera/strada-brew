@@ -24,6 +24,8 @@ export default function RevenueStoreClient() {
   const [isVerified, setIsVerified] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [accurateConnected, setAccurateConnected] = useState(false)
+  const [submitUangMasuk, setSubmitUangMasuk] = useState(true)
+  const [submitPenjualan, setSubmitPenjualan] = useState(true)
 
   // Bank and Payment Manual Inputs
   const [bcaKreditIncome, setBcaKreditIncome] = useState<string>('')
@@ -225,6 +227,11 @@ export default function RevenueStoreClient() {
       return
     }
 
+    if (!submitUangMasuk && !submitPenjualan) {
+      addLog('❌ Pilih minimal satu jenis jurnal yang ingin dikirim', 'error')
+      return
+    }
+
     setIsSubmitting(true)
     // Clear logs or keep them? User said log process should move to bottom.
     // Let's not clear logs from Quinos process, just append.
@@ -234,7 +241,13 @@ export default function RevenueStoreClient() {
       const response = await fetch('/api/finance/submit-accurate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(result),
+        body: JSON.stringify({
+          ...result,
+          options: {
+            submitUangMasuk,
+            submitPenjualan
+          }
+        }),
       })
 
       if (!response.ok) {
@@ -646,7 +659,44 @@ export default function RevenueStoreClient() {
           {/* Submit to Accurate Section */}
           <div className="mt-8 pt-6 border-t border-gray-200">
             <h3 className="text-lg font-bold text-gray-900 mb-4">Post ke Jurnal Umum Accurate</h3>
-            <div className="bg-blue-50 border border-blue-200 rounded-xl p-5">
+            <div className="bg-blue-50 border border-blue-200 rounded-xl p-5 space-y-6">
+              
+              {/* Journal Selection */}
+              <div>
+                <p className="text-sm font-semibold text-blue-900 mb-3">Pilih Jurnal yang akan dibuat:</p>
+                <div className="flex flex-col gap-3">
+                  <label className="flex items-center gap-3 cursor-pointer group">
+                    <input 
+                      type="checkbox" 
+                      checked={submitPenjualan} 
+                      onChange={(e) => setSubmitPenjualan(e.target.checked)}
+                      disabled={isSubmitting}
+                      className="w-5 h-5 rounded border-gray-300 text-strada-blue focus:ring-strada-blue"
+                    />
+                    <div className="flex flex-col">
+                      <span className="text-sm font-bold text-gray-900 group-hover:text-strada-blue transition-colors">Jurnal Penjualan Cafe</span>
+                      <span className="text-xs text-gray-500">Mencatat pendapatan (Bar, Kitchen, dll) dan piutang.</span>
+                    </div>
+                  </label>
+
+                  <label className="flex items-center gap-3 cursor-pointer group">
+                    <input 
+                      type="checkbox" 
+                      checked={submitUangMasuk} 
+                      onChange={(e) => setSubmitUangMasuk(e.target.checked)}
+                      disabled={isSubmitting}
+                      className="w-5 h-5 rounded border-gray-300 text-strada-blue focus:ring-strada-blue"
+                    />
+                    <div className="flex flex-col">
+                      <span className="text-sm font-bold text-gray-900 group-hover:text-strada-blue transition-colors">Jurnal Uang Masuk Penjualan Cafe</span>
+                      <span className="text-xs text-gray-500">Mencatat pelunasan piutang ke Kas/Bank Settlement.</span>
+                    </div>
+                  </label>
+                </div>
+              </div>
+
+              <hr className="border-blue-100" />
+
               <label className="flex items-start gap-3 cursor-pointer">
                 <input 
                   type="checkbox" 
@@ -655,9 +705,8 @@ export default function RevenueStoreClient() {
                   disabled={isSubmitting}
                   className="mt-1 w-5 h-5 rounded border-gray-300 text-strada-blue focus:ring-strada-blue"
                 />
-                <span className="text-sm text-blue-900 leading-relaxed">
+                <span className="text-sm text-blue-900 leading-relaxed font-medium">
                   Saya menyatakan bahwa saya sudah memverifikasi angka-angka Penjualan dan Bank di atas. 
-                  Data yang dikirim akan otomatis masuk ke Jurnal Umum Accurate (Uang Masuk Penjualan Cafe & Penjualan Cafe).
                 </span>
               </label>
 

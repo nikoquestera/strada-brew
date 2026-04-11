@@ -15,6 +15,10 @@ export async function POST(request: NextRequest) {
     }
 
     const resultData = await request.json()
+    const { options } = resultData
+    const submitUangMasuk = options?.submitUangMasuk ?? true
+    const submitPenjualan = options?.submitPenjualan ?? true
+
     if (!resultData || !resultData.transaction_date || !resultData.store_name) {
       return new Response(JSON.stringify({ success: false, message: 'Invalid data payload' }), { status: 400 })
     }
@@ -89,7 +93,6 @@ export async function POST(request: NextRequest) {
             throw new Error('Tidak ada database Accurate yang ditemukan untuk akun ini.')
           }
 
-          // Search for a database that might match or just use the first one
           const dbId = dbListRes.data.d[0].id
           sendLog(`✅ [40%] Database ditemukan: "${dbListRes.data.d[0].alias}".`)
           
@@ -122,57 +125,6 @@ export async function POST(request: NextRequest) {
           const memoPenjualan = `Penjualan cafe ${resultData.store_name} tanggal ${accurateDate}`
           const memoUangMasuk = `Uang masuk penjualan cafe ${resultData.store_name} tanggal ${accurateDate}`
 
-          // ─── JOURNAL 1: PENJUALAN CAFE ──────────────────────────────────
-          sendLog('⏳ [70%] Menyusun Jurnal Penjualan Cafe...')
-          const detailsPenjualan: any[] = []
-          addDetail(detailsPenjualan, mapping.payment_credit_bca, 'DEBIT', (resultData.payment_credit_bca || 0))
-          addDetail(detailsPenjualan, mapping.payment_debit_bca, 'DEBIT', (resultData.payment_debit_bca || 0))
-          addDetail(detailsPenjualan, mapping.payment_qris, 'DEBIT', (resultData.payment_qris || 0))
-          addDetail(detailsPenjualan, mapping.payment_gobiz, 'DEBIT', (resultData.payment_gobiz || 0))
-          addDetail(detailsPenjualan, mapping.payment_ovo, 'DEBIT', (resultData.payment_ovo || 0))
-          addDetail(detailsPenjualan, mapping.payment_cash, 'DEBIT', (resultData.payment_cash || 0))
-          addDetail(detailsPenjualan, mapping.payment_transfer, 'DEBIT', (resultData.payment_transfer || 0))
-          
-          for (const key in ACCURATE_MAPPING.GLOBAL) {
-            if (key.startsWith('payment_')) addDetail(detailsPenjualan, ACCURATE_MAPPING.GLOBAL[key], 'DEBIT', (resultData[key] || 0))
-          }
-          if (mapping.payment_bsd_workshop_vou) addDetail(detailsPenjualan, mapping.payment_bsd_workshop_vou, 'DEBIT', (resultData.payment_bsd_workshop_vou || 0))
-          if (mapping.payment_voucher_smkg) addDetail(detailsPenjualan, mapping.payment_voucher_smkg, 'DEBIT', (resultData.payment_voucher_smkg || 0))
-          if (mapping.payment_workshop_sms_voucher) addDetail(detailsPenjualan, mapping.payment_workshop_sms_voucher, 'DEBIT', (resultData.payment_workshop_sms_voucher || 0))
-          if (mapping.payment_cl_upperwest) addDetail(detailsPenjualan, mapping.payment_cl_upperwest, 'DEBIT', (resultData.payment_cl_upperwest || 0))
-
-          addDetail(detailsPenjualan, mapping.discount, 'DEBIT', (resultData.revenue_discount || 0))
-          addDetail(detailsPenjualan, ACCURATE_MAPPING.GLOBAL.admin_bank, 'DEBIT', (resultData.biaya_admin_bank || 0))
-          addDetail(detailsPenjualan, ACCURATE_MAPPING.GLOBAL.admin_merchant, 'DEBIT', (resultData.biaya_penjualan_merchant_online || 0))
-
-          addDetail(detailsPenjualan, mapping.sales_bar, 'KREDIT', (resultData.penjualan_bar || 0))
-          addDetail(detailsPenjualan, mapping.sales_beans, 'KREDIT', (resultData.penjualan_coffee_beans || 0))
-          addDetail(detailsPenjualan, mapping.sales_kitchen, 'KREDIT', (resultData.penjualan_makanan || 0))
-          addDetail(detailsPenjualan, mapping.sales_konsinyasi, 'KREDIT', (resultData.penjualan_konsinyasi || 0))
-          addDetail(detailsPenjualan, mapping.sales_bundling, 'KREDIT', (resultData.penjualan_bundling || 0))
-          addDetail(detailsPenjualan, mapping.sales_inventory, 'KREDIT', (resultData.penjualan_inventory || 0))
-          addDetail(detailsPenjualan, mapping.sales_modifier, 'KREDIT', (resultData.penjualan_modifier || 0))
-          addDetail(detailsPenjualan, mapping.sales_konsinyasi_no_brand, 'KREDIT', (resultData.penjualan_konsinyasi_no_brand || 0))
-          addDetail(detailsPenjualan, mapping.service_charge, 'KREDIT', (resultData.hutang_service || 0))
-          addDetail(detailsPenjualan, mapping.tax, 'KREDIT', (resultData.hutang_pajak_pemkot || 0))
-
-          // ─── JOURNAL 2: UANG MASUK PENJUALAN CAFE ───────────────────────
-          sendLog('⏳ [80%] Menyusun Jurnal Uang Masuk Cafe...')
-          const detailsUangMasuk: any[] = []
-          addDetail(detailsUangMasuk, mapping.settlement_bca, 'DEBIT', (resultData.total_payment_quinos || 0))
-          
-          // KREDIT: All payment components (using same logic as Journal 1 but as KREDIT)
-          const allPaymentKeys = Object.keys(resultData).filter(k => k.startsWith('payment_'))
-          for (const key of allPaymentKeys) {
-            const amount = resultData[key] || 0
-            if (amount > 0) {
-              const account = mapping[key] || ACCURATE_MAPPING.GLOBAL[key]
-              if (account) {
-                addDetail(detailsUangMasuk, account, 'KREDIT', amount)
-              }
-            }
-          }
-
           // POST Logic
           const postToAccurate = async (memo: string, details: any[]) => {
             const debits = details.filter(d => d.amountType === 'DEBIT').reduce((s, d) => s + d.amount, 0)
@@ -189,15 +141,71 @@ export async function POST(request: NextRequest) {
             })
           }
 
-          sendLog('⏳ [90%] Mengirim Jurnal Penjualan ke server Accurate...')
-          const res1 = await postToAccurate(memoPenjualan, detailsPenjualan)
-          if (!res1.data.s) throw new Error(`Accurate Reject Jurnal Penjualan: ${res1.data.d}`)
+          // ─── JOURNAL 1: PENJUALAN CAFE ──────────────────────────────────
+          if (submitPenjualan) {
+            sendLog('⏳ [70%] Menyusun Jurnal Penjualan Cafe...')
+            const detailsPenjualan: any[] = []
+            addDetail(detailsPenjualan, mapping.payment_credit_bca, 'DEBIT', (resultData.payment_credit_bca || 0))
+            addDetail(detailsPenjualan, mapping.payment_debit_bca, 'DEBIT', (resultData.payment_debit_bca || 0))
+            addDetail(detailsPenjualan, mapping.payment_qris, 'DEBIT', (resultData.payment_qris || 0))
+            addDetail(detailsPenjualan, mapping.payment_gobiz, 'DEBIT', (resultData.payment_gobiz || 0))
+            addDetail(detailsPenjualan, mapping.payment_ovo, 'DEBIT', (resultData.payment_ovo || 0))
+            addDetail(detailsPenjualan, mapping.payment_cash, 'DEBIT', (resultData.payment_cash || 0))
+            addDetail(detailsPenjualan, mapping.payment_transfer, 'DEBIT', (resultData.payment_transfer || 0))
+            
+            for (const key in ACCURATE_MAPPING.GLOBAL) {
+              if (key.startsWith('payment_')) addDetail(detailsPenjualan, ACCURATE_MAPPING.GLOBAL[key], 'DEBIT', (resultData[key] || 0))
+            }
+            if (mapping.payment_bsd_workshop_vou) addDetail(detailsPenjualan, mapping.payment_bsd_workshop_vou, 'DEBIT', (resultData.payment_bsd_workshop_vou || 0))
+            if (mapping.payment_voucher_smkg) addDetail(detailsPenjualan, mapping.payment_voucher_smkg, 'DEBIT', (resultData.payment_voucher_smkg || 0))
+            if (mapping.payment_workshop_sms_voucher) addDetail(detailsPenjualan, mapping.payment_workshop_sms_voucher, 'DEBIT', (resultData.payment_workshop_sms_voucher || 0))
+            if (mapping.payment_cl_upperwest) addDetail(detailsPenjualan, mapping.payment_cl_upperwest, 'DEBIT', (resultData.payment_cl_upperwest || 0))
 
-          sendLog('⏳ [95%] Mengirim Jurnal Uang Masuk ke server Accurate...')
-          const res2 = await postToAccurate(memoUangMasuk, detailsUangMasuk)
-          if (!res2.data.s) throw new Error(`Accurate Reject Jurnal Uang Masuk: ${res2.data.d}`)
+            addDetail(detailsPenjualan, mapping.discount, 'DEBIT', (resultData.revenue_discount || 0))
+            addDetail(detailsPenjualan, ACCURATE_MAPPING.GLOBAL.admin_bank, 'DEBIT', (resultData.biaya_admin_bank || 0))
+            addDetail(detailsPenjualan, ACCURATE_MAPPING.GLOBAL.admin_merchant, 'DEBIT', (resultData.biaya_penjualan_merchant_online || 0))
 
-          sendLog('✅ [100%] Semua Jurnal berhasil ter-posting di Accurate!', 'success')
+            addDetail(detailsPenjualan, mapping.sales_bar, 'KREDIT', (resultData.penjualan_bar || 0))
+            addDetail(detailsPenjualan, mapping.sales_beans, 'KREDIT', (resultData.penjualan_coffee_beans || 0))
+            addDetail(detailsPenjualan, mapping.sales_kitchen, 'KREDIT', (resultData.penjualan_makanan || 0))
+            addDetail(detailsPenjualan, mapping.sales_konsinyasi, 'KREDIT', (resultData.penjualan_konsinyasi || 0))
+            addDetail(detailsPenjualan, mapping.sales_bundling, 'KREDIT', (resultData.penjualan_bundling || 0))
+            addDetail(detailsPenjualan, mapping.sales_inventory, 'KREDIT', (resultData.penjualan_inventory || 0))
+            addDetail(detailsPenjualan, mapping.sales_modifier, 'KREDIT', (resultData.penjualan_modifier || 0))
+            addDetail(detailsPenjualan, mapping.sales_konsinyasi_no_brand, 'KREDIT', (resultData.penjualan_konsinyasi_no_brand || 0))
+            addDetail(detailsPenjualan, mapping.service_charge, 'KREDIT', (resultData.hutang_service || 0))
+            addDetail(detailsPenjualan, mapping.tax, 'KREDIT', (resultData.hutang_pajak_pemkot || 0))
+
+            sendLog('⏳ [80%] Mengirim Jurnal Penjualan ke server Accurate...')
+            const res1 = await postToAccurate(memoPenjualan, detailsPenjualan)
+            if (!res1.data.s) throw new Error(`Accurate Reject Jurnal Penjualan: ${res1.data.d}`)
+            sendLog('✅ [85%] Jurnal Penjualan berhasil.', 'success')
+          }
+
+          // ─── JOURNAL 2: UANG MASUK PENJUALAN CAFE ───────────────────────
+          if (submitUangMasuk) {
+            sendLog('⏳ [90%] Menyusun Jurnal Uang Masuk Cafe...')
+            const detailsUangMasuk: any[] = []
+            addDetail(detailsUangMasuk, mapping.settlement_bca, 'DEBIT', (resultData.total_payment_quinos || 0))
+            
+            const allPaymentKeys = Object.keys(resultData).filter(k => k.startsWith('payment_'))
+            for (const key of allPaymentKeys) {
+              const amount = resultData[key] || 0
+              if (amount > 0) {
+                const account = mapping[key] || ACCURATE_MAPPING.GLOBAL[key]
+                if (account) {
+                  addDetail(detailsUangMasuk, account, 'KREDIT', amount)
+                }
+              }
+            }
+
+            sendLog('⏳ [95%] Mengirim Jurnal Uang Masuk ke server Accurate...')
+            const res2 = await postToAccurate(memoUangMasuk, detailsUangMasuk)
+            if (!res2.data.s) throw new Error(`Accurate Reject Jurnal Uang Masuk: ${res2.data.d}`)
+            sendLog('✅ [98%] Jurnal Uang Masuk berhasil.', 'success')
+          }
+
+          sendLog('✅ [100%] Semua pilihan Jurnal berhasil ter-posting!', 'success')
           controller.enqueue(encoder.encode(JSON.stringify({ success: true, message: 'Done' }) + '\n'))
           controller.close()
 
