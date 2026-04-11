@@ -59,7 +59,7 @@ export async function POST(request: NextRequest) {
             const paymentGobiz = result.payment_gobiz || 0
 
             // Calculate fees
-            const biayaAdminBank = (paymentCreditBca + paymentDebitBca + paymentQris) - bcaIncome
+            const biayaAdminBank = (paymentCreditBca + paymentDebitBca + paymentQris) - bcaIncome + gobizIncome
             const biayaPenjualanMerchantOnline = paymentGobiz - gobizIncome
 
             if (bankData?.bca_income !== undefined) {

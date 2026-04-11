@@ -401,11 +401,12 @@ export default function RevenueStoreClient() {
                   { label: 'Discount', value: result.revenue_discount },
                   { label: 'Hutang Service', value: result.hutang_service },
                   { label: 'Hutang Pajak Pemkot', value: result.hutang_pajak_pemkot },
+                  { label: 'Total Penjualan', value: (parseFloat(result.payment_credit_bca || 0) + parseFloat(result.payment_debit_bca || 0) + parseFloat(result.payment_qris || 0)) },
                 ].map(item => (
                   <div key={item.label} className="bg-gray-50 rounded-lg p-4 border border-gray-200">
                     <p className="text-gray-600 text-sm mb-1">{item.label}</p>
                     <p className="text-2xl font-bold text-gray-900">
-                      Rp {parseFloat(item.value || 0).toLocaleString('id-ID')}
+                      Rp {parseFloat(item.value as any || 0).toLocaleString('id-ID')}
                     </p>
                   </div>
                 ))}
@@ -441,7 +442,7 @@ export default function RevenueStoreClient() {
                       Rp {parseFloat(result.biaya_admin_bank || 0).toLocaleString('id-ID')}
                     </p>
                     <p className="text-xs text-gray-500 mt-2">
-                      = (Credit + Debit + QRIS) - BCA
+                      = (Credit + Debit + QRIS) - BCA + Gobiz
                     </p>
                   </div>
                 )}
