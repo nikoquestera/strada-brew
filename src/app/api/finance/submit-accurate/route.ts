@@ -111,7 +111,7 @@ export async function POST(request: NextRequest) {
           sendLog('✅ [60%] Sesi database berhasil dibuka.', 'success')
 
           // Helper to add detail rows
-          const addDetail = (details: any[], account: string, type: 'DEBIT' | 'KREDIT', amount: number) => {
+          const addDetail = (details: any[], account: string, type: 'DEBIT' | 'CREDIT', amount: number) => {
             if (amount <= 0 || !account) return
             details.push({
               accountNo: account,
@@ -128,7 +128,7 @@ export async function POST(request: NextRequest) {
           // POST Logic
           const postToAccurate = async (memo: string, details: any[]) => {
             const debits = details.filter(d => d.amountType === 'DEBIT').reduce((s, d) => s + d.amount, 0)
-            const credits = details.filter(d => d.amountType === 'KREDIT').reduce((s, d) => s + d.amount, 0)
+            const credits = details.filter(d => d.amountType === 'CREDIT').reduce((s, d) => s + d.amount, 0)
             if (Math.abs(debits - credits) > 1) {
               throw new Error(`Jurnal "${memo}" tidak balance! (D: ${debits}, K: ${credits})`)
             }
@@ -165,20 +165,23 @@ export async function POST(request: NextRequest) {
             addDetail(detailsPenjualan, ACCURATE_MAPPING.GLOBAL.admin_bank, 'DEBIT', (resultData.biaya_admin_bank || 0))
             addDetail(detailsPenjualan, ACCURATE_MAPPING.GLOBAL.admin_merchant, 'DEBIT', (resultData.biaya_penjualan_merchant_online || 0))
 
-            addDetail(detailsPenjualan, mapping.sales_bar, 'KREDIT', (resultData.penjualan_bar || 0))
-            addDetail(detailsPenjualan, mapping.sales_beans, 'KREDIT', (resultData.penjualan_coffee_beans || 0))
-            addDetail(detailsPenjualan, mapping.sales_kitchen, 'KREDIT', (resultData.penjualan_makanan || 0))
-            addDetail(detailsPenjualan, mapping.sales_konsinyasi, 'KREDIT', (resultData.penjualan_konsinyasi || 0))
-            addDetail(detailsPenjualan, mapping.sales_bundling, 'KREDIT', (resultData.penjualan_bundling || 0))
-            addDetail(detailsPenjualan, mapping.sales_inventory, 'KREDIT', (resultData.penjualan_inventory || 0))
-            addDetail(detailsPenjualan, mapping.sales_modifier, 'KREDIT', (resultData.penjualan_modifier || 0))
-            addDetail(detailsPenjualan, mapping.sales_konsinyasi_no_brand, 'KREDIT', (resultData.penjualan_konsinyasi_no_brand || 0))
-            addDetail(detailsPenjualan, mapping.service_charge, 'KREDIT', (resultData.hutang_service || 0))
-            addDetail(detailsPenjualan, mapping.tax, 'KREDIT', (resultData.hutang_pajak_pemkot || 0))
+            addDetail(detailsPenjualan, mapping.sales_bar, 'CREDIT', (resultData.penjualan_bar || 0))
+            addDetail(detailsPenjualan, mapping.sales_beans, 'CREDIT', (resultData.penjualan_coffee_beans || 0))
+            addDetail(detailsPenjualan, mapping.sales_kitchen, 'CREDIT', (resultData.penjualan_makanan || 0))
+            addDetail(detailsPenjualan, mapping.sales_konsinyasi, 'CREDIT', (resultData.penjualan_konsinyasi || 0))
+            addDetail(detailsPenjualan, mapping.sales_bundling, 'CREDIT', (resultData.penjualan_bundling || 0))
+            addDetail(detailsPenjualan, mapping.sales_inventory, 'CREDIT', (resultData.penjualan_inventory || 0))
+            addDetail(detailsPenjualan, mapping.sales_modifier, 'CREDIT', (resultData.penjualan_modifier || 0))
+            addDetail(detailsPenjualan, mapping.sales_konsinyasi_no_brand, 'CREDIT', (resultData.penjualan_konsinyasi_no_brand || 0))
+            addDetail(detailsPenjualan, mapping.service_charge, 'CREDIT', (resultData.hutang_service || 0))
+            addDetail(detailsPenjualan, mapping.tax, 'CREDIT', (resultData.hutang_pajak_pemkot || 0))
 
             sendLog('⏳ [80%] Mengirim Jurnal Penjualan ke server Accurate...')
             const res1 = await postToAccurate(memoPenjualan, detailsPenjualan)
-            if (!res1.data.s) throw new Error(`Accurate Reject Jurnal Penjualan: ${res1.data.d}`)
+            if (!res1.data.s) {
+              const errMsg = Array.isArray(res1.data.d) ? res1.data.d.join(', ') : res1.data.d
+              throw new Error(`Accurate Reject Jurnal Penjualan: ${errMsg || 'Unknown Error'}`)
+            }
             sendLog('✅ [85%] Jurnal Penjualan berhasil.', 'success')
           }
 
@@ -194,14 +197,17 @@ export async function POST(request: NextRequest) {
               if (amount > 0) {
                 const account = mapping[key] || ACCURATE_MAPPING.GLOBAL[key]
                 if (account) {
-                  addDetail(detailsUangMasuk, account, 'KREDIT', amount)
+                  addDetail(detailsUangMasuk, account, 'CREDIT', amount)
                 }
               }
             }
 
             sendLog('⏳ [95%] Mengirim Jurnal Uang Masuk ke server Accurate...')
             const res2 = await postToAccurate(memoUangMasuk, detailsUangMasuk)
-            if (!res2.data.s) throw new Error(`Accurate Reject Jurnal Uang Masuk: ${res2.data.d}`)
+            if (!res2.data.s) {
+              const errMsg = Array.isArray(res2.data.d) ? res2.data.d.join(', ') : res2.data.d
+              throw new Error(`Accurate Reject Jurnal Uang Masuk: ${errMsg || 'Unknown Error'}`)
+            }
             sendLog('✅ [98%] Jurnal Uang Masuk berhasil.', 'success')
           }
 
