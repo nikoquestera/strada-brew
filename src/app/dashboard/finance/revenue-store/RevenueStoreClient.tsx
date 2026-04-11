@@ -207,11 +207,10 @@ export default function RevenueStoreClient() {
         <p className="text-gray-500 mt-2">Otomatis tarik laporan penjualan dari Quinos Cloud</p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="max-w-2xl">
         {/* Form Section */}
-        <div className="lg:col-span-1">
-          <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-6">
-            <h2 className="text-lg font-semibold text-gray-900 mb-6">Filter Report</h2>
+        <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-6">
+          <h2 className="text-lg font-semibold text-gray-900 mb-6">Filter Report</h2>
 
             {/* Date Input */}
             <div className="mb-6">
@@ -348,42 +347,6 @@ export default function RevenueStoreClient() {
             </button>
           </div>
         </div>
-
-        {/* Logs Section */}
-        <div className="lg:col-span-2">
-          <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-6 h-full">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">Log Proses</h2>
-            <div className="bg-gray-900 text-gray-100 p-4 rounded-lg font-mono text-sm h-96 overflow-y-auto">
-              {logs.length === 0 ? (
-                <div className="text-gray-500 flex items-center justify-center h-full">
-                  Klik tombol "Proses" untuk memulai...
-                </div>
-              ) : (
-                <div className="space-y-2">
-                  {logs.map((log, idx) => (
-                    <div key={idx} className="flex gap-3">
-                      <span className="text-gray-500 shrink-0 w-24">[{log.timestamp}]</span>
-                      <span
-                        className={`flex-1 ${
-                          log.type === 'success'
-                            ? 'text-green-400'
-                            : log.type === 'error'
-                            ? 'text-red-400'
-                            : log.type === 'warning'
-                            ? 'text-yellow-400'
-                            : 'text-blue-400'
-                        }`}
-                      >
-                        {log.message}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
 
       {/* Results Section */}
       {result && (
@@ -587,6 +550,39 @@ export default function RevenueStoreClient() {
           </details>
         </div>
       )}
+
+      {/* Logs Section */}
+      <div className="mt-6 bg-white rounded-lg border border-gray-200 shadow-sm p-6">
+        <h2 className="text-lg font-semibold text-gray-900 mb-4">Log Proses</h2>
+        <div className="bg-gray-900 text-gray-100 p-4 rounded-lg font-mono text-sm h-96 overflow-y-auto">
+          {logs.length === 0 ? (
+            <div className="text-gray-500 flex items-center justify-center h-full">
+              Klik tombol "Proses" untuk memulai...
+            </div>
+          ) : (
+            <div className="space-y-2">
+              {logs.map((log, idx) => (
+                <div key={idx} className="flex gap-3">
+                  <span className="text-gray-500 shrink-0 w-24">[{log.timestamp}]</span>
+                  <span
+                    className={`flex-1 ${
+                      log.type === 'success'
+                        ? 'text-green-400'
+                        : log.type === 'error'
+                        ? 'text-red-400'
+                        : log.type === 'warning'
+                        ? 'text-yellow-400'
+                        : 'text-blue-400'
+                    }`}
+                  >
+                    {log.message}
+                  </span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   )
 }
