@@ -21,6 +21,8 @@ export default function RevenueStoreClient() {
   const [logs, setLogs] = useState<ProcessingLog[]>([])
   const [result, setResult] = useState<any>(null)
   const [expandedStores, setExpandedStores] = useState(false)
+  const [isVerified, setIsVerified] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   // Bank and Payment Manual Inputs
   const [bcaKreditIncome, setBcaKreditIncome] = useState<string>('')
@@ -156,6 +158,45 @@ export default function RevenueStoreClient() {
       addLog(`❌ Error: ${error.message}`, 'error')
     } finally {
       setIsProcessing(false)
+    }
+  }
+
+  const handleSubmitAccurate = async () => {
+    if (!isVerified) {
+      addLog('❌ Mohon centang verifikasi terlebih dahulu', 'error')
+      return
+    }
+
+    setIsSubmitting(true)
+    addLog('🚀 Memulai pengiriman jurnal ke Accurate...', 'info')
+
+    try {
+      const response = await fetch('/api/finance/submit-accurate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(result),
+      })
+
+      if (!response.ok) {
+        const errText = await response.text()
+        try {
+           const errObj = JSON.parse(errText)
+           throw new Error(errObj.message || response.statusText)
+        } catch(e) {
+           throw new Error(`API Error: ${response.statusText}`)
+        }
+      }
+
+      const resData = await response.json()
+      if (resData.success) {
+        addLog('✅ Berhasil mengirim jurnal ke Accurate!', 'success')
+      } else {
+        throw new Error(resData.message || 'Unknown error submitting to Accurate')
+      }
+    } catch (error: any) {
+      addLog(`❌ Error Accurate: ${error.message}`, 'error')
+    } finally {
+      setIsSubmitting(false)
     }
   }
 
@@ -502,6 +543,38 @@ export default function RevenueStoreClient() {
               </div>
             </>
           )}
+
+          {/* Submit to Accurate Section */}
+          <div className="mt-8 pt-6 border-t border-gray-200">
+            <h3 className="text-lg font-bold text-gray-900 mb-4">Post ke Jurnal Umum Accurate</h3>
+            <div className="bg-blue-50 border border-blue-200 rounded-xl p-5">
+              <label className="flex items-start gap-3 cursor-pointer">
+                <input 
+                  type="checkbox" 
+                  checked={isVerified} 
+                  onChange={(e) => setIsVerified(e.target.checked)}
+                  disabled={isSubmitting}
+                  className="mt-1 w-5 h-5 rounded border-gray-300 text-strada-blue focus:ring-strada-blue"
+                />
+                <span className="text-sm text-blue-900 leading-relaxed">
+                  Saya menyatakan bahwa saya sudah memverifikasi angka-angka Penjualan dan Bank di atas. 
+                  Data yang dikirim akan otomatis masuk ke Jurnal Umum Accurate (Uang Masuk Penjualan Cafe & Penjualan Cafe).
+                </span>
+              </label>
+
+              <button
+                onClick={handleSubmitAccurate}
+                disabled={!isVerified || isSubmitting}
+                className={`mt-4 w-full py-3 rounded-lg font-bold text-sm flex items-center justify-center gap-2 transition-all ${
+                  !isVerified || isSubmitting
+                    ? 'bg-blue-200 text-white cursor-not-allowed'
+                    : 'bg-strada-blue text-white hover:bg-strada-dark-teal shadow-md hover:shadow-lg'
+                }`}
+              >
+                {isSubmitting ? 'Mengirim Data ke Accurate...' : 'Submit to Accurate'}
+              </button>
+            </div>
+          </div>
 
           {/* Raw JSON */}
           <details className="border-t border-gray-200 pt-4 mt-6">
