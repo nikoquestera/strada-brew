@@ -112,11 +112,15 @@ export async function POST(request: NextRequest) {
 
           // Helper to add detail rows
           const addDetail = (details: any[], account: string, type: 'DEBIT' | 'CREDIT', amount: number) => {
-            if (amount <= 0 || !account) return
+            if (!account) return
+            const trimmedAccount = account.trim()
+            const roundedAmount = Math.round(amount * 100) / 100
+            if (roundedAmount <= 0) return
+            
             details.push({
-              accountNo: account,
+              accountNo: trimmedAccount,
               amountType: type,
-              amount: amount
+              amount: roundedAmount
             })
           }
 
@@ -129,16 +133,35 @@ export async function POST(request: NextRequest) {
           const postToAccurate = async (memo: string, details: any[]) => {
             const debits = details.filter(d => d.amountType === 'DEBIT').reduce((s, d) => s + d.amount, 0)
             const credits = details.filter(d => d.amountType === 'CREDIT').reduce((s, d) => s + d.amount, 0)
-            if (Math.abs(debits - credits) > 1) {
-              throw new Error(`Jurnal "${memo}" tidak balance! (D: ${debits}, K: ${credits})`)
+            
+            const diff = Math.abs(debits - credits)
+            if (diff > 0.01) {
+              throw new Error(`Jurnal "${memo}" tidak balance! (Selisih: ${diff.toFixed(2)}, D: ${debits.toFixed(2)}, K: ${credits.toFixed(2)})`)
             }
-            return axios.post(`${host}/api/journal-voucher/save.do`, {
+
+            const response = await axios.post(`${host}/api/journal-voucher/save.do`, {
               transDate: accurateDate,
               description: memo,
               detailJournalVoucher: details
             }, {
-              headers: { 'Authorization': `Bearer ${accessToken}`, 'X-Session-ID': sessionId }
+              headers: { 
+                'Authorization': `Bearer ${accessToken}`,
+                'X-Session-ID': sessionId,
+                'Content-Type': 'application/json'
+              }
             })
+
+            if (!response.data.s) {
+              const d = response.data.d
+              let errMsg = 'Unknown Accurate Error'
+              if (typeof d === 'string') errMsg = d
+              else if (Array.isArray(d)) errMsg = d.join(', ')
+              else if (typeof d === 'object') errMsg = JSON.stringify(d)
+              
+              throw new Error(`Accurate Reject: ${errMsg}`)
+            }
+
+            return response.data
           }
 
           // ─── JOURNAL 1: PENJUALAN CAFE ──────────────────────────────────
@@ -177,11 +200,7 @@ export async function POST(request: NextRequest) {
             addDetail(detailsPenjualan, mapping.tax, 'CREDIT', (resultData.hutang_pajak_pemkot || 0))
 
             sendLog('⏳ [80%] Mengirim Jurnal Penjualan ke server Accurate...')
-            const res1 = await postToAccurate(memoPenjualan, detailsPenjualan)
-            if (!res1.data.s) {
-              const errMsg = Array.isArray(res1.data.d) ? res1.data.d.join(', ') : res1.data.d
-              throw new Error(`Accurate Reject Jurnal Penjualan: ${errMsg || 'Unknown Error'}`)
-            }
+            await postToAccurate(memoPenjualan, detailsPenjualan)
             sendLog('✅ [85%] Jurnal Penjualan berhasil.', 'success')
           }
 
@@ -203,11 +222,7 @@ export async function POST(request: NextRequest) {
             }
 
             sendLog('⏳ [95%] Mengirim Jurnal Uang Masuk ke server Accurate...')
-            const res2 = await postToAccurate(memoUangMasuk, detailsUangMasuk)
-            if (!res2.data.s) {
-              const errMsg = Array.isArray(res2.data.d) ? res2.data.d.join(', ') : res2.data.d
-              throw new Error(`Accurate Reject Jurnal Uang Masuk: ${errMsg || 'Unknown Error'}`)
-            }
+            await postToAccurate(memoUangMasuk, detailsUangMasuk)
             sendLog('✅ [98%] Jurnal Uang Masuk berhasil.', 'success')
           }
 
@@ -216,7 +231,16 @@ export async function POST(request: NextRequest) {
           controller.close()
 
         } catch (err: any) {
-          const errorMsg = err.response?.data?.d || err.message
+          console.error('Submit Accurate Error Trace:', err.response?.data || err.message)
+          const errorData = err.response?.data
+          let errorMsg = err.message
+          
+          if (errorData) {
+            if (typeof errorData.d === 'string') errorMsg = errorData.d
+            else if (Array.isArray(errorData.d)) errorMsg = errorData.d.join(', ')
+            else errorMsg = JSON.stringify(errorData)
+          }
+          
           sendLog(`❌ Gagal: ${errorMsg}`, 'error')
           controller.close()
         }
