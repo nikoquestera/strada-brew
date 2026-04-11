@@ -167,12 +167,14 @@ export default function RevenueStoreClient() {
 
       if (!response.ok) {
         const errText = await response.text()
+        let errorMessage = response.statusText || `Server Error (${response.status})`
         try {
            const errObj = JSON.parse(errText)
-           throw new Error(errObj.message || response.statusText)
+           errorMessage = errObj.message || errObj.error || errorMessage
         } catch(e) {
-           throw new Error(`API Error: ${response.statusText}`)
+           if (errText) errorMessage = errText.substring(0, 100)
         }
+        throw new Error(errorMessage)
       }
 
       if (!response.body) throw new Error('No body returned from API')
@@ -224,6 +226,8 @@ export default function RevenueStoreClient() {
     }
 
     setIsSubmitting(true)
+    // Clear logs or keep them? User said log process should move to bottom.
+    // Let's not clear logs from Quinos process, just append.
     addLog('🚀 Memulai pengiriman jurnal ke Accurate...', 'info')
 
     try {
@@ -235,20 +239,44 @@ export default function RevenueStoreClient() {
 
       if (!response.ok) {
         const errText = await response.text()
+        let errorMessage = response.statusText || `Server Error (${response.status})`
         try {
            const errObj = JSON.parse(errText)
-           throw new Error(errObj.message || response.statusText)
+           errorMessage = errObj.message || errObj.error || errorMessage
         } catch(e) {
-           throw new Error(`API Error: ${response.statusText}`)
+           if (errText) errorMessage = errText.substring(0, 100)
         }
+        throw new Error(errorMessage)
       }
 
-      const resData = await response.json()
-      if (resData.success) {
-        addLog('✅ Berhasil mengirim jurnal ke Accurate!', 'success')
-      } else {
-        throw new Error(resData.message || 'Unknown error submitting to Accurate')
+      if (!response.body) throw new Error('No body returned from API')
+
+      const reader = response.body.getReader()
+      const decoder = new TextDecoder()
+      let buffer = ''
+
+      while (true) {
+        const { done, value } = await reader.read()
+        if (done) break
+        
+        buffer += decoder.decode(value, { stream: true })
+        const lines = buffer.split('\n')
+        buffer = lines.pop() || ''
+        
+        for (const line of lines) {
+          if (!line.trim()) continue
+          try {
+            const log = JSON.parse(line)
+            if (log.message) {
+              addLog(log.message, log.type || 'info')
+            }
+          } catch (e) {
+            console.log("Accurate chunk parse error", e, line)
+          }
+        }
       }
+      
+      addLog('✅ Semua proses Accurate selesai', 'success')
     } catch (error: any) {
       addLog(`❌ Error Accurate: ${error.message}`, 'error')
     } finally {

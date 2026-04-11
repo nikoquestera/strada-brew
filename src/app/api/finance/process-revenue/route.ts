@@ -93,7 +93,10 @@ export async function POST(request: NextRequest) {
             const biayaAdminBank = (paymentCreditBca - bcaKreditIncome) + (paymentDebitBca - bcaDebitIncome) + (paymentQris - bcaQrisIncome)
             const biayaPenjualanMerchantOnline = (paymentGobiz + paymentOvo) - (gobizIncome + ovoIncome)
             
-            const totalPaymentQuinos = result.payment_academy_100_vouc + result.payment_credit_bca + result.payment_debit_bca + result.payment_gobiz + result.payment_qris + result.payment_strada_reward + result.payment_ovo + result.payment_transfer + result.payment_cash
+            // Calculate total SUM of ALL payment methods from Quinos
+            const totalPaymentQuinos = Object.entries(result)
+              .filter(([key]) => key.startsWith('payment_'))
+              .reduce((sum, [_, val]) => sum + (val as number || 0), 0)
 
             // Percentages
             const pctCredit = paymentCreditBca ? ((paymentCreditBca - bcaKreditIncome) / paymentCreditBca * 100) : 0
