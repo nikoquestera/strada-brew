@@ -39,16 +39,16 @@ export async function POST(request: NextRequest) {
 
             // Log detailed results to UI
             controller.enqueue(encoder.encode(JSON.stringify({ type: 'info', message: '--- Sales per Department ---' }) + '\n'))
-            controller.enqueue(encoder.encode(JSON.stringify({ type: 'info', message: `» Bar: Rp ${result.penjualan_bar.toLocaleString('id-ID')}` }) + '\n'))
-            controller.enqueue(encoder.encode(JSON.stringify({ type: 'info', message: `» Coffee Beans: Rp ${result.penjualan_coffee_beans.toLocaleString('id-ID')}` }) + '\n'))
-            controller.enqueue(encoder.encode(JSON.stringify({ type: 'info', message: `» Kitchen: Rp ${result.penjualan_makanan.toLocaleString('id-ID')}` }) + '\n'))
-            controller.enqueue(encoder.encode(JSON.stringify({ type: 'info', message: `» Konsinyasi: Rp ${result.penjualan_konsinyasi.toLocaleString('id-ID')}` }) + '\n'))
+            controller.enqueue(encoder.encode(JSON.stringify({ type: 'info', message: `» Bar: Rp ${result.penjualan_bar.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` }) + '\n'))
+            controller.enqueue(encoder.encode(JSON.stringify({ type: 'info', message: `» Coffee Beans: Rp ${result.penjualan_coffee_beans.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` }) + '\n'))
+            controller.enqueue(encoder.encode(JSON.stringify({ type: 'info', message: `» Kitchen: Rp ${result.penjualan_makanan.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` }) + '\n'))
+            controller.enqueue(encoder.encode(JSON.stringify({ type: 'info', message: `» Konsinyasi: Rp ${result.penjualan_konsinyasi.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` }) + '\n'))
             
             controller.enqueue(encoder.encode(JSON.stringify({ type: 'info', message: '--- Payment Method ---' }) + '\n'))
-            controller.enqueue(encoder.encode(JSON.stringify({ type: 'info', message: `» CREDIT BCA: Rp ${result.payment_credit_bca.toLocaleString('id-ID')}` }) + '\n'))
-            controller.enqueue(encoder.encode(JSON.stringify({ type: 'info', message: `» DEBIT BCA: Rp ${result.payment_debit_bca.toLocaleString('id-ID')}` }) + '\n'))
-            controller.enqueue(encoder.encode(JSON.stringify({ type: 'info', message: `» QRIS: Rp ${result.payment_qris.toLocaleString('id-ID')}` }) + '\n'))
-            controller.enqueue(encoder.encode(JSON.stringify({ type: 'info', message: `» GOBIZ: Rp ${result.payment_gobiz.toLocaleString('id-ID')}` }) + '\n'))
+            controller.enqueue(encoder.encode(JSON.stringify({ type: 'info', message: `» CREDIT BCA: Rp ${result.payment_credit_bca.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` }) + '\n'))
+            controller.enqueue(encoder.encode(JSON.stringify({ type: 'info', message: `» DEBIT BCA: Rp ${result.payment_debit_bca.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` }) + '\n'))
+            controller.enqueue(encoder.encode(JSON.stringify({ type: 'info', message: `» QRIS: Rp ${result.payment_qris.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` }) + '\n'))
+            controller.enqueue(encoder.encode(JSON.stringify({ type: 'info', message: `» GOBIZ: Rp ${result.payment_gobiz.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` }) + '\n'))
 
             // Process bank data if provided
             const bcaIncome = bankData?.bca_income || 0
@@ -64,10 +64,10 @@ export async function POST(request: NextRequest) {
 
             if (bankData?.bca_income !== undefined) {
               controller.enqueue(encoder.encode(JSON.stringify({ type: 'info', message: '--- Bank & Payment Data ---' }) + '\n'))
-              controller.enqueue(encoder.encode(JSON.stringify({ type: 'info', message: `» Uang Masuk BCA: Rp ${bcaIncome.toLocaleString('id-ID')}` }) + '\n'))
-              controller.enqueue(encoder.encode(JSON.stringify({ type: 'info', message: `» Uang Masuk Gobiz: Rp ${gobizIncome.toLocaleString('id-ID')}` }) + '\n'))
-              controller.enqueue(encoder.encode(JSON.stringify({ type: 'info', message: `» Biaya Admin Bank: Rp ${biayaAdminBank.toLocaleString('id-ID')}` }) + '\n'))
-              controller.enqueue(encoder.encode(JSON.stringify({ type: 'info', message: `» Biaya Penjualan Merchant: Rp ${biayaPenjualanMerchantOnline.toLocaleString('id-ID')}` }) + '\n'))
+              controller.enqueue(encoder.encode(JSON.stringify({ type: 'info', message: `» Uang Masuk BCA: Rp ${bcaIncome.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` }) + '\n'))
+              controller.enqueue(encoder.encode(JSON.stringify({ type: 'info', message: `» Uang Masuk Gobiz: Rp ${gobizIncome.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` }) + '\n'))
+              controller.enqueue(encoder.encode(JSON.stringify({ type: 'info', message: `» Biaya Admin Bank: Rp ${biayaAdminBank.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` }) + '\n'))
+              controller.enqueue(encoder.encode(JSON.stringify({ type: 'info', message: `» Biaya Penjualan Merchant: Rp ${biayaPenjualanMerchantOnline.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` }) + '\n'))
             }
 
             controller.enqueue(encoder.encode(JSON.stringify({ type: 'info', message: 'Menyimpan data ke database Supabase...' }) + '\n'))

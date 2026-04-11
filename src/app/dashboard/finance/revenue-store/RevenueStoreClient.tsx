@@ -51,6 +51,21 @@ export default function RevenueStoreClient() {
     setLogs(prev => [...prev, { timestamp, message, type }])
   }
 
+  const formatCurrencyInput = (val: string) => {
+    let cleaned = val.replace(/[^\d,-]/g, '')
+    if (!cleaned) return ''
+    const parts = cleaned.split(',')
+    if (parts.length > 2) parts.length = 2
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+    return parts.join(',')
+  }
+
+  const parseCurrencyInput = (val: string) => {
+    if (!val) return 0
+    const cleaned = val.replace(/\./g, '').replace(/,/g, '.')
+    return parseFloat(cleaned) || 0
+  }
+
   const handleProses = async () => {
     if (!selectedStore) {
       addLog('❌ Pilih satu toko', 'error')
@@ -80,11 +95,11 @@ export default function RevenueStoreClient() {
           date: selectedDate,
           stores: [selectedStore],
           bankData: {
-            bca_income: parseFloat(bcaIncome) || 0,
-            gobiz_income: parseFloat(gobizIncome) || 0,
-            payment_credit_bca: parseFloat(paymentCreditBca) || 0,
-            payment_debit_bca: parseFloat(paymentDebitBca) || 0,
-            payment_qris: parseFloat(paymentQris) || 0,
+            bca_income: parseCurrencyInput(bcaIncome),
+            gobiz_income: parseCurrencyInput(gobizIncome),
+            payment_credit_bca: parseCurrencyInput(paymentCreditBca),
+            payment_debit_bca: parseCurrencyInput(paymentDebitBca),
+            payment_qris: parseCurrencyInput(paymentQris),
           },
         }),
       })
@@ -195,9 +210,9 @@ export default function RevenueStoreClient() {
               </label>
               <input
                 id="bca-income"
-                type="number"
+                type="text"
                 value={bcaIncome}
-                onChange={(e) => setBcaIncome(e.target.value)}
+                onChange={(e) => setBcaIncome(formatCurrencyInput(e.target.value))}
                 disabled={isProcessing}
                 placeholder="Masukkan dari bank statement"
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-strada-blue disabled:bg-gray-50 disabled:text-gray-500"
@@ -212,9 +227,9 @@ export default function RevenueStoreClient() {
               </label>
               <input
                 id="gobiz-income"
-                type="number"
+                type="text"
                 value={gobizIncome}
-                onChange={(e) => setGobizIncome(e.target.value)}
+                onChange={(e) => setGobizIncome(formatCurrencyInput(e.target.value))}
                 disabled={isProcessing}
                 placeholder="Masukkan dari Gobiz statement"
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-strada-blue disabled:bg-gray-50 disabled:text-gray-500"
@@ -236,9 +251,9 @@ export default function RevenueStoreClient() {
                   </label>
                   <input
                     id="payment-credit"
-                    type="number"
+                    type="text"
                     value={paymentCreditBca}
-                    onChange={(e) => setPaymentCreditBca(e.target.value)}
+                    onChange={(e) => setPaymentCreditBca(formatCurrencyInput(e.target.value))}
                     disabled={isProcessing}
                     placeholder="0"
                     className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-strada-blue disabled:bg-gray-50 disabled:text-gray-500"
@@ -252,9 +267,9 @@ export default function RevenueStoreClient() {
                   </label>
                   <input
                     id="payment-debit"
-                    type="number"
+                    type="text"
                     value={paymentDebitBca}
-                    onChange={(e) => setPaymentDebitBca(e.target.value)}
+                    onChange={(e) => setPaymentDebitBca(formatCurrencyInput(e.target.value))}
                     disabled={isProcessing}
                     placeholder="0"
                     className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-strada-blue disabled:bg-gray-50 disabled:text-gray-500"
@@ -268,9 +283,9 @@ export default function RevenueStoreClient() {
                   </label>
                   <input
                     id="payment-qris"
-                    type="number"
+                    type="text"
                     value={paymentQris}
-                    onChange={(e) => setPaymentQris(e.target.value)}
+                    onChange={(e) => setPaymentQris(formatCurrencyInput(e.target.value))}
                     disabled={isProcessing}
                     placeholder="0"
                     className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-strada-blue disabled:bg-gray-50 disabled:text-gray-500"
@@ -366,7 +381,7 @@ export default function RevenueStoreClient() {
                   <div key={item.label} className="bg-gray-50 rounded-lg p-4 border border-gray-200">
                     <p className="text-gray-600 text-sm mb-1">{item.label}</p>
                     <p className="text-2xl font-bold text-gray-900">
-                      Rp {parseFloat(item.value || 0).toLocaleString('id-ID')}
+                      Rp {parseFloat(item.value || 0).toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </p>
                   </div>
                 ))}
@@ -387,7 +402,7 @@ export default function RevenueStoreClient() {
                   <div key={item.label} className="bg-gray-50 rounded-lg p-4 border border-gray-200">
                     <p className="text-gray-600 text-sm mb-1">{item.label}</p>
                     <p className="text-2xl font-bold text-gray-900">
-                      Rp {parseFloat(item.value || 0).toLocaleString('id-ID')}
+                      Rp {parseFloat(item.value || 0).toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </p>
                   </div>
                 ))}
@@ -406,7 +421,7 @@ export default function RevenueStoreClient() {
                   <div key={item.label} className="bg-gray-50 rounded-lg p-4 border border-gray-200">
                     <p className="text-gray-600 text-sm mb-1">{item.label}</p>
                     <p className="text-2xl font-bold text-gray-900">
-                      Rp {parseFloat(item.value as any || 0).toLocaleString('id-ID')}
+                      Rp {parseFloat(item.value as any || 0).toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </p>
                   </div>
                 ))}
@@ -423,7 +438,7 @@ export default function RevenueStoreClient() {
                   <div className="bg-green-50 rounded-lg p-4 border border-green-200">
                     <p className="text-gray-600 text-sm mb-1">Uang Masuk BCA</p>
                     <p className="text-2xl font-bold text-green-600">
-                      Rp {parseFloat(result.bca_income || 0).toLocaleString('id-ID')}
+                      Rp {parseFloat(result.bca_income || 0).toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </p>
                   </div>
                 )}
@@ -431,7 +446,7 @@ export default function RevenueStoreClient() {
                   <div className="bg-green-50 rounded-lg p-4 border border-green-200">
                     <p className="text-gray-600 text-sm mb-1">Uang Masuk Gobiz</p>
                     <p className="text-2xl font-bold text-green-600">
-                      Rp {parseFloat(result.gobiz_income || 0).toLocaleString('id-ID')}
+                      Rp {parseFloat(result.gobiz_income || 0).toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </p>
                   </div>
                 )}
@@ -439,7 +454,7 @@ export default function RevenueStoreClient() {
                   <div className="bg-orange-50 rounded-lg p-4 border border-orange-200">
                     <p className="text-gray-600 text-sm mb-1">Biaya Admin Bank</p>
                     <p className="text-2xl font-bold text-orange-600">
-                      Rp {parseFloat(result.biaya_admin_bank || 0).toLocaleString('id-ID')}
+                      Rp {parseFloat(result.biaya_admin_bank || 0).toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </p>
                     <p className="text-xs text-gray-500 mt-2">
                       = (Credit + Debit + QRIS) - BCA + Gobiz
@@ -450,7 +465,7 @@ export default function RevenueStoreClient() {
                   <div className="bg-orange-50 rounded-lg p-4 border border-orange-200">
                     <p className="text-gray-600 text-sm mb-1">Biaya Merchant Online</p>
                     <p className="text-2xl font-bold text-orange-600">
-                      Rp {parseFloat(result.biaya_penjualan_merchant_online || 0).toLocaleString('id-ID')}
+                      Rp {parseFloat(result.biaya_penjualan_merchant_online || 0).toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </p>
                     <p className="text-xs text-gray-500 mt-2">
                       = Payment Gobiz - Gobiz
