@@ -1,5 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
-import { isFinanceUser } from '@/lib/auth/access'
+import { createClient as createAdminClient } from '@supabase/supabase-js'
 import { redirect } from 'next/navigation'
 import FinanceLayout from './layout-client'
 
@@ -11,7 +11,21 @@ export default async function FinanceDashboardLayout({ children }: { children: R
     const { data: { user }, error } = await supabase.auth.getUser()
     if (error || !user) redirect('/login')
 
-    if (!isFinanceUser(user.email)) redirect('/dashboard/hrd')
+    // Check role in database securely using admin client to bypass RLS
+    const adminSupabase = createAdminClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SERVICE_SUPABASE_KEY!
+    )
+
+    const { data: userData } = await adminSupabase
+      .from('brew_users')
+      .select('role')
+      .ilike('email', user.email || '')
+      .maybeSingle()
+
+    if (userData?.role?.toUpperCase() !== 'FINANCE') {
+      redirect('/dashboard/hrd')
+    }
 
     userEmail = user?.email ?? ''
   } catch {

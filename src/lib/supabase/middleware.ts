@@ -31,24 +31,20 @@ export async function updateSession(request: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser()
   const userEmail = user?.email?.toLowerCase() || ''
 
+  // Use the fast fallback list for immediate UI response.
+  // The TRUE security verification and routing happens in the layout.tsx files 
+  // using the admin client, so this is just for UX speed.
+  const isFinance = isFinanceUser(userEmail)
+
   // Already logged in → redirect away from login
   if (user && pathname === '/login') {
-    if (isFinanceUser(userEmail)) {
+    if (isFinance) {
       return NextResponse.redirect(new URL('/dashboard/finance', request.url))
     }
-
     return NextResponse.redirect(new URL('/dashboard/hrd', request.url))
   }
 
-  if (user && pathname.startsWith('/dashboard/finance') && !isFinanceUser(userEmail)) {
-    return NextResponse.redirect(new URL('/dashboard/hrd', request.url))
-  }
-
-  if (user && pathname.startsWith('/dashboard/hrd') && isFinanceUser(userEmail)) {
-    return NextResponse.redirect(new URL('/dashboard/finance', request.url))
-  }
-
-  // Not logged in → redirect to login (except public routes)
+  // Basic guard (true enforcement is in layout.tsx)
   if (!user && pathname.startsWith('/dashboard')) {
     return NextResponse.redirect(new URL('/login', request.url))
   }

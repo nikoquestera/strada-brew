@@ -17,10 +17,31 @@ export default function LoginPage() {
     e.preventDefault()
     setLoading(true)
     setError('')
-    const { data, error } = await supabase.auth.signInWithPassword({ email, password })
-    if (error) { setError('Email atau password salah.'); setLoading(false); return }
-    const destination = isFinanceUser(data.user?.email) ? '/dashboard/finance' : '/dashboard/hrd'
-    router.push(destination)
+    
+    // 1. Authenticate with Supabase Auth
+    const { data: authData, error: authError } = await supabase.auth.signInWithPassword({ email, password })
+    
+    if (authError || !authData.user) { 
+      setError('Email atau password salah.')
+      setLoading(false)
+      return 
+    }
+
+    // 2. Fetch role from secure API route
+    try {
+      const res = await fetch('/api/auth/role')
+      if (res.ok) {
+        const { role } = await res.json()
+        const destination = role === 'FINANCE' ? '/dashboard/finance' : '/dashboard/hrd'
+        router.push(destination)
+        return
+      }
+    } catch (e) {
+      console.error('Failed to fetch role:', e)
+    }
+
+    // Fallback if API fails
+    router.push('/dashboard/hrd')
   }
 
   return (

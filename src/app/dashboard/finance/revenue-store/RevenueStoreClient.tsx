@@ -1,6 +1,7 @@
 'use client'
-import { useEffect, useState, useRef } from 'react'
-import { ChevronDown, Play, CheckCircle2, Copy, AlertTriangle, Info } from 'lucide-react'
+import { useEffect, useState, useRef, Suspense } from 'react'
+import { useSearchParams } from 'next/navigation'
+import { ChevronDown, Play, CheckCircle2, Copy, AlertTriangle, Info, Loader2 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { DEFAULT_STORE_NAMES } from '@/lib/stores/defaults'
 
@@ -10,14 +11,17 @@ interface ProcessingLog {
   type: 'info' | 'success' | 'error' | 'warning'
 }
 
-export default function RevenueStoreClient() {
+function RevenueStoreForm() {
   const supabase = createClient()
+  const searchParams = useSearchParams()
+  const defaultDate = searchParams.get('date') || new Date().toISOString().split('T')[0]
+  const defaultStore = searchParams.get('store') || ''
+  const autoRun = searchParams.get('auto_run') === 'true'
+
   const scrollRef = useRef<HTMLDivElement>(null)
   const [stores, setStores] = useState<string[]>([...DEFAULT_STORE_NAMES])
-  const [selectedStore, setSelectedStore] = useState<string>('')
-  const [selectedDate, setSelectedDate] = useState<string>(
-    new Date().toISOString().split('T')[0]
-  )
+  const [selectedStore, setSelectedStore] = useState<string>(defaultStore)
+  const [selectedDate, setSelectedDate] = useState<string>(defaultDate)
   const [isProcessing, setIsProcessing] = useState(false)
   const [logs, setLogs] = useState<ProcessingLog[]>([])
   const [result, setResult] = useState<any>(null)
@@ -26,14 +30,68 @@ export default function RevenueStoreClient() {
   const [accurateConnected, setAccurateConnected] = useState(false)
   const [submitUangMasuk, setSubmitUangMasuk] = useState(true)
   const [submitPenjualan, setSubmitPenjualan] = useState(true)
+  const [showInvestigation, setShowInvestigation] = useState(false)
+  const [isBalanceApproved, setIsBalanceApproved] = useState(false)
+  const [isMarkingResolved, setIsMarkingResolved] = useState(false)
 
-  // Bank and Payment Manual Inputs - Default to '0'
-  const [bcaKreditIncome, setBcaKreditIncome] = useState<string>('0')
-  const [bcaDebitIncome, setBcaDebitIncome] = useState<string>('0')
-  const [bcaQrisIncome, setBcaQrisIncome] = useState<string>('0')
-  const [gobizIncome, setGobizIncome] = useState<string>('0')
-  const [ovoIncome, setOvoIncome] = useState<string>('0')
-  const [cashIncome, setCashIncome] = useState<string>('0')
+  // Track if there's active/unsaved data
+  const hasUnsavedChanges = isProcessing || isSubmitting || !!result || logs.length > 0
+
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (hasUnsavedChanges) {
+        e.preventDefault()
+        e.returnValue = ''
+      }
+    }
+    window.addEventListener('beforeunload', handleBeforeUnload)
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload)
+  }, [hasUnsavedChanges])
+
+  const formatCurrencyValue = (val: string | null) => {
+    if (!val || val === '0') return '0'
+    return parseFloat(val).toLocaleString('id-ID')
+  }
+
+  // Bank and Payment Manual Inputs
+  const [bcaKreditIncome, setBcaKreditIncome] = useState<string>(formatCurrencyValue(searchParams.get('acc_kredit')))
+  const [bcaDebitIncome, setBcaDebitIncome] = useState<string>(formatCurrencyValue(searchParams.get('acc_debit')))
+  const [bcaQrisIncome, setBcaQrisIncome] = useState<string>(formatCurrencyValue(searchParams.get('acc_qris')))
+  const [gobizIncome, setGobizIncome] = useState<string>(formatCurrencyValue(searchParams.get('acc_gobiz')))
+  const [ovoIncome, setOvoIncome] = useState<string>(formatCurrencyValue(searchParams.get('acc_ovo')))
+  const [cashIncome, setCashIncome] = useState<string>(formatCurrencyValue(searchParams.get('acc_cash')))
+
+  // Simple caching
+  useEffect(() => {
+    if (!autoRun) {
+      const cached = localStorage.getItem('revenue_store_cache')
+      if (cached) {
+        try {
+          const data = JSON.parse(cached)
+          if (!defaultStore) setSelectedStore(data.store || '')
+          setBcaKreditIncome(data.bcaKredit || '0')
+          setBcaDebitIncome(data.bcaDebit || '0')
+          setBcaQrisIncome(data.bcaQris || '0')
+          setGobizIncome(data.gobiz || '0')
+          setOvoIncome(data.ovo || '0')
+          setCashIncome(data.cash || '0')
+        } catch (e) {}
+      }
+    }
+  }, [])
+
+  useEffect(() => {
+    localStorage.setItem('revenue_store_cache', JSON.stringify({
+      store: selectedStore,
+      bcaKredit: bcaKreditIncome,
+      bcaDebit: bcaDebitIncome,
+      bcaQris: bcaQrisIncome,
+      gobiz: gobizIncome,
+      ovo: ovoIncome,
+      cash: cashIncome
+    }))
+  }, [selectedStore, bcaKreditIncome, bcaDebitIncome, bcaQrisIncome, gobizIncome, ovoIncome, cashIncome])
+  
   const [paymentCreditBca, setPaymentCreditBca] = useState<string>('0')
   const [paymentDebitBca, setPaymentDebitBca] = useState<string>('0')
   const [paymentQris, setPaymentQris] = useState<string>('0')
@@ -41,6 +99,9 @@ export default function RevenueStoreClient() {
   useEffect(() => {
     loadStores()
     checkAccurateConnection()
+    if (autoRun && defaultStore && defaultDate) {
+      handleProses()
+    }
   }, [])
 
   // Auto-scroll logs
@@ -137,6 +198,28 @@ export default function RevenueStoreClient() {
     return val.toString().startsWith('-') ? '-' + result : result
   }
 
+  const handleMarkResolved = async () => {
+    if (!result) return
+    setIsMarkingResolved(true)
+    const { error } = await supabase.from('abnormal_transactions').upsert({
+      transaction_date: result.date,
+      store_name: result.store,
+      report_type: 'Revenue Report',
+      issue_description: 'Audited from Accurate Data - Approved as is.',
+      status: 'RESOLVED',
+      resolution_notes: 'Confirmed by staff that Accurate data is correct.',
+      resolved_at: new Date().toISOString()
+    }, { onConflict: 'store_name,transaction_date,report_type' })
+
+    if (!error) {
+      addLog('✅ Transaksi telah ditandai SELESAI dan dihapus dari antrean audit.', 'success')
+      alert('Berhasil! Transaksi ini sekarang dianggap benar dan masuk ke riwayat terselesaikan.')
+    } else {
+      addLog(`❌ Gagal menandai: ${error.message}`, 'error')
+    }
+    setIsMarkingResolved(false)
+  }
+
   const parseCurrencyInput = (val: string) => {
     if (!val || val === '0') return 0
     const cleaned = val.toString().replace(/\./g, '').replace(/,/g, '.')
@@ -152,6 +235,8 @@ export default function RevenueStoreClient() {
     setIsProcessing(true)
     setLogs([])
     setResult(null)
+    setShowInvestigation(false)
+    setIsBalanceApproved(false)
 
     try {
       addLog('🚀 Memulai proses revenue report...', 'info')
@@ -192,22 +277,23 @@ export default function RevenueStoreClient() {
 
       const reader = response.body.getReader()
       const decoder = new TextDecoder()
-      
       let buffer = ''
+      let finalData = null
 
       while (true) {
         const { done, value } = await reader.read()
         if (done) break
-        
+
         buffer += decoder.decode(value, { stream: true })
         const lines = buffer.split('\n')
         buffer = lines.pop() || ''
-        
+
         for (const line of lines) {
           if (!line.trim()) continue
           try {
             const log = JSON.parse(line)
             if (log.type === 'result') {
+              finalData = log.data
               setResult(log.data)
             } else if (log.message) {
               addLog(log.message, log.type || 'info')
@@ -217,7 +303,26 @@ export default function RevenueStoreClient() {
           }
         }
       }
-      
+
+      if (finalData) {
+        const val = getValidation(finalData)
+        if (val?.isSalahKamar || val?.isUnbalanced) {
+          const issueDesc = []
+          if (val.isSalahKamar) issueDesc.push('Terdeteksi Salah Kamar (Selisih mutasi vs Quinos melebihi toleransi)')
+          if (val.isUnbalanced) issueDesc.push(`Jurnal tidak seimbang (Selisih Rp ${val.absDiff.toLocaleString('id-ID')})`)
+
+          await supabase.from('abnormal_transactions').upsert({
+            transaction_date: finalData.date,
+            report_type: 'Revenue Report',
+            store_name: finalData.store,
+            issue_description: issueDesc.join('. '),
+            status: 'PENDING'
+          }, { onConflict: 'store_name,transaction_date,report_type' })
+
+          addLog('⚠️ Transaksi ini ditandai sebagai PERLU REVIEW dan telah dikirim ke tim Finance.', 'warning')
+        }
+      }
+
       addLog('✅ Proses selesai', 'success')
     } catch (error: any) {
       addLog(`❌ Error: ${error.message}`, 'error')
@@ -248,7 +353,9 @@ export default function RevenueStoreClient() {
           ...result,
           options: {
             submitUangMasuk,
-            submitPenjualan
+            submitPenjualan,
+            isBalanceApproved,
+            balancingData: validation?.proposal
           }
         }),
       })
@@ -308,41 +415,59 @@ export default function RevenueStoreClient() {
   }
 
   // --- VALIDATION LOGIC ---
-  const getValidation = () => {
-    if (!result) return null
+  const getValidation = (data = result) => {
+    if (!data) return null
 
     // 1. Validasi Salah Kamar
-    const diffCredit = Math.abs((result.payment_credit_bca || 0) - (result.bca_kredit_income || 0))
-    const pctCredit = (result.payment_credit_bca || 0) > 0 ? (diffCredit / result.payment_credit_bca) : 0
+    const diffCredit = Math.abs((data.payment_credit_bca || 0) - (data.bca_kredit_income || 0))
+    const pctCredit = (data.payment_credit_bca || 0) > 0 ? (diffCredit / data.payment_credit_bca) : 0
     
-    const diffDebit = Math.abs((result.payment_debit_bca || 0) - (result.bca_debit_income || 0))
-    const pctDebit = (result.payment_debit_bca || 0) > 0 ? (diffDebit / result.payment_debit_bca) : 0
+    const diffDebit = Math.abs((data.payment_debit_bca || 0) - (data.bca_debit_income || 0))
+    const pctDebit = (data.payment_debit_bca || 0) > 0 ? (diffDebit / data.payment_debit_bca) : 0
     
-    const diffQris = Math.abs((result.payment_qris || 0) - (result.bca_qris_income || 0))
-    const pctQris = (result.payment_qris || 0) > 0 ? (diffQris / result.payment_qris) : 0
+    const diffQris = Math.abs((data.payment_qris || 0) - (data.bca_qris_income || 0))
+    const pctQris = (data.payment_qris || 0) > 0 ? (diffQris / data.payment_qris) : 0
 
     const isSalahKamar = (pctCredit > 0.021) || (pctDebit > 0.008) || (pctQris > 0.0085)
 
     // 2. Validasi Balance
     // Must include ALL payment methods from Quinos for Journal 1 validation
-    const allPaymentsGross = Object.entries(result)
+    const allPaymentsGross = Object.entries(data)
       .filter(([key]) => key.startsWith('payment_'))
       .reduce((sum, [_, val]) => sum + (val as number || 0), 0)
 
-    const totalDebit = allPaymentsGross + (result.revenue_discount || 0)
-    const totalCredit = (result.penjualan_bar || 0) + (result.penjualan_coffee_beans || 0) + 
-                        (result.penjualan_makanan || 0) + (result.penjualan_konsinyasi || 0) + 
-                        (result.penjualan_bundling || 0) + (result.penjualan_inventory || 0) + 
-                        (result.penjualan_modifier || 0) + (result.penjualan_konsinyasi_no_brand || 0) + 
-                        (result.hutang_service || 0) + (result.hutang_pajak_pemkot || 0)
+    const totalDebit = allPaymentsGross + (data.revenue_discount || 0)
+    const totalCredit = (data.penjualan_bar || 0) + (data.penjualan_coffee_beans || 0) + 
+                        (data.penjualan_makanan || 0) + (data.penjualan_konsinyasi || 0) + 
+                        (data.penjualan_bundling || 0) + (data.penjualan_inventory || 0) + 
+                        (data.penjualan_modifier || 0) + (data.penjualan_konsinyasi_no_brand || 0) + 
+                        (data.hutang_service || 0) + (data.hutang_pajak_pemkot || 0)
     
-    const diffBalance = Math.abs(totalDebit - totalCredit)
-    const isUnbalanced = diffBalance > 1 // Tolerance 1 Rupiah
+    const diffBalance = totalDebit - totalCredit
+    const absDiff = Math.abs(diffBalance)
+    const isUnbalanced = absDiff > 1 // Tolerance 1 Rupiah
+
+    // Proposal for balancing
+    let proposal = null
+    if (isUnbalanced) {
+      const isRounding = absDiff <= 5
+      const isMisc = absDiff > 5 && absDiff <= 15000
+      const canAutoFix = isRounding || isMisc
+      
+      proposal = {
+        amount: absDiff,
+        type: diffBalance > 0 ? 'CREDIT' : 'DEBIT', // If Debit is higher, add Credit to balance
+        code: isRounding ? '7200.02' : '4000.90',
+        label: isRounding ? 'Pembulatan' : 'Pendapatan Lain-lain',
+        canAutoFix
+      }
+    }
 
     return {
       isSalahKamar,
       isUnbalanced,
-      diffBalance,
+      absDiff,
+      proposal,
       details: { pctCredit, pctDebit, pctQris }
     }
   }
@@ -516,9 +641,9 @@ export default function RevenueStoreClient() {
                     <p className="text-[11px] text-red-700 mt-1 font-medium leading-relaxed">
                       Selisih Mutasi Bank vs Quinos melebihi batas toleransi.<br/>
                       <span className="opacity-80 font-mono mt-1 block space-y-0.5">
-                        • Credit: {(validation.details.pctCredit * 100).toFixed(2)}% (Limit: 2.10%)<br/>
-                        • Debit: {(validation.details.pctDebit * 100).toFixed(2)}% (Limit: 0.80%)<br/>
-                        • QRIS: {(validation.details.pctQris * 100).toFixed(2)}% (Limit: 0.85%)
+                        • Credit: {((validation?.details?.pctCredit || 0) * 100).toFixed(2)}% (Limit: 2.10%)<br/>
+                        • Debit: {((validation?.details?.pctDebit || 0) * 100).toFixed(2)}% (Limit: 0.80%)<br/>
+                        • QRIS: {((validation?.details?.pctQris || 0) * 100).toFixed(2)}% (Limit: 0.85%)
                       </span>
                     </p>
                   </div>
@@ -531,9 +656,9 @@ export default function RevenueStoreClient() {
                     <p className="text-[11px] text-green-700 mt-1 font-medium leading-relaxed">
                       Selisih mutasi bank berada dalam batas wajar.<br/>
                       <span className="opacity-80 font-mono mt-1 block space-y-0.5">
-                        • Credit: {(validation.details.pctCredit * 100).toFixed(2)}%<br/>
-                        • Debit: {(validation.details.pctDebit * 100).toFixed(2)}%<br/>
-                        • QRIS: {(validation.details.pctQris * 100).toFixed(2)}%
+                        • Credit: {((validation?.details?.pctCredit || 0) * 100).toFixed(2)}%<br/>
+                        • Debit: {((validation?.details?.pctDebit || 0) * 100).toFixed(2)}%<br/>
+                        • QRIS: {((validation?.details?.pctQris || 0) * 100).toFixed(2)}%
                       </span>
                     </p>
                   </div>
@@ -541,17 +666,62 @@ export default function RevenueStoreClient() {
               )}
 
               {validation?.isUnbalanced ? (
-                <div className="bg-red-50 border border-red-200 rounded-xl p-4 flex items-start gap-3 shadow-sm">
-                  <AlertTriangle className="text-red-600 shrink-0 mt-0.5" size={20} />
-                  <div>
-                    <p className="text-sm font-bold text-red-900">Masalah Balance Terdeteksi</p>
-                    <p className="text-[11px] text-red-700 mt-1 font-medium leading-relaxed">
-                      Jurnal tidak seimbang (Selisih: Rp {validation.diffBalance.toLocaleString('id-ID')}).<br/>
-                      <span className="opacity-80 font-mono mt-1 block">
-                        Formula: Total DEBIT (Payment + Discount) harus sama dengan Total CREDIT (Sales + Service + Tax)
-                      </span>
-                    </p>
+                <div className={`${isBalanceApproved ? 'bg-orange-50 border-orange-200' : 'bg-red-50 border-red-200'} border rounded-xl p-4 flex flex-col gap-3 shadow-sm transition-colors`}>
+                  <div className="flex items-start gap-3">
+                    {isBalanceApproved ? <CheckCircle2 className="text-orange-600 shrink-0 mt-0.5" size={20} /> : <AlertTriangle className="text-red-600 shrink-0 mt-0.5" size={20} />}
+                    <div className="flex-1">
+                      <p className={`text-sm font-bold ${isBalanceApproved ? 'text-orange-900' : 'text-red-900'}`}>
+                        {isBalanceApproved ? 'Masalah Balance (Diterima)' : 'Masalah Balance Terdeteksi'}
+                      </p>
+                      <p className={`text-[11px] mt-1 font-medium leading-relaxed ${isBalanceApproved ? 'text-orange-700' : 'text-red-700'}`}>
+                        Jurnal tidak seimbang (Selisih: Rp {validation.absDiff.toLocaleString('id-ID')}).<br/>
+                        {!isBalanceApproved && (
+                          <button 
+                            onClick={() => setShowInvestigation(!showInvestigation)}
+                            className="mt-2 text-[10px] bg-red-100 hover:bg-red-200 text-red-700 px-2 py-1 rounded font-bold uppercase tracking-wider transition-all"
+                          >
+                            {showInvestigation ? 'Tutup Investigasi' : '🔍 Investigasi / Cek Solusi'}
+                          </button>
+                        )}
+                      </p>
+                    </div>
                   </div>
+
+                  {showInvestigation && !isBalanceApproved && (
+                    <div className="bg-white/60 rounded-lg p-3 text-[11px] border border-red-100 space-y-2 animate-in fade-in slide-in-from-top-1">
+                      <p className="font-bold text-gray-800 underline">Proposal Solusi Pembulatan:</p>
+                      <div className="grid grid-cols-2 gap-2 font-mono">
+                        <div className="text-gray-500">Nominal Selisih:</div>
+                        <div className="font-bold text-red-600">Rp {validation.absDiff.toLocaleString('id-ID')}</div>
+                        <div className="text-gray-500">Posisi Akun:</div>
+                        <div className="font-bold">{validation.proposal?.type}</div>
+                        <div className="text-gray-500">Kode Akun:</div>
+                        <div className="font-bold">{validation.proposal?.code}</div>
+                        <div className="text-gray-500">Keterangan:</div>
+                        <div className="font-bold uppercase">{validation.proposal?.label}</div>
+                      </div>
+                      
+                      {validation.proposal?.canAutoFix ? (
+                        <div className="pt-2 border-t border-red-100 flex flex-col gap-2">
+                          <p className="text-[10px] text-gray-600 italic text-pretty">Selisih masih dalam batas toleransi (≤ Rp 15.000). Anda dapat menyetujui proposal ini untuk melanjutkan.</p>
+                          <button 
+                            onClick={() => {
+                              setIsBalanceApproved(true)
+                              setShowInvestigation(false)
+                              addLog(`⚠️ User menyetujui balancing otomatis: ${validation.proposal?.label} (Rp ${validation.absDiff})`, 'warning')
+                            }}
+                            className="w-full py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-lg font-bold uppercase tracking-tighter text-[10px] shadow-sm transition-all active:scale-95"
+                          >
+                            Saya sudah membaca dan setuju dengan pembulatan ini
+                          </button>
+                        </div>
+                      ) : (
+                        <p className="pt-2 border-t border-red-100 text-[10px] text-red-600 font-bold italic text-pretty">
+                          ⚠️ Selisih diatas Rp 15.000. Investigasi manual wajib dilakukan pada data Quinos/Mutasi. Proses Submit dihentikan.
+                        </p>
+                      )}
+                    </div>
+                  )}
                 </div>
               ) : (
                 <div className="bg-green-50 border border-green-200 rounded-xl p-4 flex items-start gap-3 shadow-sm">
@@ -787,15 +957,26 @@ export default function RevenueStoreClient() {
 
                   <button
                     onClick={handleSubmitAccurate}
-                    disabled={!isVerified || isSubmitting}
+                    disabled={!isVerified || isSubmitting || (validation?.isSalahKamar) || (validation?.isUnbalanced && !isBalanceApproved)}
                     className={`w-full py-4 rounded-xl font-black text-sm uppercase tracking-widest flex items-center justify-center gap-2 transition-all ${
-                      !isVerified || isSubmitting
+                      !isVerified || isSubmitting || (validation?.isSalahKamar) || (validation?.isUnbalanced && !isBalanceApproved)
                         ? 'bg-blue-200 text-white cursor-not-allowed'
                         : 'bg-strada-blue text-white hover:bg-strada-dark-teal shadow-lg hover:shadow-xl active:scale-[0.98]'
                     }`}
                   >
-                    {isSubmitting ? '⌛ MENGIRIM...' : '🚀 SUBMIT TO ACCURATE'}
+                    {isSubmitting ? '⌛ MENGIRIM...' : '🚀 SUBMIT REVISI KE ACCURATE'}
                   </button>
+
+                  {autoRun && (
+                    <button
+                      onClick={handleMarkResolved}
+                      disabled={isMarkingResolved}
+                      className="w-full py-3 mt-2 bg-green-600 hover:bg-green-700 text-white rounded-xl font-bold text-xs uppercase tracking-widest flex items-center justify-center gap-2 transition-all shadow-md active:scale-95"
+                    >
+                      {isMarkingResolved ? <Loader2 size={14} className="animate-spin" /> : <CheckCircle2 size={14} />}
+                      Data Accurate Sudah Benar
+                    </button>
+                  )}
                 </div>
               </div>
 
@@ -857,5 +1038,13 @@ export default function RevenueStoreClient() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function RevenueStoreClient() {
+  return (
+    <Suspense fallback={<div className="p-8">Loading...</div>}>
+      <RevenueStoreForm />
+    </Suspense>
   )
 }

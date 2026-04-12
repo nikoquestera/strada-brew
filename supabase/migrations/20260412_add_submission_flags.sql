@@ -1,0 +1,3 @@
+ALTER TABLE daily_revenue 
+ADD COLUMN IF NOT EXISTS is_penjualan_submitted BOOLEAN DEFAULT FALSE,
+ADD COLUMN IF NOT EXISTS is_uang_masuk_submitted BOOLEAN DEFAULT FALSE;

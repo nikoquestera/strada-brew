@@ -18,6 +18,8 @@ export async function POST(request: NextRequest) {
     const { options } = resultData
     const submitUangMasuk = options?.submitUangMasuk ?? true
     const submitPenjualan = options?.submitPenjualan ?? true
+    const isBalanceApproved = options?.isBalanceApproved ?? false
+    const balancingData = options?.balancingData
 
     if (!resultData || !resultData.transaction_date || !resultData.store_name) {
       return new Response(JSON.stringify({ success: false, message: 'Invalid data payload' }), { status: 400 })
@@ -145,6 +147,31 @@ export async function POST(request: NextRequest) {
           const memoPenjualan = `BREW - Penjualan cafe ${resultData.store_name} tanggal ${accurateDate}`
           const memoUangMasuk = `BREW - Uang masuk penjualan cafe ${resultData.store_name} tanggal ${accurateDate}`
 
+          // Delete existing logic (for Revisions)
+          const deleteExistingJournal = async (memo: string) => {
+            try {
+              const res = await axios.get(`${apiBaseUrl}/api/journal-voucher/list.do`, {
+                params: {
+                  'fields': 'id,description',
+                  'filter.keywords.op': 'EQUAL',
+                  'filter.keywords.val': memo
+                },
+                headers: { 'Authorization': `Bearer ${accessToken}`, 'X-Session-ID': sessionId }
+              })
+              
+              if (res.data.s && res.data.d && res.data.d.length > 0) {
+                const existingId = res.data.d[0].id
+                sendLog(`🔄 Revisi: Menghapus jurnal lama (${memo})...`, 'warning')
+                await axios.delete(`${apiBaseUrl}/api/journal-voucher/delete.do`, {
+                  params: { id: existingId },
+                  headers: { 'Authorization': `Bearer ${accessToken}`, 'X-Session-ID': sessionId }
+                })
+              }
+            } catch (e: any) {
+              console.warn(`Could not check/delete existing journal ${memo}:`, e.message)
+            }
+          }
+
           // POST Logic
           const postToAccurate = async (memo: string, details: any[]) => {
             const debits = details.filter(d => d.amountType === 'DEBIT').reduce((s, d) => s + d.amount, 0)
@@ -154,6 +181,8 @@ export async function POST(request: NextRequest) {
             if (diff > 1) { // 1 Rupiah tolerance
               throw new Error(`Jurnal "${memo}" tidak balance! (Selisih: ${diff.toFixed(2)}, D: ${debits.toFixed(2)}, K: ${credits.toFixed(2)})`)
             }
+
+            await deleteExistingJournal(memo)
 
             const payload = {
               transDate: accurateDate,
@@ -217,6 +246,14 @@ export async function POST(request: NextRequest) {
             addDetail(detailsPenjualan, mapping.service_charge, 'CREDIT', (resultData.hutang_service || 0))
             addDetail(detailsPenjualan, mapping.tax, 'CREDIT', (resultData.hutang_pajak_pemkot || 0))
 
+            // ADD BALANCING ROW IF APPROVED
+            if (isBalanceApproved && balancingData) {
+              sendLog(`⚖️ Menambahkan baris balancing: ${balancingData.label} (Rp ${balancingData.amount})`)
+              const balancingAccount = balancingData.code === '7200.02' 
+                ? ACCURATE_MAPPING.GLOBAL.balancing_rounding 
+                : ACCURATE_MAPPING.GLOBAL.balancing_misc
+              addDetail(detailsPenjualan, balancingAccount, balancingData.type, balancingData.amount)
+            }
             sendLog('⏳ [80%] Mengirim Jurnal Penjualan ke server Accurate...')
             await postToAccurate(memoPenjualan, detailsPenjualan)
             sendLog('✅ [85%] Jurnal Penjualan berhasil.', 'success')

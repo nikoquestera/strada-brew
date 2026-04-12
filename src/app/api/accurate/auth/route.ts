@@ -12,7 +12,7 @@ export async function GET(request: NextRequest) {
   const clientId = process.env.ACCURATE_OAUTH_CLIENT_ID
   const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://brew.stradacoffee.com'
   const redirectUri = `${appUrl}/api/accurate/callback`
-  const scope = 'glaccount_view company_data journal_voucher_save' 
+  const scope = 'glaccount_view company_data journal_voucher_save journal_voucher_view journal_voucher_delete' 
 
   if (!clientId) {
     return NextResponse.json({ error: 'ACCURATE_OAUTH_CLIENT_ID not configured' }, { status: 500 })

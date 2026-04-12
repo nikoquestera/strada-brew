@@ -2,7 +2,7 @@
 import { useState } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
-import { Home, LogOut, Menu, X, TrendingUp, ShoppingCart, CreditCard, Package } from 'lucide-react'
+import { Home, LogOut, Menu, X, TrendingUp, ShoppingCart, CreditCard, Package, AlertOctagon, Search, Key, Loader2 } from 'lucide-react'
 
 interface Props {
   children: React.ReactNode
@@ -15,6 +15,8 @@ const financeNav = [
   { label: 'Penjualan', href: '/dashboard/finance/penjualan', icon: ShoppingCart },
   { label: 'Pembayaran', href: '/dashboard/finance/pembayaran', icon: CreditCard },
   { label: 'Stok Opname', href: '/dashboard/finance/stok-opname', icon: Package },
+  { label: 'Transaksi Perlu Review', href: '/dashboard/finance/transaksi-abnormal', icon: AlertOctagon },
+  { label: 'Batch Audit', href: '/dashboard/finance/batch-audit', icon: Search },
 ]
 
 export default function FinanceLayout({ children, userEmail }: Props) {
@@ -22,10 +24,33 @@ export default function FinanceLayout({ children, userEmail }: Props) {
   const pathname = usePathname()
   const supabase = createClient()
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [showPasswordModal, setShowPasswordModal] = useState(false)
+  const [newPassword, setNewPassword] = useState('')
+  const [isChangingPassword, setIsChangingPassword] = useState(false)
 
   async function handleLogout() {
     await supabase.auth.signOut()
     router.push('/login')
+  }
+
+  async function handleChangePassword(e: React.FormEvent) {
+    e.preventDefault()
+    if (!newPassword || newPassword.length < 6) {
+      alert('Password baru minimal 6 karakter.')
+      return
+    }
+    
+    setIsChangingPassword(true)
+    const { error } = await supabase.auth.updateUser({ password: newPassword })
+    setIsChangingPassword(false)
+
+    if (error) {
+      alert(`Gagal mengganti password: ${error.message}`)
+    } else {
+      alert('Password berhasil diperbarui!')
+      setShowPasswordModal(false)
+      setNewPassword('')
+    }
   }
 
   const sidebarContent = (
@@ -48,6 +73,7 @@ export default function FinanceLayout({ children, userEmail }: Props) {
       {/* Module label */}
       <div className="px-6 pt-6 pb-2">
         <p className="text-gray-400 text-[10px] font-bold tracking-[3px] uppercase m-0">Finance Module</p>
+        <p className="text-gray-300 text-[8px] font-mono mt-1">REV b399</p>
       </div>
 
       {/* Nav */}
@@ -73,7 +99,7 @@ export default function FinanceLayout({ children, userEmail }: Props) {
       </nav>
 
       {/* User section */}
-      <div className="p-4 border-t border-gray-100 bg-white flex items-center gap-3">
+      <div className="p-4 border-t border-gray-100 bg-white flex items-center gap-2">
         <div className="w-9 h-9 rounded-full bg-gradient-to-br from-strada-blue to-strada-dark-teal flex items-center justify-center shrink-0 shadow-sm">
           <span className="text-white text-xs font-bold">{userEmail?.[0]?.toUpperCase()}</span>
         </div>
@@ -81,8 +107,12 @@ export default function FinanceLayout({ children, userEmail }: Props) {
           <p className="text-gray-900 text-sm font-semibold m-0 truncate">{userEmail}</p>
           <p className="text-gray-400 text-[10px] m-0 tracking-wider uppercase font-medium">Finance Staff</p>
         </div>
+        <button onClick={() => setShowPasswordModal(true)} title="Ganti Password"
+          className="text-gray-400 hover:text-strada-blue hover:bg-blue-50 p-2 rounded-lg transition-all duration-200 shrink-0">
+          <Key size={16} />
+        </button>
         <button onClick={handleLogout} title="Keluar"
-          className="text-gray-400 hover:text-strada-coral hover:bg-red-50 p-2 rounded-full transition-all duration-200">
+          className="text-gray-400 hover:text-strada-coral hover:bg-red-50 p-2 rounded-lg transition-all duration-200 shrink-0">
           <LogOut size={16} />
         </button>
       </div>
@@ -91,6 +121,41 @@ export default function FinanceLayout({ children, userEmail }: Props) {
 
   return (
     <div className="flex h-screen overflow-hidden bg-[#F5F5F7]">
+      {/* Password Modal */}
+      {showPasswordModal && (
+        <div className="fixed inset-0 bg-gray-900/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl shadow-xl w-full max-w-sm overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+            <div className="p-6 border-b border-gray-100 flex items-center justify-between">
+              <h3 className="text-lg font-bold text-gray-900">Ganti Password</h3>
+              <button onClick={() => setShowPasswordModal(false)} className="text-gray-400 hover:text-gray-600 transition-colors">
+                <X size={20} />
+              </button>
+            </div>
+            <form onSubmit={handleChangePassword} className="p-6 space-y-4">
+              <div>
+                <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Password Baru</label>
+                <input
+                  type="password"
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  placeholder="Minimal 6 karakter"
+                  required
+                  className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-strada-blue outline-none transition-all text-sm"
+                />
+              </div>
+              <button
+                type="submit"
+                disabled={isChangingPassword}
+                className="w-full py-3 bg-strada-blue hover:bg-strada-dark-teal text-white font-bold rounded-xl shadow-md hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              >
+                {isChangingPassword ? <Loader2 size={16} className="animate-spin" /> : <Key size={16} />}
+                {isChangingPassword ? 'Menyimpan...' : 'Simpan Password'}
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+
       {/* Mobile overlay */}
       {sidebarOpen && (
         <div 

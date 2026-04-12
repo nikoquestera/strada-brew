@@ -153,7 +153,9 @@ export const ACCURATE_MAPPING: Record<string, any> = {
     payment_voucher_chope: '4000.96.08',
     payment_voucher_telkomsel: '4000.96.17',
     admin_merchant: '6000.01.36',
-    admin_bank: '6000.01.08'
+    admin_bank: '6000.01.08',
+    balancing_rounding: '7200.02',
+    balancing_misc: '4000.90'
   },
   CUSTOMER_MAPPING: {
     '1100.16': 'C.00006',
