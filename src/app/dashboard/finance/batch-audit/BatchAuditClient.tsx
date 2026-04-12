@@ -1,5 +1,6 @@
 'use client'
 import React, { useState, useEffect, useMemo } from 'react'
+import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { Search, AlertTriangle, CheckCircle2, Loader2, Calendar, Store, Filter } from 'lucide-react'
 import { DEFAULT_STORE_NAMES } from '@/lib/stores/defaults'
@@ -15,6 +16,7 @@ const STORE_OPENING_DATES: Record<string, string> = {
 
 export default function BatchAuditClient() {
   const supabase = createClient()
+  const router = useRouter()
   const [loading, setLoading] = useState(true)
   const [csvData, setCsvData] = useState<any[]>([])
   const [resolvedData, setResolvedData] = useState<any[]>([])
@@ -24,7 +26,7 @@ export default function BatchAuditClient() {
   // Filters
   const [selectedStore, setSelectedStore] = useState<string>('LA.PIAZZA')
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc')
-  const [filterMissing, setFilterMissing] = useState<boolean>(false)
+  const [filterMode, setFilterMode] = useState<'all' | 'missing' | 'unbalanced'>('all')
 
   useEffect(() => {
     fetchUser()
@@ -79,11 +81,19 @@ export default function BatchAuditClient() {
   const tableData = useMemo(() => {
     const resolvedKeys = new Set(resolvedData.map(r => `${r.transaction_date}_${r.store_name}`))
     
-    // Create a map for CSV data for quick lookup: date -> data
-    const csvMap = new Map()
+    // Create maps for quick lookup
+    const csvMap = new Map() // By transaction date (for Penjualan)
+    const uangMasukMap = new Map() // By Date - 1 (for Uang Masuk alignment)
+
     csvData.forEach(row => {
       if (row.Toko === selectedStore) {
         csvMap.set(row.Tanggal, row)
+        
+        // Uang Masuk is H+1, so for date D, we look at CSV date D+1
+        const dateObj = new Date(row.Tanggal)
+        dateObj.setDate(dateObj.getDate() - 1)
+        const shiftedDate = dateObj.toISOString().split('T')[0]
+        uangMasukMap.set(shiftedDate, row)
       }
     })
 
@@ -92,24 +102,44 @@ export default function BatchAuditClient() {
 
     return storeDates.map(date => {
       const csvRow = csvMap.get(date)
+      const umRow = uangMasukMap.get(date)
       const isResolved = resolvedKeys.has(`${date}_${selectedStore}`)
       
-      return {
+      const res = {
         date,
         store: selectedStore,
         csvRow: csvRow || null,
+        umRow: umRow || null,
         isResolved
       }
+      return res
     }).filter(item => {
       if (item.isResolved) return false
-      if (filterMissing) {
-        const hasPenjualan = item.csvRow && (item.csvRow.penjualanDebit > 0 || item.csvRow.penjualanKredit > 0)
-        const hasUangMasuk = item.csvRow && (item.csvRow.uangMasukDebit > 0 || item.csvRow.uangMasukKredit > 0)
+      
+      const hasPenjualan = item.csvRow && (item.csvRow.penjualanDebit > 0 || item.csvRow.penjualanKredit > 0)
+      const hasUangMasuk = item.umRow && (item.umRow.uangMasukDebit > 0 || item.umRow.uangMasukKredit > 0)
+      
+      if (filterMode === 'missing') {
         return !hasPenjualan || !hasUangMasuk
       }
+      
+      if (filterMode === 'unbalanced') {
+        if (!hasPenjualan || !hasUangMasuk) return false
+        const pD = item.csvRow.penjualanDebit
+        const pK = item.csvRow.penjualanKredit
+        const uD = item.umRow.uangMasukDebit
+        const uK = item.umRow.uangMasukKredit
+        
+        // Unbalanced if any of the 4 values are not equal (within tolerance)
+        const vals = [pD, pK, uD, uK]
+        const first = vals[0]
+        const isAllEqual = vals.every(v => Math.abs(v - first) < 2)
+        return !isAllEqual
+      }
+      
       return true
     })
-  }, [csvData, resolvedData, selectedStore, sortOrder, filterMissing])
+  }, [csvData, resolvedData, selectedStore, sortOrder, filterMode])
 
   const storeStats = useMemo(() => {
     const stats: Record<string, any> = {}
@@ -120,22 +150,41 @@ export default function BatchAuditClient() {
       
       const csvForStore = csvData.filter(row => row.Toko === store)
       
-      let existingJournalsCount = 0
+      // We need a map to detect Uang Masuk H+1 for stats too
+      const umMap = new Map()
       csvForStore.forEach(row => {
-        if (row.penjualanDebit > 0 || row.penjualanKredit > 0) existingJournalsCount++
-        if (row.uangMasukDebit > 0 || row.uangMasukKredit > 0) existingJournalsCount++
+        const dateObj = new Date(row.Tanggal)
+        dateObj.setDate(dateObj.getDate() - 1)
+        umMap.set(dateObj.toISOString().split('T')[0], row)
+      })
+
+      let existingJournalsCount = 0
+      storeDates.forEach(date => {
+        const row = csvForStore.find(r => r.Tanggal === date)
+        if (row && (row.penjualanDebit > 0 || row.penjualanKredit > 0)) existingJournalsCount++
+        
+        const umRow = umMap.get(date)
+        if (umRow && (umRow.uangMasukDebit > 0 || umRow.uangMasukKredit > 0)) existingJournalsCount++
       })
 
       const percentage = totalJournalsRequired > 0 ? (existingJournalsCount / totalJournalsRequired) * 100 : 0
       
       const resolvedKeys = new Set(resolvedData.filter(r => r.store_name === store).map(r => r.transaction_date))
       
-      const potentialErrors = csvForStore.filter(row => {
-        if (resolvedKeys.has(row.Tanggal)) return false
-        const isPenjualanUnbalanced = Math.abs(row.penjualanDebit - row.penjualanKredit) >= 2
-        const isUangMasukUnbalanced = Math.abs(row.uangMasukDebit - row.uangMasukKredit) >= 2
-        return isPenjualanUnbalanced || isUangMasukUnbalanced
-      }).length
+      let potentialErrors = 0
+      storeDates.forEach(date => {
+        if (resolvedKeys.has(date)) return
+        
+        const row = csvForStore.find(r => r.Tanggal === date)
+        const umRow = umMap.get(date)
+        
+        if (row && umRow) {
+          const vals = [row.penjualanDebit, row.penjualanKredit, umRow.uangMasukDebit, umRow.uangMasukKredit]
+          const first = vals[0]
+          const isAllEqual = vals.every(v => Math.abs(v - first) < 2)
+          if (!isAllEqual) potentialErrors++
+        }
+      })
 
       stats[store] = {
         existingCount: existingJournalsCount,
@@ -179,13 +228,14 @@ export default function BatchAuditClient() {
     params.set('store', selectedStore)
     params.set('auto_run', 'true')
     
-    if (row.csvRow) {
-      params.set('acc_kredit', (row.csvRow['[DEBIT] payment_credit_bca'] || 0).toString())
-      params.set('acc_debit', (row.csvRow['[DEBIT] payment_debit_bca'] || 0).toString())
-      params.set('acc_qris', (row.csvRow['[DEBIT] payment_qris'] || 0).toString())
-      params.set('acc_gobiz', (row.csvRow['[DEBIT] payment_gobiz'] || 0).toString())
-      params.set('acc_ovo', (row.csvRow['[DEBIT] payment_ovo'] || 0).toString())
-      params.set('acc_cash', (row.csvRow['[DEBIT] payment_cash'] || 0).toString())
+    // Bank data for Review should come from the Uang Masuk row (H+1)
+    if (row.umRow) {
+      params.set('acc_kredit', (row.umRow['[DEBIT] payment_credit_bca'] || 0).toString())
+      params.set('acc_debit', (row.umRow['[DEBIT] payment_debit_bca'] || 0).toString())
+      params.set('acc_qris', (row.umRow['[DEBIT] payment_qris'] || 0).toString())
+      params.set('acc_gobiz', (row.umRow['[DEBIT] payment_gobiz'] || 0).toString())
+      params.set('acc_ovo', (row.umRow['[DEBIT] payment_ovo'] || 0).toString())
+      params.set('acc_cash', (row.umRow['[DEBIT] payment_cash'] || 0).toString())
     }
     return `/dashboard/finance/revenue-store?${params.toString()}`
   }
@@ -199,7 +249,7 @@ export default function BatchAuditClient() {
             Batch Audit
           </h1>
           <p className="text-gray-500 font-medium text-sm">
-            Kewajiban Jurnal Harian (1 Jan 2025 - Sekarang)
+            Kewajiban Jurnal Harian (Sejak Store Buka)
           </p>
         </div>
 
@@ -230,12 +280,13 @@ export default function BatchAuditClient() {
           <div className="flex items-center gap-2 px-3 border-r border-gray-100">
             <Filter size={16} className="text-gray-400" />
             <select 
-              value={filterMissing ? 'missing' : 'all'}
-              onChange={(e) => setFilterMissing(e.target.value === 'missing')}
+              value={filterMode}
+              onChange={(e) => setFilterMode(e.target.value as any)}
               className="text-sm font-bold bg-transparent outline-none cursor-pointer"
             >
               <option value="all">Semua Jurnal</option>
               <option value="missing">Hanya Belum Ada</option>
+              <option value="unbalanced">Hanya Unbalanced</option>
             </select>
           </div>
 
@@ -253,7 +304,6 @@ export default function BatchAuditClient() {
       <div className="flex gap-3 overflow-x-auto pb-4 no-scrollbar">
         {DEFAULT_STORE_NAMES.map(store => {
           const stats = storeStats[store] || { existingCount: 0, totalRequired: 0, percentage: 0, potentialErrors: 0 }
-          const remainingPercentage = 100 - stats.percentage
           const isSelected = selectedStore === store
           
           return (
@@ -318,18 +368,30 @@ export default function BatchAuditClient() {
                         <div className="w-16 h-16 bg-green-50 text-green-500 rounded-full flex items-center justify-center">
                           <CheckCircle2 size={32} />
                         </div>
-                        <p className="text-gray-400 font-bold italic">Semua kewajiban jurnal untuk {selectedStore} sudah terpenuhi. 🎉</p>
+                        <p className="text-gray-400 font-bold italic">
+                          {filterMode === 'unbalanced' 
+                            ? 'Semua jurnal sudah balance sempurna. ⚖️' 
+                            : `Semua kewajiban jurnal untuk ${selectedStore} sudah terpenuhi. 🎉`}
+                        </p>
                       </div>
                     </td>
                   </tr>
                 ) : (
                   tableData.map((row, idx) => {
                     const csv = row.csvRow
+                    const um = row.umRow
                     const hasPenjualan = csv && (csv.penjualanDebit > 0 || csv.penjualanKredit > 0)
-                    const hasUangMasuk = csv && (csv.uangMasukDebit > 0 || csv.uangMasukKredit > 0)
+                    const hasUangMasuk = um && (um.uangMasukDebit > 0 || um.uangMasukKredit > 0)
                     
                     const isPenjualanBalanced = csv ? Math.abs(csv.penjualanDebit - csv.penjualanKredit) < 2 : false
-                    const isUangMasukBalanced = csv ? Math.abs(csv.uangMasukDebit - csv.uangMasukKredit) < 2 : false
+                    const isUangMasukBalanced = um ? Math.abs(um.uangMasukDebit - um.uangMasukKredit) < 2 : false
+
+                    // Deep Balance check (All 4 values must be equal)
+                    let isDeepUnbalanced = false
+                    if (hasPenjualan && hasUangMasuk) {
+                      const vals = [csv.penjualanDebit, csv.penjualanKredit, um.uangMasukDebit, um.uangMasukKredit]
+                      isDeepUnbalanced = !vals.every(v => Math.abs(v - vals[0]) < 2)
+                    }
 
                     return (
                       <tr key={row.date} className="hover:bg-gray-50/80 transition-colors group">
@@ -349,12 +411,12 @@ export default function BatchAuditClient() {
                                 <span className="font-mono text-blue-900 font-black">{csv.penjualanKredit.toLocaleString('id-ID')}</span>
                               </div>
                               {!isPenjualanBalanced && (
-                                <span className="text-[9px] font-black text-red-500 bg-red-50 px-2 py-0.5 rounded-full border border-red-100 uppercase tracking-tighter">Selisih detected</span>
+                                <span className="text-[9px] font-black text-red-500 bg-red-50 px-2 py-0.5 rounded-full border border-red-100 uppercase tracking-tighter animate-pulse">Selisih</span>
                               )}
                             </div>
                           ) : (
                             <div className="inline-block bg-orange-50 text-orange-600 px-4 py-2 rounded-xl border border-orange-100 font-black text-[10px] uppercase tracking-widest shadow-sm">
-                              Belum Ada, Perlu Dibuat
+                              Belum Ada
                             </div>
                           )}
                         </td>
@@ -363,28 +425,32 @@ export default function BatchAuditClient() {
                           {hasUangMasuk ? (
                             <div className="inline-flex flex-col items-center gap-1.5">
                               <div className="flex items-center gap-2 bg-green-50 px-3 py-1.5 rounded-full border border-green-100">
-                                <span className="font-mono text-green-700 font-black">{csv.uangMasukDebit.toLocaleString('id-ID')}</span>
+                                <span className="font-mono text-green-700 font-black">{um.uangMasukDebit.toLocaleString('id-ID')}</span>
                                 <span className="text-green-200">/</span>
-                                <span className="font-mono text-green-900 font-black">{csv.uangMasukKredit.toLocaleString('id-ID')}</span>
+                                <span className="font-mono text-green-900 font-black">{um.uangMasukKredit.toLocaleString('id-ID')}</span>
                               </div>
                               {!isUangMasukBalanced && (
-                                <span className="text-[9px] font-black text-red-500 bg-red-50 px-2 py-0.5 rounded-full border border-red-100 uppercase tracking-tighter">Selisih detected</span>
+                                <span className="text-[9px] font-black text-red-500 bg-red-50 px-2 py-0.5 rounded-full border border-red-100 uppercase tracking-tighter animate-pulse">Selisih</span>
                               )}
                             </div>
                           ) : (
                             <div className="inline-block bg-orange-50 text-orange-600 px-4 py-2 rounded-xl border border-orange-100 font-black text-[10px] uppercase tracking-widest shadow-sm">
-                              Belum Ada, Perlu Dibuat
+                              Belum Ada
                             </div>
                           )}
                         </td>
 
                         <td className="px-8 py-6 text-right">
                           <div className="flex items-center justify-end gap-3">
-                            <button 
-                              onClick={() => window.location.href = buildReviewUrl(row)}
-                              className="bg-white hover:bg-gray-50 text-gray-700 px-4 py-2 rounded-xl font-black flex items-center gap-2 transition-all active:scale-95 text-[10px] uppercase tracking-widest border border-gray-200 shadow-sm"
+                            <button
+                              onClick={() => router.push(buildReviewUrl(row))}
+                              className={`px-4 py-2 rounded-xl font-black flex items-center gap-2 transition-all active:scale-95 text-[10px] uppercase tracking-widest border shadow-sm ${
+                                isDeepUnbalanced 
+                                  ? 'bg-yellow-400 hover:bg-yellow-500 text-yellow-950 border-yellow-500' 
+                                  : 'bg-white hover:bg-gray-50 text-gray-700 border-gray-200'
+                              }`}
                             >
-                              🔍 Review
+                              🔍 {isDeepUnbalanced ? 'Fix Balance' : 'Review'}
                             </button>
                             <button 
                               onClick={() => handleSudahOK(row)}
@@ -392,7 +458,7 @@ export default function BatchAuditClient() {
                               className="bg-green-600 hover:bg-green-700 disabled:bg-green-300 text-white px-5 py-2 rounded-xl font-black flex items-center gap-2 transition-all shadow-md active:scale-95 text-[10px] uppercase tracking-widest"
                             >
                               {markingId === `${row.date}_${selectedStore}` ? <Loader2 size={12} className="animate-spin" /> : <CheckCircle2 size={12} />}
-                              Selesai
+                              OK
                             </button>
                           </div>
                         </td>

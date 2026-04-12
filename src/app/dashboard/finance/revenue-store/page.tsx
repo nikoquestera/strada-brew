@@ -1,7 +1,14 @@
-'use client'
-import { useState } from 'react'
+import { Suspense } from 'react'
 import RevenueStoreClient from './RevenueStoreClient'
 
+export const metadata = {
+  title: 'Revenue Store | Strada BREW',
+}
+
 export default function RevenuePage() {
-  return <RevenueStoreClient />
+  return (
+    <Suspense>
+      <RevenueStoreClient />
+    </Suspense>
+  )
 }

@@ -241,7 +241,7 @@ export default function TransaksiAbnormalClient() {
                           <div className="flex flex-col gap-1">
                             <span className="font-bold text-gray-900 text-xs">{tx.resolved_by}</span>
                             <span className="text-[10px] text-gray-400 font-mono">
-                              {new Date(tx.resolved_at!).toLocaleString('id-ID')}
+                              {tx.resolved_at ? new Date(tx.resolved_at).toLocaleString('id-ID') : '—'}
                             </span>
                           </div>
                         </td>

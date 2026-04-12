@@ -120,7 +120,7 @@ export default function FinanceLayout({ children, userEmail }: Props) {
   )
 
   return (
-    <div className="flex h-screen overflow-hidden bg-[#F5F5F7]">
+    <div className="flex h-dvh overflow-hidden bg-[#F5F5F7]">
       {/* Password Modal */}
       {showPasswordModal && (
         <div className="fixed inset-0 bg-gray-900/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4">

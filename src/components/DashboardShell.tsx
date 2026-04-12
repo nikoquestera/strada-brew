@@ -95,7 +95,7 @@ export default function DashboardShell({ children, userEmail }: Props) {
   )
 
   return (
-    <div className="flex h-screen overflow-hidden bg-[#F5F5F7]">
+    <div className="flex h-dvh overflow-hidden bg-[#F5F5F7]">
       {/* Mobile overlay */}
       {sidebarOpen && (
         <div 
