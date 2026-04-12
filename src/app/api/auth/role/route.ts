@@ -12,9 +12,12 @@ export async function GET(request: NextRequest) {
     }
 
     // Bypass RLS using admin client
+    const serviceKey =
+      process.env.SERVICE_SUPABASE_KEY ||
+      process.env.SUPABASE_SERVICE_ROLE_KEY
     const adminSupabase = createAdminClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SERVICE_SUPABASE_KEY!
+      serviceKey!
     )
 
     const { data: userData } = await adminSupabase
