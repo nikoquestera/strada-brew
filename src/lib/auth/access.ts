@@ -1,9 +1,4 @@
-export const FINANCE_EMAILS = [
-  'selena@stradacoffee.com',
-  'clara@stradacoffee.com',
-  'cipta@stradacoffee.com'
-] as const
+// Role is always sourced from the brew_users table in the database.
+// Do not hardcode user emails or roles here — use the DB role check
+// in layouts (finance/layout.tsx, hrd/layout.tsx) or /api/auth/role.
 
-export function isFinanceUser(email?: string | null) {
-  return FINANCE_EMAILS.includes((email ?? '').toLowerCase() as (typeof FINANCE_EMAILS)[number])
-}
