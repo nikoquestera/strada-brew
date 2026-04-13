@@ -90,9 +90,9 @@ export async function POST(request: NextRequest) {
             const paymentGobiz = result.payment_gobiz || 0
             const paymentOvo = result.payment_ovo || 0
 
-            // Calculate fees: diff between Quinos gross and actual bank receipts (all 5 channels)
-            const biayaAdminBank = (paymentCreditBca - bcaKreditIncome) + (paymentDebitBca - bcaDebitIncome) + (paymentQris - bcaQrisIncome) + (paymentGobiz - gobizIncome) + (paymentOvo - ovoIncome)
-            const biayaPenjualanMerchantOnline = (paymentGobiz + paymentOvo) - (gobizIncome + ovoIncome)
+            // Calculate fees (kept separate — different Accurate codes per store)
+            const biayaAdminBank = (paymentCreditBca - bcaKreditIncome) + (paymentDebitBca - bcaDebitIncome) + (paymentQris - bcaQrisIncome)
+            const biayaPenjualanMerchantOnline = (paymentGobiz - gobizIncome) + (paymentOvo - ovoIncome)
 
             // Total Uang Masuk = sum of user-inputted bank receipts (excluding cash)
             const totalPaymentQuinos = bcaKreditIncome + bcaDebitIncome + bcaQrisIncome + gobizIncome + ovoIncome

@@ -277,9 +277,9 @@ export async function POST(request: NextRequest) {
             // DEBIT: Settlement BCA (Actual cash/bank received)
             addDetail(detailsUangMasuk, mapping.settlement_bca, 'DEBIT', totalNetReceipt)
             
-            // DEBIT: Fees (Selisih)
-            addDetail(detailsUangMasuk, ACCURATE_MAPPING.GLOBAL.admin_bank, 'DEBIT', (resultData.biaya_admin_bank || 0))
-            addDetail(detailsUangMasuk, ACCURATE_MAPPING.GLOBAL.admin_merchant, 'DEBIT', (resultData.biaya_penjualan_merchant_online || 0))
+            // DEBIT: Fees — use per-store code if defined, fall back to GLOBAL
+            addDetail(detailsUangMasuk, mapping.admin_bank || ACCURATE_MAPPING.GLOBAL.admin_bank, 'DEBIT', (resultData.biaya_admin_bank || 0))
+            addDetail(detailsUangMasuk, mapping.admin_merchant || ACCURATE_MAPPING.GLOBAL.admin_merchant, 'DEBIT', (resultData.biaya_penjualan_merchant_online || 0))
             
             // KREDIT: Only clear the 7 core Piutang/Payment accounts that were added to the Debit side
             const corePaymentKeys = [

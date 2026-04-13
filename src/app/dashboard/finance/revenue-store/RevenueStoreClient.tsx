@@ -873,16 +873,27 @@ function RevenueStoreForm() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-gray-50">
                   {result.biaya_admin_bank !== undefined && (
                     <div className="bg-orange-50 rounded-xl p-5 border border-orange-100">
-                      <p className="text-orange-600 text-[11px] font-bold uppercase mb-1">Biaya Admin (BCA + Gobiz + OVO)</p>
+                      <p className="text-orange-600 text-[11px] font-bold uppercase mb-1">Biaya Admin BCA (CC, Debit & QRIS)</p>
                       <p className="text-2xl font-black text-orange-700">
                         Rp {parseFloat(result.biaya_admin_bank || 0).toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                       </p>
                       <div className="text-[10px] text-orange-800/70 mt-3 space-y-1 font-medium">
-                        <p className="font-bold underline decoration-orange-300 mb-1">Rincian Persentase Admin BCA:</p>
+                        <p className="font-bold underline decoration-orange-300 mb-1">Rincian Persentase Admin:</p>
                         <p>• Credit BCA: {parseFloat(result.pct_credit || 0).toFixed(2)}% <span className="opacity-50">(Batas: 2.10%)</span></p>
                         <p>• Debit BCA: {parseFloat(result.pct_debit || 0).toFixed(2)}% <span className="opacity-50">(Batas: 0.80%)</span></p>
                         <p>• QRIS BCA: {parseFloat(result.pct_qris || 0).toFixed(2)}% <span className="opacity-50">(Batas: 0.85%)</span></p>
                       </div>
+                    </div>
+                  )}
+                  {result.biaya_penjualan_merchant_online !== undefined && (
+                    <div className="bg-orange-50 rounded-xl p-5 border border-orange-100">
+                      <p className="text-orange-600 text-[11px] font-bold uppercase mb-1">Biaya Merchant (Gobiz & OVO)</p>
+                      <p className="text-2xl font-black text-orange-700">
+                        Rp {parseFloat(result.biaya_penjualan_merchant_online || 0).toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                      </p>
+                      <p className="text-[10px] text-orange-800/70 mt-3 font-medium uppercase tracking-wider">
+                        = (Gobiz Quinos − Masuk Gobiz) + (OVO Quinos − Masuk OVO)
+                      </p>
                     </div>
                   )}
                 </div>
