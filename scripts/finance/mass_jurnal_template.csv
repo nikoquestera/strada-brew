@@ -1,0 +1,35 @@
+tanggal,keterangan,kode_akun,tipe,nominal,customer_no,vendor_no
+# ─────────────────────────────────────────────────────────────────────────────
+# PETUNJUK PENGISIAN
+# ─────────────────────────────────────────────────────────────────────────────
+# tanggal     : Format YYYY-MM-DD                  (contoh: 2026-04-01)
+# keterangan  : Deskripsi jurnal persis seperti di Accurate
+#               (contoh: BREW - Penjualan cafe BSD tanggal 01/04/2026)
+# kode_akun   : Kode akun Accurate                 (contoh: 1100.13)
+# tipe        : DEBIT atau CREDIT
+# nominal     : Angka bulat tanpa titik/koma       (contoh: 5000000)
+# customer_no : Isi jika akun piutang / GoBiz / OVO (contoh: C.00045)
+#               Kosongkan jika tidak perlu
+# vendor_no   : Isi jika akun hutang vendor        (contoh: V.00001)
+#               Kosongkan jika tidak perlu
+#
+# CATATAN PENTING:
+# - Baris-baris dengan tanggal + keterangan SAMA akan digabung menjadi 1 jurnal
+# - Total DEBIT harus = Total KREDIT (toleransi Rp 1) — jika tidak, jurnal di-skip
+# - Jika jurnal dengan keterangan yang sama sudah ada di Accurate, akan di-REVISI
+#   (hapus lama → buat baru)
+# - Baris yang diawali # adalah komentar dan akan diabaikan
+# ─────────────────────────────────────────────────────────────────────────────
+#
+# CONTOH (hapus tanda # di depan untuk mengaktifkan):
+#
+# Jurnal Penjualan BSD tanggal 01/04/2026:
+# 2026-04-01,BREW - Penjualan cafe BSD tanggal 01/04/2026,1100.13,DEBIT,8500000,C.00045,
+# 2026-04-01,BREW - Penjualan cafe BSD tanggal 01/04/2026,1000.01.10,DEBIT,1200000,,
+# 2026-04-01,BREW - Penjualan cafe BSD tanggal 01/04/2026,4000.01.07,CREDIT,9700000,,
+#
+# Jurnal Uang Masuk BSD tanggal 02/04/2026 (H+1):
+# 2026-04-02,BREW - Uang masuk penjualan cafe BSD tanggal 01/04/2026,1000.02.06,DEBIT,8400000,,
+# 2026-04-02,BREW - Uang masuk penjualan cafe BSD tanggal 01/04/2026,6000.01.08,DEBIT,100000,,
+# 2026-04-02,BREW - Uang masuk penjualan cafe BSD tanggal 01/04/2026,1100.13,CREDIT,8500000,C.00045,
+# ─────────────────────────────────────────────────────────────────────────────

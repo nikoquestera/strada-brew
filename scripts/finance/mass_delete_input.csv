@@ -1,0 +1,13 @@
+nomor_jurnal
+# ─────────────────────────────────────────────────────────────────────────────
+# PETUNJUK PENGISIAN
+# ─────────────────────────────────────────────────────────────────────────────
+# Isi satu nomor jurnal Accurate per baris, contoh:
+#
+# JU-000001
+# JU-000002
+# JU-000003
+#
+# Nomor jurnal bisa dilihat di Accurate → Buku Besar → Jurnal Umum
+# Baris yang diawali # adalah komentar dan akan diabaikan
+# ─────────────────────────────────────────────────────────────────────────────

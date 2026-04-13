@@ -144,6 +144,15 @@ export async function POST(request: NextRequest) {
 
           const dateParts = resultData.transaction_date.split('-')
           const accurateDate = `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`
+
+          // Uang Masuk di BCA masuk H+1 dari tanggal transaksi
+          const txDate = new Date(`${dateParts[0]}-${dateParts[1]}-${dateParts[2]}`)
+          txDate.setDate(txDate.getDate() + 1)
+          const h1Day = String(txDate.getDate()).padStart(2, '0')
+          const h1Month = String(txDate.getMonth() + 1).padStart(2, '0')
+          const h1Year = txDate.getFullYear()
+          const accurateDateH1 = `${h1Day}/${h1Month}/${h1Year}`
+
           const memoPenjualan = `BREW - Penjualan cafe ${resultData.store_name} tanggal ${accurateDate}`
           const memoUangMasuk = `BREW - Uang masuk penjualan cafe ${resultData.store_name} tanggal ${accurateDate}`
 
@@ -173,7 +182,7 @@ export async function POST(request: NextRequest) {
           }
 
           // POST Logic
-          const postToAccurate = async (memo: string, details: any[]) => {
+          const postToAccurate = async (memo: string, details: any[], transDate: string = accurateDate) => {
             const debits = details.filter(d => d.amountType === 'DEBIT').reduce((s, d) => s + d.amount, 0)
             const credits = details.filter(d => d.amountType === 'CREDIT').reduce((s, d) => s + d.amount, 0)
             
@@ -185,7 +194,7 @@ export async function POST(request: NextRequest) {
             await deleteExistingJournal(memo)
 
             const payload = {
-              transDate: accurateDate,
+              transDate,
               description: memo,
               detailJournalVoucher: details
             }
@@ -302,8 +311,8 @@ export async function POST(request: NextRequest) {
               }
             }
 
-            sendLog('⏳ [95%] Mengirim Jurnal Uang Masuk ke server Accurate...')
-            await postToAccurate(memoUangMasuk, detailsUangMasuk)
+            sendLog(`⏳ [95%] Mengirim Jurnal Uang Masuk ke server Accurate (tanggal: ${accurateDateH1})...`)
+            await postToAccurate(memoUangMasuk, detailsUangMasuk, accurateDateH1)
             sendLog('✅ [98%] Jurnal Uang Masuk berhasil.', 'success')
           }
 
