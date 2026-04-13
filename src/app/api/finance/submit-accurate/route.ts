@@ -153,8 +153,8 @@ export async function POST(request: NextRequest) {
           const h1Year = txDate.getFullYear()
           const accurateDateH1 = `${h1Day}/${h1Month}/${h1Year}`
 
-          const memoPenjualan = `BREW - Penjualan cafe ${resultData.store_name} tanggal ${accurateDate}`
-          const memoUangMasuk = `BREW - Uang masuk penjualan cafe ${resultData.store_name} tanggal ${accurateDate}`
+          const memoPenjualan = `BREW - PENJUALAN STRADA ${resultData.store_name} ${accurateDate}`
+          const memoUangMasuk = `BREW - UANG MASUK STRADA ${resultData.store_name} ${accurateDate}`
 
           // Delete existing logic (for Revisions)
           const deleteExistingJournal = async (memo: string) => {

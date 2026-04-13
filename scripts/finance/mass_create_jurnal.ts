@@ -1,29 +1,23 @@
 /**
  * mass_create_jurnal.ts
  *
- * Buat massal jurnal umum Accurate dari CSV template.
+ * Buat massal Jurnal Penjualan + Uang Masuk ke Accurate dari CSV sederhana.
  *
  * Usage:
  *   npx ts-node -e "require('dotenv').config({path:'.env.local'})" scripts/finance/mass_create_jurnal.ts
- *   npx ts-node -e "require('dotenv').config({path:'.env.local'})" scripts/finance/mass_create_jurnal.ts ./path/to/your.csv
+ *   npx ts-node -e "require('dotenv').config({path:'.env.local'})" scripts/finance/mass_create_jurnal.ts ./scripts/finance/MASS_INPUT_MKG_TEST.csv
  *
- * Input CSV (default: ./scripts/finance/mass_jurnal_template.csv):
- *   Setiap baris = satu baris detail jurnal.
- *   Baris yang punya tanggal + keterangan sama akan digabung menjadi SATU jurnal.
+ * Format CSV (lihat mass_jurnal_template.csv untuk contoh):
+ *   TANGGAL,TOKO,CASH,KREDIT BCA,DEBIT BCA,QRIS BCA,DEBIT,DEBIT BRI,KREDIT BRI,TRANSFER,GO-BIZ,OVO
+ *   1/1/25,MKG,,261.949,615.653,1.697.171,,,,,,
  *
- * Kolom CSV:
- *   tanggal       - Format YYYY-MM-DD  (contoh: 2026-04-01)
- *   keterangan    - Deskripsi jurnal   (contoh: BREW - Penjualan cafe BSD tanggal 01/04/2026)
- *   kode_akun     - Kode akun Accurate (contoh: 1100.13)
- *   tipe          - DEBIT atau CREDIT
- *   nominal       - Angka tanpa titik/koma (contoh: 5000000)
- *   customer_no   - (Opsional) Nomor customer jika akun piutang (contoh: C.00045)
- *   vendor_no     - (Opsional) Nomor vendor jika akun hutang  (contoh: V.00001)
+ * Kolom pembayaran di CSV = jumlah bank settlement (income).
+ * Data penjualan (kredit jurnal) diambil dari tabel daily_revenue Supabase.
+ * Jika daily_revenue belum ada untuk tanggal tersebut → baris dilewati.
  *
- * Catatan:
- *   - Jika jurnal dengan keterangan yang sama sudah ada di Accurate, script akan
- *     menghapusnya dulu (revisi) sebelum membuat yang baru.
- *   - Script akan skip jurnal yang tidak balance (selisih > Rp 1).
+ * Kolom DEBIT        → digabung ke payment_debit_bca (non-BCA debit card)
+ * Kolom DEBIT BRI    → digabung ke payment_transfer
+ * Kolom KREDIT BRI   → digabung ke payment_transfer
  */
 
 import axios from 'axios'
@@ -32,27 +26,126 @@ import * as fs from 'fs'
 import * as path from 'path'
 import * as readline from 'readline'
 import * as dotenv from 'dotenv'
+import { ACCURATE_MAPPING } from '../../src/lib/finance/accurate-mapping'
+import { fetchQuinosRevenue } from '../../src/lib/finance/quinos'
 
 dotenv.config({ path: '.env.local' })
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const supabaseKey = process.env.SERVICE_SUPABASE_KEY!
-const supabase = createClient(supabaseUrl, supabaseKey)
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SERVICE_SUPABASE_KEY!
+)
+
+// ─── Helpers ─────────────────────────────────────────────────────────────────
+
+function parseDate(raw: string): string {
+  // Handles: 1/1/25, 01/01/25, 1/1/2025, 01/01/2025
+  const parts = raw.trim().split('/')
+  if (parts.length !== 3) throw new Error(`Format tanggal tidak dikenali: "${raw}"`)
+  const [d, m, y] = parts
+  const year = y.length === 2 ? `20${y}` : y
+  return `${year}-${d.padStart(2, '0')}-${m.padStart(2, '0')}`
+}
+
+function toAccurateDate(iso: string): string {
+  const [y, m, d] = iso.split('-')
+  return `${d}/${m}/${y}`
+}
+
+function parseNum(raw: string): number {
+  if (!raw || !raw.trim()) return 0
+  // Indonesian format: 1.697.171 → remove dots, replace comma with dot for decimals
+  return parseFloat(raw.trim().replace(/\./g, '').replace(',', '.')) || 0
+}
+
+function confirm(question: string): Promise<boolean> {
+  const rl = readline.createInterface({ input: process.stdin, output: process.stdout })
+  return new Promise(resolve => {
+    rl.question(question, ans => { rl.close(); resolve(ans.trim().toLowerCase() === 'y') })
+  })
+}
+
+// ─── CSV Parser ───────────────────────────────────────────────────────────────
+
+interface CsvRow {
+  date: string          // YYYY-MM-DD
+  store: string
+  income: {
+    payment_cash: number
+    payment_credit_bca: number
+    payment_debit_bca: number
+    payment_qris: number
+    payment_gobiz: number
+    payment_ovo: number
+    payment_transfer: number
+  }
+}
+
+function parseCSV(filePath: string): CsvRow[] {
+  const lines = fs.readFileSync(filePath, 'utf-8')
+    .split('\n')
+    .map(l => l.trim())
+    .filter(l => l && !l.startsWith('#'))
+
+  if (lines.length < 2) throw new Error('CSV kosong atau hanya header.')
+
+  const headers = lines[0].split(',').map(h => h.trim().toUpperCase())
+  const rows: CsvRow[] = []
+
+  for (let i = 1; i < lines.length; i++) {
+    const cols = lines[i].split(',')
+    const get = (colName: string) => {
+      const idx = headers.indexOf(colName)
+      return idx >= 0 ? parseNum(cols[idx]) : 0
+    }
+
+    const tanggal = cols[headers.indexOf('TANGGAL')]?.trim()
+    const toko = cols[headers.indexOf('TOKO')]?.trim()
+
+    if (!tanggal || !toko) {
+      console.warn(`  ⚠️  Baris ${i + 1}: TANGGAL atau TOKO kosong, dilewati.`)
+      continue
+    }
+
+    let date: string
+    try { date = parseDate(tanggal) } catch (e: any) {
+      console.warn(`  ⚠️  Baris ${i + 1}: ${e.message}, dilewati.`)
+      continue
+    }
+
+    // DEBIT and DEBIT BRI/KREDIT BRI are merged into their closest mapping
+    rows.push({
+      date,
+      store: toko,
+      income: {
+        payment_cash:       get('CASH'),
+        payment_credit_bca: get('KREDIT BCA'),
+        payment_debit_bca:  get('DEBIT BCA') + get('DEBIT'),   // non-BCA debit merged
+        payment_qris:       get('QRIS BCA'),
+        payment_gobiz:      get('GO-BIZ'),
+        payment_ovo:        get('OVO'),
+        payment_transfer:   get('TRANSFER') + get('DEBIT BRI') + get('KREDIT BRI'),
+      }
+    })
+  }
+
+  return rows
+}
 
 // ─── Accurate Auth ───────────────────────────────────────────────────────────
 
 async function getAccurateConnection() {
-  const { data: tokenData, error } = await supabase.from('accurate_tokens').select('*').limit(1).maybeSingle()
-  if (error || !tokenData) throw new Error('No Accurate tokens found in database.')
+  const { data: tokenData, error } = await supabase
+    .from('accurate_tokens').select('*').limit(1).maybeSingle()
+  if (error || !tokenData) throw new Error('Token Accurate tidak ditemukan di database.')
 
   let accessToken = tokenData.access_token
 
   if (new Date(tokenData.expires_at) <= new Date()) {
-    console.log('Token expired, refreshing...')
+    console.log('Token expired, memperbarui...')
     const authHeader = Buffer.from(
       `${process.env.ACCURATE_OAUTH_CLIENT_ID}:${process.env.ACCURATE_OAUTH_CLIENT_SECRET}`
     ).toString('base64')
-
     const refreshRes = await axios.post(
       'https://account.accurate.id/oauth/token',
       new URLSearchParams({ grant_type: 'refresh_token', refresh_token: tokenData.refresh_token }).toString(),
@@ -71,7 +164,6 @@ async function getAccurateConnection() {
     headers: { Authorization: `Bearer ${accessToken}` }
   })
   const dbId = dbListRes.data.d[0].id
-
   const sessionRes = await axios.get(`https://account.accurate.id/api/open-db.do?id=${dbId}`, {
     headers: { Authorization: `Bearer ${accessToken}` }
   })
@@ -83,162 +175,184 @@ async function getAccurateConnection() {
   }
 }
 
-// ─── Helpers ─────────────────────────────────────────────────────────────────
+// ─── Journal Helpers ──────────────────────────────────────────────────────────
 
-function toAccurateDate(dateStr: string): string {
-  // YYYY-MM-DD → DD/MM/YYYY
-  const [y, m, d] = dateStr.split('-')
-  return `${d}/${m}/${y}`
+function addDetail(details: any[], account: string, type: 'DEBIT' | 'CREDIT', amount: number) {
+  if (!account) return
+  const trimmed = account.trim()
+  const rounded = Math.round(amount * 100) / 100
+  if (rounded <= 0) return
+
+  const detail: any = { accountNo: trimmed, amountType: type, amount: rounded }
+
+  const customerNo = ACCURATE_MAPPING.CUSTOMER_MAPPING[trimmed]
+  if (customerNo) { detail.customerNo = customerNo; detail.subsidiaryType = 'CUSTOMER' }
+
+  const vendorNo = ACCURATE_MAPPING.VENDOR_MAPPING[trimmed]
+  if (vendorNo) { detail.vendorNo = vendorNo; detail.subsidiaryType = 'VENDOR' }
+
+  details.push(detail)
 }
-
-function parseCsvLine(line: string): string[] {
-  // Handle quoted fields containing commas
-  const result: string[] = []
-  let current = ''
-  let inQuotes = false
-  for (const ch of line) {
-    if (ch === '"') { inQuotes = !inQuotes; continue }
-    if (ch === ',' && !inQuotes) { result.push(current.trim()); current = ''; continue }
-    current += ch
-  }
-  result.push(current.trim())
-  return result
-}
-
-function confirm(question: string): Promise<boolean> {
-  const rl = readline.createInterface({ input: process.stdin, output: process.stdout })
-  return new Promise((resolve) => {
-    rl.question(question, (ans) => { rl.close(); resolve(ans.trim().toLowerCase() === 'y') })
-  })
-}
-
-// ─── Delete existing journal by description (for revision) ───────────────────
 
 async function deleteIfExists(
   description: string,
   conn: { accessToken: string; sessionId: string; apiBaseUrl: string }
-): Promise<boolean> {
-  const headers = { Authorization: `Bearer ${conn.accessToken}`, 'X-Session-ID': conn.sessionId }
+) {
   try {
     const res = await axios.get(`${conn.apiBaseUrl}/api/journal-voucher/list.do`, {
-      params: {
-        fields: 'id,description',
-        'filter.keywords.op': 'EQUAL',
-        'filter.keywords.val': description
-      },
-      headers
+      params: { fields: 'id,description', 'filter.keywords.op': 'EQUAL', 'filter.keywords.val': description },
+      headers: { Authorization: `Bearer ${conn.accessToken}`, 'X-Session-ID': conn.sessionId }
     })
-    if (!res.data.s || !res.data.d?.length) return false
+    if (res.data.s && res.data.d?.length > 0) {
+      await axios.delete(`${conn.apiBaseUrl}/api/journal-voucher/delete.do`, {
+        params: { id: res.data.d[0].id },
+        headers: { Authorization: `Bearer ${conn.accessToken}`, 'X-Session-ID': conn.sessionId }
+      })
+      return true
+    }
+  } catch (_) {}
+  return false
+}
 
-    const id = res.data.d[0].id
-    await axios.delete(`${conn.apiBaseUrl}/api/journal-voucher/delete.do`, {
-      params: { id },
-      headers
-    })
-    return true
-  } catch (_) {
-    return false
+async function postJournal(
+  memo: string,
+  transDate: string,
+  details: any[],
+  conn: { accessToken: string; sessionId: string; apiBaseUrl: string }
+) {
+  const debit  = details.filter(d => d.amountType === 'DEBIT').reduce((s, d) => s + d.amount, 0)
+  const credit = details.filter(d => d.amountType === 'CREDIT').reduce((s, d) => s + d.amount, 0)
+  if (Math.abs(debit - credit) > 1) {
+    throw new Error(`Tidak balance — D: ${debit.toLocaleString('id-ID')} K: ${credit.toLocaleString('id-ID')} (selisih ${Math.abs(debit - credit).toLocaleString('id-ID')})`)
+  }
+
+  const revised = await deleteIfExists(memo, conn)
+  if (revised) console.log(`     🔄 Jurnal lama dihapus (revisi).`)
+
+  const res = await axios.post(`${conn.apiBaseUrl}/api/journal-voucher/save.do`,
+    { transDate, description: memo, detailJournalVoucher: details },
+    { headers: { Authorization: `Bearer ${conn.accessToken}`, 'X-Session-ID': conn.sessionId, 'Content-Type': 'application/json' } }
+  )
+
+  if (!res.data.s) {
+    const err = Array.isArray(res.data.d) ? res.data.d.join(', ') : String(res.data.d)
+    throw new Error(`Accurate reject: ${err}`)
   }
 }
 
-// ─── Parse & group CSV rows into journals ─────────────────────────────────────
+// ─── Process one row ──────────────────────────────────────────────────────────
 
-interface DetailRow {
-  accountNo: string
-  amountType: 'DEBIT' | 'CREDIT'
-  amount: number
-  customerNo?: string
-  vendorNo?: string
-}
+async function processRow(
+  row: CsvRow,
+  conn: { accessToken: string; sessionId: string; apiBaseUrl: string }
+) {
+  const { date, store, income } = row
+  const mapping = ACCURATE_MAPPING.STORES[store]
+  if (!mapping) throw new Error(`Mapping untuk toko "${store}" tidak ditemukan.`)
 
-interface Journal {
-  tanggal: string        // YYYY-MM-DD
-  keterangan: string
-  details: DetailRow[]
-  lineNumbers: number[]  // for error reporting
-}
+  // Always fetch fresh data from Quinos so the latest formula is applied,
+  // then upsert into daily_revenue (overwrites any stale record).
+  console.log(`     📡 Mengambil data dari Quinos...`)
+  const qData = await fetchQuinosRevenue(date, store)
 
-function parseCSV(csvPath: string): Journal[] {
-  const raw = fs.readFileSync(csvPath, 'utf-8')
-  const lines = raw.split('\n').map(l => l.trim()).filter(l => l)
+  await supabase.from('daily_revenue').upsert(
+    { ...qData, updated_at: new Date().toISOString() },
+    { onConflict: 'store_name,transaction_date' }
+  )
 
-  const header = parseCsvLine(lines[0].toLowerCase())
-  const idx = {
-    tanggal:     header.indexOf('tanggal'),
-    keterangan:  header.indexOf('keterangan'),
-    kode_akun:   header.indexOf('kode_akun'),
-    tipe:        header.indexOf('tipe'),
-    nominal:     header.indexOf('nominal'),
-    customer_no: header.indexOf('customer_no'),
-    vendor_no:   header.indexOf('vendor_no')
+  // rev = fresh Quinos data (POS gross amounts + penjualan breakdown)
+  // income = CSV bank settlement amounts (net)
+  // fees = POS - settlement
+  const rev = qData
+
+  const biayaAdminBank =
+    Math.max(0, (rev.payment_credit_bca || 0) - income.payment_credit_bca) +
+    Math.max(0, (rev.payment_debit_bca  || 0) - income.payment_debit_bca)  +
+    Math.max(0, (rev.payment_qris       || 0) - income.payment_qris)
+
+  const biayaMerchant =
+    Math.max(0, (rev.payment_gobiz || 0) + (rev.payment_ovo || 0) -
+                 income.payment_gobiz    - income.payment_ovo)
+
+  const accurateDate = toAccurateDate(date)
+
+  // H+1 date for Uang Masuk
+  const txDate = new Date(date)
+  txDate.setDate(txDate.getDate() + 1)
+  const accurateDateH1 = toAccurateDate(txDate.toISOString().split('T')[0])
+
+  const memoPenjualan = `BREW - PENJUALAN STRADA ${store} ${accurateDate}`
+  const memoUangMasuk = `BREW - UANG MASUK STRADA ${store} ${accurateDate}`
+
+  // ── Jurnal 1: Penjualan ───────────────────────────────────────────────────
+  const dp: any[] = []
+
+  addDetail(dp, mapping.payment_credit_bca, 'DEBIT', rev.payment_credit_bca || 0)
+  addDetail(dp, mapping.payment_debit_bca,  'DEBIT', rev.payment_debit_bca  || 0)
+  addDetail(dp, mapping.payment_qris,       'DEBIT', rev.payment_qris       || 0)
+  addDetail(dp, mapping.payment_gobiz,      'DEBIT', rev.payment_gobiz      || 0)
+  addDetail(dp, mapping.payment_ovo,        'DEBIT', rev.payment_ovo        || 0)
+  addDetail(dp, mapping.payment_cash,       'DEBIT', rev.payment_cash       || 0)
+  addDetail(dp, mapping.payment_transfer,   'DEBIT', rev.payment_transfer   || 0)
+
+  // Global vouchers
+  for (const key in ACCURATE_MAPPING.GLOBAL) {
+    if (key.startsWith('payment_')) {
+      addDetail(dp, ACCURATE_MAPPING.GLOBAL[key], 'DEBIT', rev[key] || 0)
+    }
+  }
+  // Store-specific vouchers
+  if (mapping.payment_bsd_workshop_vou)    addDetail(dp, mapping.payment_bsd_workshop_vou,    'DEBIT', rev.payment_bsd_workshop_vou    || 0)
+  if (mapping.payment_voucher_smkg)        addDetail(dp, mapping.payment_voucher_smkg,         'DEBIT', rev.payment_voucher_smkg         || 0)
+  if (mapping.payment_workshop_sms_voucher) addDetail(dp, mapping.payment_workshop_sms_voucher,'DEBIT', rev.payment_workshop_sms_voucher || 0)
+  if (mapping.payment_cl_upperwest)        addDetail(dp, mapping.payment_cl_upperwest,         'DEBIT', rev.payment_cl_upperwest         || 0)
+
+  addDetail(dp, mapping.discount, 'DEBIT', rev.revenue_discount || 0)
+
+  addDetail(dp, mapping.sales_bar,                 'CREDIT', rev.penjualan_bar                 || 0)
+  addDetail(dp, mapping.sales_beans,               'CREDIT', rev.penjualan_coffee_beans         || 0)
+  addDetail(dp, mapping.sales_kitchen,             'CREDIT', rev.penjualan_makanan              || 0)
+  addDetail(dp, mapping.sales_konsinyasi,          'CREDIT', rev.penjualan_konsinyasi           || 0)
+  addDetail(dp, mapping.sales_bundling,            'CREDIT', rev.penjualan_bundling             || 0)
+  addDetail(dp, mapping.sales_inventory,           'CREDIT', rev.penjualan_inventory            || 0)
+  addDetail(dp, mapping.sales_modifier,            'CREDIT', rev.penjualan_modifier             || 0)
+  addDetail(dp, mapping.sales_konsinyasi_no_brand, 'CREDIT', rev.penjualan_konsinyasi_no_brand  || 0)
+  addDetail(dp, mapping.service_charge,            'CREDIT', rev.hutang_service                 || 0)
+  addDetail(dp, mapping.tax,                       'CREDIT', rev.hutang_pajak_pemkot            || 0)
+
+  await postJournal(memoPenjualan, accurateDate, dp, conn)
+  console.log(`     ✅ Jurnal Penjualan OK`)
+
+  // ── Jurnal 2: Uang Masuk ─────────────────────────────────────────────────
+  const du: any[] = []
+
+  const totalNetReceipt =
+    income.payment_credit_bca +
+    income.payment_debit_bca  +
+    income.payment_qris       +
+    income.payment_gobiz      +
+    income.payment_ovo        +
+    income.payment_cash       +
+    income.payment_transfer
+
+  addDetail(du, mapping.settlement_bca,                             'DEBIT',  totalNetReceipt)
+  addDetail(du, mapping.admin_bank     || ACCURATE_MAPPING.GLOBAL.admin_bank,     'DEBIT', biayaAdminBank)
+  addDetail(du, mapping.admin_merchant || ACCURATE_MAPPING.GLOBAL.admin_merchant, 'DEBIT', biayaMerchant)
+
+  const coreKeys = [
+    'payment_cash', 'payment_transfer', 'payment_credit_bca',
+    'payment_debit_bca', 'payment_qris', 'payment_gobiz', 'payment_ovo'
+  ]
+  for (const key of coreKeys) {
+    const amount = rev[key] || 0
+    if (amount > 0) {
+      const account = mapping[key] || ACCURATE_MAPPING.GLOBAL[key]
+      if (account) addDetail(du, account, 'CREDIT', amount)
+    }
   }
 
-  const required = ['tanggal', 'keterangan', 'kode_akun', 'tipe', 'nominal'] as const
-  for (const col of required) {
-    if (idx[col] === -1) throw new Error(`Kolom "${col}" tidak ditemukan di header CSV.`)
-  }
-
-  const journalMap = new Map<string, Journal>()
-
-  for (let i = 1; i < lines.length; i++) {
-    // Skip comment lines
-    if (lines[i].startsWith('#')) continue
-
-    const cols = parseCsvLine(lines[i])
-    if (cols.every(c => !c)) continue
-
-    const tanggal    = cols[idx.tanggal]
-    const keterangan = cols[idx.keterangan]
-    const kode_akun  = cols[idx.kode_akun]
-    const tipe       = cols[idx.tipe]?.toUpperCase()
-    const nominal    = parseFloat(cols[idx.nominal]?.replace(/[.,\s]/g, '') || '0')
-    const customer_no = idx.customer_no >= 0 ? cols[idx.customer_no] : ''
-    const vendor_no   = idx.vendor_no   >= 0 ? cols[idx.vendor_no]   : ''
-
-    if (!tanggal || !keterangan || !kode_akun || !tipe || !nominal) {
-      console.warn(`  ⚠️  Baris ${i + 1} tidak lengkap, dilewati.`)
-      continue
-    }
-
-    if (tipe !== 'DEBIT' && tipe !== 'CREDIT') {
-      console.warn(`  ⚠️  Baris ${i + 1}: tipe harus DEBIT atau CREDIT (ditemukan: "${tipe}"), dilewati.`)
-      continue
-    }
-
-    if (isNaN(nominal) || nominal <= 0) {
-      console.warn(`  ⚠️  Baris ${i + 1}: nominal tidak valid ("${cols[idx.nominal]}"), dilewati.`)
-      continue
-    }
-
-    const key = `${tanggal}||${keterangan}`
-    if (!journalMap.has(key)) {
-      journalMap.set(key, { tanggal, keterangan, details: [], lineNumbers: [] })
-    }
-
-    const journal = journalMap.get(key)!
-    journal.lineNumbers.push(i + 1)
-
-    const detail: DetailRow = {
-      accountNo: kode_akun.trim(),
-      amountType: tipe as 'DEBIT' | 'CREDIT',
-      amount: Math.round(nominal * 100) / 100
-    }
-    if (customer_no) { detail.customerNo = customer_no; (detail as any).subsidiaryType = 'CUSTOMER' }
-    if (vendor_no)   { detail.vendorNo   = vendor_no;   (detail as any).subsidiaryType = 'VENDOR' }
-
-    journal.details.push(detail)
-  }
-
-  return Array.from(journalMap.values())
-}
-
-// ─── Validate balance ─────────────────────────────────────────────────────────
-
-function validateBalance(journal: Journal): { ok: boolean; diff: number } {
-  const debit  = journal.details.filter(d => d.amountType === 'DEBIT').reduce((s, d) => s + d.amount, 0)
-  const credit = journal.details.filter(d => d.amountType === 'CREDIT').reduce((s, d) => s + d.amount, 0)
-  const diff = Math.abs(debit - credit)
-  return { ok: diff <= 1, diff }
+  await postJournal(memoUangMasuk, accurateDateH1, du, conn)
+  console.log(`     ✅ Jurnal Uang Masuk OK (tanggal ${accurateDateH1})`)
 }
 
 // ─── Main ─────────────────────────────────────────────────────────────────────
@@ -248,109 +362,58 @@ async function main() {
 
   if (!fs.existsSync(csvPath)) {
     console.error(`\n❌ File tidak ditemukan: ${csvPath}`)
-    console.error('Isi file mass_jurnal_template.csv terlebih dahulu lalu jalankan kembali.')
     process.exit(1)
   }
 
   console.log(`\nMembaca CSV: ${csvPath}`)
-  let journals: Journal[]
+  let rows: CsvRow[]
   try {
-    journals = parseCSV(csvPath)
+    rows = parseCSV(csvPath)
   } catch (e: any) {
     console.error(`\n❌ Error membaca CSV: ${e.message}`)
     process.exit(1)
   }
 
-  if (journals.length === 0) {
-    console.error('❌ Tidak ada data jurnal yang valid di dalam file CSV.')
+  if (rows.length === 0) {
+    console.error('❌ Tidak ada baris valid di CSV.')
     process.exit(1)
   }
 
-  // Pre-flight validation: check balance
-  console.log(`\n${'─'.repeat(70)}`)
-  console.log(`Validasi ${journals.length} jurnal...`)
-  console.log('─'.repeat(70))
+  console.log(`\n${'─'.repeat(60)}`)
+  console.log(`Ditemukan ${rows.length} baris:`)
+  rows.forEach((r, i) => console.log(
+    `  ${i + 1}. ${r.date}  ${r.store.padEnd(16)}  ` +
+    Object.entries(r.income).filter(([,v]) => v > 0)
+      .map(([k, v]) => `${k.replace('payment_','').toUpperCase()} ${v.toLocaleString('id-ID')}`)
+      .join('  ')
+  ))
+  console.log('─'.repeat(60))
 
-  const validJournals: Journal[]   = []
-  const invalidJournals: Journal[] = []
-
-  for (const j of journals) {
-    const { ok, diff } = validateBalance(j)
-    const date = toAccurateDate(j.tanggal)
-    if (ok) {
-      const total = j.details.filter(d => d.amountType === 'DEBIT').reduce((s, d) => s + d.amount, 0)
-      console.log(`  ✅ OK       ${date}  ${j.keterangan.substring(0, 50)}  (${j.details.length} baris, Rp ${total.toLocaleString('id-ID')})`)
-      validJournals.push(j)
-    } else {
-      console.log(`  ❌ TIDAK BALANCE  ${date}  ${j.keterangan.substring(0, 50)}  (Selisih: Rp ${diff.toLocaleString('id-ID')})`)
-      invalidJournals.push(j)
-    }
-  }
-
-  console.log('─'.repeat(70))
-  console.log(`\nValid: ${validJournals.length}  |  Tidak balance (skip): ${invalidJournals.length}`)
-
-  if (validJournals.length === 0) {
-    console.log('\nTidak ada jurnal yang bisa dipost.')
-    process.exit(0)
-  }
-
-  // Confirm
-  const ok = await confirm(`\nPost ${validJournals.length} jurnal ke Accurate? (y/n): `)
+  const ok = await confirm(`\nPost ${rows.length} hari ke Accurate (Penjualan + Uang Masuk)? (y/n): `)
   if (!ok) { console.log('Dibatalkan.'); process.exit(0) }
 
   console.log(`\nMenghubungkan ke Accurate...`)
   const conn = await getAccurateConnection()
   console.log(`✅ Terhubung. Session: ${conn.sessionId}\n`)
 
-  // Post
-  console.log('─'.repeat(70))
   let success = 0
   let failed  = 0
 
-  for (let i = 0; i < validJournals.length; i++) {
-    const j = validJournals[i]
-    const transDate = toAccurateDate(j.tanggal)
-    const label = `[${i + 1}/${validJournals.length}] ${transDate} | ${j.keterangan.substring(0, 45)}`
-
+  for (let i = 0; i < rows.length; i++) {
+    const row = rows[i]
+    console.log(`[${i + 1}/${rows.length}] ${row.date} — ${row.store}`)
     try {
-      // Delete existing journal with same description (revision)
-      const wasDeleted = await deleteIfExists(j.keterangan, conn)
-      if (wasDeleted) console.log(`  🔄 Revisi: jurnal lama dihapus.`)
-
-      const payload = {
-        transDate,
-        description: j.keterangan,
-        detailJournalVoucher: j.details
-      }
-
-      const res = await axios.post(`${conn.apiBaseUrl}/api/journal-voucher/save.do`, payload, {
-        headers: {
-          Authorization: `Bearer ${conn.accessToken}`,
-          'X-Session-ID': conn.sessionId,
-          'Content-Type': 'application/json'
-        }
-      })
-
-      if (res.data.s) {
-        success++
-        console.log(`  ✅ OK    ${label}`)
-      } else {
-        failed++
-        const errMsg = Array.isArray(res.data.d) ? res.data.d.join(', ') : String(res.data.d)
-        console.log(`  ❌ FAIL  ${label}\n         Accurate: ${errMsg}`)
-      }
+      await processRow(row, conn)
+      success++
     } catch (e: any) {
       failed++
-      const errMsg = e.response?.data?.d ? String(e.response.data.d) : e.message
-      console.log(`  ❌ ERR   ${label}\n         ${errMsg}`)
+      console.log(`     ❌ ${e.message}`)
     }
-
-    await new Promise(r => setTimeout(r, 600))
+    await new Promise(r => setTimeout(r, 700))
   }
 
-  console.log('─'.repeat(70))
-  console.log(`\n✅ Selesai!  Berhasil: ${success}  |  Gagal: ${failed}`)
+  console.log(`\n${'─'.repeat(60)}`)
+  console.log(`✅ Selesai!  Berhasil: ${success}  |  Gagal: ${failed}`)
 }
 
 main().catch(e => {

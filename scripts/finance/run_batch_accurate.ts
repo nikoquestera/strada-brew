@@ -187,8 +187,8 @@ async function processRow(row: any, accurateConn: any) {
     // Submit Accurate Flow
     const dateParts = date.split('-')
     const accurateDate = `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`
-    const memoPenjualan = `BREW - Penjualan cafe ${store} tanggal ${accurateDate}`
-    const memoUangMasuk = `BREW - Uang masuk penjualan cafe ${store} tanggal ${accurateDate}`
+    const memoPenjualan = `BREW - PENJUALAN STRADA ${store} ${accurateDate}`
+    const memoUangMasuk = `BREW - UANG MASUK STRADA ${store} ${accurateDate}`
 
     const postToAccurate = async (memo: string, details: any[]) => {
       const d = details.filter(x => x.amountType === 'DEBIT').reduce((s, x) => s + x.amount, 0)

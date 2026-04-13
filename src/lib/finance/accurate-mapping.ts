@@ -171,6 +171,7 @@ export const ACCURATE_MAPPING: Record<string, any> = {
     balancing_misc: '4000.90'
   },
   CUSTOMER_MAPPING: {
+    '1100.12': 'C.00098',
     '1100.16': 'C.00006',
     '1100.06': 'C.00006',
     '1100.17': 'C.00006',

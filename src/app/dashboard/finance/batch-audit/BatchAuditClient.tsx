@@ -5,6 +5,46 @@ import { createClient } from '@/lib/supabase/client'
 import { Search, AlertTriangle, CheckCircle2, Loader2, Calendar, Store, Filter } from 'lucide-react'
 import { DEFAULT_STORE_NAMES } from '@/lib/stores/defaults'
 
+// Core payment keys that are cleared in both Penjualan AND Uang Masuk journals.
+// Vouchers / Others are any [DEBIT] entries in Penjualan that are NOT in this set —
+// they never appear in Uang Masuk, so their sum is the expected cross-journal diff.
+const CORE_DEBIT_KEYS = new Set([
+  '[DEBIT] payment_cash',
+  '[DEBIT] payment_transfer',
+  '[DEBIT] payment_credit_bca',
+  '[DEBIT] payment_debit_bca',
+  '[DEBIT] payment_qris',
+  '[DEBIT] payment_gobiz',
+  '[DEBIT] payment_ovo',
+])
+
+function getTotalVoucherAndOthers(penjualanRow: Record<string, any>): number {
+  return Object.entries(penjualanRow)
+    .filter(([k]) => k.startsWith('[DEBIT] ') && !CORE_DEBIT_KEYS.has(k))
+    .reduce((sum, [_, v]) => sum + ((v as number) || 0), 0)
+}
+
+function checkDeepBalance(
+  csv: Record<string, any>,
+  um: Record<string, any>
+): boolean {
+  const penjIsBalanced = Math.abs(csv.penjualanDebit - csv.penjualanKredit) < 2
+  const umIsBalanced   = Math.abs(um.uangMasukDebit  - um.uangMasukKredit)  < 2
+
+  // Both journals must be internally balanced first.
+  if (!penjIsBalanced || !umIsBalanced) return false
+
+  // If penjualan total equals uang masuk total → balanced.
+  if (Math.abs(csv.penjualanDebit - um.uangMasukDebit) < 2) return true
+
+  // Totals differ — balanced only if the difference equals Voucher + CL Upperwest + Others.
+  // getTotalVoucherAndOthers sums all [DEBIT] entries in the Penjualan row that are NOT
+  // core payments, which naturally includes payment_cl_upperwest and all voucher codes.
+  const totalVoucherAndOthers = getTotalVoucherAndOthers(csv)
+  const diff = csv.penjualanDebit - um.uangMasukDebit
+  return Math.abs(diff - totalVoucherAndOthers) < 2
+}
+
 const STORE_OPENING_DATES: Record<string, string> = {
   'LA.PIAZZA': '2025-01-01',
   'MKG': '2025-01-01',
@@ -125,16 +165,7 @@ export default function BatchAuditClient() {
       
       if (filterMode === 'unbalanced') {
         if (!hasPenjualan || !hasUangMasuk) return false
-        const pD = item.csvRow.penjualanDebit
-        const pK = item.csvRow.penjualanKredit
-        const uD = item.umRow.uangMasukDebit
-        const uK = item.umRow.uangMasukKredit
-        
-        // Unbalanced if any of the 4 values are not equal (within tolerance)
-        const vals = [pD, pK, uD, uK]
-        const first = vals[0]
-        const isAllEqual = vals.every(v => Math.abs(v - first) < 2)
-        return !isAllEqual
+        return !checkDeepBalance(item.csvRow, item.umRow)
       }
       
       return true
@@ -179,10 +210,7 @@ export default function BatchAuditClient() {
         const umRow = umMap.get(date)
         
         if (row && umRow) {
-          const vals = [row.penjualanDebit, row.penjualanKredit, umRow.uangMasukDebit, umRow.uangMasukKredit]
-          const first = vals[0]
-          const isAllEqual = vals.every(v => Math.abs(v - first) < 2)
-          if (!isAllEqual) potentialErrors++
+          if (!checkDeepBalance(row, umRow)) potentialErrors++
         }
       })
 
@@ -386,12 +414,11 @@ export default function BatchAuditClient() {
                     const isPenjualanBalanced = csv ? Math.abs(csv.penjualanDebit - csv.penjualanKredit) < 2 : false
                     const isUangMasukBalanced = um ? Math.abs(um.uangMasukDebit - um.uangMasukKredit) < 2 : false
 
-                    // Deep Balance check (All 4 values must be equal)
-                    let isDeepUnbalanced = false
-                    if (hasPenjualan && hasUangMasuk) {
-                      const vals = [csv.penjualanDebit, csv.penjualanKredit, um.uangMasukDebit, um.uangMasukKredit]
-                      isDeepUnbalanced = !vals.every(v => Math.abs(v - vals[0]) < 2)
-                    }
+                    // Deep Balance: each journal must be internally balanced AND
+                    // the diff between penjualan and uang masuk must equal total Voucher + Others.
+                    const isDeepUnbalanced = hasPenjualan && hasUangMasuk
+                      ? !checkDeepBalance(csv, um)
+                      : false
 
                     return (
                       <tr key={row.date} className="hover:bg-gray-50/80 transition-colors group">

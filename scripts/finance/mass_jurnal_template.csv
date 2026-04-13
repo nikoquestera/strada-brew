@@ -1,35 +1,22 @@
-tanggal,keterangan,kode_akun,tipe,nominal,customer_no,vendor_no
+TANGGAL,TOKO,CASH,KREDIT BCA,DEBIT BCA,QRIS BCA,DEBIT,DEBIT BRI,KREDIT BRI,TRANSFER,GO-BIZ,OVO
 # ─────────────────────────────────────────────────────────────────────────────
 # PETUNJUK PENGISIAN
 # ─────────────────────────────────────────────────────────────────────────────
-# tanggal     : Format YYYY-MM-DD                  (contoh: 2026-04-01)
-# keterangan  : Deskripsi jurnal persis seperti di Accurate
-#               (contoh: BREW - Penjualan cafe BSD tanggal 01/04/2026)
-# kode_akun   : Kode akun Accurate                 (contoh: 1100.13)
-# tipe        : DEBIT atau CREDIT
-# nominal     : Angka bulat tanpa titik/koma       (contoh: 5000000)
-# customer_no : Isi jika akun piutang / GoBiz / OVO (contoh: C.00045)
-#               Kosongkan jika tidak perlu
-# vendor_no   : Isi jika akun hutang vendor        (contoh: V.00001)
-#               Kosongkan jika tidak perlu
+# TANGGAL    : D/M/YY atau DD/MM/YYYY        (contoh: 1/4/25 atau 01/04/2025)
+# TOKO       : Nama toko sesuai sistem       (MKG, BSD, LA.PIAZZA, SMB, SMS, SMB GOLD LOUNGE)
+# Kolom lain : Nominal settlement bank per metode pembayaran (angka, boleh pakai titik ribuan)
+#              Kolom kosong = 0
 #
-# CATATAN PENTING:
-# - Baris-baris dengan tanggal + keterangan SAMA akan digabung menjadi 1 jurnal
-# - Total DEBIT harus = Total KREDIT (toleransi Rp 1) — jika tidak, jurnal di-skip
-# - Jika jurnal dengan keterangan yang sama sudah ada di Accurate, akan di-REVISI
-#   (hapus lama → buat baru)
-# - Baris yang diawali # adalah komentar dan akan diabaikan
+# SYARAT: Data revenue (jurnal penjualan) harus sudah ada di portal Supabase
+#         untuk tanggal + toko tersebut. Script akan mengambil breakdown penjualan
+#         dari sana. Jika belum ada → baris dilewati.
+#
+# Kolom DEBIT        → digabung ke Debit BCA
+# Kolom DEBIT BRI    → digabung ke Transfer
+# Kolom KREDIT BRI   → digabung ke Transfer
+#
+# Baris yang diawali # diabaikan.
 # ─────────────────────────────────────────────────────────────────────────────
-#
-# CONTOH (hapus tanda # di depan untuk mengaktifkan):
-#
-# Jurnal Penjualan BSD tanggal 01/04/2026:
-# 2026-04-01,BREW - Penjualan cafe BSD tanggal 01/04/2026,1100.13,DEBIT,8500000,C.00045,
-# 2026-04-01,BREW - Penjualan cafe BSD tanggal 01/04/2026,1000.01.10,DEBIT,1200000,,
-# 2026-04-01,BREW - Penjualan cafe BSD tanggal 01/04/2026,4000.01.07,CREDIT,9700000,,
-#
-# Jurnal Uang Masuk BSD tanggal 02/04/2026 (H+1):
-# 2026-04-02,BREW - Uang masuk penjualan cafe BSD tanggal 01/04/2026,1000.02.06,DEBIT,8400000,,
-# 2026-04-02,BREW - Uang masuk penjualan cafe BSD tanggal 01/04/2026,6000.01.08,DEBIT,100000,,
-# 2026-04-02,BREW - Uang masuk penjualan cafe BSD tanggal 01/04/2026,1100.13,CREDIT,8500000,C.00045,
-# ─────────────────────────────────────────────────────────────────────────────
+# Contoh:
+# 1/1/25,MKG,,261.949,615.653,1.697.171,,,,,,
+# 2/1/25,MKG,500000,1.200.000,800.000,2.100.000,,,,150000,,
