@@ -90,12 +90,12 @@ export async function POST(request: NextRequest) {
             const paymentGobiz = result.payment_gobiz || 0
             const paymentOvo = result.payment_ovo || 0
 
-            // Calculate fees
-            const biayaAdminBank = (paymentCreditBca - bcaKreditIncome) + (paymentDebitBca - bcaDebitIncome) + (paymentQris - bcaQrisIncome)
+            // Calculate fees: diff between Quinos gross and actual bank receipts (all 5 channels)
+            const biayaAdminBank = (paymentCreditBca - bcaKreditIncome) + (paymentDebitBca - bcaDebitIncome) + (paymentQris - bcaQrisIncome) + (paymentGobiz - gobizIncome) + (paymentOvo - ovoIncome)
             const biayaPenjualanMerchantOnline = (paymentGobiz + paymentOvo) - (gobizIncome + ovoIncome)
-            
-            // Calculate total SUM of core bank methods (BCA, Gobiz, OVO)
-            const totalPaymentQuinos = paymentCreditBca + paymentDebitBca + paymentQris + paymentGobiz + paymentOvo
+
+            // Total Uang Masuk = sum of user-inputted bank receipts (excluding cash)
+            const totalPaymentQuinos = bcaKreditIncome + bcaDebitIncome + bcaQrisIncome + gobizIncome + ovoIncome
 
             // Percentages
             const pctCredit = paymentCreditBca ? ((paymentCreditBca - bcaKreditIncome) / paymentCreditBca * 100) : 0
@@ -110,9 +110,8 @@ export async function POST(request: NextRequest) {
               controller.enqueue(encoder.encode(JSON.stringify({ type: 'info', message: `» Uang Masuk Gobiz: Rp ${gobizIncome.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` }) + '\n'))
               controller.enqueue(encoder.encode(JSON.stringify({ type: 'info', message: `» Uang Masuk OVO: Rp ${ovoIncome.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` }) + '\n'))
               controller.enqueue(encoder.encode(JSON.stringify({ type: 'info', message: `» Uang Masuk CASH (Manual): Rp ${cashIncome.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` }) + '\n'))
-              controller.enqueue(encoder.encode(JSON.stringify({ type: 'info', message: `» Biaya Admin Bank: Rp ${biayaAdminBank.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` }) + '\n'))
-              controller.enqueue(encoder.encode(JSON.stringify({ type: 'info', message: `» Biaya Penjualan Merchant: Rp ${biayaPenjualanMerchantOnline.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` }) + '\n'))
-              controller.enqueue(encoder.encode(JSON.stringify({ type: 'info', message: `» Total Uang Masuk (BCA + Gobiz + OVO Gross): Rp ${totalPaymentQuinos.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` }) + '\n'))
+              controller.enqueue(encoder.encode(JSON.stringify({ type: 'info', message: `» Biaya Admin (BCA + Gobiz + OVO): Rp ${biayaAdminBank.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` }) + '\n'))
+              controller.enqueue(encoder.encode(JSON.stringify({ type: 'info', message: `» Total Uang Masuk (Input User): Rp ${totalPaymentQuinos.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` }) + '\n'))
             }
 
             controller.enqueue(encoder.encode(JSON.stringify({ type: 'info', message: 'Menyimpan data ke database Supabase...' }) + '\n'))
