@@ -157,6 +157,7 @@ export const ACCURATE_MAPPING: Record<string, any> = {
     payment_voucher_ckt_50_0: '4000.96.09',
     payment_voucher_florist: '4000.96.14',
     payment_voucher_harris_p: '2002.01.01',
+    payment_voucher_smkg: '2002.01.02',
     payment_voucher_justyoga: '4000.96.10',
     payment_voucher_padel_sp: '4000.96.16',
     payment_voucher_timezone: '4000.96.11',

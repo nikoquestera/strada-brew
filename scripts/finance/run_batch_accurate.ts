@@ -102,9 +102,15 @@ async function processRow(row: any, accurateConn: any) {
   try {
     // 3.1 Fetch Quinos
     const qData = await fetchQuinosRevenue(date, store, () => {})
+
+    // Upsert to Supabase
+    await supabase.from('daily_revenue').upsert(
+      { ...qData, updated_at: new Date().toISOString() },
+      { onConflict: 'store_name,transaction_date' }
+    )
     
     // Combine with Bank Data
-    const resultData = {
+    const resultData: any = {
       ...qData,
       store_name: store,
       transaction_date: date,
@@ -191,7 +197,11 @@ async function processRow(row: any, accurateConn: any) {
     const memoUangMasuk = `BREW - UANG MASUK STRADA ${store} ${accurateDate}`
 
     const postToAccurate = async (memo: string, details: any[]) => {
-      const d = details.filter(x => x.amountType === 'DEBIT').reduce((s, x) => s + x.amount, 0)
+      if (details.length === 0) {
+        throw new Error('Data kosong (0) untuk tanggal ini. Tidak ada detail transaksi yang dapat dikirim (toko mungkin tutup).')
+      }
+
+      const d = details.filter(d => d.amountType === 'DEBIT').reduce((s, d) => s + d.amount, 0)
       const c = details.filter(x => x.amountType === 'CREDIT').reduce((s, x) => s + x.amount, 0)
       if (Math.abs(d - c) > 1) {
         throw new Error(`[${date} ${store}] Jurnal tidak balance! D: ${d}, C: ${c}`)

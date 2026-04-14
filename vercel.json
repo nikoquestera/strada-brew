@@ -1,0 +1,8 @@
+{
+  "crons": [
+    {
+      "path": "/api/purchasing/parstock-agent",
+      "schedule": "0 1 * * *"
+    }
+  ]
+}

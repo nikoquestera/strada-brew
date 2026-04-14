@@ -1,18 +1,20 @@
 import { createClient } from '@/lib/supabase/server'
 import { createClient as createAdminClient } from '@supabase/supabase-js'
 import { redirect } from 'next/navigation'
-import DashboardShell from '@/components/DashboardShell'
+import PurchasingShell from '@/components/PurchasingShell'
 
-// Support both env var naming conventions
 const SERVICE_KEY =
   process.env.SERVICE_SUPABASE_KEY ||
   process.env.SUPABASE_SERVICE_ROLE_KEY
 
-export default async function HRDLayout({ children }: { children: React.ReactNode }) {
+// Roles that have any access to the purchasing module
+const PURCHASING_ROLES = ['purchasing', 'warehouse', 'roastery', 'purchasing_approver', 'finance', 'admin']
+
+export default async function PurchasingLayout({ children }: { children: React.ReactNode }) {
   let userEmail = ''
+  let userRole = ''
   let redirectTo: string | null = null
 
-  // Step 1: Verify the user is authenticated
   let user: any = null
   try {
     const supabase = await createClient()
@@ -25,10 +27,8 @@ export default async function HRDLayout({ children }: { children: React.ReactNod
     redirect('/login')
   }
 
-  // Step 2: Check role via admin client
-  // If admin client fails for any reason, treat user as HRD (don't redirect to /login)
-  // so we never create a redirect loop with the proxy.
   userEmail = user.email ?? ''
+
   try {
     const adminSupabase = createAdminClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -41,23 +41,23 @@ export default async function HRDLayout({ children }: { children: React.ReactNod
       .maybeSingle()
 
     const role = userData?.role?.toLowerCase() ?? ''
-    if (role === 'finance') {
-      redirectTo = '/dashboard/finance'
-    } else if (['purchasing', 'warehouse', 'roastery', 'purchasing_approver'].includes(role)) {
-      // Purchasing roles belong in the purchasing portal
-      redirectTo = '/dashboard/purchasing'
+    userRole = role
+
+    if (!PURCHASING_ROLES.includes(role)) {
+      // HRD or unknown → send to HRD dashboard
+      redirectTo = '/dashboard/hrd'
     }
-    // Otherwise user is HRD or unknown — let them through
   } catch (err) {
-    // Admin client unavailable — treat as HRD, don't redirect to /login
-    console.error('[hrd/layout] admin role check failed:', err)
+    console.error('[purchasing/layout] admin role check failed:', err)
+    // If admin client fails, let them through to avoid locking out
+    userRole = 'purchasing'
   }
 
   if (redirectTo) redirect(redirectTo)
 
   return (
-    <DashboardShell userEmail={userEmail}>
+    <PurchasingShell userEmail={userEmail} userRole={userRole}>
       {children}
-    </DashboardShell>
+    </PurchasingShell>
   )
 }

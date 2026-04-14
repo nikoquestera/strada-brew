@@ -115,17 +115,24 @@ export async function POST(request: NextRequest) {
 
           // Helper to add detail rows
           const addDetail = (details: any[], account: string, type: 'DEBIT' | 'CREDIT', amount: number) => {
-            if (!account) return
+            if (!account || amount === 0) return
             const trimmedAccount = account.trim()
-            const roundedAmount = Math.round(amount * 100) / 100
-            if (roundedAmount <= 0) return
-            
-            const detail: any = {
-              accountNo: trimmedAccount,
-              amountType: type,
-              amount: roundedAmount
+
+            let finalType = type
+            let finalAmount = amount
+            if (finalAmount < 0) {
+              finalType = type === 'DEBIT' ? 'CREDIT' : 'DEBIT'
+              finalAmount = Math.abs(finalAmount)
             }
 
+            const roundedAmount = Math.round(finalAmount * 100) / 100
+            if (roundedAmount <= 0) return
+
+            const detail: any = {
+              accountNo: trimmedAccount,
+              amountType: finalType,
+              amount: roundedAmount
+            }
             // Add customer/vendor if mapped (required for Piutang/Hutang accounts)
             const customerNo = ACCURATE_MAPPING.CUSTOMER_MAPPING[trimmedAccount]
             if (customerNo) {
