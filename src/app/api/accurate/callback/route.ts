@@ -55,7 +55,7 @@ export async function GET(request: NextRequest) {
         refresh_token,
         expires_at: expiresAt,
         updated_at: new Date().toISOString()
-      })
+      }, { onConflict: 'user_id' })
 
     if (upsertError) {
       throw new Error(`Database error: ${upsertError.message}`)
