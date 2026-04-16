@@ -330,15 +330,25 @@ export async function POST(request: NextRequest) {
         } catch (err: any) {
           console.error('Submit Accurate Error Trace:', err.response?.data || err.message)
           const errorData = err.response?.data
-          let errorMsg = err.message
-          
-          if (errorData) {
-            if (typeof errorData.d === 'string') errorMsg = errorData.d
-            else if (Array.isArray(errorData.d)) errorMsg = errorData.d.join(', ')
-            else errorMsg = JSON.stringify(errorData)
+
+          // Detect revoked / expired token that wasn't caught by expires_at check
+          const isInvalidToken =
+            errorData?.error === 'invalid_token' ||
+            err.response?.status === 401
+
+          if (isInvalidToken) {
+            // Clear the stale token so the UI prompts reconnect
+            await supabase.from('accurate_tokens').delete().eq('user_id', user.id)
+            sendLog('🔑 Sesi Accurate telah berakhir atau dicabut. Silakan klik "Hubungkan ke Accurate" untuk login ulang.', 'auth_error')
+          } else {
+            let errorMsg = err.message
+            if (errorData) {
+              if (typeof errorData.d === 'string') errorMsg = errorData.d
+              else if (Array.isArray(errorData.d)) errorMsg = errorData.d.join(', ')
+              else errorMsg = JSON.stringify(errorData)
+            }
+            sendLog(`❌ Gagal: ${errorMsg}`, 'error')
           }
-          
-          sendLog(`❌ Gagal: ${errorMsg}`, 'error')
           controller.close()
         }
       }

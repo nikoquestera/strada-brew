@@ -1,0 +1,208 @@
+[MATCH - GOOD] Faktur: PI.2025.02.00152 | Accurate: Rp 219.114 == Excel: Rp 219.114 | File: OTORISASI KAMIS - 6 MARET 2025.xlsx
+[MATCH - GOOD] Faktur: PI.2025.02.00149 | Accurate: Rp 2.505.360 == Excel: Rp 2.505.360 | File: OTORISASI KAMIS - 6 MARET 2025.xlsx
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00190 | Accurate: Rp 23.500 (Unknown)
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00189 | Accurate: Rp 76.000 (Unknown)
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00186 | Accurate: Rp 54.000 (Unknown)
+[MATCH - GOOD] Faktur: PI.2025.01.00182 | Accurate: Rp 270.000 == Excel: Rp 270.000 | File: OTORISASI KAMIS - 6 FEBRUARI 2025.xlsx
+[MATCH - GOOD] Faktur: PI.2025.01.00174 | Accurate: Rp 400.000 == Excel: Rp 400.000 | File: OTORISASI KAMIS - 6 FEBRUARI 2025.xlsx
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00173 | Accurate: Rp 318.000 (Unknown)
+[MATCH - GOOD] Faktur: PI.2025.01.00162 | Accurate: Rp 1.936.000 == Excel: Rp 1.936.000 | File: OTORISASI KAMIS - 6 FEBRUARI 2025.xlsx
+[MATCH - GOOD] Faktur: PI.2025.01.00197 | Accurate: Rp 2.247.740 == Excel: Rp 2.247.740 | File: OTORISASI KAMIS - 20 FEBRUARI 2025.xlsx
+[MISMATCH - BAD] Faktur: PI.2025.01.00196 | Accurate: Rp 1.633.460,8 != Excel: Rp 1.633.461 | File: OTORISASI KAMIS - 20 FEBRUARI 2025.xlsx
+[MATCH - GOOD] Faktur: PI.2025.01.00195 | Accurate: Rp 2.722.650 == Excel: Rp 2.722.650 | File: OTORISASI KAMIS - 20 FEBRUARI 2025.xlsx
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00187 | Accurate: Rp 19.000 (Unknown)
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00185 | Accurate: Rp 36.000 (Unknown)
+[NOT FOUND IN EXCEL] Faktur: PI.2025.02.00016 | Accurate: Rp 603.840 (Unknown)
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00172 | Accurate: Rp 121.620 (Unknown)
+[NOT FOUND IN EXCEL] Faktur: PI.2025.02.00003 | Accurate: Rp 290.000 (Unknown)
+[MATCH - GOOD] Faktur: PI.2025.01.00168 | Accurate: Rp 3.624.000 == Excel: Rp 3.624.000 | File: OTORISASI KAMIS - 27 FEBRUARI 2025.xlsx
+[MATCH - GOOD] Faktur: PI.2025.01.00158 | Accurate: Rp 662.108 == Excel: Rp 662.108 | File: OTORISASI KAMIS - 30 JANUARI 2025.xlsx
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00184 | Accurate: Rp 54.000 (Unknown)
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00180 | Accurate: Rp 90.450 (Unknown)
+[MATCH - GOOD] Faktur: PI.2025.02.00155 | Accurate: Rp 911.040 == Excel: Rp 911.040 | File: OTORISASI KAMIS - 6 MARET 2025.xlsx
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00188 | Accurate: Rp 57.000 (Unknown)
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00183 | Accurate: Rp 72.000 (Unknown)
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00179 | Accurate: Rp 90.450 (Unknown)
+[MATCH - GOOD] Faktur: PI.2025.01.00160 | Accurate: Rp 70.000 == Excel: Rp 70.000 | File: OTORISASI KAMIS - 30 JANUARI 2025.xlsx
+[MATCH - GOOD] Faktur: PI.2025.01.00159 | Accurate: Rp 142.000 == Excel: Rp 142.000 | File: OTORISASI KAMIS - 30 JANUARI 2025.xlsx
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00151 | Accurate: Rp 303.000 (Unknown)
+[MATCH - GOOD] Faktur: PI.2025.01.00131 | Accurate: Rp 1.100.000 == Excel: Rp 1.100.000 | File: OTORISASI KAMIS - 30 JANUARI 2025.xlsx
+[MATCH - GOOD] Faktur: PI.2025.01.00126 | Accurate: Rp 1.185.000 == Excel: Rp 1.185.000 | File: OTORISASI KAMIS - 30 JANUARI 2025.xlsx
+[MATCH - GOOD] Faktur: PI.2025.01.00117 | Accurate: Rp 518.000 == Excel: Rp 518.000 | File: OTORISASI KAMIS - 30 JANUARI 2025.xlsx
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00178 | Accurate: Rp 90.450 (Unknown)
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00171 | Accurate: Rp 54.000 (Unknown)
+[MATCH - GOOD] Faktur: PI.2025.01.00156 | Accurate: Rp 2.504.000 == Excel: Rp 2.504.000 | File: OTORISASI KAMIS - 30 JANUARI 2025.xlsx
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00150 | Accurate: Rp 6.000 (Unknown)
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00120 | Accurate: Rp 150.000 (Unknown)
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00170 | Accurate: Rp 72.000 (Unknown)
+[MATCH - GOOD] Faktur: PI.2025.02.00151 | Accurate: Rp 455.520 == Excel: Rp 455.520 | File: OTORISASI KAMIS - 6 MARET 2025.xlsx
+[MATCH - GOOD] Faktur: PI.2025.01.00157 | Accurate: Rp 333.000 == Excel: Rp 333.000 | File: OTORISASI KAMIS - 14 FEBRUARI 2025.xlsx
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00141 | Accurate: Rp 54.000 (Unknown)
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00140 | Accurate: Rp 38.000 (Unknown)
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00124 | Accurate: Rp 161.196 (Unknown)
+[MATCH - GOOD] Faktur: PI.2025.02.00150 | Accurate: Rp 1.138.800 == Excel: Rp 1.138.800 | File: OTORISASI KAMIS - 6 MARET 2025.xlsx
+[MATCH - GOOD] Faktur: PI.2025.01.00194 | Accurate: Rp 12.349.500 == Excel: Rp 12.349.500 | File: OTORISASI KAMIS - 20 FEBRUARI 2025.xlsx
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00181 | Accurate: Rp 90.450 (Unknown)
+[MATCH - GOOD] Faktur: PI.2025.01.00152 | Accurate: Rp 930.050 == Excel: Rp 930.050 | File: OTORISASI KAMIS - 30 JANUARI 2025.xlsx
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00142 | Accurate: Rp 36.000 (Unknown)
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00139 | Accurate: Rp 38.000 (Unknown)
+[MATCH - GOOD] Faktur: PI.2025.01.00129 | Accurate: Rp 400.000 == Excel: Rp 400.000 | File: OTORISASI KAMIS - 30 JANUARI 2025.xlsx
+[MATCH - GOOD] Faktur: PI.2025.01.00128 | Accurate: Rp 130.000 == Excel: Rp 130.000 | File: OTORISASI KAMIS - 30 JANUARI 2025.xlsx
+[MATCH - GOOD] Faktur: PI.2025.01.00127 | Accurate: Rp 182.000 == Excel: Rp 182.000 | File: OTORISASI KAMIS - 30 JANUARI 2025.xlsx
+[MATCH - GOOD] Faktur: PI.2025.01.00125 | Accurate: Rp 1.154.000 == Excel: Rp 1.154.000 | File: OTORISASI KAMIS - 30 JANUARI 2025.xlsx
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00123 | Accurate: Rp 140.000 (Unknown)
+[MISMATCH - BAD] Faktur: PI.2025.01.00106 | Accurate: Rp 5.752.564,56 != Excel: Rp 5.752.565 | File: OTORISASI KAMIS - 30 JANUARI 2025.xlsx
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00177 | Accurate: Rp 90.450 (Unknown)
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00143 | Accurate: Rp 36.000 (Unknown)
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00138 | Accurate: Rp 19.000 (Unknown)
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00122 | Accurate: Rp 214.928 (Unknown)
+[MATCH - GOOD] Faktur: PI.2025.01.00105 | Accurate: Rp 7.602.220 == Excel: Rp 7.602.220 | File: OTORISASI KAMIS - 30 JANUARI 2025.xlsx
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00176 | Accurate: Rp 90.450 (Unknown)
+[MATCH - GOOD] Faktur: PI.2025.01.00164 | Accurate: Rp 10.563.000 == Excel: Rp 10.563.000 | File: OTORISASI KAMIS - 6 FEBRUARI 2025.xlsx
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00144 | Accurate: Rp 36.000 (Unknown)
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00137 | Accurate: Rp 19.000 (Unknown)
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00130 | Accurate: Rp 29.900 (Unknown)
+[MATCH - GOOD] Faktur: PI.2025.01.00103 | Accurate: Rp 50.000 == Excel: Rp 50.000 | File: OTORISASI KAMIS - 23 JANUARI 2025.xlsx
+[MATCH - GOOD] Faktur: PI.2025.01.00202 | Accurate: Rp 683.280 == Excel: Rp 683.280 | File: OTORISASI KAMIS - 27 FEBRUARI 2025.xlsx
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00175 | Accurate: Rp 90.450 (Unknown)
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00145 | Accurate: Rp 18.000 (Unknown)
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00136 | Accurate: Rp 19.000 (Unknown)
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00119 | Accurate: Rp 60.000 (Unknown)
+[MATCH - GOOD] Faktur: PI.2025.01.00104 | Accurate: Rp 260.000 == Excel: Rp 260.000 | File: OTORISASI KAMIS - 23 JANUARI 2025.xlsx
+[MATCH - GOOD] Faktur: PI.2025.01.00102 | Accurate: Rp 989.000 == Excel: Rp 989.000 | File: OTORISASI KAMIS - 23 JANUARI 2025.xlsx
+[MATCH - GOOD] Faktur: PI.2025.01.00101 | Accurate: Rp 1.236.000 == Excel: Rp 1.236.000 | File: OTORISASI KAMIS - 23 JANUARI 2025.xlsx
+[MATCH - GOOD] Faktur: PI.2025.01.00100 | Accurate: Rp 871.000 == Excel: Rp 871.000 | File: OTORISASI KAMIS - 23 JANUARI 2025.xlsx
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00192 | Accurate: Rp 5.730.000 (Unknown)
+[MATCH - GOOD] Faktur: PI.2025.01.00169 | Accurate: Rp 1.175.000 == Excel: Rp 1.175.000 | File: OTORISASI KAMIS - 6 FEBRUARI 2025.xlsx
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00146 | Accurate: Rp 36.000 (Unknown)
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00135 | Accurate: Rp 19.000 (Unknown)
+[MATCH - GOOD] Faktur: PI.2025.01.00091 | Accurate: Rp 3.714.500 == Excel: Rp 3.714.500 | File: OTORISASI KAMIS - 23 JANUARI 2025.xlsx
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00090 | Accurate: Rp 2.318.980 (Unknown)
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00089 | Accurate: Rp 141.000 (Unknown)
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00088 | Accurate: Rp 100.000 (Unknown)
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00087 | Accurate: Rp 53.732 (Unknown)
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00147 | Accurate: Rp 54.000 (Unknown)
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00134 | Accurate: Rp 23.500 (Unknown)
+[MATCH - GOOD] Faktur: PI.2025.01.00166 | Accurate: Rp 585.000 == Excel: Rp 585.000 | File: OTORISASI KAMIS - 6 FEBRUARI 2025.xlsx
+[MATCH - GOOD] Faktur: PI.2025.01.00165 | Accurate: Rp 142.500 == Excel: Rp 142.500 | File: OTORISASI KAMIS - 6 FEBRUARI 2025.xlsx
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00148 | Accurate: Rp 54.000 (Unknown)
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00133 | Accurate: Rp 38.000 (Unknown)
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00107 | Accurate: Rp 90.450 (Unknown)
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00099 | Accurate: Rp 240.000 (Unknown)
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00098 | Accurate: Rp 28.300 (Unknown)
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00097 | Accurate: Rp 198.090 (Unknown)
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00096 | Accurate: Rp 193.300 (Unknown)
+[MATCH - GOOD] Faktur: PI.2025.01.00092 | Accurate: Rp 140.000 == Excel: Rp 140.000 | File: OTORISASI KAMIS - 23 JANUARI 2025.xlsx
+[MATCH - GOOD] Faktur: PI.2025.01.00203 | Accurate: Rp 911.040 == Excel: Rp 911.040 | File: OTORISASI KAMIS - 27 FEBRUARI 2025.xlsx
+[MATCH - GOOD] Faktur: PI.2025.01.00153 | Accurate: Rp 434.500 == Excel: Rp 434.500 | File: OTORISASI KAMIS - 30 JANUARI 2025.xlsx
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00149 | Accurate: Rp 36.000 (Unknown)
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00132 | Accurate: Rp 19.000 (Unknown)
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00108 | Accurate: Rp 90.450 (Unknown)
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00086 | Accurate: Rp 230.000 (Unknown)
+[MATCH - GOOD] Faktur: PI.2025.01.00075 | Accurate: Rp 494.000 == Excel: Rp 494.000 | File: OTORISASI KAMIS - 30 JANUARI 2025.xlsx
+[MATCH - GOOD] Faktur: PI.2025.01.00073 | Accurate: Rp 125.540 == Excel: Rp 125.540 | File: OTORISASI KAMIS - 23 JANUARI 2025.xlsx
+[MATCH - GOOD] Faktur: PI.2025.01.00167 | Accurate: Rp 2.444.000 == Excel: Rp 2.444.000 | File: OTORISASI KAMIS - 6 FEBRUARI 2025.xlsx
+[MATCH - GOOD] Faktur: PI.2025.02.00001 | Accurate: Rp 7.576.500 == Excel: Rp 7.576.500 | File: OTORISASI KAMIS - 6 FEBRUARI 2025.xlsx
+[MATCH - GOOD] Faktur: PI.2025.01.00155 | Accurate: Rp 467.900 == Excel: Rp 467.900 | File: OTORISASI KAMIS - 30 JANUARI 2025.xlsx
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00109 | Accurate: Rp 90.450 (Unknown)
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00110 | Accurate: Rp 90.450 (Unknown)
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00085 | Accurate: Rp 19.000 (Unknown)
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00084 | Accurate: Rp 36.000 (Unknown)
+[MATCH - GOOD] Faktur: PI.2025.01.00074 | Accurate: Rp 3.836.450 == Excel: Rp 3.836.450 | File: OTORISASI KAMIS - 23 JANUARI 2025.xlsx
+[MATCH - GOOD] Faktur: PI.2025.01.00069 | Accurate: Rp 70.000 == Excel: Rp 70.000 | File: OTORISASI KAMIS - 16 JANUARI 2025.xlsx
+[MATCH - GOOD] Faktur: PI.2025.01.00204 | Accurate: Rp 911.040 == Excel: Rp 911.040 | File: OTORISASI KAMIS - 27 FEBRUARI 2025.xlsx
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00083 | Accurate: Rp 36.000 (Unknown)
+[MATCH - GOOD] Faktur: PI.2025.01.00068 | Accurate: Rp 917.775 == Excel: Rp 917.775 | File: OTORISASI KAMIS - 16 JANUARI 2025.xlsx
+[MATCH - GOOD] Faktur: PI.2025.01.00067 | Accurate: Rp 1.789.000 == Excel: Rp 1.789.000 | File: OTORISASI KAMIS - 16 JANUARI 2025.xlsx
+[MATCH - GOOD] Faktur: PI.2025.01.00066 | Accurate: Rp 285.000 == Excel: Rp 285.000 | File: OTORISASI KAMIS - 16 JANUARI 2025.xlsx
+[MISMATCH - BAD] Faktur: PI.2025.01.00064 | Accurate: Rp 622.742 != Excel: Rp 622.745 | File: OTORISASI KAMIS - 16 JANUARI 2025.xlsx
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00060 | Accurate: Rp 37.000 (Unknown)
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00082 | Accurate: Rp 38.000 (Unknown)
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00081 | Accurate: Rp 36.000 (Unknown)
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00059 | Accurate: Rp 130.350 (Unknown)
+[MATCH - GOOD] Faktur: PI.2025.01.00056 | Accurate: Rp 280.000 == Excel: Rp 280.000 | File: OTORISASI KAMIS - 16 JANUARI 2025.xlsx
+[MATCH - GOOD] Faktur: PI.2025.01.00055 | Accurate: Rp 707.000 == Excel: Rp 707.000 | File: OTORISASI KAMIS - 16 JANUARI 2025.xlsx
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00053 | Accurate: Rp 35.000 (Unknown)
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00052 | Accurate: Rp 240.000 (Unknown)
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00040 | Accurate: Rp 100.000 (Unknown)
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00080 | Accurate: Rp 54.000 (Unknown)
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00111 | Accurate: Rp 90.450 (Unknown)
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00079 | Accurate: Rp 36.000 (Unknown)
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00078 | Accurate: Rp 19.000 (Unknown)
+[MATCH - GOOD] Faktur: PI.2025.01.00205 | Accurate: Rp 683.280 == Excel: Rp 683.280 | File: OTORISASI KAMIS - 20 MARET 2025.xlsx
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00193 | Accurate: Rp 60.099.445 (Unknown)
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00112 | Accurate: Rp 90.450 (Unknown)
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00077 | Accurate: Rp 18.000 (Unknown)
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00063 | Accurate: Rp 761.500 (Unknown)
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00062 | Accurate: Rp 349.000 (Unknown)
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00061 | Accurate: Rp 1.723.850 (Unknown)
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00058 | Accurate: Rp 192.760 (Unknown)
+[MATCH - GOOD] Faktur: PI.2025.01.00054 | Accurate: Rp 140.000 == Excel: Rp 140.000 | File: OTORISASI KAMIS - 16 JANUARI 2025.xlsx
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00041 | Accurate: Rp 140.000 (Unknown)
+[MATCH - GOOD] Faktur: PI.2025.01.00154 | Accurate: Rp 779.300 == Excel: Rp 779.300 | File: OTORISASI KAMIS - 30 JANUARI 2025.xlsx
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00113 | Accurate: Rp 90.450 (Unknown)
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00076 | Accurate: Rp 36.000 (Unknown)
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00051 | Accurate: Rp 38.000 (Unknown)
+[MISMATCH - BAD] Faktur: PI.2025.01.00038 | Accurate: Rp 1.229.137,52 != Excel: Rp 1.229.138 | File: OTORISASI KAMIS - 16 JANUARI 2025.xlsx
+[MATCH - GOOD] Faktur: PI.2025.01.00037 | Accurate: Rp 3.835.043 == Excel: Rp 3.835.043 | File: OTORISASI KAMIS - 16 JANUARI 2025.xlsx
+[MATCH - GOOD] Faktur: PI.2025.01.00034 | Accurate: Rp 1.400.000 == Excel: Rp 1.400.000 | File: OTORISASI KAMIS - 16 JANUARI 2025.xlsx
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00114 | Accurate: Rp 90.450 (Unknown)
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00057 | Accurate: Rp 547.400 (Unknown)
+[MATCH - GOOD] Faktur: PI.2025.01.00039 | Accurate: Rp 4.601.800 == Excel: Rp 4.601.800 | File: OTORISASI KAMIS - 16 JANUARI 2025.xlsx
+[MATCH - GOOD] Faktur: PI.2025.01.00032 | Accurate: Rp 3.440.600 == Excel: Rp 3.440.600 | File: OTORISASI KAMIS - 9 JANUARI 2025.xlsx
+[MATCH - GOOD] Faktur: PI.2025.01.00030 | Accurate: Rp 1.636.294 == Excel: Rp 1.636.294 | File: OTORISASI KAMIS - 9 JANUARI 2025.xlsx
+[MATCH - GOOD] Faktur: PI.2025.01.00026 | Accurate: Rp 200.000 == Excel: Rp 200.000 | File: OTORISASI KAMIS - 9 JANUARI 2025.xlsx
+[MATCH - GOOD] Faktur: PI.2025.01.00201 | Accurate: Rp 8.520.390 == Excel: Rp 8.520.390 | File: OTORISASI KAMIS - 20 FEBRUARI 2025.xlsx
+[MATCH - GOOD] Faktur: PI.2025.02.00067 | Accurate: Rp 2.733.120 == Excel: Rp 2.733.120 | File: OTORISASI KAMIS - 20 FEBRUARI 2025.xlsx
+[MATCH - GOOD] Faktur: PI.2025.02.00002 | Accurate: Rp 1.934.000 == Excel: Rp 1.934.000 | File: OTORISASI KAMIS - 6 FEBRUARI 2025.xlsx
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00115 | Accurate: Rp 90.450 (Unknown)
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00050 | Accurate: Rp 19.000 (Unknown)
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00049 | Accurate: Rp 36.000 (Unknown)
+[MATCH - GOOD] Faktur: PI.2025.01.00028 | Accurate: Rp 430.000 == Excel: Rp 430.000 | File: OTORISASI KAMIS - 9 JANUARI 2025.xlsx
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00019 | Accurate: Rp 2.269.600 (Unknown)
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00018 | Accurate: Rp 54.700 (Unknown)
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00011 | Accurate: Rp 60.000 (Unknown)
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00009 | Accurate: Rp 27.000 (Unknown)
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00048 | Accurate: Rp 36.000 (Unknown)
+[MATCH - GOOD] Faktur: PI.2025.01.00036 | Accurate: Rp 333.000 == Excel: Rp 333.000 | File: OTORISASI KAMIS - 16 JANUARI 2025.xlsx
+[MATCH - GOOD] Faktur: PI.2025.01.00035 | Accurate: Rp 3.196.800 == Excel: Rp 3.196.800 | File: OTORISASI KAMIS - 16 JANUARI 2025.xlsx
+[MATCH - GOOD] Faktur: PI.2025.01.00031 | Accurate: Rp 3.578.000 == Excel: Rp 3.578.000 | File: OTORISASI KAMIS - 9 JANUARI 2025.xlsx
+[MATCH - GOOD] Faktur: PI.2025.01.00025 | Accurate: Rp 1.358.000 == Excel: Rp 1.358.000 | File: OTORISASI KAMIS - 9 JANUARI 2025.xlsx
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00017 | Accurate: Rp 484.320 (Unknown)
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00008 | Accurate: Rp 180.000 (Unknown)
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00047 | Accurate: Rp 18.000 (Unknown)
+[MATCH - GOOD] Faktur: PI.2025.02.00148 | Accurate: Rp 219.114 == Excel: Rp 219.114 | File: OTORISASI KAMIS - 6 MARET 2025.xlsx
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00065 | Accurate: Rp 36.000 (Unknown)
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00046 | Accurate: Rp 36.000 (Unknown)
+[MATCH - GOOD] Faktur: PI.2025.01.00191 | Accurate: Rp 455.520 == Excel: Rp 455.520 | File: OTORISASI KAMIS - 14 FEBRUARI 2025.xlsx
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00116 | Accurate: Rp 180.900 (Unknown)
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00045 | Accurate: Rp 19.000 (Unknown)
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00044 | Accurate: Rp 36.000 (Unknown)
+[MATCH - GOOD] Faktur: PI.2025.01.00029 | Accurate: Rp 87.500 == Excel: Rp 87.500 | File: OTORISASI KAMIS - 9 JANUARI 2025.xlsx
+[MATCH - GOOD] Faktur: PI.2025.01.00027 | Accurate: Rp 305.000 == Excel: Rp 305.000 | File: OTORISASI KAMIS - 9 JANUARI 2025.xlsx
+[MATCH - GOOD] Faktur: PI.2025.01.00024 | Accurate: Rp 1.280.000 == Excel: Rp 1.280.000 | File: OTORISASI KAMIS - 9 JANUARI 2025.xlsx
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00023 | Accurate: Rp 5.994 (Unknown)
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00022 | Accurate: Rp 35.090 (Unknown)
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00021 | Accurate: Rp 40.000 (Unknown)
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00020 | Accurate: Rp 1.009.600 (Unknown)
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00016 | Accurate: Rp 300.000 (Unknown)
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00015 | Accurate: Rp 91.800 (Unknown)
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00014 | Accurate: Rp 227.520 (Unknown)
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00013 | Accurate: Rp 129.660 (Unknown)
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00012 | Accurate: Rp 196.940 (Unknown)
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00007 | Accurate: Rp 150.065 (Unknown)
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00006 | Accurate: Rp 30.000 (Unknown)
+[MATCH - GOOD] Faktur: PI.2025.01.00003 | Accurate: Rp 1.800.000 == Excel: Rp 1.800.000 | File: OTORISASI KAMIS - 9 JANUARI 2025.xlsx
+[MATCH - GOOD] Faktur: PI.2025.01.00002 | Accurate: Rp 1.026.970 == Excel: Rp 1.026.970 | File: OTORISASI KAMIS - 9 JANUARI 2025.xlsx
+[MATCH - GOOD] Faktur: PI.2025.01.00200 | Accurate: Rp 16.967.546 == Excel: Rp 16.967.546 | File: OTORISASI KAMIS - 20 FEBRUARI 2025.xlsx
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00121 | Accurate: Rp 1.138.800 (Unknown)
+[MATCH - GOOD] Faktur: PI.2025.01.00094 | Accurate: Rp 217.500 == Excel: Rp 217.500 | File: OTORISASI KAMIS - 23 JANUARI 2025.xlsx
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00043 | Accurate: Rp 36.000 (Unknown)
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00005 | Accurate: Rp 240.000 (Unknown)
+[NOT FOUND IN EXCEL] Faktur: PI.2025.01.00004 | Accurate: Rp 36.000 (Unknown)
+
+--- AUDIT SUMMARY ---
+Total Faktur Pembelian in Accurate (Jan 2025): 202
+Matched Nominal: 79
+Mismatched Nominal: 4
+Faktur in Accurate but NOT found in any Otorisasi Excel: 119

@@ -118,8 +118,15 @@ function RevenueStoreForm() {
   }
 
   async function checkAccurateConnection() {
-    const { data } = await supabase.from('accurate_tokens').select('id').maybeSingle()
-    setAccurateConnected(!!data)
+    const { data } = await supabase.from('accurate_tokens').select('id, expires_at').maybeSingle()
+    if (!data) {
+      setAccurateConnected(false)
+      return
+    }
+    // If token is already expired by time and there's no refresh that can fix it,
+    // still show as connected — the route will attempt refresh. Only mark disconnected
+    // if there's genuinely no token row.
+    setAccurateConnected(true)
   }
 
   const handleConnectAccurate = () => {
@@ -392,9 +399,12 @@ function RevenueStoreForm() {
           try {
             const log = JSON.parse(line)
             if (log.type === 'error') hasError = true
-            
+            if (log.type === 'auth_error') {
+              hasError = true
+              setAccurateConnected(false)
+            }
             if (log.message) {
-              addLog(log.message, log.type || 'info')
+              addLog(log.message, log.type === 'auth_error' ? 'error' : (log.type || 'info'))
             }
           } catch (e) {
             console.log("Accurate chunk parse error", e, line)

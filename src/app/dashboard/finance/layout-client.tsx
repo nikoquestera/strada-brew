@@ -16,7 +16,7 @@ const financeNav = [
   { label: 'Pembayaran', href: '/dashboard/finance/pembayaran', icon: CreditCard },
   { label: 'Stok Opname', href: '/dashboard/finance/stok-opname', icon: Package },
   { label: 'Transaksi Perlu Review', href: '/dashboard/finance/transaksi-abnormal', icon: AlertOctagon },
-  { label: 'Batch Audit', href: '/dashboard/finance/batch-audit', icon: Search },
+  // { label: 'Batch Audit', href: '/dashboard/finance/batch-audit', icon: Search },
 ]
 
 export default function FinanceLayout({ children, userEmail }: Props) {
