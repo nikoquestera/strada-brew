@@ -438,7 +438,7 @@ function RevenueStoreForm() {
     const diffQris = Math.abs((data.payment_qris || 0) - (data.bca_qris_income || 0))
     const pctQris = (data.payment_qris || 0) > 0 ? (diffQris / data.payment_qris) : 0
 
-    const isSalahKamar = (pctCredit > 0.021) || (pctDebit > 0.008) || (pctQris > 0.0085)
+    const isSalahKamar = (pctCredit > 0.021) || (pctDebit > 0.01) || (pctQris > 0.0085)
 
     // 2. Validasi Balance
     // Must include ALL payment methods from Quinos for Journal 1 validation
@@ -652,7 +652,7 @@ function RevenueStoreForm() {
                       Selisih Mutasi Bank vs Quinos melebihi batas toleransi.<br/>
                       <span className="opacity-80 font-mono mt-1 block space-y-0.5">
                         • Credit: {((validation?.details?.pctCredit || 0) * 100).toFixed(2)}% (Limit: 2.10%)<br/>
-                        • Debit: {((validation?.details?.pctDebit || 0) * 100).toFixed(2)}% (Limit: 0.80%)<br/>
+                        • Debit: {((validation?.details?.pctDebit || 0) * 100).toFixed(2)}% (Limit: 1.00%)<br/>
                         • QRIS: {((validation?.details?.pctQris || 0) * 100).toFixed(2)}% (Limit: 0.85%)
                       </span>
                     </p>
@@ -890,7 +890,7 @@ function RevenueStoreForm() {
                       <div className="text-[10px] text-orange-800/70 mt-3 space-y-1 font-medium">
                         <p className="font-bold underline decoration-orange-300 mb-1">Rincian Persentase Admin:</p>
                         <p>• Credit BCA: {parseFloat(result.pct_credit || 0).toFixed(2)}% <span className="opacity-50">(Batas: 2.10%)</span></p>
-                        <p>• Debit BCA: {parseFloat(result.pct_debit || 0).toFixed(2)}% <span className="opacity-50">(Batas: 0.80%)</span></p>
+                        <p>• Debit BCA: {parseFloat(result.pct_debit || 0).toFixed(2)}% <span className="opacity-50">(Batas: 1.00%)</span></p>
                         <p>• QRIS BCA: {parseFloat(result.pct_qris || 0).toFixed(2)}% <span className="opacity-50">(Batas: 0.85%)</span></p>
                       </div>
                     </div>
