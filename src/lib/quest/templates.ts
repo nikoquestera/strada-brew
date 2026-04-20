@@ -12,10 +12,18 @@ export async function generateMessageTemplates(
   options: MessageTemplateOptions,
   channel: 'whatsapp' | 'email'
 ): Promise<{ option1: string; option2: string; option3: string }> {
+  const supabase = (await import('@/lib/supabase/server')).createClient()
+  const { data: settings } = await supabase
+    .from('hrd_settings')
+    .select('quest_ai_system_prompt')
+    .eq('id', 'default')
+    .single()
 
-  const systemPrompt = `Kamu adalah Quest, AI assistant HR untuk Strada Coffee Indonesia. Tugasmu membuat template pesan komunikasi dengan kandidat yang profesional, hangat, dan on-brand dengan Strada Coffee.
+  const systemPrompt = settings?.quest_ai_system_prompt || `Kamu adalah Quest, AI assistant HR untuk Strada Coffee Indonesia. Tugasmu membuat template pesan komunikasi dengan kandidat yang profesional, hangat, dan on-brand dengan Strada Coffee.
 
-Strada Coffee brand tone: profesional namun hangat, specialty coffee focused, proud of Indonesian coffee culture.
+Strada Coffee brand tone: profesional namun hangat, specialty coffee focused, proud of Indonesian coffee culture.`
+
+  const finalSystemPrompt = `${systemPrompt}
 
 Buat 3 variasi pesan yang berbeda tone: (1) Formal & profesional, (2) Hangat & friendly, (3) Singkat & to-the-point.
 
@@ -41,9 +49,9 @@ Format JSON:
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      model: 'claude-sonnet-4-20250514',
+      model: 'claude-3-5-sonnet-20240620',
       max_tokens: 1000,
-      system: systemPrompt,
+      system: finalSystemPrompt,
       messages: [{ role: 'user', content: userPrompt }]
     })
   })

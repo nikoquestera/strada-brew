@@ -185,7 +185,7 @@ export function buildDiscReportCopy(results: DiscResults, applicant?: ApplicantC
 
   const adaptedLead = getLeadDimension(results.plot1)
   const naturalLead = getLeadDimension(results.plot2)
-  const integratedLead = getLeadDimension(results.plot3)
+  const integratedLead = naturalLead // We use Natural Style as the core driver per DISC PDF
 
   const adaptedRef = STYLE_REFERENCE[adaptedLead]
   const naturalRef = STYLE_REFERENCE[naturalLead]
@@ -202,14 +202,14 @@ export function buildDiscReportCopy(results: DiscResults, applicant?: ApplicantC
     .join(', ')
 
   const overviewTitle = `${integratedPattern} • ${activeDims}`
-  const overview = `${applicantName} terutama terbaca sebagai profil ${describeOrientation(integratedLead)}. Berdasarkan kerangka pada DISC PDF, gaya ${integratedLead} biasanya menunjukkan ${integratedRef.summary}.`
-  const applicantExplanation = `${adaptationSentence} Pada konteks rekrutmen untuk ${role}, pembacaan yang paling penting adalah membedakan gaya yang sedang diadaptasi terhadap tuntutan situasi dengan gaya yang lebih natural saat kandidat tidak terlalu menyesuaikan diri.`
+  const overview = `${applicantName} terutama terbaca sebagai profil ${describeOrientation(integratedLead)}. Berdasarkan kerangka pada DISC PDF, kecenderungan alami (Natural Style) ${integratedLead} biasanya menunjukkan ${integratedRef.summary}.`
+  const applicantExplanation = `${adaptationSentence} Pada konteks rekrutmen untuk ${role}, pembacaan yang paling penting adalah gaya natural saat kandidat tidak terlalu menyesuaikan diri.`
   const fitSummary = `Interpretasi ini sebaiknya dipakai sebagai bahan interview lanjutan, bukan keputusan final tunggal. Fungsi DISC adalah membantu HR membaca kecenderungan perilaku, cara kandidat berinteraksi, area kekuatan, dan area risiko dalam konteks kerja.`
 
   const workStyle = uniqueStrings([
     `Graph I menunjukkan gaya yang cenderung muncul ketika kandidat merasa ada ekspektasi lingkungan: ${adaptedRef.summary}.`,
     `Graph II menunjukkan kecenderungan yang lebih natural: ${naturalRef.summary}.`,
-    `Graph III dipakai sebagai ringkasan integrasi pola perilaku, sehingga narasi utama di report ini mengikuti gaya ${integratedLead}.`,
+    `Sistem ini mengacu pada Graph II sebagai ringkasan pola perilaku utama, sehingga narasi utama di report ini mengikuti gaya ${integratedLead}.`,
     sameAdaptation
       ? `Karena gaya adaptif dan gaya natural relatif searah, perilaku kandidat kemungkinan terasa cukup konsisten lintas situasi.`
       : `Karena gaya adaptif dan natural berbeda, HR perlu mengecek apakah penyesuaian ini sehat dan fungsional, atau justru menimbulkan kelelahan/pergeseran perilaku saat tekanan naik.`,
@@ -249,15 +249,11 @@ export function buildDiscReportCopy(results: DiscResults, applicant?: ApplicantC
   const graphExplanations = [
     {
       title: 'Graph I — Adapted Style',
-      summary: `Dalam PDF, Graph I dibaca sebagai “This is expected of me”. Artinya grafik ini menunjukkan gaya yang kemungkinan ditampilkan kandidat untuk menyesuaikan diri dengan tuntutan lingkungan. Pada hasil ini, aksen terkuatnya mengarah ke ${adaptedLead}.`,
+      summary: `Dalam DISC PDF, Graph I dibaca sebagai “This is expected of me”. Artinya grafik ini menunjukkan gaya yang kemungkinan ditampilkan kandidat untuk menyesuaikan diri dengan tuntutan lingkungan. Pada hasil ini, aksen terkuatnya mengarah ke ${adaptedLead}.`,
     },
     {
       title: 'Graph II — Natural Style',
-      summary: `Dalam PDF, Graph II dibaca sebagai “This is me”. Grafik ini membantu melihat kecenderungan yang lebih natural saat kandidat tidak terlalu menyesuaikan diri. Pada hasil ini, aksen terkuatnya mengarah ke ${naturalLead}.`,
-    },
-    {
-      title: 'Graph III — Ringkasan Profil',
-      summary: `Sistem ini memakai Graph III sebagai ringkasan pola utama untuk report. Pembacaannya tetap harus dikaitkan dengan Graph I dan II agar HR tahu apakah perilaku kandidat konsisten atau sedang banyak beradaptasi. Pada hasil ini, ringkasan utamanya mengarah ke ${integratedLead}.`,
+      summary: `Dalam DISC PDF, Graph II dibaca sebagai “This is me”. Grafik ini sangat penting karena menunjukkan kecenderungan yang lebih natural saat kandidat berada dalam tekanan atau bersikap paling spontan. Profil utama kandidat (Primary Profile) diambil dari grafik ini, yaitu ${naturalLead}.`,
     },
   ]
 

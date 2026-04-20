@@ -1,0 +1,128 @@
+BREW — Mass Patch Uang Masuk (Kas Besar → Bank BCA)
+Mode       : ✏️  LIVE — akan menyimpan ke Accurate
+Filter tgl : 2025-02-01 s/d 2025-02-28 (tanggal di keterangan jurnal)
+Filter toko: LA.PIAZZA
+Dijalankan : 17-04-2026, 12.42.10 WIB
+Log file   : /Users/questmotors/strada-brew/scripts/finance/logs/mass_patch_uang_masuk_20260417_124210.log
+
+Tabel remap DEBIT:
+  1000.01.01   → 1000.02.01
+  1000.01.10   → 1000.02.06
+  1000.01.11   → 1000.02.04
+  1000.01.12   → 1000.02.07
+  1000.01.13   → 1000.02.08
+  1000.01.14   → 1000.02.04
+
+Menghubungkan ke Accurate...
+✅ Terhubung. Session: a06e43cd-cf3a-417e-a6ef-f90e75576f3f
+
+──────────────────────────────────────────────────────────────────────
+FASE 1 — AMBIL DAFTAR JURNAL
+──────────────────────────────────────────────────────────────────────
+Mencari jurnal dengan keyword: "BREW - UANG MASUK" (tanggal: 2025-02-01 s/d 2025-02-28) ...
+  Halaman 1: 100 total, 0 cocok (kumulatif: 0)
+  Halaman 2: 100 total, 0 cocok (kumulatif: 0)
+  Halaman 3: 100 total, 0 cocok (kumulatif: 0)
+  Halaman 4: 100 total, 0 cocok (kumulatif: 0)
+  Halaman 5: 100 total, 0 cocok (kumulatif: 0)
+  Halaman 6: 100 total, 0 cocok (kumulatif: 0)
+  Halaman 7: 100 total, 0 cocok (kumulatif: 0)
+  Halaman 8: 100 total, 0 cocok (kumulatif: 0)
+  Halaman 9: 100 total, 0 cocok (kumulatif: 0)
+  Halaman 10: 100 total, 0 cocok (kumulatif: 0)
+  Halaman 11: 100 total, 0 cocok (kumulatif: 0)
+  Halaman 12: 100 total, 0 cocok (kumulatif: 0)
+  Halaman 13: 100 total, 4 cocok (kumulatif: 4)
+  Halaman 14: 100 total, 24 cocok (kumulatif: 28)
+  Halaman 15: 6 total, 0 cocok (kumulatif: 28)
+
+Total jurnal ditemukan: 28
+
+──────────────────────────────────────────────────────────────────────
+FASE 2 — PREVIEW (ambil detail & identifikasi perubahan)
+──────────────────────────────────────────────────────────────────────
+
+  ⏭️  SKIP (no Kas Besar DEBIT)  85679                     | BREW - UANG MASUK STRADA LA.PIAZZA 28/02/2025
+
+  ⏭️  SKIP (no Kas Besar DEBIT)  85733                     | BREW - UANG MASUK STRADA LA.PIAZZA 26/02/2025
+
+  ⏭️  SKIP (no Kas Besar DEBIT)  85731                     | BREW - UANG MASUK STRADA LA.PIAZZA 25/02/2025
+
+  ⏭️  SKIP (no Kas Besar DEBIT)  85761                     | BREW - UANG MASUK STRADA LA.PIAZZA 24/02/2025
+
+  ⏭️  SKIP (no Kas Besar DEBIT)  85396                     | BREW - UANG MASUK STRADA LA.PIAZZA 21/02/2025
+
+  ⏭️  SKIP (no Kas Besar DEBIT)  85727                     | BREW - UANG MASUK STRADA LA.PIAZZA 20/02/2025
+
+  ⏭️  SKIP (no Kas Besar DEBIT)  85677                     | BREW - UANG MASUK STRADA LA.PIAZZA 19/02/2025
+
+  ⏭️  SKIP (no Kas Besar DEBIT)  85338                     | BREW - UANG MASUK STRADA LA.PIAZZA 18/02/2025
+
+  ⏭️  SKIP (no Kas Besar DEBIT)  85437                     | BREW - UANG MASUK STRADA LA.PIAZZA 17/02/2025
+
+  ⏭️  SKIP (no Kas Besar DEBIT)  85337                     | BREW - UANG MASUK STRADA LA.PIAZZA 16/02/2025
+
+  ⏭️  SKIP (no Kas Besar DEBIT)  85336                     | BREW - UANG MASUK STRADA LA.PIAZZA 15/02/2025
+
+  ⏭️  SKIP (no Kas Besar DEBIT)  85436                     | BREW - UANG MASUK STRADA LA.PIAZZA 14/02/2025
+
+  ⏭️  SKIP (no Kas Besar DEBIT)  85725                     | BREW - UANG MASUK STRADA LA.PIAZZA 13/02/2025
+
+  ⏭️  SKIP (no Kas Besar DEBIT)  85395                     | BREW - UANG MASUK STRADA LA.PIAZZA 12/02/2025
+
+  ⏭️  SKIP (no Kas Besar DEBIT)  85335                     | BREW - UANG MASUK STRADA LA.PIAZZA 11/02/2025
+
+  ⏭️  SKIP (no Kas Besar DEBIT)  85434                     | BREW - UANG MASUK STRADA LA.PIAZZA 10/02/2025
+
+  ⏭️  SKIP (no Kas Besar DEBIT)  85752                     | BREW - UANG MASUK STRADA LA.PIAZZA 07/02/2025
+
+  ⏭️  SKIP (no Kas Besar DEBIT)  85722                     | BREW - UANG MASUK STRADA LA.PIAZZA 06/02/2025
+
+  ⏭️  SKIP (no Kas Besar DEBIT)  85674                     | BREW - UANG MASUK STRADA LA.PIAZZA 05/02/2025
+
+  ⏭️  SKIP (no Kas Besar DEBIT)  85673                     | BREW - UANG MASUK STRADA LA.PIAZZA 04/02/2025
+
+Perlu diubah       : 8
+Tidak ada perubahan: 20
+Gagal fetch detail : 0
+
+Daftar jurnal yang akan diubah:
+  85627                     | 28/02/2025   | BREW - UANG MASUK STRADA LA.PIAZZA 27/02/2025
+    Baris 2: DEBIT 1000.01.01 → 1000.02.01  (Rp 105.105)
+  85730                     | 24/02/2025   | BREW - UANG MASUK STRADA LA.PIAZZA 23/02/2025
+    Baris 2: DEBIT 1000.01.01 → 1000.02.01  (Rp 287.540)
+  85340                     | 23/02/2025   | BREW - UANG MASUK STRADA LA.PIAZZA 22/02/2025
+    Baris 2: DEBIT 1000.01.01 → 1000.02.01  (Rp 235.335)
+  85723                     | 10/02/2025   | BREW - UANG MASUK STRADA LA.PIAZZA 09/02/2025
+    Baris 2: DEBIT 1000.01.01 → 1000.02.01  (Rp 1.048.740)
+  85754                     | 09/02/2025   | BREW - UANG MASUK STRADA LA.PIAZZA 08/02/2025
+    Baris 2: DEBIT 1000.01.01 → 1000.02.01  (Rp 139.755)
+  85669                     | 04/02/2025   | BREW - UANG MASUK STRADA LA.PIAZZA 03/02/2025
+    Baris 2: DEBIT 1000.01.01 → 1000.02.01  (Rp 198.660)
+  85391                     | 03/02/2025   | BREW - UANG MASUK STRADA LA.PIAZZA 02/02/2025
+    Baris 2: DEBIT 1000.01.01 → 1000.02.01  (Rp 427.350)
+  85718                     | 02/02/2025   | BREW - UANG MASUK STRADA LA.PIAZZA 01/02/2025
+    Baris 2: DEBIT 1000.01.01 → 1000.02.01  (Rp 344.190)
+
+──────────────────────────────────────────────────────────────────────
+FASE 3 — PATCH
+──────────────────────────────────────────────────────────────────────
+  [  1/8] ✅ PATCHED  | 17-04-2026, 12.45.08 WIB | 85627                     | 1000.01.01→1000.02.01 Rp 105.105
+  [  2/8] ✅ PATCHED  | 17-04-2026, 12.45.09 WIB | 85730                     | 1000.01.01→1000.02.01 Rp 287.540
+  [  3/8] ✅ PATCHED  | 17-04-2026, 12.45.10 WIB | 85340                     | 1000.01.01→1000.02.01 Rp 235.335
+  [  4/8] ✅ PATCHED  | 17-04-2026, 12.45.11 WIB | 85723                     | 1000.01.01→1000.02.01 Rp 1.048.740
+  [  5/8] ✅ PATCHED  | 17-04-2026, 12.45.11 WIB | 85754                     | 1000.01.01→1000.02.01 Rp 139.755
+  [  6/8] ✅ PATCHED  | 17-04-2026, 12.45.12 WIB | 85669                     | 1000.01.01→1000.02.01 Rp 198.660
+  [  7/8] ✅ PATCHED  | 17-04-2026, 12.45.13 WIB | 85391                     | 1000.01.01→1000.02.01 Rp 427.350
+  [  8/8] ✅ PATCHED  | 17-04-2026, 12.45.13 WIB | 85718                     | 1000.01.01→1000.02.01 Rp 344.190
+
+──────────────────────────────────────────────────────────────────────
+RINGKASAN AKHIR
+──────────────────────────────────────────────────────────────────────
+Selesai pada      : 17-04-2026, 12.45.14 WIB
+Total perlu patch : 8
+Berhasil dipatch  : 8
+Gagal             : 0
+Tidak ada perubahan: 20
+Gagal fetch detail : 0
+Log tersimpan     : /Users/questmotors/strada-brew/scripts/finance/logs/mass_patch_uang_masuk_20260417_124210.log

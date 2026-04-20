@@ -167,72 +167,146 @@ function ApplyContent() {
 
   // ── JOB LIST ───────────────────────────────────────────────
   if (!selectedJob) return (
-    <div className="min-h-screen bg-[#F5F5F7] font-sans">
-      {/* Header */}
-      <div className="bg-white/80 backdrop-blur-xl border-b border-gray-200/50 sticky top-0 z-30 px-6 py-6 flex flex-col items-center shadow-sm">
-        <img src="/strada-logo.svg" alt="Strada Coffee" className="h-12 w-auto filter grayscale contrast-200 mb-2" />
-        <p className="text-[11px] font-bold text-gray-400 tracking-[0.25em] uppercase">Bergabunglah bersama tim kami</p>
-      </div>
+    <div className="min-h-screen bg-white font-sans overflow-x-hidden">
+      {/* Navbar */}
+      <nav className="bg-white/80 backdrop-blur-xl border-b border-gray-100 sticky top-0 z-50 px-6 py-4 flex items-center justify-between">
+        <img src="/strada-logo.svg" alt="Strada Coffee" className="h-10 w-auto filter grayscale contrast-200" />
+        <a href="#lowongan" className="text-xs font-bold text-strada-blue uppercase tracking-widest bg-blue-50 px-4 py-2 rounded-full hover:bg-blue-100 transition-colors">
+          Lihat Lowongan
+        </a>
+      </nav>
 
-      <div className="max-w-3xl mx-auto px-6 py-12 md:py-16">
-        <div className="mb-10 text-center md:text-left">
-          <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 tracking-tight mb-3">Posisi Tersedia</h1>
-          <p className="text-base text-gray-500">
-            {jobs.length > 0 ? `Temukan peran yang sesuai dengan passion Anda dari ${jobs.length} posisi terbuka.` : 'Belum ada posisi terbuka saat ini'}
+      {/* Hero Section */}
+      <section className="relative pt-12 pb-20 px-6 bg-gradient-to-b from-[#F9F8F6] to-white">
+        <div className="max-w-4xl mx-auto text-center">
+          <div className="inline-block px-4 py-1.5 bg-strada-blue/10 rounded-full mb-6">
+            <p className="text-[11px] font-extrabold text-strada-blue tracking-[0.2em] uppercase">Join Our Growing Team</p>
+          </div>
+          <h1 className="text-4xl md:text-6xl font-[900] text-gray-900 leading-[1.1] mb-8 tracking-tight">
+            Menyeduh Masa Depan <br className="hidden md:block" /> 
+            <span className="text-strada-blue">Bersama Strada Coffee</span>
+          </h1>
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-10 leading-relaxed font-medium">
+            Kami percaya bahwa secangkir kopi terbaik bermula dari tim yang penuh passion, integritas, dan semangat untuk terus belajar.
           </p>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <button 
+              onClick={() => document.getElementById('lowongan')?.scrollIntoView({ behavior: 'smooth' })}
+              className="w-full sm:w-auto px-10 py-4 bg-strada-blue text-white rounded-full font-extrabold text-base shadow-lg shadow-strada-blue/20 hover:bg-strada-dark-teal transition-all hover:-translate-y-0.5 active:translate-y-0"
+            >
+              Lihat Posisi Aktif
+            </button>
+            <button 
+              onClick={() => document.getElementById('cerita')?.scrollIntoView({ behavior: 'smooth' })}
+              className="w-full sm:w-auto px-10 py-4 bg-white text-gray-900 border border-gray-200 rounded-full font-extrabold text-base hover:bg-gray-50 transition-all"
+            >
+              Cerita Kami
+            </button>
+          </div>
         </div>
 
-        {jobs.length === 0 ? (
-          <div className="text-center py-20 px-6 bg-white rounded-[32px] border border-gray-100 shadow-sm">
-            <span className="text-5xl mb-4 block">☕</span>
-            <p className="text-xl font-bold text-gray-900 mb-2">Belum ada posisi terbuka</p>
-            <p className="text-gray-500">Pantau terus halaman ini untuk lowongan terbaru dari Strada Coffee.</p>
-          </div>
-        ) : (
-          <div className="flex flex-col gap-4">
-            {jobs.map(job => (
-              <div key={job.id} 
-                onClick={() => nextRouter.push(`/jobs/${job.job_id}`)}
-                className="group bg-white rounded-3xl p-6 border border-gray-200/60 shadow-sm hover:shadow-md hover:border-strada-blue/30 transition-all duration-300 cursor-pointer flex flex-col md:flex-row md:items-center gap-6">
-                
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-3 flex-wrap mb-2">
-                    <h3 className="text-xl font-bold text-gray-900 tracking-tight group-hover:text-strada-blue transition-colors">{job.title}</h3>
-                    {job.is_urgent && (
-                      <span className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-red-50 text-strada-coral tracking-wide uppercase">URGENT</span>
-                    )}
-                  </div>
-                  <p className="text-sm font-semibold text-strada-blue mb-4">{job.department}</p>
-                  
-                  <div className="flex flex-wrap gap-4 gap-y-2 text-sm text-gray-500 font-medium">
-                    <span className="flex items-center gap-1.5"><MapPin size={16} className="text-gray-400" /> {job.location}{job.outlet ? ` · ${job.outlet}` : ''}</span>
-                    <span className="flex items-center gap-1.5"><Clock size={16} className="text-gray-400" /> {job.employment_type}</span>
-                    {job.salary_display && (
-                      <span className="flex items-center gap-1.5"><DollarSign size={16} className="text-gray-400" /> {job.salary_display}</span>
-                    )}
-                  </div>
-                  
-                  {job.description && (
-                    <p className="text-sm text-gray-500 mt-4 line-clamp-2 leading-relaxed">
-                      {job.description}
-                    </p>
-                  )}
-                </div>
-
-                <div className="shrink-0 flex items-center justify-end">
-                  <button className="flex items-center gap-2 px-5 py-2.5 bg-gray-50 text-gray-700 font-bold rounded-full group-hover:bg-strada-blue group-hover:text-white transition-colors duration-300 text-sm">
-                    Lihat Detail <ArrowRight size={16} />
-                  </button>
-                </div>
+        {/* Stats Grid */}
+        <div className="max-w-5xl mx-auto mt-20">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8">
+            {[
+              { label: 'Tahun Berdiri', value: '12+' },
+              { label: 'Outlet Aktif', value: '6+' },
+              { label: 'Anggota Tim', value: '80+' },
+              { label: 'Quality Standard', value: '1st' },
+            ].map((stat, i) => (
+              <div key={i} className="bg-white p-6 md:p-8 rounded-[32px] border border-gray-100 shadow-sm text-center">
+                <p className="text-3xl md:text-4xl font-[900] text-strada-blue mb-1">{stat.value}</p>
+                <p className="text-[11px] md:text-xs font-bold text-gray-400 uppercase tracking-widest">{stat.label}</p>
               </div>
             ))}
           </div>
-        )}
-
-        <div className="mt-16 text-center">
-          <p className="text-xs font-semibold text-gray-400 tracking-widest uppercase">STRADA COFFEE · EST. 2012</p>
         </div>
-      </div>
+      </section>
+
+      {/* Story Section */}
+      <section id="cerita" className="py-24 px-6 bg-white overflow-hidden">
+        <div className="max-w-5xl mx-auto">
+          <div className="flex flex-col md:flex-row items-center gap-12 md:gap-20">
+            <div className="flex-1 relative">
+              <div className="absolute -top-10 -left-10 w-40 h-40 bg-strada-blue/5 rounded-full blur-3xl -z-10"></div>
+              <h2 className="text-3xl md:text-4xl font-[900] text-gray-900 mb-6 tracking-tight">Cerita Kami</h2>
+              <p className="text-gray-600 leading-relaxed mb-6 font-medium">
+                Strada Coffee bukan sekadar kedai kopi. Sejak 2012, kami telah berkomitmen untuk membawa standar kopi spesialti Indonesia ke tingkat yang lebih tinggi. Dari pemilihan biji kopi terbaik hingga teknik roasting yang presisi, "Quality First" adalah nafas kami.
+              </p>
+              <p className="text-gray-600 leading-relaxed font-medium">
+                Di sini, setiap barista adalah seniman, setiap server adalah duta kehangatan, dan setiap tim di balik layar adalah pondasi kekuatan kami. Kami mencari individu yang tidak hanya mencari pekerjaan, tapi mencari tempat untuk bertumbuh dan berkarya.
+              </p>
+            </div>
+            <div className="flex-1 grid grid-cols-2 gap-4">
+              <div className="space-y-4">
+                <div className="h-48 md:h-64 bg-gray-100 rounded-[32px] overflow-hidden">
+                  <img src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&q=80&w=500" alt="Cafe" className="w-full h-full object-cover grayscale opacity-80" />
+                </div>
+                <div className="h-32 md:h-40 bg-strada-blue rounded-[32px]"></div>
+              </div>
+              <div className="space-y-4 pt-8">
+                <div className="h-32 md:h-40 bg-strada-coral rounded-[32px]"></div>
+                <div className="h-48 md:h-64 bg-gray-100 rounded-[32px] overflow-hidden">
+                   <img src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&q=80&w=500" alt="Coffee" className="w-full h-full object-cover grayscale opacity-80" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Jobs Section */}
+      <section id="lowongan" className="py-24 px-6 bg-[#F9F8F6]">
+        <div className="max-w-4xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-[900] text-gray-900 mb-4 tracking-tight">Posisi Aktif</h2>
+            <p className="text-gray-500 font-medium">Temukan peran yang sesuai dengan aspirasi karier Anda.</p>
+          </div>
+
+          {jobs.length === 0 ? (
+            <div className="text-center py-20 px-6 bg-white rounded-[32px] border border-gray-100 shadow-sm">
+              <span className="text-5xl mb-4 block">☕</span>
+              <p className="text-xl font-bold text-gray-900 mb-2">Belum ada posisi terbuka</p>
+              <p className="text-gray-500 font-medium">Pantau terus halaman ini untuk lowongan terbaru dari Strada Coffee.</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 gap-6">
+              {jobs.map(job => (
+                <div key={job.id} 
+                  onClick={() => nextRouter.push(`/jobs/${job.job_id}`)}
+                  className="group bg-white rounded-[32px] p-8 border border-gray-200/60 shadow-sm hover:shadow-xl hover:border-strada-blue/20 transition-all duration-500 cursor-pointer flex flex-col md:flex-row md:items-center gap-8">
+                  
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-3 flex-wrap mb-3">
+                      <h3 className="text-2xl font-extrabold text-gray-900 tracking-tight group-hover:text-strada-blue transition-colors">{job.title}</h3>
+                      {job.is_urgent && (
+                        <span className="text-[10px] font-black px-3 py-1 rounded-full bg-red-50 text-strada-coral tracking-widest uppercase">URGENT</span>
+                      )}
+                    </div>
+                    <p className="text-sm font-bold text-strada-blue mb-6 uppercase tracking-wider">{job.department}</p>
+                    
+                    <div className="flex flex-wrap gap-6 text-sm text-gray-500 font-bold">
+                      <span className="flex items-center gap-2"><MapPin size={18} className="text-strada-blue" /> {job.location}{job.outlet ? ` · ${job.outlet}` : ''}</span>
+                      <span className="flex items-center gap-2"><Clock size={18} className="text-strada-blue" /> {job.employment_type}</span>
+                    </div>
+                  </div>
+
+                  <div className="shrink-0 flex items-center">
+                    <div className="w-14 h-14 bg-gray-50 text-gray-400 group-hover:bg-strada-blue group-hover:text-white rounded-2xl flex items-center justify-center transition-all duration-500 group-hover:rotate-12">
+                      <ArrowRight size={24} strokeWidth={3} />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          <div className="mt-20 text-center">
+            <img src="/strada-logo.svg" alt="Strada Coffee" className="h-8 w-auto filter grayscale opacity-20 mx-auto mb-4" />
+            <p className="text-[10px] font-bold text-gray-400 tracking-[0.3em] uppercase">Strada Coffee Indonesia · Est. 2012</p>
+          </div>
+        </div>
+      </section>
     </div>
   )
 

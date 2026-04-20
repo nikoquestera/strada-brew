@@ -1,8 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server'
-
-const HRD_EMAIL = process.env.HRD_EMAIL || 'hrd@stradacoffee.com'
+import { createClient } from '@/lib/supabase/server'
 
 export async function POST(request: NextRequest) {
+  const supabase = await createClient()
+  
+  // Fetch settings from DB
+  const { data: settings } = await supabase
+    .from('hrd_settings')
+    .select('hrd_email')
+    .eq('id', 'default')
+    .single()
+
+  const HRD_EMAIL = settings?.hrd_email || process.env.HRD_EMAIL || 'hrd@stradacoffee.com'
+
   // Accept either a full applicant object or just the data fields
   const body = await request.json()
   // Support both calling conventions:

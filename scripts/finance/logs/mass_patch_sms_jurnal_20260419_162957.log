@@ -1,0 +1,23 @@
+BREW — Mass Patch Jurnal Uang Masuk SMS (1000.02.04 → 1000.02.05 / split OVO)
+Mode       : 🔍 DRY RUN — tidak ada yang disimpan
+Filter tgl : Semua tanggal
+Keyword    : "BREW - UANG MASUK STRADA SMS"
+Source kode: 1000.02.04 (DEBIT)
+Normal days: 1000.02.04 → 1000.02.05 (Bank BCA SMS 4599993999)
+OVO days   : 1000.02.04 split → 1000.02.05 (non-OVO sum) + 1000.02.01 (OVO, Bank BCA LPZ 4281688817)
+OVO dates (14): 2025-08-31, 2025-09-19, 2025-09-25, 2025-10-09, 2025-10-13, 2025-10-27, 2025-12-08, 2025-12-29, 2026-01-13, 2026-01-31, 2026-02-12, 2026-02-13, 2026-02-14, 2026-03-08
+Dijalankan : 19-04-2026, 16.29.57 WIB
+Log file   : /Users/questmotors/strada-brew/scripts/finance/logs/mass_patch_sms_jurnal_20260419_162957.log
+
+Menghubungkan ke Accurate...
+✅ Terhubung. Session: a06e43cd-cf3a-417e-a6ef-f90e75576f3f
+
+──────────────────────────────────────────────────────────────────────
+FASE 1 — AMBIL DAFTAR JURNAL
+──────────────────────────────────────────────────────────────────────
+Mencari jurnal dengan keyword: "BREW - UANG MASUK STRADA SMS" (semua tanggal) ...
+  Halaman 1: 100 total, 100 cocok (kumulatif: 100)
+  Halaman 2: 100 total, 100 cocok (kumulatif: 200)
+  Halaman 3: 60 total, 60 cocok (kumulatif: 260)
+
+Total jurnal ditemukan: 260

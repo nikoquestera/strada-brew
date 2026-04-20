@@ -1,0 +1,558 @@
+BREW — Mass Patch Jurnal Uang Masuk SMS (1000.02.04 → 1000.02.05 / 1000.02.01)
+Mode       : 🔍 DRY RUN — tidak ada yang disimpan
+Filter tgl : Semua tanggal
+Keyword    : "BREW - UANG MASUK STRADA SMS"
+Source kode: 1000.02.04 (DEBIT)
+Target normal  : 1000.02.05 (Bank BCA SMS 4599993999)
+Target OVO hari: 1000.02.01 (Bank BCA LPZ 4281688817)
+OVO dates (14): 2025-08-31, 2025-09-19, 2025-09-25, 2025-10-09, 2025-10-13, 2025-10-27, 2025-12-08, 2025-12-29, 2026-01-13, 2026-01-31, 2026-02-12, 2026-02-13, 2026-02-14, 2026-03-08
+Dijalankan : 19-04-2026, 15.53.41 WIB
+Log file   : /Users/questmotors/strada-brew/scripts/finance/logs/mass_patch_sms_jurnal_20260419_155341.log
+
+Menghubungkan ke Accurate...
+✅ Terhubung. Session: a06e43cd-cf3a-417e-a6ef-f90e75576f3f
+
+──────────────────────────────────────────────────────────────────────
+FASE 1 — AMBIL DAFTAR JURNAL
+──────────────────────────────────────────────────────────────────────
+Mencari jurnal dengan keyword: "BREW - UANG MASUK STRADA SMS" (semua tanggal) ...
+  Halaman 1: 100 total, 100 cocok (kumulatif: 100)
+  Halaman 2: 100 total, 100 cocok (kumulatif: 200)
+  Halaman 3: 60 total, 60 cocok (kumulatif: 260)
+
+Total jurnal ditemukan: 260
+
+──────────────────────────────────────────────────────────────────────
+FASE 2 — PREVIEW (ambil detail & identifikasi perubahan)
+──────────────────────────────────────────────────────────────────────
+
+  ⏭️  SKIP (no 1000.02.04 DEBIT)  84919                     | BREW - UANG MASUK STRADA SMS 30/08/2025
+
+  ⏭️  SKIP (no 1000.02.04 DEBIT)  85026                     | BREW - UANG MASUK STRADA SMS 29/08/2025
+
+  ⏭️  SKIP (no 1000.02.04 DEBIT)  84965                     | BREW - UANG MASUK STRADA SMS 28/08/2025
+
+  ⏭️  SKIP (no 1000.02.04 DEBIT)  85024                     | BREW - UANG MASUK STRADA SMS 27/08/2025
+
+  ⏭️  SKIP (no 1000.02.04 DEBIT)  84548                     | BREW - UANG MASUK STRADA SMS 26/08/2025
+
+  ⏭️  SKIP (no 1000.02.04 DEBIT)  84570                     | BREW - UANG MASUK STRADA SMS 25/08/2025
+
+  ⏭️  SKIP (no 1000.02.04 DEBIT)  84751                     | BREW - UANG MASUK STRADA SMS 24/08/2025
+
+  ⏭️  SKIP (no 1000.02.04 DEBIT)  84866                     | BREW - UANG MASUK STRADA SMS 23/08/2025
+
+  ⏭️  SKIP (no 1000.02.04 DEBIT)  85022                     | BREW - UANG MASUK STRADA SMS 22/08/2025
+
+  ⏭️  SKIP (no 1000.02.04 DEBIT)  85021                     | BREW - UANG MASUK STRADA SMS 21/08/2025
+
+  ⏭️  SKIP (no 1000.02.04 DEBIT)  84917                     | BREW - UANG MASUK STRADA SMS 20/08/2025
+
+  ⏭️  SKIP (no 1000.02.04 DEBIT)  84848                     | BREW - UANG MASUK STRADA SMS 19/08/2025
+
+  ⏭️  SKIP (no 1000.02.04 DEBIT)  85020                     | BREW - UANG MASUK STRADA SMS 18/08/2025
+
+  ⏭️  SKIP (no 1000.02.04 DEBIT)  84663                     | BREW - UANG MASUK STRADA SMS 17/08/2025
+
+  ⏭️  SKIP (no 1000.02.04 DEBIT)  84847                     | BREW - UANG MASUK STRADA SMS 16/08/2025
+
+  ⏭️  SKIP (no 1000.02.04 DEBIT)  84449                     | BREW - UANG MASUK STRADA SMS 15/08/2025
+
+  ⏭️  SKIP (no 1000.02.04 DEBIT)  84914                     | BREW - UANG MASUK STRADA SMS 14/08/2025
+
+  ⏭️  SKIP (no 1000.02.04 DEBIT)  84567                     | BREW - UANG MASUK STRADA SMS 13/08/2025
+
+  ⏭️  SKIP (no 1000.02.04 DEBIT)  84846                     | BREW - UANG MASUK STRADA SMS 12/08/2025
+
+  ⏭️  SKIP (no 1000.02.04 DEBIT)  84566                     | BREW - UANG MASUK STRADA SMS 11/08/2025
+
+  ⏭️  SKIP (no 1000.02.04 DEBIT)  84703                     | BREW - UANG MASUK STRADA SMS 10/08/2025
+
+  ⏭️  SKIP (no 1000.02.04 DEBIT)  84845                     | BREW - UANG MASUK STRADA SMS 09/08/2025
+
+  ⏭️  SKIP (no 1000.02.04 DEBIT)  84446                     | BREW - UANG MASUK STRADA SMS 08/08/2025
+
+  ⏭️  SKIP (no 1000.02.04 DEBIT)  84661                     | BREW - UANG MASUK STRADA SMS 07/08/2025
+
+  ⏭️  SKIP (no 1000.02.04 DEBIT)  84844                     | BREW - UANG MASUK STRADA SMS 06/08/2025
+
+  ⏭️  SKIP (no 1000.02.04 DEBIT)  84244                     | BREW - UANG MASUK STRADA SMS 05/08/2025
+
+  ⏭️  SKIP (no 1000.02.04 DEBIT)  84243                     | BREW - UANG MASUK STRADA SMS 04/08/2025
+
+  ⏭️  SKIP (no 1000.02.04 DEBIT)  84843                     | BREW - UANG MASUK STRADA SMS 03/08/2025
+
+  ⏭️  SKIP (no 1000.02.04 DEBIT)  84720                     | BREW - UANG MASUK STRADA SMS 02/08/2025
+
+  ⏭️  SKIP (no 1000.02.04 DEBIT)  84620                     | BREW - UANG MASUK STRADA SMS 01/08/2025
+
+  ⏭️  SKIP (no 1000.02.04 DEBIT)  84443                     | BREW - UANG MASUK STRADA SMS 31/07/2025
+
+  ⏭️  SKIP (no 1000.02.04 DEBIT)  85015                     | BREW - UANG MASUK STRADA SMS 30/07/2025
+
+  ⏭️  SKIP (no 1000.02.04 DEBIT)  84842                     | BREW - UANG MASUK STRADA SMS 29/07/2025
+
+  ⏭️  SKIP (no 1000.02.04 DEBIT)  84659                     | BREW - UANG MASUK STRADA SMS 28/07/2025
+
+Perlu diubah       : 226
+  → ke 1000.02.05 (normal) : 212
+  → ke 1000.02.01 (OVO)    : 14
+Tidak ada perubahan: 34
+Gagal fetch detail : 0
+
+Daftar jurnal yang akan diubah:
+  87056                     | 16/04/2026   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 15/04/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 587.742,14)
+  85073                     | 13/04/2026   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 12/04/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 907.325,19)
+  85169                     | 12/04/2026   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 11/04/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 922.101,69)
+  84994                     | 11/04/2026   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 10/04/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 400.476,62)
+  84956                     | 10/04/2026   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 09/04/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 369.856,94)
+  84834                     | 09/04/2026   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 08/04/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 87.165,55)
+  84740                     | 08/04/2026   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 07/04/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 170.010,24)
+  84904                     | 07/04/2026   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 06/04/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 284.527,36)
+  84891                     | 06/04/2026   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 05/04/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 1.022.073,95)
+  85168                     | 05/04/2026   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 04/04/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 1.157.822,21)
+  85166                     | 04/04/2026   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 03/04/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 1.402.277,78)
+  84903                     | 03/04/2026   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 02/04/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 443.331,09)
+  84717                     | 02/04/2026   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 01/04/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 477.738,54)
+  85002                     | 01/04/2026   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 31/03/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 309.667,06)
+  84953                     | 31/03/2026   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 30/03/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 169.187,57)
+  84993                     | 30/03/2026   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 29/03/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 650.156,95)
+  85216                     | 29/03/2026   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 28/03/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 1.284.363,48)
+  84858                     | 28/03/2026   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 27/03/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 330.311,53)
+  84952                     | 27/03/2026   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 26/03/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 547.202,58)
+  84739                     | 26/03/2026   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 25/03/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 913.625,96)
+  84992                     | 25/03/2026   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 24/03/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 696.880,02)
+  84951                     | 24/03/2026   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 23/03/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 1.039.883,69)
+  84715                     | 23/03/2026   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 22/03/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 1.343.871,81)
+  84991                     | 22/03/2026   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 21/03/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 852.602,53)
+  85000                     | 21/03/2026   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 20/03/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 1.748.215,61)
+  85165                     | 20/03/2026   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 19/03/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 1.122.714,03)
+  85164                     | 19/03/2026   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 18/03/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 969.849,75)
+  84786                     | 18/03/2026   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 17/03/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 463.975,56)
+  84832                     | 17/03/2026   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 16/03/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 334.899,19)
+  85163                     | 16/03/2026   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 15/03/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 1.278.735,08)
+  84988                     | 15/03/2026   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 14/03/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 1.226.174,57)
+  85213                     | 14/03/2026   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 13/03/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 463.435,67)
+  84831                     | 13/03/2026   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 12/03/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 301.779,26)
+  85212                     | 12/03/2026   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 11/03/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 457.935,56)
+  84950                     | 11/03/2026   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 10/03/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 119.279,17)
+  85071                     | 10/03/2026   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 09/03/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 757.167,19)
+  85161                     | 09/03/2026   | [OVO → LPZ] | BREW - UANG MASUK STRADA SMS 08/03/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.01  (Rp 1.458.532,33)
+  84987                     | 08/03/2026   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 07/03/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 1.825.547,22)
+  84830                     | 07/03/2026   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 06/03/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 534.705,68)
+  84699                     | 06/03/2026   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 05/03/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 480.363,75)
+  84829                     | 05/03/2026   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 04/03/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 200.236,22)
+  85070                     | 04/03/2026   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 03/03/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 429.219,39)
+  84782                     | 03/03/2026   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 02/03/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 259.598,96)
+  84698                     | 02/03/2026   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 01/03/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 957.663,32)
+  84857                     | 01/03/2026   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 28/02/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 1.240.526,34)
+  84737                     | 28/02/2026   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 27/02/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 1.055.540,66)
+  85069                     | 27/02/2026   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 26/02/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 466.556,18)
+  85210                     | 26/02/2026   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 25/02/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 221.077,6)
+  84986                     | 25/02/2026   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 24/02/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 171.125,38)
+  84827                     | 24/02/2026   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 23/02/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 405.134,08)
+  85142                     | 23/02/2026   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 22/02/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 1.396.491,8)
+  84697                     | 22/02/2026   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 21/02/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 780.145,49)
+  85141                     | 21/02/2026   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 20/02/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 501.640,19)
+  84826                     | 20/02/2026   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 19/02/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 413.556,04)
+  85068                     | 19/02/2026   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 18/02/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 887.486,94)
+  85139                     | 18/02/2026   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 17/02/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 904.711,38)
+  84734                     | 17/02/2026   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 16/02/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 998.179,33)
+  85138                     | 16/02/2026   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 15/02/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 1.790.452,61)
+  85206                     | 15/02/2026   | [OVO → LPZ] | BREW - UANG MASUK STRADA SMS 14/02/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.01  (Rp 1.468.858,31)
+  84856                     | 14/02/2026   | [OVO → LPZ] | BREW - UANG MASUK STRADA SMS 13/02/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.01  (Rp 627.465,51)
+  84855                     | 13/02/2026   | [OVO → LPZ] | BREW - UANG MASUK STRADA SMS 12/02/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.01  (Rp 574.926,43)
+  84696                     | 12/02/2026   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 11/02/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 82.577,88)
+  84885                     | 11/02/2026   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 10/02/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 196.344,81)
+  84778                     | 10/02/2026   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 09/02/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 628.881,49)
+  85159                     | 09/02/2026   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 08/02/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 2.028.015,38)
+  84647                     | 08/02/2026   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 07/02/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 1.598.109,38)
+  84884                     | 07/02/2026   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 06/02/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 374.802,99)
+  84985                     | 06/02/2026   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 05/02/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 546.756,12)
+  84984                     | 05/02/2026   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 04/02/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 464.504,79)
+  84712                     | 04/02/2026   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 03/02/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 232.823,76)
+  85203                     | 03/02/2026   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 02/02/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 326.323,17)
+  84732                     | 02/02/2026   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 01/02/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 1.992.998,83)
+  85156                     | 01/02/2026   | [OVO → LPZ] | BREW - UANG MASUK STRADA SMS 31/01/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.01  (Rp 1.667.503,44)
+  85135                     | 31/01/2026   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 30/01/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 622.718,87)
+  85066                     | 30/01/2026   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 29/01/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 948.154,21)
+  85201                     | 29/01/2026   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 28/01/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 407.377,17)
+  85154                     | 28/01/2026   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 27/01/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 273.584,29)
+  84711                     | 27/01/2026   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 26/01/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 533.508,22)
+  84730                     | 26/01/2026   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 25/01/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 2.188.556,93)
+  84982                     | 25/01/2026   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 24/01/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 1.116.314,76)
+  84881                     | 24/01/2026   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 23/01/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 543.286,64)
+  85153                     | 23/01/2026   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 22/01/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 159.624,47)
+  85132                     | 22/01/2026   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 21/01/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 811.020,59)
+  84821                     | 21/01/2026   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 20/01/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 127.307,57)
+  84596                     | 20/01/2026   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 19/01/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 188.460,4)
+  84981                     | 19/01/2026   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 18/01/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 1.492.694,89)
+  84949                     | 18/01/2026   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 17/01/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 1.124.622,84)
+  85131                     | 17/01/2026   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 16/01/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 1.780.863,98)
+  85152                     | 16/01/2026   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 15/01/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 404.097,13)
+  84646                     | 15/01/2026   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 14/01/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 233.067,04)
+  84979                     | 14/01/2026   | [OVO → LPZ] | BREW - UANG MASUK STRADA SMS 13/01/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.01  (Rp 674.091,45)
+  84645                     | 13/01/2026   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 12/01/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 481.535,49)
+  84880                     | 12/01/2026   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 11/01/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 1.439.370,7)
+  85128                     | 11/01/2026   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 10/01/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 1.695.498,37)
+  84820                     | 10/01/2026   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 09/01/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 618.708,97)
+  84595                     | 09/01/2026   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 08/01/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 349.052,33)
+  85062                     | 08/01/2026   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 07/01/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 667.709,46)
+  84594                     | 07/01/2026   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 06/01/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 439.155,99)
+  84692                     | 06/01/2026   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 05/01/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 169.743,43)
+  85127                     | 05/01/2026   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 04/01/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 1.588.617,76)
+  84643                     | 04/01/2026   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 03/01/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 1.032.059,66)
+  84776                     | 03/01/2026   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 02/01/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 846.911,56)
+  85151                     | 02/01/2026   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 01/01/2026
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 1.564.511,23)
+  84775                     | 01/01/2026   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 31/12/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 1.394.545,28)
+  85150                     | 31/12/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 30/12/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 829.552,68)
+  84774                     | 30/12/2025   | [OVO → LPZ] | BREW - UANG MASUK STRADA SMS 29/12/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.01  (Rp 980.530,44)
+  84944                     | 29/12/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 28/12/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 1.592.430,58)
+  84818                     | 28/12/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 27/12/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 1.349.976,46)
+  84878                     | 27/12/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 26/12/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 952.809,1)
+  85124                     | 26/12/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 25/12/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 1.890.419,35)
+  84591                     | 25/12/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 24/12/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 710.125,42)
+  85048                     | 24/12/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 23/12/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 568.157,8)
+  85047                     | 23/12/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 22/12/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 808.146)
+  85060                     | 22/12/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 21/12/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 2.418.098,85)
+  84729                     | 21/12/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 20/12/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 32.600)
+  84876                     | 20/12/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 19/12/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 1.250.396,43)
+  84773                     | 19/12/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 18/12/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 820.868,12)
+  84977                     | 18/12/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 17/12/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 670.261)
+  84772                     | 17/12/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 16/12/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 166.338,88)
+  85120                     | 16/12/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 15/12/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 585.201,54)
+  84941                     | 15/12/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 14/12/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 2.051.071,35)
+  84875                     | 14/12/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 13/12/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 1.233.317,36)
+  84939                     | 13/12/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 12/12/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 847.230,05)
+  84728                     | 12/12/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 11/12/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 740.190,99)
+  84727                     | 11/12/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 10/12/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 498.294,65)
+  84974                     | 10/12/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 09/12/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 599.598,62)
+  84590                     | 09/12/2025   | [OVO → LPZ] | BREW - UANG MASUK STRADA SMS 08/12/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.01  (Rp 642.263,46)
+  84973                     | 08/12/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 07/12/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 1.122.203,78)
+  85044                     | 07/12/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 06/12/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 1.233.668,45)
+  84725                     | 06/12/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 05/12/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 436.853,34)
+  84872                     | 05/12/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 04/12/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 765.333,82)
+  84641                     | 04/12/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 03/12/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 811.326,32)
+  84640                     | 03/12/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 02/12/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 822.308,91)
+  84687                     | 02/12/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 01/12/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 226.878,75)
+  84972                     | 01/12/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 30/11/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 1.025.734,04)
+  84936                     | 30/11/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 29/11/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 1.195.020,48)
+  84935                     | 29/11/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 28/11/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 1.059.333,01)
+  84851                     | 28/11/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 27/11/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 237.178,06)
+  84639                     | 27/11/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 26/11/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 259.202,79)
+  85581                     | 26/11/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 25/11/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 221.354,6)
+    Baris 2: DEBIT 1000.02.04 → 1000.02.05  (Rp 430.000)
+  84816                     | 25/11/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 24/11/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 249.392,78)
+  85116                     | 24/11/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 23/11/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 751.594,32)
+  85059                     | 23/11/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 22/11/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 1.127.912,87)
+  84588                     | 22/11/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 21/11/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 402.567,18)
+  84771                     | 21/11/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 20/11/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 714.837,58)
+  85114                     | 20/11/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 19/11/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 325.480,59)
+  84815                     | 19/11/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 18/11/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 450.737,6)
+  84586                     | 18/11/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 17/11/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 281.390,34)
+  84932                     | 17/11/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 16/11/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 903.324,62)
+  84249                     | 16/11/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 15/11/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 895.603,88)
+  84585                     | 15/11/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 14/11/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 44.729,69)
+  84871                     | 14/11/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 13/11/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 433.558,86)
+  85058                     | 13/11/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 12/11/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 261.750,73)
+  84812                     | 12/11/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 11/11/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 324.095,34)
+  84584                     | 11/11/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 10/11/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 316.548,55)
+  84636                     | 10/11/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 09/11/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 1.746.897,67)
+  84683                     | 09/11/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 08/11/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 838.941,02)
+  84248                     | 08/11/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 07/11/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 79.759,03)
+  84682                     | 07/11/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 06/11/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 246.586,73)
+  84633                     | 06/11/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 05/11/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 168.076,86)
+  84631                     | 05/11/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 04/11/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 513.655,65)
+  84766                     | 04/11/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 03/11/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 415.055,03)
+  84931                     | 03/11/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 02/11/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 1.428.145,11)
+  85112                     | 02/11/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 01/11/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 1.141.276,02)
+  85057                     | 01/11/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 31/10/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 1.350.698,05)
+  84583                     | 31/10/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 30/10/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 1.322.576,63)
+  85111                     | 30/10/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 29/10/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 1.574.912,12)
+  84582                     | 29/10/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 28/10/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 1.333.911,8)
+  84630                     | 28/10/2025   | [OVO → LPZ] | BREW - UANG MASUK STRADA SMS 27/10/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.01  (Rp 1.820.504,28)
+  84707                     | 27/10/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 26/10/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 850.916,95)
+  84723                     | 26/10/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 25/10/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 1.740.151,41)
+  84706                     | 25/10/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 24/10/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 1.492.564,96)
+  84680                     | 24/10/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 23/10/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 1.302.350,57)
+  84764                     | 23/10/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 22/10/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 1.629.637,79)
+  84808                     | 22/10/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 21/10/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 91.753,21)
+  84763                     | 21/10/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 20/10/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 120.426,08)
+  84870                     | 20/10/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 19/10/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 1.349.407,36)
+  85109                     | 19/10/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 18/10/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 694.626,18)
+  84579                     | 18/10/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 17/10/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 1.063.503,45)
+  84678                     | 17/10/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 16/10/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 377.608,12)
+  84805                     | 16/10/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 15/10/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 204.741,93)
+  84677                     | 15/10/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 14/10/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 202.742,68)
+  84704                     | 14/10/2025   | [OVO → LPZ] | BREW - UANG MASUK STRADA SMS 13/10/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.01  (Rp 1.271.245,33)
+  84869                     | 13/10/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 12/10/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 781.200,05)
+  84626                     | 12/10/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 11/10/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 1.334.553,86)
+  84676                     | 11/10/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 10/10/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 363.341,49)
+  84803                     | 10/10/2025   | [OVO → LPZ] | BREW - UANG MASUK STRADA SMS 09/10/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.01  (Rp 391.836,74)
+  84970                     | 09/10/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 08/10/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 319.064,72)
+  84577                     | 08/10/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 07/10/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 329.137,69)
+  84247                     | 07/10/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 06/10/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 151.392,79)
+  84928                     | 06/10/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 05/10/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 1.135.182,8)
+  84760                     | 05/10/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 04/10/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 751.741,56)
+  84575                     | 04/10/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 03/10/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 637.224,35)
+  84624                     | 03/10/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 02/10/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 325.168,01)
+  84672                     | 02/10/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 01/10/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 231.676,83)
+  84759                     | 01/10/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 30/09/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 328.017,7)
+  84927                     | 30/09/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 29/09/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 330.418,37)
+  85036                     | 29/09/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 28/09/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 1.632.601,96)
+  84758                     | 28/09/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 27/09/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 754.158,68)
+  84968                     | 27/09/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 26/09/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 670.954,45)
+  84926                     | 26/09/2025   | [OVO → LPZ] | BREW - UANG MASUK STRADA SMS 25/09/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.01  (Rp 455.143,1)
+  84574                     | 25/09/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 24/09/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 120.426,08)
+  84572                     | 24/09/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 23/09/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 274.112,69)
+  84757                     | 23/09/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 22/09/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 142.217,47)
+  84925                     | 22/09/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 21/09/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 1.279.247,62)
+  85547                     | 21/09/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 20/09/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 974.780,15)
+  85548                     | 20/09/2025   | [OVO → LPZ] | BREW - UANG MASUK STRADA SMS 19/09/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.01  (Rp 491.084,79)
+  84571                     | 19/09/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 18/09/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 138.776,72)
+  84670                     | 18/09/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 17/09/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 236.264,49)
+  85033                     | 17/09/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 16/09/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 402.941,31)
+  85032                     | 16/09/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 15/09/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 161.250)
+  85108                     | 15/09/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 14/09/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 1.323.289,19)
+  85031                     | 14/09/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 13/09/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 1.461.863,48)
+  84622                     | 13/09/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 12/09/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 36.701,28)
+  84756                     | 12/09/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 11/09/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 82.577,88)
+  84245                     | 11/09/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 10/09/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 217.432,25)
+  85053                     | 10/09/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 09/09/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 381.852,55)
+  84755                     | 09/09/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 08/09/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 460.309,09)
+  85028                     | 08/09/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 07/09/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 1.360.362,5)
+  84665                     | 07/09/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 06/09/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 1.463.974,1)
+  85106                     | 06/09/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 05/09/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 1.496.900,8)
+  84922                     | 05/09/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 04/09/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 707.388,9)
+  84721                     | 04/09/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 03/09/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 371.133,19)
+  84754                     | 03/09/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 02/09/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 268.241,58)
+  84921                     | 02/09/2025   | [normal → SMS] | BREW - UANG MASUK STRADA SMS 01/09/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 578.952,04)
+  84920                     | 01/09/2025   | [OVO → LPZ] | BREW - UANG MASUK STRADA SMS 31/08/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.01  (Rp 920.810,47)
+
+=== DRY RUN SELESAI — tidak ada perubahan yang disimpan ===

@@ -19,6 +19,7 @@ const hrdNav = [
   { label: 'Scoring Weights', href: '/dashboard/hrd/rekrutmen/weights', icon: Scale },
   { label: 'Tes Kepribadian', href: '/dashboard/hrd/disc', icon: Brain },
   { label: 'Tes Intelegensi', href: '/dashboard/hrd/cfit', icon: Brain },
+  { label: 'Pengaturan', href: '/dashboard/hrd/pengaturan', icon: Settings },
 ]
 
 export default function DashboardShell({ children, userEmail }: Props) {

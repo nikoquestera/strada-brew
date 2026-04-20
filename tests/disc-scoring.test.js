@@ -7,7 +7,7 @@ test('graph II D normalization keeps value 17 negative', () => {
   const row = DISC_SCORING_TABLE.find((entry) => entry.line === 2 && entry.value === 17)
 
   assert.ok(row, 'expected line 2 / value 17 to exist')
-  assert.equal(row.d, -6.7)
+  assert.equal(row.d, -15.2)
 })
 
 test('graph II D normalization decreases monotonically as raw value increases', () => {

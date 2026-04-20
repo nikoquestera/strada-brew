@@ -1,0 +1,2000 @@
+BREW — Audit & Fix Uang Masuk Decimal Amounts
+Mode       : 🔍 DRY RUN
+Toko       : LA.PIAZZA
+Periode    : 2025-08-17 s/d 2026-04-12  (tanggal keterangan jurnal)
+CSV        : /Users/questmotors/strada-brew/scripts/finance/MASS_INPUT_ALL-2025.csv
+Dijalankan : 17-04-2026, 13.52.31 WIB
+Log        : /Users/questmotors/strada-brew/scripts/finance/logs/audit_fix_decimals_20260417_135231.log
+
+──────────────────────────────────────────────────────────────────────
+FASE 1 — BACA CSV
+──────────────────────────────────────────────────────────────────────
+Ditemukan 239 baris untuk LA.PIAZZA antara 2025-08-17 dan 2026-04-12
+
+Menghubungkan ke Accurate...
+✅ Terhubung. Session: a06e43cd-cf3a-417e-a6ef-f90e75576f3f
+
+──────────────────────────────────────────────────────────────────────
+FASE 2 — AUDIT (bandingkan CSV vs Accurate)
+──────────────────────────────────────────────────────────────────────
+
+Total tanggal CSV       : 239
+  → Perlu difix         : 199
+  → Sudah benar / skip  : 40
+  → Jurnal tidak ada    : 0
+
+──────────────────────────────────────────────────────────────────────
+PREVIEW PERUBAHAN
+──────────────────────────────────────────────────────────────────────
+
+  2025-08-18  |  BREW - UANG MASUK STRADA LA.PIAZZA 18/08/2025  (id: 86169)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 27.857.138,00
+      BENAR    : Rp 27.857.138,44
+      CEK      : Math.round(27.857.138,44) = 27857138 = 27857138 ✓
+
+  2025-08-20  |  BREW - UANG MASUK STRADA LA.PIAZZA 20/08/2025  (id: 86254)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 15.110.276,00
+      BENAR    : Rp 15.110.276,34
+      CEK      : Math.round(15.110.276,34) = 15110276 = 15110276 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 169.224,00
+      BENAR    : Rp 169.223,66
+      CEK      : Math.round(169.223,66) = 169224 = 169224 ✓
+
+  2025-08-21  |  BREW - UANG MASUK STRADA LA.PIAZZA 21/08/2025  (id: 86070)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 10.348.763,00
+      BENAR    : Rp 10.348.763,11
+      CEK      : Math.round(10.348.763,11) = 10348763 = 10348763 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 90.187,00
+      BENAR    : Rp 90.186,89
+      CEK      : Math.round(90.186,89) = 90187 = 90187 ✓
+
+  2025-08-22  |  BREW - UANG MASUK STRADA LA.PIAZZA 22/08/2025  (id: 86256)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 18.208.952,00
+      BENAR    : Rp 18.208.951,59
+      CEK      : Math.round(18.208.951,59) = 18208952 = 18208952 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 164.493,00
+      BENAR    : Rp 164.493,41
+      CEK      : Math.round(164.493,41) = 164493 = 164493 ✓
+
+  2025-08-23  |  BREW - UANG MASUK STRADA LA.PIAZZA 23/08/2025  (id: 86170)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 28.038.162,00
+      BENAR    : Rp 28.038.162,31
+      CEK      : Math.round(28.038.162,31) = 28038162 = 28038162 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 230.018,00
+      BENAR    : Rp 230.017,69
+      CEK      : Math.round(230.017,69) = 230018 = 230018 ✓
+
+  2025-08-24  |  BREW - UANG MASUK STRADA LA.PIAZZA 24/08/2025  (id: 86216)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 22.646.184,00
+      BENAR    : Rp 22.646.183,50
+      CEK      : Math.round(22.646.183,50) = 22646184 = 22646184 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 214.742,00
+      BENAR    : Rp 214.741,50
+      CEK      : Math.round(214.741,50) = 214742 = 214742 ✓
+
+  2025-08-26  |  BREW - UANG MASUK STRADA LA.PIAZZA 26/08/2025  (id: 86173)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 12.503.872,00
+      BENAR    : Rp 12.503.872,41
+      CEK      : Math.round(12.503.872,41) = 12503872 = 12503872 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 134.513,00
+      BENAR    : Rp 134.512,59
+      CEK      : Math.round(134.512,59) = 134513 = 134513 ✓
+
+  2025-09-04  |  BREW - UANG MASUK STRADA LA.PIAZZA 04/09/2025  (id: 86145)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 20.533.134,00
+      BENAR    : Rp 20.533.133,87
+      CEK      : Math.round(20.533.133,87) = 20533134 = 20533134 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 165.286,00
+      BENAR    : Rp 165.286,13
+      CEK      : Math.round(165.286,13) = 165286 = 165286 ✓
+
+  2025-09-06  |  BREW - UANG MASUK STRADA LA.PIAZZA 06/09/2025  (id: 86071)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 18.936.785,00
+      BENAR    : Rp 18.936.784,55
+      CEK      : Math.round(18.936.784,55) = 18936785 = 18936785 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 190.370,00
+      BENAR    : Rp 190.370,45
+      CEK      : Math.round(190.370,45) = 190370 = 190370 ✓
+
+  2025-09-07  |  BREW - UANG MASUK STRADA LA.PIAZZA 07/09/2025  (id: 86146)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 22.313.164,00
+      BENAR    : Rp 22.313.163,78
+      CEK      : Math.round(22.313.163,78) = 22313164 = 22313164 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 201.206,00
+      BENAR    : Rp 201.206,22
+      CEK      : Math.round(201.206,22) = 201206 = 201206 ✓
+
+  2025-09-19  |  BREW - UANG MASUK STRADA LA.PIAZZA 19/09/2025  (id: 86218)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 15.379.231,00
+      BENAR    : Rp 15.379.230,81
+      CEK      : Math.round(15.379.230,81) = 15379231 = 15379231 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 132.429,00
+      BENAR    : Rp 132.429,19
+      CEK      : Math.round(132.429,19) = 132429 = 132429 ✓
+
+  2025-09-21  |  BREW - UANG MASUK STRADA LA.PIAZZA 21/09/2025  (id: 86148)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 29.326.053,00
+      BENAR    : Rp 29.326.053,31
+      CEK      : Math.round(29.326.053,31) = 29326053 = 29326053 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 303.980,00
+      BENAR    : Rp 303.979,69
+      CEK      : Math.round(303.979,69) = 303980 = 303980 ✓
+
+  2025-09-24  |  BREW - UANG MASUK STRADA LA.PIAZZA 24/09/2025  (id: 86257)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 7.153.444,00
+      BENAR    : Rp 7.153.443,87
+      CEK      : Math.round(7.153.443,87) = 7153444 = 7153444 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 65.941,00
+      BENAR    : Rp 65.941,13
+      CEK      : Math.round(65.941,13) = 65941 = 65941 ✓
+
+  2025-09-26  |  BREW - UANG MASUK STRADA LA.PIAZZA 26/09/2025  (id: 86259)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 15.297.028,00
+      BENAR    : Rp 15.297.027,69
+      CEK      : Math.round(15.297.027,69) = 15297028 = 15297028 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 173.047,00
+      BENAR    : Rp 173.047,31
+      CEK      : Math.round(173.047,31) = 173047 = 173047 ✓
+
+  2025-09-27  |  BREW - UANG MASUK STRADA LA.PIAZZA 27/09/2025  (id: 86300)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 20.231.292,00
+      BENAR    : Rp 20.231.292,20
+      CEK      : Math.round(20.231.292,20) = 20231292 = 20231292 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 180.613,00
+      BENAR    : Rp 180.612,80
+      CEK      : Math.round(180.612,80) = 180613 = 180613 ✓
+
+  2025-10-02  |  BREW - UANG MASUK STRADA LA.PIAZZA 02/10/2025  (id: 86261)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 13.417.524,00
+      BENAR    : Rp 13.417.523,64
+      CEK      : Math.round(13.417.523,64) = 13417524 = 13417524 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 121.736,00
+      BENAR    : Rp 121.736,36
+      CEK      : Math.round(121.736,36) = 121736 = 121736 ✓
+
+  2025-10-10  |  BREW - UANG MASUK STRADA LA.PIAZZA 10/10/2025  (id: 86029)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 14.518.918,00
+      BENAR    : Rp 14.518.918,18
+      CEK      : Math.round(14.518.918,18) = 14518918 = 14518918 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 129.982,00
+      BENAR    : Rp 129.981,82
+      CEK      : Math.round(129.981,82) = 129982 = 129982 ✓
+
+  2025-10-11  |  BREW - UANG MASUK STRADA LA.PIAZZA 11/10/2025  (id: 86221)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 26.930.440,00
+      BENAR    : Rp 26.930.440,18
+      CEK      : Math.round(26.930.440,18) = 26930440 = 26930440 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 240.495,00
+      BENAR    : Rp 240.494,82
+      CEK      : Math.round(240.494,82) = 240495 = 240495 ✓
+
+  2025-10-12  |  BREW - UANG MASUK STRADA LA.PIAZZA 12/10/2025  (id: 86030)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 19.466.461,00
+      BENAR    : Rp 19.466.460,88
+      CEK      : Math.round(19.466.460,88) = 19466461 = 19466461 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 162.144,00
+      BENAR    : Rp 162.144,12
+      CEK      : Math.round(162.144,12) = 162144 = 162144 ✓
+
+  2025-10-13  |  BREW - UANG MASUK STRADA LA.PIAZZA 13/10/2025  (id: 86263)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 9.377.195,00
+      BENAR    : Rp 9.377.195,18
+      CEK      : Math.round(9.377.195,18) = 9377195 = 9377195 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 88.320,00
+      BENAR    : Rp 88.319,82
+      CEK      : Math.round(88.319,82) = 88320 = 88320 ✓
+
+  2025-10-14  |  BREW - UANG MASUK STRADA LA.PIAZZA 14/10/2025  (id: 86303)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 12.167.949,00
+      BENAR    : Rp 12.167.948,64
+      CEK      : Math.round(12.167.948,64) = 12167949 = 12167949 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 119.406,00
+      BENAR    : Rp 119.406,36
+      CEK      : Math.round(119.406,36) = 119406 = 119406 ✓
+
+  2025-10-15  |  BREW - UANG MASUK STRADA LA.PIAZZA 15/10/2025  (id: 86305)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 11.208.832,00
+      BENAR    : Rp 11.208.831,92
+      CEK      : Math.round(11.208.831,92) = 11208832 = 11208832 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 123.208,00
+      BENAR    : Rp 123.208,08
+      CEK      : Math.round(123.208,08) = 123208 = 123208 ✓
+
+  2025-10-16  |  BREW - UANG MASUK STRADA LA.PIAZZA 16/10/2025  (id: 86264)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 11.000.648,00
+      BENAR    : Rp 11.000.648,42
+      CEK      : Math.round(11.000.648,42) = 11000648 = 11000648 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 103.882,00
+      BENAR    : Rp 103.881,58
+      CEK      : Math.round(103.881,58) = 103882 = 103882 ✓
+
+  2025-10-17  |  BREW - UANG MASUK STRADA LA.PIAZZA 17/10/2025  (id: 85841)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 14.200.428,00
+      BENAR    : Rp 14.200.427,88
+      CEK      : Math.round(14.200.427,88) = 14200428 = 14200428 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 160.872,00
+      BENAR    : Rp 160.872,12
+      CEK      : Math.round(160.872,12) = 160872 = 160872 ✓
+
+  2025-10-18  |  BREW - UANG MASUK STRADA LA.PIAZZA 18/10/2025  (id: 86031)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 36.738.380,00
+      BENAR    : Rp 36.738.379,77
+      CEK      : Math.round(36.738.379,77) = 36738380 = 36738380 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 327.688,00
+      BENAR    : Rp 327.688,23
+      CEK      : Math.round(327.688,23) = 327688 = 327688 ✓
+
+  2025-10-19  |  BREW - UANG MASUK STRADA LA.PIAZZA 19/10/2025  (id: 86266)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 21.929.279,00
+      BENAR    : Rp 21.929.279,25
+      CEK      : Math.round(21.929.279,25) = 21929279 = 21929279 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 235.981,00
+      BENAR    : Rp 235.980,75
+      CEK      : Math.round(235.980,75) = 235981 = 235981 ✓
+
+  2025-10-20  |  BREW - UANG MASUK STRADA LA.PIAZZA 20/10/2025  (id: 86267)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 12.382.147,00
+      BENAR    : Rp 12.382.147,42
+      CEK      : Math.round(12.382.147,42) = 12382147 = 12382147 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 121.988,00
+      BENAR    : Rp 121.987,58
+      CEK      : Math.round(121.987,58) = 121988 = 121988 ✓
+
+  2025-10-21  |  BREW - UANG MASUK STRADA LA.PIAZZA 21/10/2025  (id: 86307)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 12.108.189,00
+      BENAR    : Rp 12.108.189,33
+      CEK      : Math.round(12.108.189,33) = 12108189 = 12108189 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 115.041,00
+      BENAR    : Rp 115.040,67
+      CEK      : Math.round(115.040,67) = 115041 = 115041 ✓
+
+  2025-10-22  |  BREW - UANG MASUK STRADA LA.PIAZZA 22/10/2025  (id: 86224)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 8.417.426,00
+      BENAR    : Rp 8.417.425,80
+      CEK      : Math.round(8.417.425,80) = 8417426 = 8417426 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 88.579,00
+      BENAR    : Rp 88.579,20
+      CEK      : Math.round(88.579,20) = 88579 = 88579 ✓
+
+  2025-10-23  |  BREW - UANG MASUK STRADA LA.PIAZZA 23/10/2025  (id: 86225)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 11.574.439,00
+      BENAR    : Rp 11.574.439,18
+      CEK      : Math.round(11.574.439,18) = 11574439 = 11574439 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 105.141,00
+      BENAR    : Rp 105.140,82
+      CEK      : Math.round(105.140,82) = 105141 = 105141 ✓
+
+  2025-10-24  |  BREW - UANG MASUK STRADA LA.PIAZZA 24/10/2025  (id: 85844)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 11.281.672,00
+      BENAR    : Rp 11.281.671,88
+      CEK      : Math.round(11.281.671,88) = 11281672 = 11281672 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 88.643,00
+      BENAR    : Rp 88.643,12
+      CEK      : Math.round(88.643,12) = 88643 = 88643 ✓
+
+  2025-10-25  |  BREW - UANG MASUK STRADA LA.PIAZZA 25/10/2025  (id: 86269)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 27.993.582,00
+      BENAR    : Rp 27.993.582,45
+      CEK      : Math.round(27.993.582,45) = 27993582 = 27993582 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 307.488,00
+      BENAR    : Rp 307.487,55
+      CEK      : Math.round(307.487,55) = 307488 = 307488 ✓
+
+  2025-10-26  |  BREW - UANG MASUK STRADA LA.PIAZZA 26/10/2025  (id: 86310)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 24.898.220,00
+      BENAR    : Rp 24.898.220,38
+      CEK      : Math.round(24.898.220,38) = 24898220 = 24898220 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 256.653,00
+      BENAR    : Rp 256.652,62
+      CEK      : Math.round(256.652,62) = 256653 = 256653 ✓
+
+  2025-10-27  |  BREW - UANG MASUK STRADA LA.PIAZZA 27/10/2025  (id: 86226)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 6.735.147,00
+      BENAR    : Rp 6.735.146,54
+      CEK      : Math.round(6.735.146,54) = 6735147 = 6735147 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 66.913,00
+      BENAR    : Rp 66.913,46
+      CEK      : Math.round(66.913,46) = 66913 = 66913 ✓
+
+  2025-10-28  |  BREW - UANG MASUK STRADA LA.PIAZZA 28/10/2025  (id: 86032)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 12.625.175,00
+      BENAR    : Rp 12.625.174,90
+      CEK      : Math.round(12.625.174,90) = 12625175 = 12625175 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 137.340,00
+      BENAR    : Rp 137.340,10
+      CEK      : Math.round(137.340,10) = 137340 = 137340 ✓
+
+  2025-10-29  |  BREW - UANG MASUK STRADA LA.PIAZZA 29/10/2025  (id: 86227)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 9.903.037,00
+      BENAR    : Rp 9.903.037,37
+      CEK      : Math.round(9.903.037,37) = 9903037 = 9903037 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 95.663,00
+      BENAR    : Rp 95.662,63
+      CEK      : Math.round(95.662,63) = 95663 = 95663 ✓
+
+  2025-10-30  |  BREW - UANG MASUK STRADA LA.PIAZZA 30/10/2025  (id: 86314)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 6.872.020,00
+      BENAR    : Rp 6.872.019,66
+      CEK      : Math.round(6.872.019,66) = 6872020 = 6872020 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 72.700,00
+      BENAR    : Rp 72.700,34
+      CEK      : Math.round(72.700,34) = 72700 = 72700 ✓
+
+  2025-10-31  |  BREW - UANG MASUK STRADA LA.PIAZZA 31/10/2025  (id: 86316)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 12.569.410,00
+      BENAR    : Rp 12.569.410,27
+      CEK      : Math.round(12.569.410,27) = 12569410 = 12569410 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 108.700,00
+      BENAR    : Rp 108.699,73
+      CEK      : Math.round(108.699,73) = 108700 = 108700 ✓
+
+  2025-11-01  |  BREW - UANG MASUK STRADA LA.PIAZZA 01/11/2025  (id: 86033)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 31.818.833,00
+      BENAR    : Rp 31.818.833,30
+      CEK      : Math.round(31.818.833,30) = 31818833 = 31818833 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 278.012,00
+      BENAR    : Rp 278.011,70
+      CEK      : Math.round(278.011,70) = 278012 = 278012 ✓
+
+  2025-11-02  |  BREW - UANG MASUK STRADA LA.PIAZZA 02/11/2025  (id: 86228)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 24.659.492,00
+      BENAR    : Rp 24.659.492,42
+      CEK      : Math.round(24.659.492,42) = 24659492 = 24659492 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 234.173,00
+      BENAR    : Rp 234.172,58
+      CEK      : Math.round(234.172,58) = 234173 = 234173 ✓
+
+  2025-11-03  |  BREW - UANG MASUK STRADA LA.PIAZZA 03/11/2025  (id: 86034)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 8.175.287,00
+      BENAR    : Rp 8.175.286,93
+      CEK      : Math.round(8.175.286,93) = 8175287 = 8175287 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 75.603,00
+      BENAR    : Rp 75.603,07
+      CEK      : Math.round(75.603,07) = 75603 = 75603 ✓
+
+  2025-11-04  |  BREW - UANG MASUK STRADA LA.PIAZZA 04/11/2025  (id: 86035)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 11.981.030,00
+      BENAR    : Rp 11.981.029,86
+      CEK      : Math.round(11.981.029,86) = 11981030 = 11981030 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 87.620,00
+      BENAR    : Rp 87.620,14
+      CEK      : Math.round(87.620,14) = 87620 = 87620 ✓
+
+  2025-11-05  |  BREW - UANG MASUK STRADA LA.PIAZZA 05/11/2025  (id: 86272)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 9.768.639,00
+      BENAR    : Rp 9.768.639,11
+      CEK      : Math.round(9.768.639,11) = 9768639 = 9768639 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 101.619,00
+      BENAR    : Rp 101.618,89
+      CEK      : Math.round(101.618,89) = 101619 = 101619 ✓
+
+  2025-11-06  |  BREW - UANG MASUK STRADA LA.PIAZZA 06/11/2025  (id: 86318)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 12.194.821,00
+      BENAR    : Rp 12.194.821,31
+      CEK      : Math.round(12.194.821,31) = 12194821 = 12194821 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 128.689,00
+      BENAR    : Rp 128.688,69
+      CEK      : Math.round(128.688,69) = 128689 = 128689 ✓
+
+  2025-11-07  |  BREW - UANG MASUK STRADA LA.PIAZZA 07/11/2025  (id: 86274)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 15.440.312,00
+      BENAR    : Rp 15.440.311,64
+      CEK      : Math.round(15.440.311,64) = 15440312 = 15440312 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 132.743,00
+      BENAR    : Rp 132.743,36
+      CEK      : Math.round(132.743,36) = 132743 = 132743 ✓
+
+  2025-11-08  |  BREW - UANG MASUK STRADA LA.PIAZZA 08/11/2025  (id: 86232)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 33.354.636,00
+      BENAR    : Rp 33.354.636,28
+      CEK      : Math.round(33.354.636,28) = 33354636 = 33354636 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 274.557,00
+      BENAR    : Rp 274.556,72
+      CEK      : Math.round(274.556,72) = 274557 = 274557 ✓
+
+  2025-11-09  |  BREW - UANG MASUK STRADA LA.PIAZZA 09/11/2025  (id: 85847)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 29.467.291,00
+      BENAR    : Rp 29.467.290,76
+      CEK      : Math.round(29.467.290,76) = 29467291 = 29467291 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 273.899,00
+      BENAR    : Rp 273.899,24
+      CEK      : Math.round(273.899,24) = 273899 = 273899 ✓
+
+  2025-11-10  |  BREW - UANG MASUK STRADA LA.PIAZZA 10/11/2025  (id: 86036)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 10.831.322,00
+      BENAR    : Rp 10.831.322,34
+      CEK      : Math.round(10.831.322,34) = 10831322 = 10831322 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 108.909,00
+      BENAR    : Rp 108.908,66
+      CEK      : Math.round(108.908,66) = 108909 = 108909 ✓
+
+  2025-11-11  |  BREW - UANG MASUK STRADA LA.PIAZZA 11/11/2025  (id: 86275)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 11.880.246,00
+      BENAR    : Rp 11.880.245,94
+      CEK      : Math.round(11.880.245,94) = 11880246 = 11880246 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 126.599,00
+      BENAR    : Rp 126.599,06
+      CEK      : Math.round(126.599,06) = 126599 = 126599 ✓
+
+  2025-11-12  |  BREW - UANG MASUK STRADA LA.PIAZZA 12/11/2025  (id: 86233)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 10.501.094,00
+      BENAR    : Rp 10.501.094,32
+      CEK      : Math.round(10.501.094,32) = 10501094 = 10501094 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 110.566,00
+      BENAR    : Rp 110.565,68
+      CEK      : Math.round(110.565,68) = 110566 = 110566 ✓
+
+  2025-11-13  |  BREW - UANG MASUK STRADA LA.PIAZZA 13/11/2025  (id: 86276)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 9.733.968,00
+      BENAR    : Rp 9.733.967,77
+      CEK      : Math.round(9.733.967,77) = 9733968 = 9733968 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 97.382,00
+      BENAR    : Rp 97.382,23
+      CEK      : Math.round(97.382,23) = 97382 = 97382 ✓
+
+  2025-11-14  |  BREW - UANG MASUK STRADA LA.PIAZZA 14/11/2025  (id: 86039)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 19.299.671,00
+      BENAR    : Rp 19.299.670,66
+      CEK      : Math.round(19.299.670,66) = 19299671 = 19299671 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 164.509,00
+      BENAR    : Rp 164.509,34
+      CEK      : Math.round(164.509,34) = 164509 = 164509 ✓
+
+  2025-11-15  |  BREW - UANG MASUK STRADA LA.PIAZZA 15/11/2025  (id: 86322)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 28.743.577,00
+      BENAR    : Rp 28.743.577,45
+      CEK      : Math.round(28.743.577,45) = 28743577 = 28743577 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 298.706,00
+      BENAR    : Rp 298.705,55
+      CEK      : Math.round(298.705,55) = 298706 = 298706 ✓
+
+  2025-11-16  |  BREW - UANG MASUK STRADA LA.PIAZZA 16/11/2025  (id: 86323)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 26.986.866,00
+      BENAR    : Rp 26.986.866,08
+      CEK      : Math.round(26.986.866,08) = 26986866 = 26986866 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 289.712,00
+      BENAR    : Rp 289.711,92
+      CEK      : Math.round(289.711,92) = 289712 = 289712 ✓
+
+  2025-11-17  |  BREW - UANG MASUK STRADA LA.PIAZZA 17/11/2025  (id: 86040)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 10.392.205,00
+      BENAR    : Rp 10.392.204,61
+      CEK      : Math.round(10.392.204,61) = 10392205 = 10392205 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 91.575,00
+      BENAR    : Rp 91.575,39
+      CEK      : Math.round(91.575,39) = 91575 = 91575 ✓
+
+  2025-11-18  |  BREW - UANG MASUK STRADA LA.PIAZZA 18/11/2025  (id: 86236)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 10.865.832,00
+      BENAR    : Rp 10.865.832,26
+      CEK      : Math.round(10.865.832,26) = 10865832 = 10865832 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 99.438,00
+      BENAR    : Rp 99.437,74
+      CEK      : Math.round(99.437,74) = 99438 = 99438 ✓
+
+  2025-11-19  |  BREW - UANG MASUK STRADA LA.PIAZZA 19/11/2025  (id: 86238)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 14.472.075,00
+      BENAR    : Rp 14.472.075,23
+      CEK      : Math.round(14.472.075,23) = 14472075 = 14472075 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 129.620,00
+      BENAR    : Rp 129.619,77
+      CEK      : Math.round(129.619,77) = 129620 = 129620 ✓
+
+  2025-11-20  |  BREW - UANG MASUK STRADA LA.PIAZZA 20/11/2025  (id: 86278)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 16.768.360,00
+      BENAR    : Rp 16.768.360,11
+      CEK      : Math.round(16.768.360,11) = 16768360 = 16768360 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 139.120,00
+      BENAR    : Rp 139.119,89
+      CEK      : Math.round(139.119,89) = 139120 = 139120 ✓
+
+  2025-11-21  |  BREW - UANG MASUK STRADA LA.PIAZZA 21/11/2025  (id: 86239)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 15.982.049,00
+      BENAR    : Rp 15.982.049,47
+      CEK      : Math.round(15.982.049,47) = 15982049 = 15982049 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 135.566,00
+      BENAR    : Rp 135.565,53
+      CEK      : Math.round(135.565,53) = 135566 = 135566 ✓
+
+  2025-11-22  |  BREW - UANG MASUK STRADA LA.PIAZZA 22/11/2025  (id: 86351)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 36.413.533,00
+      BENAR    : Rp 36.413.533,17
+      CEK      : Math.round(36.413.533,17) = 36413533 = 36413533 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 310.932,00
+      BENAR    : Rp 310.931,83
+      CEK      : Math.round(310.931,83) = 310932 = 310932 ✓
+
+  2025-11-23  |  BREW - UANG MASUK STRADA LA.PIAZZA 23/11/2025  (id: 86240)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 25.075.445,00
+      BENAR    : Rp 25.075.444,92
+      CEK      : Math.round(25.075.444,92) = 25075445 = 25075445 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 245.370,00
+      BENAR    : Rp 245.370,08
+      CEK      : Math.round(245.370,08) = 245370 = 245370 ✓
+
+  2025-11-24  |  BREW - UANG MASUK STRADA LA.PIAZZA 24/11/2025  (id: 86327)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 11.600.780,00
+      BENAR    : Rp 11.600.779,65
+      CEK      : Math.round(11.600.779,65) = 11600780 = 11600780 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 114.288,00
+      BENAR    : Rp 114.288,35
+      CEK      : Math.round(114.288,35) = 114288 = 114288 ✓
+
+  2025-11-25  |  BREW - UANG MASUK STRADA LA.PIAZZA 25/11/2025  (id: 86352)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 14.033.987,00
+      BENAR    : Rp 14.033.987,27
+      CEK      : Math.round(14.033.987,27) = 14033987 = 14033987 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 128.778,00
+      BENAR    : Rp 128.777,73
+      CEK      : Math.round(128.777,73) = 128778 = 128778 ✓
+
+  2025-11-26  |  BREW - UANG MASUK STRADA LA.PIAZZA 26/11/2025  (id: 86279)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 14.735.976,00
+      BENAR    : Rp 14.735.975,72
+      CEK      : Math.round(14.735.975,72) = 14735976 = 14735976 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 147.669,00
+      BENAR    : Rp 147.669,28
+      CEK      : Math.round(147.669,28) = 147669 = 147669 ✓
+
+  2025-11-27  |  BREW - UANG MASUK STRADA LA.PIAZZA 27/11/2025  (id: 86329)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 11.771.894,00
+      BENAR    : Rp 11.771.894,38
+      CEK      : Math.round(11.771.894,38) = 11771894 = 11771894 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 116.906,00
+      BENAR    : Rp 116.905,62
+      CEK      : Math.round(116.905,62) = 116906 = 116906 ✓
+
+  2025-11-28  |  BREW - UANG MASUK STRADA LA.PIAZZA 28/11/2025  (id: 86242)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 18.423.721,00
+      BENAR    : Rp 18.423.720,74
+      CEK      : Math.round(18.423.720,74) = 18423721 = 18423721 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 185.382,00
+      BENAR    : Rp 185.382,26
+      CEK      : Math.round(185.382,26) = 185382 = 185382 ✓
+
+  2025-11-29  |  BREW - UANG MASUK STRADA LA.PIAZZA 29/11/2025  (id: 86354)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 31.625.647,00
+      BENAR    : Rp 31.625.647,07
+      CEK      : Math.round(31.625.647,07) = 31625647 = 31625647 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 325.168,00
+      BENAR    : Rp 325.167,93
+      CEK      : Math.round(325.167,93) = 325168 = 325168 ✓
+
+  2025-11-30  |  BREW - UANG MASUK STRADA LA.PIAZZA 30/11/2025  (id: 86331)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 23.851.352,00
+      BENAR    : Rp 23.851.352,01
+      CEK      : Math.round(23.851.352,01) = 23851352 = 23851352 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 201.026,00
+      BENAR    : Rp 201.025,99
+      CEK      : Math.round(201.025,99) = 201026 = 201026 ✓
+
+  2025-12-01  |  BREW - UANG MASUK STRADA LA.PIAZZA 01/12/2025  (id: 86043)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 11.351.633,00
+      BENAR    : Rp 11.351.632,72
+      CEK      : Math.round(11.351.632,72) = 11351633 = 11351633 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 135.467,00
+      BENAR    : Rp 135.467,28
+      CEK      : Math.round(135.467,28) = 135467 = 135467 ✓
+
+  2025-12-02  |  BREW - UANG MASUK STRADA LA.PIAZZA 02/12/2025  (id: 86333)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 13.329.289,00
+      BENAR    : Rp 13.329.289,48
+      CEK      : Math.round(13.329.289,48) = 13329289 = 13329289 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 109.021,00
+      BENAR    : Rp 109.020,52
+      CEK      : Math.round(109.020,52) = 109021 = 109021 ✓
+
+  2025-12-03  |  BREW - UANG MASUK STRADA LA.PIAZZA 03/12/2025  (id: 86244)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 12.059.061,00
+      BENAR    : Rp 12.059.061,43
+      CEK      : Math.round(12.059.061,43) = 12059061 = 12059061 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 120.764,00
+      BENAR    : Rp 120.763,57
+      CEK      : Math.round(120.763,57) = 120764 = 120764 ✓
+
+  2025-12-04  |  BREW - UANG MASUK STRADA LA.PIAZZA 04/12/2025  (id: 86335)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 17.143.016,00
+      BENAR    : Rp 17.143.016,22
+      CEK      : Math.round(17.143.016,22) = 17143016 = 17143016 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 137.839,00
+      BENAR    : Rp 137.838,78
+      CEK      : Math.round(137.838,78) = 137839 = 137839 ✓
+
+  2025-12-05  |  BREW - UANG MASUK STRADA LA.PIAZZA 05/12/2025  (id: 86283)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 24.242.069,00
+      BENAR    : Rp 24.242.068,84
+      CEK      : Math.round(24.242.068,84) = 24242069 = 24242069 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 252.074,00
+      BENAR    : Rp 252.074,16
+      CEK      : Math.round(252.074,16) = 252074 = 252074 ✓
+
+  2025-12-06  |  BREW - UANG MASUK STRADA LA.PIAZZA 06/12/2025  (id: 86246)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 29.921.566,00
+      BENAR    : Rp 29.921.566,05
+      CEK      : Math.round(29.921.566,05) = 29921566 = 29921566 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 285.972,00
+      BENAR    : Rp 285.971,95
+      CEK      : Math.round(285.971,95) = 285972 = 285972 ✓
+
+  2025-12-07  |  BREW - UANG MASUK STRADA LA.PIAZZA 07/12/2025  (id: 86247)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 25.272.029,00
+      BENAR    : Rp 25.272.028,76
+      CEK      : Math.round(25.272.028,76) = 25272029 = 25272029 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 263.791,00
+      BENAR    : Rp 263.791,24
+      CEK      : Math.round(263.791,24) = 263791 = 263791 ✓
+
+  2025-12-08  |  BREW - UANG MASUK STRADA LA.PIAZZA 08/12/2025  (id: 86248)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 16.081.530,00
+      BENAR    : Rp 16.081.529,58
+      CEK      : Math.round(16.081.529,58) = 16081530 = 16081530 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 201.005,00
+      BENAR    : Rp 201.005,42
+      CEK      : Math.round(201.005,42) = 201005 = 201005 ✓
+
+  2025-12-09  |  BREW - UANG MASUK STRADA LA.PIAZZA 09/12/2025  (id: 86285)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 17.970.098,00
+      BENAR    : Rp 17.970.098,21
+      CEK      : Math.round(17.970.098,21) = 17970098 = 17970098 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 201.865,00
+      BENAR    : Rp 201.864,79
+      CEK      : Math.round(201.864,79) = 201865 = 201865 ✓
+
+  2025-12-10  |  BREW - UANG MASUK STRADA LA.PIAZZA 10/12/2025  (id: 86249)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 13.290.892,00
+      BENAR    : Rp 13.290.892,07
+      CEK      : Math.round(13.290.892,07) = 13290892 = 13290892 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 103.453,00
+      BENAR    : Rp 103.452,93
+      CEK      : Math.round(103.452,93) = 103453 = 103453 ✓
+
+  2025-12-11  |  BREW - UANG MASUK STRADA LA.PIAZZA 11/12/2025  (id: 86400)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 14.798.378,00
+      BENAR    : Rp 14.798.378,49
+      CEK      : Math.round(14.798.378,49) = 14798378 = 14798378 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 123.662,00
+      BENAR    : Rp 123.661,51
+      CEK      : Math.round(123.661,51) = 123662 = 123662 ✓
+
+  2025-12-12  |  BREW - UANG MASUK STRADA LA.PIAZZA 12/12/2025  (id: 86402)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 31.067.114,00
+      BENAR    : Rp 31.067.113,86
+      CEK      : Math.round(31.067.113,86) = 31067114 = 31067114 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 345.831,00
+      BENAR    : Rp 345.831,14
+      CEK      : Math.round(345.831,14) = 345831 = 345831 ✓
+
+  2025-12-13  |  BREW - UANG MASUK STRADA LA.PIAZZA 13/12/2025  (id: 86287)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 34.355.388,00
+      BENAR    : Rp 34.355.388,27
+      CEK      : Math.round(34.355.388,27) = 34355388 = 34355388 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 328.517,00
+      BENAR    : Rp 328.516,73
+      CEK      : Math.round(328.516,73) = 328517 = 328517 ✓
+
+  2025-12-14  |  BREW - UANG MASUK STRADA LA.PIAZZA 14/12/2025  (id: 86357)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 26.366.583,00
+      BENAR    : Rp 26.366.583,24
+      CEK      : Math.round(26.366.583,24) = 26366583 = 26366583 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 248.727,00
+      BENAR    : Rp 248.726,76
+      CEK      : Math.round(248.726,76) = 248727 = 248727 ✓
+
+  2025-12-15  |  BREW - UANG MASUK STRADA LA.PIAZZA 15/12/2025  (id: 86044)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 10.021.866,00
+      BENAR    : Rp 10.021.866,41
+      CEK      : Math.round(10.021.866,41) = 10021866 = 10021866 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 85.889,00
+      BENAR    : Rp 85.888,59
+      CEK      : Math.round(85.888,59) = 85889 = 85889 ✓
+
+  2025-12-16  |  BREW - UANG MASUK STRADA LA.PIAZZA 16/12/2025  (id: 86291)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 14.169.760,00
+      BENAR    : Rp 14.169.759,83
+      CEK      : Math.round(14.169.759,83) = 14169760 = 14169760 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 131.765,00
+      BENAR    : Rp 131.765,17
+      CEK      : Math.round(131.765,17) = 131765 = 131765 ✓
+
+  2025-12-17  |  BREW - UANG MASUK STRADA LA.PIAZZA 17/12/2025  (id: 86403)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 19.040.801,00
+      BENAR    : Rp 19.040.800,54
+      CEK      : Math.round(19.040.800,54) = 19040801 = 19040801 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 221.799,00
+      BENAR    : Rp 221.799,46
+      CEK      : Math.round(221.799,46) = 221799 = 221799 ✓
+
+  2025-12-18  |  BREW - UANG MASUK STRADA LA.PIAZZA 18/12/2025  (id: 86293)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 16.210.372,00
+      BENAR    : Rp 16.210.371,58
+      CEK      : Math.round(16.210.371,58) = 16210372 = 16210372 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 155.298,00
+      BENAR    : Rp 155.298,42
+      CEK      : Math.round(155.298,42) = 155298 = 155298 ✓
+
+  2025-12-19  |  BREW - UANG MASUK STRADA LA.PIAZZA 19/12/2025  (id: 86294)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 21.980.219,00
+      BENAR    : Rp 21.980.218,89
+      CEK      : Math.round(21.980.218,89) = 21980219 = 21980219 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 221.136,00
+      BENAR    : Rp 221.136,11
+      CEK      : Math.round(221.136,11) = 221136 = 221136 ✓
+
+  2025-12-20  |  BREW - UANG MASUK STRADA LA.PIAZZA 20/12/2025  (id: 86295)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 35.849.163,00
+      BENAR    : Rp 35.849.163,48
+      CEK      : Math.round(35.849.163,48) = 35849163 = 35849163 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 293.662,00
+      BENAR    : Rp 293.661,52
+      CEK      : Math.round(293.661,52) = 293662 = 293662 ✓
+
+  2025-12-21  |  BREW - UANG MASUK STRADA LA.PIAZZA 21/12/2025  (id: 86406)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 31.454.877,00
+      BENAR    : Rp 31.454.877,25
+      CEK      : Math.round(31.454.877,25) = 31454877 = 31454877 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 294.633,00
+      BENAR    : Rp 294.632,75
+      CEK      : Math.round(294.632,75) = 294633 = 294633 ✓
+
+  2025-12-22  |  BREW - UANG MASUK STRADA LA.PIAZZA 22/12/2025  (id: 86407)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 17.896.044,00
+      BENAR    : Rp 17.896.043,82
+      CEK      : Math.round(17.896.043,82) = 17896044 = 17896044 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 212.254,00
+      BENAR    : Rp 212.254,18
+      CEK      : Math.round(212.254,18) = 212254 = 212254 ✓
+
+  2025-12-23  |  BREW - UANG MASUK STRADA LA.PIAZZA 23/12/2025  (id: 86297)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 20.023.910,00
+      BENAR    : Rp 20.023.910,20
+      CEK      : Math.round(20.023.910,20) = 20023910 = 20023910 ✓
+
+  2025-12-24  |  BREW - UANG MASUK STRADA LA.PIAZZA 24/12/2025  (id: 86046)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 17.660.788,00
+      BENAR    : Rp 17.660.787,62
+      CEK      : Math.round(17.660.787,62) = 17660788 = 17660788 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 169.197,00
+      BENAR    : Rp 169.197,38
+      CEK      : Math.round(169.197,38) = 169197 = 169197 ✓
+
+  2025-12-25  |  BREW - UANG MASUK STRADA LA.PIAZZA 25/12/2025  (id: 86409)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 29.071.265,00
+      BENAR    : Rp 29.071.264,66
+      CEK      : Math.round(29.071.264,66) = 29071265 = 29071265 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 294.000,00
+      BENAR    : Rp 294.000,34
+      CEK      : Math.round(294.000,34) = 294000 = 294000 ✓
+
+  2025-12-26  |  BREW - UANG MASUK STRADA LA.PIAZZA 26/12/2025  (id: 86047)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 29.417.259,00
+      BENAR    : Rp 29.417.259,09
+      CEK      : Math.round(29.417.259,09) = 29417259 = 29417259 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 269.196,00
+      BENAR    : Rp 269.195,91
+      CEK      : Math.round(269.195,91) = 269196 = 269196 ✓
+
+  2025-12-27  |  BREW - UANG MASUK STRADA LA.PIAZZA 27/12/2025  (id: 86342)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 33.133.834,00
+      BENAR    : Rp 33.133.834,21
+      CEK      : Math.round(33.133.834,21) = 33133834 = 33133834 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 295.526,00
+      BENAR    : Rp 295.525,79
+      CEK      : Math.round(295.525,79) = 295526 = 295526 ✓
+
+  2025-12-28  |  BREW - UANG MASUK STRADA LA.PIAZZA 28/12/2025  (id: 86343)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 16.917.667,00
+      BENAR    : Rp 16.917.667,06
+      CEK      : Math.round(16.917.667,06) = 16917667 = 16917667 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 131.278,00
+      BENAR    : Rp 131.277,94
+      CEK      : Math.round(131.277,94) = 131278 = 131278 ✓
+
+  2025-12-29  |  BREW - UANG MASUK STRADA LA.PIAZZA 29/12/2025  (id: 86359)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 20.914.873,00
+      BENAR    : Rp 20.914.873,11
+      CEK      : Math.round(20.914.873,11) = 20914873 = 20914873 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 174.457,00
+      BENAR    : Rp 174.456,89
+      CEK      : Math.round(174.456,89) = 174457 = 174457 ✓
+
+  2025-12-30  |  BREW - UANG MASUK STRADA LA.PIAZZA 30/12/2025  (id: 86048)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 24.075.651,00
+      BENAR    : Rp 24.075.650,54
+      CEK      : Math.round(24.075.650,54) = 24075651 = 24075651 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 205.882,00
+      BENAR    : Rp 205.882,46
+      CEK      : Math.round(205.882,46) = 205882 = 205882 ✓
+
+  2025-12-31  |  BREW - UANG MASUK STRADA LA.PIAZZA 31/12/2025  (id: 86345)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 26.309.585,00
+      BENAR    : Rp 26.309.584,67
+      CEK      : Math.round(26.309.584,67) = 26309585 = 26309585 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 16.060.405,00
+      BENAR    : Rp 16.060.405,33
+      CEK      : Math.round(16.060.405,33) = 16060405 = 16060405 ✓
+
+  2026-01-03  |  BREW - UANG MASUK STRADA LA.PIAZZA 03/01/2026  (id: 86349)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 34.628.636,00
+      BENAR    : Rp 34.628.636,13
+      CEK      : Math.round(34.628.636,13) = 34628636 = 34628636 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 303.339,00
+      BENAR    : Rp 303.338,87
+      CEK      : Math.round(303.338,87) = 303339 = 303339 ✓
+
+  2026-01-04  |  BREW - UANG MASUK STRADA LA.PIAZZA 04/01/2026  (id: 86412)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 26.085.963,00
+      BENAR    : Rp 26.085.963,29
+      CEK      : Math.round(26.085.963,29) = 26085963 = 26085963 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 257.037,00
+      BENAR    : Rp 257.036,71
+      CEK      : Math.round(257.036,71) = 257037 = 257037 ✓
+
+  2026-01-05  |  BREW - UANG MASUK STRADA LA.PIAZZA 05/01/2026  (id: 86451)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 12.206.334,00
+      BENAR    : Rp 12.206.333,70
+      CEK      : Math.round(12.206.333,70) = 12206334 = 12206334 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 119.636,00
+      BENAR    : Rp 119.636,30
+      CEK      : Math.round(119.636,30) = 119636 = 119636 ✓
+
+  2026-01-06  |  BREW - UANG MASUK STRADA LA.PIAZZA 06/01/2026  (id: 86413)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 15.410.698,00
+      BENAR    : Rp 15.410.698,31
+      CEK      : Math.round(15.410.698,31) = 15410698 = 15410698 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 158.532,00
+      BENAR    : Rp 158.531,69
+      CEK      : Math.round(158.531,69) = 158532 = 158532 ✓
+
+  2026-01-07  |  BREW - UANG MASUK STRADA LA.PIAZZA 07/01/2026  (id: 86361)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 13.030.404,00
+      BENAR    : Rp 13.030.404,12
+      CEK      : Math.round(13.030.404,12) = 13030404 = 13030404 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 135.226,00
+      BENAR    : Rp 135.225,88
+      CEK      : Math.round(135.225,88) = 135226 = 135226 ✓
+
+  2026-01-08  |  BREW - UANG MASUK STRADA LA.PIAZZA 08/01/2026  (id: 86453)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 16.017.242,00
+      BENAR    : Rp 16.017.241,75
+      CEK      : Math.round(16.017.241,75) = 16017242 = 16017242 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 139.198,00
+      BENAR    : Rp 139.198,25
+      CEK      : Math.round(139.198,25) = 139198 = 139198 ✓
+
+  2026-01-09  |  BREW - UANG MASUK STRADA LA.PIAZZA 09/01/2026  (id: 86454)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 18.711.539,00
+      BENAR    : Rp 18.711.538,71
+      CEK      : Math.round(18.711.538,71) = 18711539 = 18711539 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 179.216,00
+      BENAR    : Rp 179.216,29
+      CEK      : Math.round(179.216,29) = 179216 = 179216 ✓
+
+  2026-01-10  |  BREW - UANG MASUK STRADA LA.PIAZZA 10/01/2026  (id: 86456)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 35.776.100,00
+      BENAR    : Rp 35.776.099,70
+      CEK      : Math.round(35.776.099,70) = 35776100 = 35776100 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 329.970,00
+      BENAR    : Rp 329.970,30
+      CEK      : Math.round(329.970,30) = 329970 = 329970 ✓
+
+  2026-01-11  |  BREW - UANG MASUK STRADA LA.PIAZZA 11/01/2026  (id: 86414)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 29.010.480,00
+      BENAR    : Rp 29.010.479,59
+      CEK      : Math.round(29.010.479,59) = 29010480 = 29010480 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 300.148,00
+      BENAR    : Rp 300.148,41
+      CEK      : Math.round(300.148,41) = 300148 = 300148 ✓
+
+  2026-01-12  |  BREW - UANG MASUK STRADA LA.PIAZZA 12/01/2026  (id: 86415)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 8.002.678,00
+      BENAR    : Rp 8.002.678,48
+      CEK      : Math.round(8.002.678,48) = 8002678 = 8002678 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 73.302,00
+      BENAR    : Rp 73.301,52
+      CEK      : Math.round(73.301,52) = 73302 = 73302 ✓
+
+  2026-01-13  |  BREW - UANG MASUK STRADA LA.PIAZZA 13/01/2026  (id: 86502)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 15.170.831,00
+      BENAR    : Rp 15.170.830,77
+      CEK      : Math.round(15.170.830,77) = 15170831 = 15170831 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 150.219,00
+      BENAR    : Rp 150.219,23
+      CEK      : Math.round(150.219,23) = 150219 = 150219 ✓
+
+  2026-01-14  |  BREW - UANG MASUK STRADA LA.PIAZZA 14/01/2026  (id: 86416)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 9.186.447,00
+      BENAR    : Rp 9.186.447,30
+      CEK      : Math.round(9.186.447,30) = 9186447 = 9186447 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 96.298,00
+      BENAR    : Rp 96.297,70
+      CEK      : Math.round(96.297,70) = 96298 = 96298 ✓
+
+  2026-01-15  |  BREW - UANG MASUK STRADA LA.PIAZZA 15/01/2026  (id: 86458)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 18.639.979,00
+      BENAR    : Rp 18.639.979,11
+      CEK      : Math.round(18.639.979,11) = 18639979 = 18639979 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 231.061,00
+      BENAR    : Rp 231.060,89
+      CEK      : Math.round(231.060,89) = 231061 = 231061 ✓
+
+  2026-01-16  |  BREW - UANG MASUK STRADA LA.PIAZZA 16/01/2026  (id: 86553)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 25.653.987,00
+      BENAR    : Rp 25.653.987,14
+      CEK      : Math.round(25.653.987,14) = 25653987 = 25653987 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 237.043,00
+      BENAR    : Rp 237.042,86
+      CEK      : Math.round(237.042,86) = 237043 = 237043 ✓
+
+  2026-01-17  |  BREW - UANG MASUK STRADA LA.PIAZZA 17/01/2026  (id: 86460)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 42.002.742,00
+      BENAR    : Rp 42.002.742,38
+      CEK      : Math.round(42.002.742,38) = 42002742 = 42002742 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 376.109,00
+      BENAR    : Rp 376.108,62
+      CEK      : Math.round(376.108,62) = 376109 = 376109 ✓
+
+  2026-01-18  |  BREW - UANG MASUK STRADA LA.PIAZZA 18/01/2026  (id: 86462)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 5.471.334,00
+      BENAR    : Rp 5.471.334,29
+      CEK      : Math.round(5.471.334,29) = 5471334 = 5471334 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 58.061,00
+      BENAR    : Rp 58.060,71
+      CEK      : Math.round(58.060,71) = 58061 = 58061 ✓
+
+  2026-01-19  |  BREW - UANG MASUK STRADA LA.PIAZZA 19/01/2026  (id: 86417)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 10.840.846,00
+      BENAR    : Rp 10.840.845,77
+      CEK      : Math.round(10.840.845,77) = 10840846 = 10840846 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 109.664,00
+      BENAR    : Rp 109.664,23
+      CEK      : Math.round(109.664,23) = 109664 = 109664 ✓
+
+  2026-01-20  |  BREW - UANG MASUK STRADA LA.PIAZZA 20/01/2026  (id: 86464)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 10.754.568,00
+      BENAR    : Rp 10.754.568,12
+      CEK      : Math.round(10.754.568,12) = 10754568 = 10754568 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 89.412,00
+      BENAR    : Rp 89.411,88
+      CEK      : Math.round(89.411,88) = 89412 = 89412 ✓
+
+  2026-01-21  |  BREW - UANG MASUK STRADA LA.PIAZZA 21/01/2026  (id: 86505)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 6.924.675,00
+      BENAR    : Rp 6.924.675,27
+      CEK      : Math.round(6.924.675,27) = 6924675 = 6924675 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 66.986,00
+      BENAR    : Rp 66.985,73
+      CEK      : Math.round(66.985,73) = 66986 = 66986 ✓
+
+  2026-01-22  |  BREW - UANG MASUK STRADA LA.PIAZZA 22/01/2026  (id: 86465)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 5.625.390,00
+      BENAR    : Rp 5.625.390,18
+      CEK      : Math.round(5.625.390,18) = 5625390 = 5625390 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 38.301,00
+      BENAR    : Rp 38.300,82
+      CEK      : Math.round(38.300,82) = 38301 = 38301 ✓
+
+  2026-01-23  |  BREW - UANG MASUK STRADA LA.PIAZZA 23/01/2026  (id: 86420)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 12.470.891,00
+      BENAR    : Rp 12.470.890,90
+      CEK      : Math.round(12.470.890,90) = 12470891 = 12470891 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 105.525,00
+      BENAR    : Rp 105.525,10
+      CEK      : Math.round(105.525,10) = 105525 = 105525 ✓
+
+  2026-01-24  |  BREW - UANG MASUK STRADA LA.PIAZZA 24/01/2026  (id: 86422)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 40.791.254,00
+      BENAR    : Rp 40.791.253,93
+      CEK      : Math.round(40.791.253,93) = 40791254 = 40791254 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 463.411,00
+      BENAR    : Rp 463.411,07
+      CEK      : Math.round(463.411,07) = 463411 = 463411 ✓
+
+  2026-01-25  |  BREW - UANG MASUK STRADA LA.PIAZZA 25/01/2026  (id: 86423)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 27.007.263,00
+      BENAR    : Rp 27.007.262,81
+      CEK      : Math.round(27.007.262,81) = 27007263 = 27007263 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 242.242,00
+      BENAR    : Rp 242.242,19
+      CEK      : Math.round(242.242,19) = 242242 = 242242 ✓
+
+  2026-01-26  |  BREW - UANG MASUK STRADA LA.PIAZZA 26/01/2026  (id: 86466)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 8.817.945,00
+      BENAR    : Rp 8.817.944,51
+      CEK      : Math.round(8.817.944,51) = 8817945 = 8817945 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 70.280,00
+      BENAR    : Rp 70.280,49
+      CEK      : Math.round(70.280,49) = 70280 = 70280 ✓
+
+  2026-01-27  |  BREW - UANG MASUK STRADA LA.PIAZZA 27/01/2026  (id: 86507)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 14.399.133,00
+      BENAR    : Rp 14.399.133,19
+      CEK      : Math.round(14.399.133,19) = 14399133 = 14399133 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 124.617,00
+      BENAR    : Rp 124.616,81
+      CEK      : Math.round(124.616,81) = 124617 = 124617 ✓
+
+  2026-01-28  |  BREW - UANG MASUK STRADA LA.PIAZZA 28/01/2026  (id: 86508)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 18.466.946,00
+      BENAR    : Rp 18.466.945,92
+      CEK      : Math.round(18.466.945,92) = 18466946 = 18466946 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 157.129,00
+      BENAR    : Rp 157.129,08
+      CEK      : Math.round(157.129,08) = 157129 = 157129 ✓
+
+  2026-01-29  |  BREW - UANG MASUK STRADA LA.PIAZZA 29/01/2026  (id: 86468)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 13.529.443,00
+      BENAR    : Rp 13.529.442,83
+      CEK      : Math.round(13.529.442,83) = 13529443 = 13529443 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 102.678,00
+      BENAR    : Rp 102.678,17
+      CEK      : Math.round(102.678,17) = 102678 = 102678 ✓
+
+  2026-01-30  |  BREW - UANG MASUK STRADA LA.PIAZZA 30/01/2026  (id: 86556)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 20.786.269,00
+      BENAR    : Rp 20.786.268,89
+      CEK      : Math.round(20.786.268,89) = 20786269 = 20786269 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 169.557,00
+      BENAR    : Rp 169.557,11
+      CEK      : Math.round(169.557,11) = 169557 = 169557 ✓
+
+  2026-01-31  |  BREW - UANG MASUK STRADA LA.PIAZZA 31/01/2026  (id: 86425)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 30.629.157,00
+      BENAR    : Rp 30.629.157,16
+      CEK      : Math.round(30.629.157,16) = 30629157 = 30629157 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 299.323,00
+      BENAR    : Rp 299.322,84
+      CEK      : Math.round(299.322,84) = 299323 = 299323 ✓
+
+  2026-02-01  |  BREW - UANG MASUK STRADA LA.PIAZZA 01/02/2026  (id: 86427)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 27.366.086,00
+      BENAR    : Rp 27.366.085,77
+      CEK      : Math.round(27.366.085,77) = 27366086 = 27366086 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 233.994,00
+      BENAR    : Rp 233.994,23
+      CEK      : Math.round(233.994,23) = 233994 = 233994 ✓
+
+  2026-02-02  |  BREW - UANG MASUK STRADA LA.PIAZZA 02/02/2026  (id: 86558)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 9.163.502,00
+      BENAR    : Rp 9.163.501,62
+      CEK      : Math.round(9.163.501,62) = 9163502 = 9163502 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 68.540,00
+      BENAR    : Rp 68.540,38
+      CEK      : Math.round(68.540,38) = 68540 = 68540 ✓
+
+  2026-02-03  |  BREW - UANG MASUK STRADA LA.PIAZZA 03/02/2026  (id: 86367)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 11.899.953,00
+      BENAR    : Rp 11.899.953,33
+      CEK      : Math.round(11.899.953,33) = 11899953 = 11899953 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 92.694,00
+      BENAR    : Rp 92.693,67
+      CEK      : Math.round(92.693,67) = 92694 = 92694 ✓
+
+  2026-02-04  |  BREW - UANG MASUK STRADA LA.PIAZZA 04/02/2026  (id: 86512)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 10.007.005,00
+      BENAR    : Rp 10.007.005,20
+      CEK      : Math.round(10.007.005,20) = 10007005 = 10007005 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 88.940,00
+      BENAR    : Rp 88.939,80
+      CEK      : Math.round(88.939,80) = 88940 = 88940 ✓
+
+  2026-02-05  |  BREW - UANG MASUK STRADA LA.PIAZZA 05/02/2026  (id: 86513)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 12.575.563,00
+      BENAR    : Rp 12.575.562,72
+      CEK      : Math.round(12.575.562,72) = 12575563 = 12575563 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 101.502,00
+      BENAR    : Rp 101.502,28
+      CEK      : Math.round(101.502,28) = 101502 = 101502 ✓
+
+  2026-02-06  |  BREW - UANG MASUK STRADA LA.PIAZZA 06/02/2026  (id: 86559)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 15.981.743,00
+      BENAR    : Rp 15.981.742,88
+      CEK      : Math.round(15.981.742,88) = 15981743 = 15981743 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 142.432,00
+      BENAR    : Rp 142.432,12
+      CEK      : Math.round(142.432,12) = 142432 = 142432 ✓
+
+  2026-02-07  |  BREW - UANG MASUK STRADA LA.PIAZZA 07/02/2026  (id: 86428)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 28.205.384,00
+      BENAR    : Rp 28.205.384,39
+      CEK      : Math.round(28.205.384,39) = 28205384 = 28205384 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 257.521,00
+      BENAR    : Rp 257.520,61
+      CEK      : Math.round(257.520,61) = 257521 = 257521 ✓
+
+  2026-02-08  |  BREW - UANG MASUK STRADA LA.PIAZZA 08/02/2026  (id: 86471)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 25.190.789,00
+      BENAR    : Rp 25.190.789,20
+      CEK      : Math.round(25.190.789,20) = 25190789 = 25190789 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 237.152,00
+      BENAR    : Rp 237.151,80
+      CEK      : Math.round(237.151,80) = 237152 = 237152 ✓
+
+  2026-02-09  |  BREW - UANG MASUK STRADA LA.PIAZZA 09/02/2026  (id: 86472)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 16.094.817,00
+      BENAR    : Rp 16.094.816,54
+      CEK      : Math.round(16.094.816,54) = 16094817 = 16094817 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 128.972,00
+      BENAR    : Rp 128.972,46
+      CEK      : Math.round(128.972,46) = 128972 = 128972 ✓
+
+  2026-02-10  |  BREW - UANG MASUK STRADA LA.PIAZZA 10/02/2026  (id: 86430)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 12.353.057,00
+      BENAR    : Rp 12.353.056,83
+      CEK      : Math.round(12.353.056,83) = 12353057 = 12353057 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 115.463,00
+      BENAR    : Rp 115.463,17
+      CEK      : Math.round(115.463,17) = 115463 = 115463 ✓
+
+  2026-02-11  |  BREW - UANG MASUK STRADA LA.PIAZZA 11/02/2026  (id: 86515)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 12.586.256,00
+      BENAR    : Rp 12.586.256,20
+      CEK      : Math.round(12.586.256,20) = 12586256 = 12586256 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 132.164,00
+      BENAR    : Rp 132.163,80
+      CEK      : Math.round(132.163,80) = 132164 = 132164 ✓
+
+  2026-02-12  |  BREW - UANG MASUK STRADA LA.PIAZZA 12/02/2026  (id: 86562)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 11.169.449,00
+      BENAR    : Rp 11.169.448,84
+      CEK      : Math.round(11.169.448,84) = 11169449 = 11169449 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 107.856,00
+      BENAR    : Rp 107.856,16
+      CEK      : Math.round(107.856,16) = 107856 = 107856 ✓
+
+  2026-02-13  |  BREW - UANG MASUK STRADA LA.PIAZZA 13/02/2026  (id: 86431)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 16.839.457,00
+      BENAR    : Rp 16.839.456,62
+      CEK      : Math.round(16.839.456,62) = 16839457 = 16839457 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 173.288,00
+      BENAR    : Rp 173.288,38
+      CEK      : Math.round(173.288,38) = 173288 = 173288 ✓
+
+  2026-02-14  |  BREW - UANG MASUK STRADA LA.PIAZZA 14/02/2026  (id: 86369)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 28.208.379,00
+      BENAR    : Rp 28.208.379,14
+      CEK      : Math.round(28.208.379,14) = 28208379 = 28208379 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 245.107,00
+      BENAR    : Rp 245.106,86
+      CEK      : Math.round(245.106,86) = 245107 = 245107 ✓
+
+  2026-02-15  |  BREW - UANG MASUK STRADA LA.PIAZZA 15/02/2026  (id: 86475)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 32.515.843,00
+      BENAR    : Rp 32.515.842,64
+      CEK      : Math.round(32.515.842,64) = 32515843 = 32515843 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 295.397,00
+      BENAR    : Rp 295.397,36
+      CEK      : Math.round(295.397,36) = 295397 = 295397 ✓
+
+  2026-02-16  |  BREW - UANG MASUK STRADA LA.PIAZZA 16/02/2026  (id: 86433)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 19.598.065,00
+      BENAR    : Rp 19.598.064,69
+      CEK      : Math.round(19.598.064,69) = 19598065 = 19598065 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 149.875,00
+      BENAR    : Rp 149.875,31
+      CEK      : Math.round(149.875,31) = 149875 = 149875 ✓
+
+  2026-02-17  |  BREW - UANG MASUK STRADA LA.PIAZZA 17/02/2026  (id: 86476)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 23.900.386,00
+      BENAR    : Rp 23.900.386,34
+      CEK      : Math.round(23.900.386,34) = 23900386 = 23900386 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 193.150,00
+      BENAR    : Rp 193.149,66
+      CEK      : Math.round(193.149,66) = 193150 = 193150 ✓
+
+  2026-02-18  |  BREW - UANG MASUK STRADA LA.PIAZZA 18/02/2026  (id: 86435)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 9.525.199,00
+      BENAR    : Rp 9.525.199,13
+      CEK      : Math.round(9.525.199,13) = 9525199 = 9525199 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 90.776,00
+      BENAR    : Rp 90.775,87
+      CEK      : Math.round(90.775,87) = 90776 = 90776 ✓
+
+  2026-02-19  |  BREW - UANG MASUK STRADA LA.PIAZZA 19/02/2026  (id: 86436)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 12.598.544,00
+      BENAR    : Rp 12.598.544,39
+      CEK      : Math.round(12.598.544,39) = 12598544 = 12598544 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 99.376,00
+      BENAR    : Rp 99.375,61
+      CEK      : Math.round(99.375,61) = 99376 = 99376 ✓
+
+  2026-02-20  |  BREW - UANG MASUK STRADA LA.PIAZZA 20/02/2026  (id: 86517)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 11.842.537,00
+      BENAR    : Rp 11.842.536,75
+      CEK      : Math.round(11.842.536,75) = 11842537 = 11842537 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 106.404,00
+      BENAR    : Rp 106.404,25
+      CEK      : Math.round(106.404,25) = 106404 = 106404 ✓
+
+  2026-02-21  |  BREW - UANG MASUK STRADA LA.PIAZZA 21/02/2026  (id: 86479)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 26.597.724,00
+      BENAR    : Rp 26.597.723,99
+      CEK      : Math.round(26.597.723,99) = 26597724 = 26597724 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 257.786,00
+      BENAR    : Rp 257.786,01
+      CEK      : Math.round(257.786,01) = 257786 = 257786 ✓
+
+  2026-02-22  |  BREW - UANG MASUK STRADA LA.PIAZZA 22/02/2026  (id: 86437)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 14.585.995,00
+      BENAR    : Rp 14.585.994,55
+      CEK      : Math.round(14.585.994,55) = 14585995 = 14585995 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 142.685,00
+      BENAR    : Rp 142.685,45
+      CEK      : Math.round(142.685,45) = 142685 = 142685 ✓
+
+  2026-02-23  |  BREW - UANG MASUK STRADA LA.PIAZZA 23/02/2026  (id: 86565)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 7.638.892,00
+      BENAR    : Rp 7.638.891,70
+      CEK      : Math.round(7.638.891,70) = 7638892 = 7638892 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 96.003,00
+      BENAR    : Rp 96.003,30
+      CEK      : Math.round(96.003,30) = 96003 = 96003 ✓
+
+  2026-02-24  |  BREW - UANG MASUK STRADA LA.PIAZZA 24/02/2026  (id: 86480)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 8.761.076,00
+      BENAR    : Rp 8.761.075,99
+      CEK      : Math.round(8.761.075,99) = 8761076 = 8761076 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 76.089,00
+      BENAR    : Rp 76.089,01
+      CEK      : Math.round(76.089,01) = 76089 = 76089 ✓
+
+  2026-02-25  |  BREW - UANG MASUK STRADA LA.PIAZZA 25/02/2026  (id: 86439)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 13.346.879,00
+      BENAR    : Rp 13.346.879,29
+      CEK      : Math.round(13.346.879,29) = 13346879 = 13346879 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 119.306,00
+      BENAR    : Rp 119.305,71
+      CEK      : Math.round(119.305,71) = 119306 = 119306 ✓
+
+  2026-02-26  |  BREW - UANG MASUK STRADA LA.PIAZZA 26/02/2026  (id: 86518)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 11.169.046,00
+      BENAR    : Rp 11.169.045,77
+      CEK      : Math.round(11.169.045,77) = 11169046 = 11169046 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 119.951,00
+      BENAR    : Rp 119.951,23
+      CEK      : Math.round(119.951,23) = 119951 = 119951 ✓
+
+  2026-02-27  |  BREW - UANG MASUK STRADA LA.PIAZZA 27/02/2026  (id: 86481)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 15.820.493,00
+      BENAR    : Rp 15.820.493,09
+      CEK      : Math.round(15.820.493,09) = 15820493 = 15820493 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 142.918,00
+      BENAR    : Rp 142.917,91
+      CEK      : Math.round(142.917,91) = 142918 = 142918 ✓
+
+  2026-02-28  |  BREW - UANG MASUK STRADA LA.PIAZZA 28/02/2026  (id: 86520)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 29.114.868,00
+      BENAR    : Rp 29.114.868,19
+      CEK      : Math.round(29.114.868,19) = 29114868 = 29114868 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 256.757,00
+      BENAR    : Rp 256.756,81
+      CEK      : Math.round(256.756,81) = 256757 = 256757 ✓
+
+  2026-03-01  |  BREW - UANG MASUK STRADA LA.PIAZZA 01/03/2026  (id: 86375)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 21.706.258,00
+      BENAR    : Rp 21.706.258,14
+      CEK      : Math.round(21.706.258,14) = 21706258 = 21706258 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 200.257,00
+      BENAR    : Rp 200.256,86
+      CEK      : Math.round(200.256,86) = 200257 = 200257 ✓
+
+  2026-03-02  |  BREW - UANG MASUK STRADA LA.PIAZZA 02/03/2026  (id: 86376)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 10.486.222,00
+      BENAR    : Rp 10.486.221,88
+      CEK      : Math.round(10.486.221,88) = 10486222 = 10486222 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 76.923,00
+      BENAR    : Rp 76.923,12
+      CEK      : Math.round(76.923,12) = 76923 = 76923 ✓
+
+  2026-03-03  |  BREW - UANG MASUK STRADA LA.PIAZZA 03/03/2026  (id: 86522)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 17.979.496,00
+      BENAR    : Rp 17.979.495,51
+      CEK      : Math.round(17.979.495,51) = 17979496 = 17979496 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 159.054,00
+      BENAR    : Rp 159.054,49
+      CEK      : Math.round(159.054,49) = 159054 = 159054 ✓
+
+  2026-03-04  |  BREW - UANG MASUK STRADA LA.PIAZZA 04/03/2026  (id: 86441)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 8.325.930,00
+      BENAR    : Rp 8.325.929,67
+      CEK      : Math.round(8.325.929,67) = 8325930 = 8325930 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 72.385,00
+      BENAR    : Rp 72.385,33
+      CEK      : Math.round(72.385,33) = 72385 = 72385 ✓
+
+  2026-03-05  |  BREW - UANG MASUK STRADA LA.PIAZZA 05/03/2026  (id: 86567)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 10.877.094,00
+      BENAR    : Rp 10.877.093,64
+      CEK      : Math.round(10.877.093,64) = 10877094 = 10877094 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 4.641.116,00
+      BENAR    : Rp 4.641.116,36
+      CEK      : Math.round(4.641.116,36) = 4641116 = 4641116 ✓
+
+  2026-03-06  |  BREW - UANG MASUK STRADA LA.PIAZZA 06/03/2026  (id: 86442)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 20.169.285,00
+      BENAR    : Rp 20.169.285,17
+      CEK      : Math.round(20.169.285,17) = 20169285 = 20169285 ✓
+
+  2026-03-07  |  BREW - UANG MASUK STRADA LA.PIAZZA 07/03/2026  (id: 86524)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 25.097.053,00
+      BENAR    : Rp 25.097.052,70
+      CEK      : Math.round(25.097.052,70) = 25097053 = 25097053 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 208.817,00
+      BENAR    : Rp 208.817,30
+      CEK      : Math.round(208.817,30) = 208817 = 208817 ✓
+
+  2026-03-08  |  BREW - UANG MASUK STRADA LA.PIAZZA 08/03/2026  (id: 86484)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 25.963.492,00
+      BENAR    : Rp 25.963.491,55
+      CEK      : Math.round(25.963.491,55) = 25963492 = 25963492 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 234.658,00
+      BENAR    : Rp 234.658,45
+      CEK      : Math.round(234.658,45) = 234658 = 234658 ✓
+
+  2026-03-09  |  BREW - UANG MASUK STRADA LA.PIAZZA 09/03/2026  (id: 86379)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 8.704.498,00
+      BENAR    : Rp 8.704.498,19
+      CEK      : Math.round(8.704.498,19) = 8704498 = 8704498 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 88.762,00
+      BENAR    : Rp 88.761,81
+      CEK      : Math.round(88.761,81) = 88762 = 88762 ✓
+
+  2026-03-10  |  BREW - UANG MASUK STRADA LA.PIAZZA 10/03/2026  (id: 86485)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 10.996.593,00
+      BENAR    : Rp 10.996.593,04
+      CEK      : Math.round(10.996.593,04) = 10996593 = 10996593 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 107.832,00
+      BENAR    : Rp 107.831,96
+      CEK      : Math.round(107.831,96) = 107832 = 107832 ✓
+
+  2026-03-11  |  BREW - UANG MASUK STRADA LA.PIAZZA 11/03/2026  (id: 86486)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 12.771.639,00
+      BENAR    : Rp 12.771.638,94
+      CEK      : Math.round(12.771.638,94) = 12771639 = 12771639 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 116.362,00
+      BENAR    : Rp 116.362,06
+      CEK      : Math.round(116.362,06) = 116362 = 116362 ✓
+
+  2026-03-12  |  BREW - UANG MASUK STRADA LA.PIAZZA 12/03/2026  (id: 86527)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 15.511.892,00
+      BENAR    : Rp 15.511.891,73
+      CEK      : Math.round(15.511.891,73) = 15511892 = 15511892 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 117.878,00
+      BENAR    : Rp 117.878,27
+      CEK      : Math.round(117.878,27) = 117878 = 117878 ✓
+
+  2026-03-13  |  BREW - UANG MASUK STRADA LA.PIAZZA 13/03/2026  (id: 86528)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 18.001.104,00
+      BENAR    : Rp 18.001.103,53
+      CEK      : Math.round(18.001.103,53) = 18001104 = 18001104 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 162.951,00
+      BENAR    : Rp 162.951,47
+      CEK      : Math.round(162.951,47) = 162951 = 162951 ✓
+
+  2026-03-14  |  BREW - UANG MASUK STRADA LA.PIAZZA 14/03/2026  (id: 86489)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 29.522.042,00
+      BENAR    : Rp 29.522.041,88
+      CEK      : Math.round(29.522.041,88) = 29522042 = 29522042 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 233.483,00
+      BENAR    : Rp 233.483,12
+      CEK      : Math.round(233.483,12) = 233483 = 233483 ✓
+
+  2026-03-15  |  BREW - UANG MASUK STRADA LA.PIAZZA 15/03/2026  (id: 86445)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 28.957.113,00
+      BENAR    : Rp 28.957.112,80
+      CEK      : Math.round(28.957.112,80) = 28957113 = 28957113 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 276.507,00
+      BENAR    : Rp 276.507,20
+      CEK      : Math.round(276.507,20) = 276507 = 276507 ✓
+
+  2026-03-16  |  BREW - UANG MASUK STRADA LA.PIAZZA 16/03/2026  (id: 86490)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 14.246.164,00
+      BENAR    : Rp 14.246.163,52
+      CEK      : Math.round(14.246.163,52) = 14246164 = 14246164 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 122.571,00
+      BENAR    : Rp 122.571,48
+      CEK      : Math.round(122.571,48) = 122571 = 122571 ✓
+
+  2026-03-17  |  BREW - UANG MASUK STRADA LA.PIAZZA 17/03/2026  (id: 86530)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 16.865.433,00
+      BENAR    : Rp 16.865.432,72
+      CEK      : Math.round(16.865.432,72) = 16865433 = 16865433 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 153.144,00
+      BENAR    : Rp 153.144,28
+      CEK      : Math.round(153.144,28) = 153144 = 153144 ✓
+
+  2026-03-18  |  BREW - UANG MASUK STRADA LA.PIAZZA 18/03/2026  (id: 86447)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 20.586.366,00
+      BENAR    : Rp 20.586.365,66
+      CEK      : Math.round(20.586.365,66) = 20586366 = 20586366 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 180.604,00
+      BENAR    : Rp 180.604,34
+      CEK      : Math.round(180.604,34) = 180604 = 180604 ✓
+
+  2026-03-19  |  BREW - UANG MASUK STRADA LA.PIAZZA 19/03/2026  (id: 86448)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 21.762.003,00
+      BENAR    : Rp 21.762.003,27
+      CEK      : Math.round(21.762.003,27) = 21762003 = 21762003 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 210.717,00
+      BENAR    : Rp 210.716,73
+      CEK      : Math.round(210.716,73) = 210717 = 210717 ✓
+
+  2026-03-20  |  BREW - UANG MASUK STRADA LA.PIAZZA 20/03/2026  (id: 86533)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 14.276.277,00
+      BENAR    : Rp 14.276.276,65
+      CEK      : Math.round(14.276.276,65) = 14276277 = 14276277 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 125.429,00
+      BENAR    : Rp 125.429,35
+      CEK      : Math.round(125.429,35) = 125429 = 125429 ✓
+
+  2026-03-21  |  BREW - UANG MASUK STRADA LA.PIAZZA 21/03/2026  (id: 86491)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 17.985.723,00
+      BENAR    : Rp 17.985.722,71
+      CEK      : Math.round(17.985.722,71) = 17985723 = 17985723 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 171.681,00
+      BENAR    : Rp 171.681,29
+      CEK      : Math.round(171.681,29) = 171681 = 171681 ✓
+
+  2026-03-22  |  BREW - UANG MASUK STRADA LA.PIAZZA 22/03/2026  (id: 86534)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 24.371.153,00
+      BENAR    : Rp 24.371.152,95
+      CEK      : Math.round(24.371.152,95) = 24371153 = 24371153 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 230.783,00
+      BENAR    : Rp 230.783,05
+      CEK      : Math.round(230.783,05) = 230783 = 230783 ✓
+
+  2026-03-23  |  BREW - UANG MASUK STRADA LA.PIAZZA 23/03/2026  (id: 86535)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 27.057.967,00
+      BENAR    : Rp 27.057.966,61
+      CEK      : Math.round(27.057.966,61) = 27057967 = 27057967 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 267.218,00
+      BENAR    : Rp 267.218,39
+      CEK      : Math.round(267.218,39) = 267218 = 267218 ✓
+
+  2026-03-24  |  BREW - UANG MASUK STRADA LA.PIAZZA 24/03/2026  (id: 86600)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 24.757.934,00
+      BENAR    : Rp 24.757.933,98
+      CEK      : Math.round(24.757.933,98) = 24757934 = 24757934 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 230.691,00
+      BENAR    : Rp 230.691,02
+      CEK      : Math.round(230.691,02) = 230691 = 230691 ✓
+
+  2026-03-25  |  BREW - UANG MASUK STRADA LA.PIAZZA 25/03/2026  (id: 86536)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 13.760.185,00
+      BENAR    : Rp 13.760.184,88
+      CEK      : Math.round(13.760.184,88) = 13760185 = 13760185 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 116.792,00
+      BENAR    : Rp 116.792,12
+      CEK      : Math.round(116.792,12) = 116792 = 116792 ✓
+
+  2026-03-26  |  BREW - UANG MASUK STRADA LA.PIAZZA 26/03/2026  (id: 86601)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 14.797.865,00
+      BENAR    : Rp 14.797.864,86
+      CEK      : Math.round(14.797.864,86) = 14797865 = 14797865 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 116.703,00
+      BENAR    : Rp 116.703,14
+      CEK      : Math.round(116.703,14) = 116703 = 116703 ✓
+
+  2026-03-27  |  BREW - UANG MASUK STRADA LA.PIAZZA 27/03/2026  (id: 86537)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 19.869.620,00
+      BENAR    : Rp 19.869.620,21
+      CEK      : Math.round(19.869.620,21) = 19869620 = 19869620 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 149.595,00
+      BENAR    : Rp 149.594,79
+      CEK      : Math.round(149.594,79) = 149595 = 149595 ✓
+
+  2026-03-28  |  BREW - UANG MASUK STRADA LA.PIAZZA 28/03/2026  (id: 86385)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 35.612.983,00
+      BENAR    : Rp 35.612.983,12
+      CEK      : Math.round(35.612.983,12) = 35612983 = 35612983 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 303.913,00
+      BENAR    : Rp 303.912,88
+      CEK      : Math.round(303.912,88) = 303913 = 303913 ✓
+
+  2026-03-29  |  BREW - UANG MASUK STRADA LA.PIAZZA 29/03/2026  (id: 86603)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 23.460.491,00
+      BENAR    : Rp 23.460.491,24
+      CEK      : Math.round(23.460.491,24) = 23460491 = 23460491 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 212.504,00
+      BENAR    : Rp 212.503,76
+      CEK      : Math.round(212.503,76) = 212504 = 212504 ✓
+
+  2026-03-30  |  BREW - UANG MASUK STRADA LA.PIAZZA 30/03/2026  (id: 86387)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 10.078.178,00
+      BENAR    : Rp 10.078.177,84
+      CEK      : Math.round(10.078.177,84) = 10078178 = 10078178 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 86.822,00
+      BENAR    : Rp 86.822,16
+      CEK      : Math.round(86.822,16) = 86822 = 86822 ✓
+
+  2026-03-31  |  BREW - UANG MASUK STRADA LA.PIAZZA 31/03/2026  (id: 86496)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 13.335.648,00
+      BENAR    : Rp 13.335.647,76
+      CEK      : Math.round(13.335.647,76) = 13335648 = 13335648 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 121.227,00
+      BENAR    : Rp 121.227,24
+      CEK      : Math.round(121.227,24) = 121227 = 121227 ✓
+
+  2026-04-01  |  BREW - UANG MASUK STRADA LA.PIAZZA 01/04/2026  (id: 86604)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 12.841.272,00
+      BENAR    : Rp 12.841.272,03
+      CEK      : Math.round(12.841.272,03) = 12841272 = 12841272 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 109.581,00
+      BENAR    : Rp 109.580,97
+      CEK      : Math.round(109.580,97) = 109581 = 109581 ✓
+
+  2026-04-02  |  BREW - UANG MASUK STRADA LA.PIAZZA 02/04/2026  (id: 86388)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 15.869.135,00
+      BENAR    : Rp 15.869.134,67
+      CEK      : Math.round(15.869.134,67) = 15869135 = 15869135 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 124.120,00
+      BENAR    : Rp 124.120,33
+      CEK      : Math.round(124.120,33) = 124120 = 124120 ✓
+
+  2026-04-03  |  BREW - UANG MASUK STRADA LA.PIAZZA 03/04/2026  (id: 86605)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 25.745.615,00
+      BENAR    : Rp 25.745.614,54
+      CEK      : Math.round(25.745.614,54) = 25745615 = 25745615 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 262.476,00
+      BENAR    : Rp 262.476,46
+      CEK      : Math.round(262.476,46) = 262476 = 262476 ✓
+
+  2026-04-04  |  BREW - UANG MASUK STRADA LA.PIAZZA 04/04/2026  (id: 86498)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 27.447.891,00
+      BENAR    : Rp 27.447.890,50
+      CEK      : Math.round(27.447.890,50) = 27447891 = 27447891 ✓
+
+  2026-04-05  |  BREW - UANG MASUK STRADA LA.PIAZZA 05/04/2026  (id: 86499)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 23.654.421,00
+      BENAR    : Rp 23.654.421,46
+      CEK      : Math.round(23.654.421,46) = 23654421 = 23654421 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 217.420,00
+      BENAR    : Rp 217.419,54
+      CEK      : Math.round(217.419,54) = 217420 = 217420 ✓
+
+  2026-04-06  |  BREW - UANG MASUK STRADA LA.PIAZZA 06/04/2026  (id: 86540)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 10.609.412,00
+      BENAR    : Rp 10.609.412,33
+      CEK      : Math.round(10.609.412,33) = 10609412 = 10609412 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 113.918,00
+      BENAR    : Rp 113.917,67
+      CEK      : Math.round(113.917,67) = 113918 = 113918 ✓
+
+  2026-04-07  |  BREW - UANG MASUK STRADA LA.PIAZZA 07/04/2026  (id: 86571)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 14.195.584,00
+      BENAR    : Rp 14.195.584,22
+      CEK      : Math.round(14.195.584,22) = 14195584 = 14195584 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 123.176,00
+      BENAR    : Rp 123.175,78
+      CEK      : Math.round(123.175,78) = 123176 = 123176 ✓
+
+  2026-04-08  |  BREW - UANG MASUK STRADA LA.PIAZZA 08/04/2026  (id: 86390)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 11.650.736,00
+      BENAR    : Rp 11.650.735,72
+      CEK      : Math.round(11.650.735,72) = 11650736 = 11650736 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 93.579,00
+      BENAR    : Rp 93.579,28
+      CEK      : Math.round(93.579,28) = 93579 = 93579 ✓
+
+  2026-04-09  |  BREW - UANG MASUK STRADA LA.PIAZZA 09/04/2026  (id: 86607)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 12.646.303,00
+      BENAR    : Rp 12.646.303,09
+      CEK      : Math.round(12.646.303,09) = 12646303 = 12646303 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 99.312,00
+      BENAR    : Rp 99.311,91
+      CEK      : Math.round(99.311,91) = 99312 = 99312 ✓
+
+  2026-04-10  |  BREW - UANG MASUK STRADA LA.PIAZZA 10/04/2026  (id: 86572)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 21.723.346,00
+      BENAR    : Rp 21.723.345,68
+      CEK      : Math.round(21.723.345,68) = 21723346 = 21723346 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 206.519,00
+      BENAR    : Rp 206.519,32
+      CEK      : Math.round(206.519,32) = 206519 = 206519 ✓
+
+  2026-04-11  |  BREW - UANG MASUK STRADA LA.PIAZZA 11/04/2026  (id: 86653)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 26.548.421,00
+      BENAR    : Rp 26.548.420,65
+      CEK      : Math.round(26.548.420,65) = 26548421 = 26548421 ✓
+    Biaya Admin Bank           [6000.01.08] DEBIT
+      SEKARANG : Rp 11.987.144,00
+      BENAR    : Rp 11.987.144,35
+      CEK      : Math.round(11.987.144,35) = 11987144 = 11987144 ✓
+
+  2026-04-12  |  BREW - UANG MASUK STRADA LA.PIAZZA 12/04/2026  (id: 86574)
+    Settlement BCA             [1000.02.01] DEBIT
+      SEKARANG : Rp 28.565.425,00
+      BENAR    : Rp 28.565.424,98
+      CEK      : Math.round(28.565.424,98) = 28565425 = 28565425 ✓
+
+=== DRY RUN SELESAI — tidak ada yang disimpan ===

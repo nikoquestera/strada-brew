@@ -1,0 +1,67 @@
+BREW — Mass Patch Uang Masuk (Kas Besar → Bank BCA)
+Mode       : ✏️  LIVE — akan menyimpan ke Accurate
+Filter tgl : Tanggal 2025-02-11 (tanggal di keterangan jurnal)
+Filter toko: LA.PIAZZA
+Dijalankan : 17-04-2026, 12.18.07 WIB
+Log file   : /Users/questmotors/strada-brew/scripts/finance/logs/mass_patch_uang_masuk_20260417_121807.log
+
+Tabel remap DEBIT:
+  1000.01.01   → 1000.02.01
+  1000.01.10   → 1000.02.06
+  1000.01.11   → 1000.02.04
+  1000.01.12   → 1000.02.07
+  1000.01.13   → 1000.02.08
+  1000.01.14   → 1000.02.04
+
+Menghubungkan ke Accurate...
+✅ Terhubung. Session: a06e43cd-cf3a-417e-a6ef-f90e75576f3f
+
+──────────────────────────────────────────────────────────────────────
+FASE 1 — AMBIL DAFTAR JURNAL
+──────────────────────────────────────────────────────────────────────
+Mencari jurnal dengan keyword: "BREW - UANG MASUK" (tanggal: 2025-02-11 s/d 2025-02-11) ...
+  Halaman 1: 100 total, 0 cocok (kumulatif: 0)
+  Halaman 2: 100 total, 0 cocok (kumulatif: 0)
+  Halaman 3: 100 total, 0 cocok (kumulatif: 0)
+  Halaman 4: 100 total, 0 cocok (kumulatif: 0)
+  Halaman 5: 100 total, 0 cocok (kumulatif: 0)
+  Halaman 6: 100 total, 0 cocok (kumulatif: 0)
+  Halaman 7: 100 total, 0 cocok (kumulatif: 0)
+  Halaman 8: 100 total, 0 cocok (kumulatif: 0)
+  Halaman 9: 100 total, 0 cocok (kumulatif: 0)
+  Halaman 10: 100 total, 0 cocok (kumulatif: 0)
+  Halaman 11: 100 total, 0 cocok (kumulatif: 0)
+  Halaman 12: 100 total, 0 cocok (kumulatif: 0)
+  Halaman 13: 100 total, 0 cocok (kumulatif: 0)
+  Halaman 14: 100 total, 1 cocok (kumulatif: 1)
+  Halaman 15: 6 total, 0 cocok (kumulatif: 1)
+
+Total jurnal ditemukan: 1
+
+──────────────────────────────────────────────────────────────────────
+FASE 2 — PREVIEW (ambil detail & identifikasi perubahan)
+──────────────────────────────────────────────────────────────────────
+
+Perlu diubah       : 1
+Tidak ada perubahan: 0
+Gagal fetch detail : 0
+
+Daftar jurnal yang akan diubah:
+  85335                     | 12/02/2025   | BREW - UANG MASUK STRADA LA.PIAZZA 11/02/2025
+    Baris 2: DEBIT 1000.01.01 → 1000.02.01  (Rp 18.965)
+
+──────────────────────────────────────────────────────────────────────
+FASE 3 — PATCH
+──────────────────────────────────────────────────────────────────────
+  [  1/1] ❌ REJECTED | 17-04-2026, 12.18.23 WIB | 85335                     | Error: Pelanggan dari Akun Perkiraan 'Piutang Usaha LPZ' harus di isi, Pelanggan dari Akun Perkiraan 'Piutang Gobiz LPZ' harus di isi
+
+──────────────────────────────────────────────────────────────────────
+RINGKASAN AKHIR
+──────────────────────────────────────────────────────────────────────
+Selesai pada      : 17-04-2026, 12.18.24 WIB
+Total perlu patch : 1
+Berhasil dipatch  : 0
+Gagal             : 1
+Tidak ada perubahan: 0
+Gagal fetch detail : 0
+Log tersimpan     : /Users/questmotors/strada-brew/scripts/finance/logs/mass_patch_uang_masuk_20260417_121807.log

@@ -1,0 +1,1520 @@
+BREW — Mass Delete Jurnal Accurate
+Dijalankan : 17-04-2026, 08.16.42 WIB
+Input CSV  : ./mass_delete_input.csv
+Log file   : /Users/questmotors/strada-brew/scripts/finance/logs/mass_delete_20260417_081642.log
+
+Total nomor jurnal di CSV: 739
+
+Menghubungkan ke Accurate...
+✅ Terhubung. Session: a06e43cd-cf3a-417e-a6ef-f90e75576f3f
+
+──────────────────────────────────────────────────────────────────────
+FASE 1 — LOOKUP
+──────────────────────────────────────────────────────────────────────
+  ✅ FOUND      JV.2025.01.00011       ID: 38902      | Tgl: 01/01/2025   | Penjualan cafe tanggal 01/01/2025
+  ✅ FOUND      JV.2025.01.00013       ID: 38903      | Tgl: 02/01/2025   | Penjualan cafe tanggal 02/01/2025
+  ✅ FOUND      JV.2025.01.00037       ID: 39372      | Tgl: 03/01/2025   | Uang masuk penjualan cafe tanggal 02/01/2025
+  ✅ FOUND      JV.2025.01.00089       ID: 39516      | Tgl: 03/01/2025   | Penjualan cafe tanggal 03/01/2025
+  ✅ FOUND      JV.2025.01.00090       ID: 39699      | Tgl: 04/01/2025   | Uang masuk penjualan cafe tanggal 03/01/2025
+  ✅ FOUND      JV.2025.01.00091       ID: 39517      | Tgl: 04/01/2025   | Penjualan cafe tanggal 04/01/2025
+  ✅ FOUND      JV.2025.01.00092       ID: 39700      | Tgl: 05/01/2025   | Uang masuk penjualan cafe tanggal  03 & 04 Januari 2025
+  ✅ FOUND      JV.2025.01.00093       ID: 39701      | Tgl: 05/01/2025   | Penjualan cafe tanggal 05/01/2025
+  ✅ FOUND      JV.2025.01.00094       ID: 39702      | Tgl: 06/01/2025   | Uang masuk penjualan cafe tanggal 05/01/2025
+  ✅ FOUND      JV.2025.01.00119       ID: 39952      | Tgl: 06/01/2025   | Penjualan cafe tanggal 06/01/2025
+  ✅ FOUND      JV.2025.01.00120       ID: 40000      | Tgl: 07/01/2025   | Uang masuk penjualan cafe tanggal 06/01/2025
+  ✅ FOUND      JV.2025.01.00121       ID: 40050      | Tgl: 07/01/2025   | Penjualan cafe tanggal 07/01/2025
+  ✅ FOUND      JV.2025.01.00122       ID: 39953      | Tgl: 08/01/2025   | Uang masuk penjualan cafe tanggal 07/01/2025
+  ✅ FOUND      JV.2025.01.00123       ID: 39903      | Tgl: 08/01/2025   | Penjualan cafe 08/01/2025
+  ✅ FOUND      JV.2025.01.00124       ID: 40051      | Tgl: 09/01/2025   | Uang masuk penjualan cafe tanggal 08/01/2025
+  ✅ FOUND      JV.2025.01.00274       ID: 39816      | Tgl: 09/01/2025   | Penjualan cafe tanggal 09/01/2025
+  ✅ FOUND      JV.2025.01.00288       ID: 40352      | Tgl: 10/01/2025   | Uang masuk penjualan cafe tanggal 09/01/2025
+  ✅ FOUND      JV.2025.01.00282       ID: 40151      | Tgl: 10/01/2025   | Penjualan cafe tanggal 10/01/2025
+  ✅ FOUND      JV.2025.01.00287       ID: 40351      | Tgl: 11/01/2025   | Uang masuk penjualan cafe tanggal 10/01/2025
+  ✅ FOUND      JV.2025.01.00284       ID: 40201      | Tgl: 11/01/2025   | Penjualan cafe tanggal 11/01/2025
+  ✅ FOUND      JV.2025.01.00289       ID: 40400      | Tgl: 12/01/2025   | Uang masuk penjualan cafe tanggal 11/01/2025
+  ✅ FOUND      JV.2025.01.00285       ID: 40301      | Tgl: 12/01/2025   | Penjualan cafe tanggal 12/01/2025
+  ✅ FOUND      JV.2025.01.00290       ID: 40302      | Tgl: 13/01/2025   | Uang masuk penjualan cafe tanggal 12/01/2025
+  ✅ FOUND      JV.2025.01.00286       ID: 40350      | Tgl: 13/01/2025   | Penjualan cafe tanggal 13/01/2025
+  ✅ FOUND      JV.2025.01.00291       ID: 40253      | Tgl: 14/01/2025   | Uang masuk penjualan cafe tanggal 13/01/2025
+  ✅ FOUND      JV.2025.01.00342       ID: 40500      | Tgl: 14/01/2025   | Penjualan cafe tanggal 14/01/2025
+  ✅ FOUND      JV.2025.01.00344       ID: 40550      | Tgl: 15/01/2025   | Uang masuk penjualan cafe taggal 14/01/2025
+  ✅ FOUND      JV.2025.01.00345       ID: 40551      | Tgl: 15/01/2025   | Penjualan cafe tanggal 15/01/2025
+  ✅ FOUND      JV.2025.01.00346       ID: 40600      | Tgl: 16/01/2025   | Uang masuk penjualan cafe tanggal 15/01/2025
+  ✅ FOUND      JV.2025.01.00347       ID: 40452      | Tgl: 16/01/2025   | Penjualan cafe 16/01/2025
+  ✅ FOUND      JV.2025.01.00348       ID: 40501      | Tgl: 17/01/2025   | Uang masuk penjualan cafe tanggal 16/01/2025
+  ✅ FOUND      JV.2025.01.00437       ID: 40661      | Tgl: 17/01/2025   | Penjualan cafe tanggal 17/01/2025
+  ✅ FOUND      JV.2025.01.00438       ID: 40662      | Tgl: 18/01/2025   | Uang masuk penjualan cafe tanggal 17/01/2025
+  ✅ FOUND      JV.2025.01.00439       ID: 40774      | Tgl: 18/01/2025   | Penjualan cafe tanggal 18/01/2025
+  ✅ FOUND      JV.2025.01.00440       ID: 40663      | Tgl: 19/01/2025   | Uang masuk penjualan cafe tanggal 18/01/2025
+  ✅ FOUND      JV.2025.01.00441       ID: 40865      | Tgl: 19/01/2025   | Uang penjualan cafe tanggal 19/01/2025
+  ✅ FOUND      JV.2025.01.00442       ID: 40813      | Tgl: 20/01/2025   | Uang masuk penjualan cafe tanggal 19/01/2025
+  ✅ FOUND      JV.2025.01.00457       ID: 41150      | Tgl: 20/01/2025   | Uang penjualan cafe tanggal 20/01/2025
+  ✅ FOUND      JV.2025.01.00458       ID: 41001      | Tgl: 21/01/2025   | Uang masuk penjualan cafe tanggal 20/01/2025
+  ✅ FOUND      JV.2025.01.00497       ID: 41304      | Tgl: 21/01/2025   | Penjualan cafe tanggal 21/01/2025
+  ✅ FOUND      JV.2025.01.00498       ID: 41505      | Tgl: 22/01/2025   | Uang masuk penjualan cafe tanggal 21/01/2025
+  ✅ FOUND      JV.2025.01.00499       ID: 41550      | Tgl: 22/01/2025   | Penjualan cafe tanggal 22/01/2025
+  ✅ FOUND      JV.2025.01.00500       ID: 41506      | Tgl: 23/01/2025   | Uang masuk penjualan cafe tanggal 22/01/2025
+  ✅ FOUND      JV.2025.01.00501       ID: 41305      | Tgl: 23/01/2025   | Penjualan cafe tanggal 23/01/2025
+  ✅ FOUND      JV.2025.01.00847       ID: 44267      | Tgl: 24/01/2025   | Setoran cash penjualan cafe tgl 23/01/2025
+  ✅ FOUND      JV.2025.01.00502       ID: 41306      | Tgl: 24/01/2025   | Uang masuk penjualan cafe tanggal 23/01/2025
+  ✅ FOUND      JV.2025.01.00528       ID: 42050      | Tgl: 24/01/2025   | Penjualan cafe tanggal 24/01/2025
+  ✅ FOUND      JV.2025.01.00848       ID: 44268      | Tgl: 25/01/2025   | Setoran cash penjualan cafe tanggal 24/01/2025
+  ✅ FOUND      JV.2025.01.00532       ID: 41904      | Tgl: 25/01/2025   | Uang masuk penjualan cafe tanggal 24/01/2025
+  ✅ FOUND      JV.2025.01.00529       ID: 41955      | Tgl: 25/01/2025   | Penjualan cafe tanggal 25/01/2025
+  ✅ FOUND      JV.2025.01.00533       ID: 41905      | Tgl: 26/01/2025   | Uang masuk penjualan cafe tanggal 25/01/2025
+  ✅ FOUND      JV.2025.02.00323       ID: 44340      | Tgl: 30/01/2025   | Setoran cash penjualan tgl 25/01/2025
+  ✅ FOUND      JV.2025.01.00530       ID: 41956      | Tgl: 26/01/2025   | Penjualan cafe tanggal 26/01/2025
+  ✅ FOUND      JV.2025.01.00534       ID: 41906      | Tgl: 27/01/2025   | Uang masuk penjualan cafe tanggal 26/01/2025
+  ✅ FOUND      JV.2025.01.00849       ID: 44492      | Tgl: 30/01/2025   | Setoran cash penjualan cafe tgl 26/01/2025
+  ✅ FOUND      JV.2025.01.00531       ID: 42051      | Tgl: 27/01/2025   | Penjualan cafe tanggal 27/01/2025
+  ✅ FOUND      JV.2025.01.00688       ID: 42259      | Tgl: 28/01/2025   | Uang masuk penjualan cafe tanggal 27/01/2025
+  ✅ FOUND      JV.2025.01.00850       ID: 44269      | Tgl: 30/01/2025   | Setoran cash penjualan cafe tgl 27/01/2025
+  ✅ FOUND      JV.2025.01.00689       ID: 42359      | Tgl: 28/01/2025   | Penjualan cafe tanggal 28/01/2025
+  ✅ FOUND      JV.2025.01.00691       ID: 42312      | Tgl: 29/01/2025   | Uang masuk penjualan cafe tanggal 28/01/2025
+  ✅ FOUND      JV.2025.01.00851       ID: 44341      | Tgl: 30/01/2025   | Setoran cash penjualan cafe tgl 28/01/2025
+  ✅ FOUND      JV.2025.01.00692       ID: 42453      | Tgl: 29/01/2025   | Penjualan cafe tanggal 29/01/2025
+  ✅ FOUND      JV.2025.01.00693       ID: 42454      | Tgl: 30/01/2025   | Uang masuk penjualan cafe tanggal 29/01/2025
+  ✅ FOUND      JV.2025.01.00694       ID: 42157      | Tgl: 30/01/2025   | Penjualan cafe tanggal 30/01/2025
+  ✅ FOUND      JV.2025.01.00785       ID: 42619      | Tgl: 30/01/2025   | Uang masuk penjualan cafe tanggal 30/01/2025
+  ✅ FOUND      JV.2025.02.00319       ID: 44520      | Tgl: 01/02/2025   | Setoran cash penjualan cafe tanggal 30/01/2025
+  ✅ FOUND      JV.2025.01.00781       ID: 42769      | Tgl: 31/01/2025   | Penjualan cafe tanggal 31/01/2025
+  ✅ FOUND      JV.2025.01.00787       ID: 42574      | Tgl: 01/02/2025   | Uang masuk penjualan cafe tanggal 31/01/2025
+  ✅ FOUND      JV.2025.02.00322       ID: 44266      | Tgl: 04/02/2025   | Setoran cash penjualan cafe tanggal 31/01/2025
+  ✅ FOUND      JV.2025.02.00029       ID: 42715      | Tgl: 01/02/2025   | Penjualan cafe tanggal 01/02/2025
+  ✅ FOUND      JV.2025.02.00320       ID: 44247      | Tgl: 02/02/2025   | Setoran cash penjualan cafe tanggal 01/02/2025
+  ✅ FOUND      JV.2025.02.00034       ID: 42774      | Tgl: 02/02/2025   | Uang masuk penjualan cafe tanggal 01/02/2025
+  ✅ FOUND      JV.2025.02.00612       ID: 45406      | Tgl: 17/02/2025   | Uang masuk setoran cash penjualan cafe tgl 01/02/2025
+  ✅ FOUND      JV.2025.02.00030       ID: 42771      | Tgl: 02/02/2025   | Penjualan cafe tanggal 02/02/2025
+  ✅ FOUND      JV.2025.02.00321       ID: 44248      | Tgl: 03/02/2025   | Setoran cash penjualan cafe tanggal 02/02/2025
+  ✅ FOUND      JV.2025.02.00035       ID: 42511      | Tgl: 03/02/2025   | Uang masuk penjualan cafe tanggal 02/02/2025
+  ✅ FOUND      JV.2025.02.00032       ID: 42672      | Tgl: 03/02/2025   | Penjualan cafe tanggal 03/02/2025
+  ✅ FOUND      JV.2025.02.00037       ID: 42575      | Tgl: 04/02/2025   | Uang masuk penjualan cafe tanggal 03/02/2025
+  ✅ FOUND      JV.2025.02.00311       ID: 44518      | Tgl: 08/02/2025   | Setoran cash penjualan cafe tanggal 03/02/2025
+  ✅ FOUND      JV.2025.02.00112       ID: 43755      | Tgl: 04/02/2025   | Penjualan cafe strada tanggal 04/02/2025
+  ✅ FOUND      JV.2025.02.00116       ID: 43806      | Tgl: 05/02/2025   | Uang masuk penjualan cafe tanggal 04/02/2025
+  ✅ FOUND      JV.2025.02.00113       ID: 43609      | Tgl: 05/02/2025   | Penjualan cafe tanggal 05/02/2025
+  ✅ FOUND      JV.2025.02.00117       ID: 43757      | Tgl: 06/02/2025   | Uang masuk penjualan cafe tanggal 05/02/2025
+  ✅ FOUND      JV.2025.02.00114       ID: 43554      | Tgl: 06/02/2025   | Penjualan cafe tanggal 06/02/2025
+  ✅ FOUND      JV.2025.02.00118       ID: 43758      | Tgl: 07/02/2025   | Uang masuk penjualan cafe tanggal 06/02/2025
+  ✅ FOUND      JV.2025.02.00304       ID: 44242      | Tgl: 07/02/2025   | Penjualan cafe tanggal 07/02/2025
+  ✅ FOUND      JV.2025.02.00893       ID: 46703      | Tgl: 08/02/2025   | Uang masuk penjualan cafe tanggal 07/02/2025
+  ✅ FOUND      JV.2025.02.00305       ID: 44490      | Tgl: 08/02/2025   | Penjualan cafe tanggal 08/02/2025
+  ✅ FOUND      JV.2025.02.00312       ID: 44519      | Tgl: 09/02/2025   | Uang masuk penjualan cafe tanggal 08/02/2025
+  ✅ FOUND      JV.2025.02.00314       ID: 44245      | Tgl: 10/02/2025   | Setoran cash penjualan cafe tanggal 08/02/2025
+  ✅ FOUND      JV.2025.02.00306       ID: 44243      | Tgl: 09/02/2025   | Penjualan cafe tanggal 09/02/2025
+  ✅ FOUND      JV.2025.02.00315       ID: 44339      | Tgl: 10/02/2025   | Setoran cash penjualan cafe tanggal 09/02/2025
+  ✅ FOUND      JV.2025.02.00313       ID: 44381      | Tgl: 10/02/2025   | Uang masuk penjualan cafe tanggal 09/02/2025
+  ✅ FOUND      JV.2025.02.00307       ID: 44265      | Tgl: 10/02/2025   | Penjualan cafe tanggal 10/02/2025
+  ✅ FOUND      JV.2025.02.00316       ID: 44491      | Tgl: 11/02/2025   | Uang masuk penjualan cafe tanggal 10/02/2025
+  ✅ FOUND      JV.2025.02.00308       ID: 44517      | Tgl: 11/02/2025   | Penjualan cafe tanggal 11/02/2025
+  ✅ FOUND      JV.2025.02.00317       ID: 44419      | Tgl: 12/02/2025   | Uang masuk penjualan cafe tanggal 11/02/2025
+  ✅ FOUND      JV.2025.02.00309       ID: 44379      | Tgl: 12/02/2025   | Penjualan cafe tanggal 12/02/2025
+  ✅ FOUND      JV.2025.02.00318       ID: 44246      | Tgl: 13/02/2025   | Uang masuk penjualan cafe tanggal 12/02/2025
+  ✅ FOUND      JV.2025.02.00310       ID: 44338      | Tgl: 13/02/2025   | Penjualan cafe tanggal 13/02/2025
+  ✅ FOUND      JV.2025.02.00605       ID: 45155      | Tgl: 14/02/2025   | Uang masuk penjualan cafe tanggal 13/02/2025
+  ✅ FOUND      JV.2025.02.00394       ID: 44278      | Tgl: 14/02/2025   | Penjualan cafe tanggal 14/02/2025
+  ✅ FOUND      JV.2025.02.00606       ID: 45311      | Tgl: 15/02/2025   | Uang masuk penjualan cafe tanggal 14/02/2025
+  ✅ FOUND      JV.2025.02.00395       ID: 44614      | Tgl: 15/02/2025   | Penjualan cafe tanggal 15/02/2025
+  ✅ FOUND      JV.2025.02.00609       ID: 45313      | Tgl: 16/02/2025   | Uang masuk penjualan cafe tanggal 15/02/2025
+  ✅ FOUND      JV.2025.02.00396       ID: 44567      | Tgl: 16/02/2025   | Penjualan cafe tanggal 16/02/2025
+  ✅ FOUND      JV.2025.02.00610       ID: 45404      | Tgl: 17/02/2025   | Uang masuk penjualan cafe tanggal 16/02/2025
+  ✅ FOUND      JV.2025.02.00397       ID: 44615      | Tgl: 17/02/2025   | Penjualan cafe tanggal 17/02/2025
+  ✅ FOUND      JV.2025.02.00611       ID: 45405      | Tgl: 18/02/2025   | Uang masuk penjualan cafe tanggal 17/02/2025
+  ✅ FOUND      JV.2025.02.00554       ID: 45100      | Tgl: 18/02/2025   | Penjualan cafe tanggal 18/02/2025
+  ✅ FOUND      JV.2025.02.00613       ID: 45209      | Tgl: 19/02/2025   | Uang masuk penjualan cafe tanggal 18/02/2025
+  ✅ FOUND      JV.2025.02.00555       ID: 45150      | Tgl: 19/02/2025   | Penjualan cafe tanggal 19/02/2025
+  ✅ FOUND      JV.2025.02.00614       ID: 45258      | Tgl: 20/02/2025   | Uang masuk penjualan cafe tanggal 19/02/2025
+  ✅ FOUND      JV.2025.02.00576       ID: 45203      | Tgl: 20/02/2025   | Penjualan cafe tanggal 20/02/2025
+  ✅ FOUND      JV.2025.02.00615       ID: 45210      | Tgl: 21/02/2025   | Uang masuk penjualan cafe tanggal 20/02/2025
+  ✅ FOUND      JV.2025.02.00752       ID: 46010      | Tgl: 21/02/2025   | Penjualan cafe tanggal 21/02/2025
+  ✅ FOUND      JV.2025.02.00850       ID: 46033      | Tgl: 22/02/2025   | Uang masuk penjualan cafe tanggal 21/02/2025
+  ✅ FOUND      JV.2025.02.00753       ID: 45913      | Tgl: 22/02/2025   | Penjualan cafe tanggal 22/02/2025
+  ✅ FOUND      JV.2025.02.00851       ID: 46034      | Tgl: 23/02/2025   | Uang masuk penjualan cafe tanggal 22/02/2025
+  ✅ FOUND      JV.2025.02.00754       ID: 45963      | Tgl: 23/02/2025   | Penjualan cafe tanggal 23/02/2025
+  ✅ FOUND      JV.2025.02.00852       ID: 45933      | Tgl: 24/02/2025   | Uang masuk penjualan cafe tanggal 23/02/2025
+  ✅ FOUND      JV.2025.02.00756       ID: 45805      | Tgl: 24/02/2025   | Penjualan cafe tanggal 24/02/2025
+  ✅ FOUND      JV.2025.02.00853       ID: 45865      | Tgl: 25/02/2025   | Uang masuk penjualan cafe tanggal 24/02/2025
+  ✅ FOUND      JV.2025.02.00872       ID: 45867      | Tgl: 25/02/2025   | Penjualan cafe tanggal 25/02/2025
+  ✅ FOUND      JV.2025.03.00007       ID: 46040      | Tgl: 26/02/2025   | Uang masuk penjualan cafe tanggal 25/02/2025
+  ✅ FOUND      JV.2025.02.00873       ID: 45989      | Tgl: 26/02/2025   | Penjualan cafe tanggal 26/02/2025
+  ✅ FOUND      JV.2025.02.00876       ID: 45990      | Tgl: 27/02/2025   | Uang masuk penjualan cafe tanggal 26/02/2025
+  ✅ FOUND      JV.2025.02.00874       ID: 46077      | Tgl: 27/02/2025   | Penjualan cafe tanggal 27/02/2025
+  ✅ FOUND      JV.2025.02.00877       ID: 45939      | Tgl: 28/02/2025   | Uang masuk penjualan cafe tanggal 27/02/2025
+  ✅ FOUND      JV.2025.02.00875       ID: 45938      | Tgl: 28/02/2025   | Penjualan cafe tanggal 28/02/2025
+  ✅ FOUND      JV.2025.03.00008       ID: 45991      | Tgl: 01/03/2025   | Uang masuk penjualan cafe tanggal 28/02/2025
+  ✅ FOUND      JV.2025.03.00053       ID: 46700      | Tgl: 01/03/2025   | Penjualan cafe tanggal 01/03/2025
+  ✅ FOUND      JV.2025.03.00064       ID: 46653      | Tgl: 02/03/2025   | Uang masuk penjualan cafe tanggal 01/03/2025
+  ✅ FOUND      JV.2025.03.00052       ID: 46651      | Tgl: 02/03/2025   | Penjualan cafe tanggal 02/03/2025
+  ✅ FOUND      JV.2025.03.00065       ID: 46605      | Tgl: 03/03/2025   | Uang masuk penjualan cafe tanggal 02/03/2025
+  ✅ FOUND      JV.2025.03.00051       ID: 46650      | Tgl: 03/03/2025   | Penjualan cafe tanggal 03/03/2025
+  ✅ FOUND      JV.2025.03.00110       ID: 47503      | Tgl: 04/03/2025   | Uang masuk penjualan cafe tanggal 03/03/2025
+  ✅ FOUND      JV.2025.03.00104       ID: 47500      | Tgl: 04/03/2025   | Penjualan cafe tanggal 04/03/2025
+  ✅ FOUND      JV.2025.03.00109       ID: 47502      | Tgl: 05/03/2025   | Uang masuk penjualan cafe tanggal 04/03/2025
+  ✅ FOUND      JV.2025.03.00106       ID: 47501      | Tgl: 05/03/2025   | Penjualan cafe tanggal 05/03/2025
+  ✅ FOUND      JV.2025.03.00111       ID: 47650      | Tgl: 06/03/2025   | Uang masuk penjualan cafe tanggal 05/03/2025
+  ✅ FOUND      JV.2025.03.00107       ID: 47551      | Tgl: 06/03/2025   | Penjualan cafe tanggal 06/03/2025
+  ✅ FOUND      JV.2025.03.00487       ID: 48238      | Tgl: 07/03/2025   | Uang masuk penjualan cafe tanggal 06/03/2025
+  ✅ FOUND      JV.2025.03.00490       ID: 48519      | Tgl: 07/03/2025   | Penjualan cafe tanggal 07/03/2025
+  ✅ FOUND      JV.2025.03.00488       ID: 48276      | Tgl: 08/03/2025   | Uang masuk penjualan cafe tanggal 07/03/2025
+  ✅ FOUND      JV.2025.03.00295       ID: 47856      | Tgl: 08/03/2025   | Penjualan cafe tanggal 08/03/2025
+  ✅ FOUND      JV.2025.03.00290       ID: 48102      | Tgl: 09/03/2025   | Uang masuk penjualan cafe tanggal 08/03/2025
+  ✅ FOUND      JV.2025.03.00296       ID: 48103      | Tgl: 09/03/2025   | Penjualan cafe tanggal 09/03/2025
+  ✅ FOUND      JV.2025.03.00291       ID: 48052      | Tgl: 10/03/2025   | Uang masuk penjualan cafe tanggal 09/03/2025
+  ✅ FOUND      JV.2025.03.00801       ID: 49640      | Tgl: 12/03/2025   | Uang masuk setoran cash penjualan cafe tanggal 09/03/2025
+  ✅ FOUND      JV.2025.03.00297       ID: 47857      | Tgl: 10/03/2025   | Penjualan cafe tanggal 10/03/2025
+  ✅ FOUND      JV.2025.03.00292       ID: 48151      | Tgl: 11/03/2025   | Uang masuk penjualan cafe tanggal 10/03/2025
+  ✅ FOUND      JV.2025.03.00299       ID: 47858      | Tgl: 11/03/2025   | Penjualan cafe tanggal 11/03/2025
+  ✅ FOUND      JV.2025.03.00293       ID: 48053      | Tgl: 12/03/2025   | Uang masuk penjualan cafe tanggal 11/03/2025
+  ✅ FOUND      JV.2025.03.00491       ID: 48239      | Tgl: 12/03/2025   | Penjualan cafe tanggal 12/03/2025
+  ✅ FOUND      JV.2025.03.00489       ID: 48277      | Tgl: 13/03/2025   | Uang masuk penjualan cafe tanggal 12/03/2025
+  ✅ FOUND      JV.2025.03.00376       ID: 48306      | Tgl: 13/03/2025   | Penjualan cafe tanggal 13/03/2025
+  ✅ FOUND      JV.2025.03.00378       ID: 48460      | Tgl: 14/03/2025   | Uang masuk penjualan cafe tanggal 13/03/2025
+  ✅ FOUND      JV.2025.03.00377       ID: 48459      | Tgl: 14/03/2025   | Penjualan cafe tanggal 14/03/2025
+  ✅ FOUND      JV.2025.03.00379       ID: 48261      | Tgl: 15/03/2025   | Uang masuk penjualan cafe tanggal 14/03/2025
+  ✅ FOUND      JV.2025.03.00431       ID: 48473      | Tgl: 15/03/2025   | Penjualan cafe tanggal 15/03/2025
+  ✅ FOUND      JV.2025.03.00459       ID: 48370      | Tgl: 16/03/2025   | Uang masuk penjualan cafe tanggal 15/03/2025
+  ✅ FOUND      JV.2025.03.00428       ID: 48265      | Tgl: 16/03/2025   | Penjualan cafe tanggal 16/03/2025
+  ✅ FOUND      JV.2025.03.00460       ID: 48272      | Tgl: 17/03/2025   | Uang masuk penjualan cafe tanggal 16/03/2025
+  ✅ FOUND      JV.2025.03.00461       ID: 48273      | Tgl: 17/03/2025   | Penjualan cafe tanggal 17/03/2025
+  ✅ FOUND      JV.2025.03.00462       ID: 48479      | Tgl: 18/03/2025   | Uang masuk penjualan cafe tanggal 17/03/2025
+  ✅ FOUND      JV.2025.03.00483       ID: 48517      | Tgl: 18/03/2025   | Penjualan cafe tanggal 18/03/2025
+  ✅ FOUND      JV.2025.03.00797       ID: 49741      | Tgl: 19/03/2025   | Uang masuk penjualan cafe tanggal 18/03/2025
+  ✅ FOUND      JV.2025.03.00507       ID: 48249      | Tgl: 19/03/2025   | Penjualan cafe tanggal 19/03/2025
+  ✅ FOUND      JV.2025.03.00522       ID: 48494      | Tgl: 20/03/2025   | Uang masuk penjualan cafe tanggal 19/03/2025
+  ✅ FOUND      JV.2025.03.00552       ID: 48499      | Tgl: 20/03/2025   | Penjualan cafe tanggal 20/03/2025
+  ✅ FOUND      JV.2025.03.00554       ID: 48292      | Tgl: 21/03/2025   | Uang masuk penjualan cafe tanggal 20/03/2025
+  ✅ FOUND      JV.2025.03.00618       ID: 48862      | Tgl: 21/03/2025   | Penjualan cafe tanggal 21/03/2025
+  ✅ FOUND      JV.2025.03.00634       ID: 49151      | Tgl: 22/03/2025   | Uang masuk penjualan cafe tanggal 21/03/2025
+  ✅ FOUND      JV.2025.03.00619       ID: 48716      | Tgl: 22/03/2025   | Penjualan cafe tanggal 22/03/2025
+  ✅ FOUND      JV.2025.03.00635       ID: 49200      | Tgl: 23/03/2025   | Uang masuk penjualan cafe tanggal 22/03/2025
+  ✅ FOUND      JV.2025.03.00620       ID: 48759      | Tgl: 23/03/2025   | Penjualan cafe tanggal 23/03/2025
+  ✅ FOUND      JV.2025.03.00636       ID: 49250      | Tgl: 24/03/2025   | Uang masuk penjualan cafe tanggal 23/03/2025
+  ✅ FOUND      JV.2025.03.00621       ID: 48760      | Tgl: 24/03/2025   | Penjualan cafe tanggal 24/03/2025
+  ✅ FOUND      JV.2025.03.00798       ID: 49820      | Tgl: 25/03/2025   | Uang masuk penjualan cafe tanggal 24/03/2025
+  ✅ FOUND      JV.2025.03.00629       ID: 49100      | Tgl: 25/03/2025   | Penjualan cafe tanggal 25/03/2025
+  ✅ FOUND      JV.2025.03.00637       ID: 49300      | Tgl: 26/03/2025   | Uang masuk penjualan cafe tanggal 25/03/2025
+  ✅ FOUND      JV.2025.03.00668       ID: 49405      | Tgl: 26/03/2025   | Penjualan cafe tanggal 26/03/2025
+  ✅ FOUND      JV.2025.03.00775       ID: 49814      | Tgl: 27/03/2025   | Uang masuk penjualan cafe tanggal 26/03/2025
+  ✅ FOUND      JV.2025.03.00673       ID: 49650      | Tgl: 27/03/2025   | Penjualan cafe tanggal 27/03/2025
+  ✅ FOUND      JV.2025.03.00776       ID: 49728      | Tgl: 28/03/2025   | Uang masuk penjualan cafe tanggal 27/03/2025
+  ✅ FOUND      JV.2025.03.00841       ID: 54804      | Tgl: 31/03/2025   | Setoran penjualan cafe cash tgl 2
+8 mar lapiaza
+  ✅ FOUND      JV.2025.03.00778       ID: 49629      | Tgl: 29/03/2025   | Uang masuk penjualan cafe tanggal 28/03/2025
+  ✅ FOUND      JV.2025.03.00683       ID: 49752      | Tgl: 29/03/2025   | Penjualan cafe tanggal 29/03/2025
+  ✅ FOUND      JV.2025.03.00779       ID: 49674      | Tgl: 30/03/2025   | Uang masuk penjualan cafe tanggal 29/03/2025
+  ✅ FOUND      JV.2025.03.00842       ID: 54954      | Tgl: 31/03/2025   | Setoran penjualan cafe cash tgl 30 Mar Lapiaza
+  ✅ FOUND      JV.2025.03.00684       ID: 49552      | Tgl: 30/03/2025   | Penjualan cafe tanggal 30/03/2025
+  ✅ FOUND      JV.2025.03.00780       ID: 49675      | Tgl: 31/03/2025   | Uang masuk penjualan cafe tanggal 30/03/2025
+  ✅ FOUND      JV.2025.04.00889       ID: 54864      | Tgl: 03/04/2025   | Setoran penjualan cafe cash tgl 31 Mar Lapiazza
+  ✅ FOUND      JV.2025.03.00685       ID: 49753      | Tgl: 31/03/2025   | Penjualan cafe tanggal 31/03/2025
+  ✅ FOUND      JV.2025.04.00031       ID: 49676      | Tgl: 01/04/2025   | Uang masuk penjualan cafe tanggal 31/03/2025
+  ✅ FOUND      JV.2025.04.00890       ID: 54805      | Tgl: 03/04/2025   | Setoran penjualan cafe cash tgl 01 Apr Lapiazza
+  ✅ FOUND      JV.2025.04.00006       ID: 49803      | Tgl: 01/04/2025   | Penjualan cafe tanggal 01/04/2025
+  ✅ FOUND      JV.2025.04.00032       ID: 49630      | Tgl: 02/04/2025   | Uang masuk penjualan cafe tanggal 01/04/2025
+  ✅ FOUND      JV.2025.04.00891       ID: 54806      | Tgl: 03/04/2025   | Setoran penjualan cafe cash tgl 02 Apr Lapiazza
+  ✅ FOUND      JV.2025.04.00038       ID: 49761      | Tgl: 02/04/2025   | Penjualan cafe tanggal 02/04/2025
+  ✅ FOUND      JV.2025.04.00137       ID: 49769      | Tgl: 03/04/2025   | Uang masuk penjualan cafe tanggal 02/04/2025
+  ✅ FOUND      JV.2025.04.00138       ID: 49905      | Tgl: 04/04/2025   | Uang masuk penjualan cafe tanggal 02/04/2025
+  ✅ FOUND      JV.2025.04.00040       ID: 49571      | Tgl: 03/04/2025   | Penjualan cafe tanggal 03/04/2025
+  ✅ FOUND      JV.2025.05.00147       ID: 52755      | Tgl: 04/05/2025   | Uang masuk penjualan tanggal 03/04/2025
+  ✅ FOUND      JV.2025.04.00066       ID: 49764      | Tgl: 04/04/2025   | Penjualan cafe tanggal 04/04/2025
+  ✅ FOUND      JV.2025.04.00139       ID: 49770      | Tgl: 05/04/2025   | Uang masuk penjualan cafe tanggal 04/04/2025
+  ✅ FOUND      JV.2025.04.00134       ID: 49955      | Tgl: 05/04/2025   | Penjualan cafe tanggal 05/04/2025
+  ✅ FOUND      JV.2025.04.00140       ID: 49592      | Tgl: 06/04/2025   | Uang masuk penjualan cafe tanggal 05/04/2025
+  ✅ FOUND      JV.2025.04.00135       ID: 49956      | Tgl: 06/04/2025   | Penjualan cafe tanggal 06/04/2025
+  ✅ FOUND      JV.2025.04.00141       ID: 49873      | Tgl: 07/04/2025   | Uang masuk penjualan cafe tanggal 06/04/2025
+  ✅ FOUND      JV.2025.04.00136       ID: 49957      | Tgl: 07/04/2025   | Penjualan cafe tanggal 07/04/2025
+  ✅ FOUND      JV.2025.04.00142       ID: 49829      | Tgl: 08/04/2025   | Uang masuk penjualan cafe tanggal 07/04/2025
+  ✅ FOUND      JV.2025.04.00186       ID: 50400      | Tgl: 08/04/2025   | Penjualan cafe tanggal 08/04/2025
+  ✅ FOUND      JV.2025.04.00896       ID: 55053      | Tgl: 09/04/2025   | Uang masuk penjualan cafe tanggal 08/04/2025
+  ✅ FOUND      JV.2025.04.00187       ID: 50450      | Tgl: 09/04/2025   | Penjualan cafe tanggal 09/04/2025
+  ✅ FOUND      JV.2025.04.00897       ID: 54867      | Tgl: 10/04/2025   | Uang amsuk penjualan cafe tanggal 09/04/2025
+  ✅ FOUND      JV.2025.04.00231       ID: 50605      | Tgl: 10/04/2025   | Penjualan cafe tanggal 10/04/2025
+  ✅ FOUND      JV.2025.04.00234       ID: 50554      | Tgl: 11/04/2025   | Uang masuk penjualan cafe tanggal 10/04/2025
+  ✅ FOUND      JV.2025.04.00232       ID: 50709      | Tgl: 11/04/2025   | Penjualan cafe tanggal 11/04/2025
+  ✅ FOUND      JV.2025.04.00233       ID: 50657      | Tgl: 12/04/2025   | Uang masuk penjualan cafe tanggal 11/04/2025
+  ✅ FOUND      JV.2025.04.00348       ID: 50817      | Tgl: 12/04/2025   | Penjualan cafe tanggal 12/04/2025
+  ✅ FOUND      JV.2025.04.00467       ID: 52008      | Tgl: 13/04/2025   | Uang masuk penjualan cafe tanggal 12/04/2025
+  ✅ FOUND      JV.2025.04.00466       ID: 52057      | Tgl: 13/04/2025   | Uang masuk penjualan cash lapiz 12 apr 25
+  ✅ FOUND      JV.2025.04.00349       ID: 50818      | Tgl: 13/04/2025   | Penjualan cafe tanggal 13/04/2025
+  ✅ FOUND      JV.2025.04.00465       ID: 51956      | Tgl: 14/04/2025   | Uang masuk penjualan cafe tanggal 13/04/2025
+  ✅ FOUND      JV.2025.04.00814       ID: 51939      | Tgl: 29/04/2025   | Uang masuk penjualan cash tanggal 13/04/2025
+  ✅ FOUND      JV.2025.04.00350       ID: 51014      | Tgl: 14/04/2025   | Penjualan cafe tanggal 14/04/2025
+  ✅ FOUND      JV.2025.04.00464       ID: 51860      | Tgl: 15/04/2025   | Uang masuk penjualan cafe tanggal 14/04/2025
+  ✅ FOUND      JV.2025.04.00374       ID: 50821      | Tgl: 15/04/2025   | Penjualan cafe tanggal 15/04/2025
+  ✅ FOUND      JV.2025.04.00463       ID: 52056      | Tgl: 16/04/2025   | Uang masuk penjualan cafe tanggal 15/04/2025
+  ✅ FOUND      JV.2025.04.00379       ID: 50822      | Tgl: 16/04/2025   | Penjualan cafe tanggal 16/04/2025
+  ✅ FOUND      JV.2025.04.00462       ID: 52007      | Tgl: 17/04/2025   | Uang masuk penjualan cafe tanggal 16/04/2025
+  ✅ FOUND      JV.2025.04.00813       ID: 52273      | Tgl: 29/04/2025   | Uang masuk penjualan cash tanggal 16/04/2025
+  ✅ FOUND      JV.2025.04.00436       ID: 51211      | Tgl: 17/04/2025   | Penjualan cafe tanggal 17/04/2025
+  ✅ FOUND      JV.2025.04.00461       ID: 51859      | Tgl: 18/04/2025   | Uang masuk penjualan cafe tanggal 17/04/2025
+  ✅ FOUND      JV.2025.04.00815       ID: 52132      | Tgl: 29/04/2025   | Uang masuk penjualan cash tanggal 17/04/2025
+  ✅ FOUND      JV.2025.04.00459       ID: 52055      | Tgl: 19/04/2025   | Uang masuk penjualan cash strada lapiazza 18apr
+  ✅ FOUND      JV.2025.04.00437       ID: 51212      | Tgl: 18/04/2025   | Penjualan cafe tanggal 18/04/2025
+  ✅ FOUND      JV.2025.04.00460       ID: 52005      | Tgl: 19/04/2025   | Uang masuk penjualan cafe tanggal 18/04/2025
+  ✅ FOUND      JV.2025.04.00442       ID: 51901      | Tgl: 19/04/2025   | Penjualan cafe tanggal 19/04/2025
+  ✅ FOUND      JV.2025.04.00458       ID: 51955      | Tgl: 20/04/2025   | Uang masuk penjualan cafe tanggal 19/04/2025
+  ✅ FOUND      JV.2025.04.00444       ID: 51801      | Tgl: 20/04/2025   | Penjualan cafe tanggal 20/04/2025
+  ✅ FOUND      JV.2025.04.00457       ID: 52053      | Tgl: 21/04/2025   | Uang masuk penjualan cafe tanggal 20/04/2025
+  ✅ FOUND      JV.2025.04.00443       ID: 51853      | Tgl: 21/04/2025   | Penjualan cafe tanggal 21/04/2025
+  ✅ FOUND      JV.2025.04.00456       ID: 52004      | Tgl: 22/04/2025   | Uang masuk penjualan cafe tanggal 21/04/2025
+  ✅ FOUND      JV.2025.04.00733       ID: 51930      | Tgl: 22/04/2025   | Penjualan cafe tanggal 22/04/2025
+  ✅ FOUND      JV.2025.04.00734       ID: 52303      | Tgl: 23/04/2025   | Uang masuk penjualan cafe tanggal 22/04/2025
+  ✅ FOUND      JV.2025.03.00828       ID: 52184      | Tgl: 27/03/2025   | Setoran penjualan cash tanggal 23/04/2025
+  ✅ FOUND      JV.2025.04.00735       ID: 52219      | Tgl: 23/04/2025   | Penjualan cafe tanggal 23/04/2025
+  ✅ FOUND      JV.2025.04.00736       ID: 52255      | Tgl: 24/04/2025   | Uang masuk penjualan cafe tanggal 23/04/2025
+  ✅ FOUND      JV.2025.04.00737       ID: 52168      | Tgl: 24/04/2025   | Penjualan cafe tanggal 24/04/2025
+  ✅ FOUND      JV.2025.04.00738       ID: 52169      | Tgl: 25/04/2025   | Uang masuk penjualan cafe tanggal 24/04/2025
+  ✅ FOUND      JV.2025.04.00812       ID: 52321      | Tgl: 29/04/2025   | Uang masuk penjualan cash tanggal 24/04/2025
+  ✅ FOUND      JV.2025.04.00739       ID: 52304      | Tgl: 25/04/2025   | Penjualan cafe tanggal 25/04/2025
+  ✅ FOUND      JV.2025.04.00745       ID: 52258      | Tgl: 26/04/2025   | Uang masuk penjualan cafe tanggal 25/04/2025
+  ✅ FOUND      JV.2025.04.00762       ID: 52262      | Tgl: 26/04/2025   | Penjualan cafe tanggal 26/04/2025
+  ✅ FOUND      JV.2025.04.00763       ID: 52224      | Tgl: 27/04/2025   | Uang masuk penjualan cafe tanggal 26/04/2025
+  ✅ FOUND      JV.2025.04.00764       ID: 52173      | Tgl: 27/04/2025   | Penjualan cafe tanggal 27/04/2025
+  ✅ FOUND      JV.2025.04.00765       ID: 51831      | Tgl: 28/04/2025   | Uang masuk penjualan cafe tanggal 27/04/2025
+  ✅ FOUND      JV.2025.04.00834       ID: 52142      | Tgl: 28/04/2025   | Penjualan cafe tanggal 28/04/2025
+  ✅ FOUND      JV.2025.04.00810       ID: 52319      | Tgl: 29/04/2025   | Uang masuk penjualan cafe tanggal 28/04/2025
+  ✅ FOUND      JV.2025.04.00835       ID: 52290      | Tgl: 29/04/2025   | Penjualan cafe tanggal 29/04/2025
+  ✅ FOUND      JV.2025.04.00811       ID: 52320      | Tgl: 30/04/2025   | Uang masuk penjualan cafe tanggal 29/04/2025
+  ✅ FOUND      JV.2025.04.00836       ID: 52245      | Tgl: 30/04/2025   | Penjualan cafe tanggal 30/04/2025
+  ✅ FOUND      JV.2025.05.00144       ID: 52553      | Tgl: 01/05/2025   | Uang masuk penjualan cafe tanggal 30/04/2025
+  ✅ FOUND      JV.2025.05.00150       ID: 52852      | Tgl: 01/05/2025   | Penjualan cafe tanggal 01/05.2025
+  ✅ FOUND      JV.2025.05.00145       ID: 52554      | Tgl: 02/05/2025   | Uang masuk penjualan cafe 01/05/2025
+  ✅ FOUND      JV.2025.05.00151       ID: 52711      | Tgl: 02/05/2025   | Penjualan cafe tanggal 02/05/2025
+  ✅ FOUND      JV.2025.05.00146       ID: 52603      | Tgl: 03/05/2025   | Uang masuk penjualan cafe tanggal 02/05/2025
+  ✅ FOUND      JV.2025.05.00152       ID: 52657      | Tgl: 03/05/2025   | Penjualan cafe tanggal 03/05/2025
+  ✅ FOUND      JV.2025.05.00153       ID: 52658      | Tgl: 04/05/2025   | Penjualan cafe tanggal 04/05/2025
+  ✅ FOUND      JV.2025.05.00148       ID: 52656      | Tgl: 05/05/2025   | Uang masuk penjualan cafe tanggal 04/05/2025
+  ✅ FOUND      JV.2025.05.00154       ID: 52659      | Tgl: 05/05/2025   | Penjualan cafe tanggal 05/05/2025
+  ✅ FOUND      JV.2025.05.00149       ID: 52851      | Tgl: 06/05/2025   | Uang masuk penjualan cafe tanggal 05/05/2025
+  ✅ FOUND      JV.2025.05.00972       ID: 57058      | Tgl: 07/05/2025   | Uang Masuk Penjualan La Piazza 6 Mei 2025
+  ✅ FOUND      JV.2025.05.00155       ID: 52660      | Tgl: 06/05/2025   | Penjualan cafe tanggal 06/05/2025
+  ✅ FOUND      JV.2025.05.00251       ID: 53510      | Tgl: 07/05/2025   | Penjualan cafe tanggal 07/05/2025
+  ✅ FOUND      JV.2025.05.00255       ID: 53354      | Tgl: 08/05/2025   | Uang masuk penjualan cafe tanggal 07/05/2025
+  ✅ FOUND      JV.2025.05.00254       ID: 53410      | Tgl: 08/05/2025   | Penjualan cafe tanggal 08/05/2025
+  ✅ FOUND      JV.2025.05.00256       ID: 53306      | Tgl: 09/05/2025   | Uang masuk penjualan cafe tanggal 08/05/2025
+  ✅ FOUND      JV.2025.05.00315       ID: 53709      | Tgl: 09/05/2025   | Penjualan cafe tanggal 09/05/2025
+  ✅ FOUND      JV.2025.05.00320       ID: 53606      | Tgl: 10/05/2025   | Uang masuk penjualan cafe tanggal 09/05/2025
+  ✅ FOUND      JV.2025.05.00316       ID: 53668      | Tgl: 10/05/2025   | Penjualan cafe tanggal10/05/2025
+  ✅ FOUND      JV.2025.05.00321       ID: 53710      | Tgl: 11/05/2025   | Uang masuk penjualan cafe tanggal 10/05/2025
+  ✅ FOUND      JV.2025.05.00317       ID: 53803      | Tgl: 11/05/2025   | Penjualan cafe tanggal 11/05/2025
+  ✅ FOUND      JV.2025.05.00322       ID: 53757      | Tgl: 12/05/2025   | Uang masuk penjualan cafe tanggal 11/05/2025
+  ✅ FOUND      JV.2025.05.00318       ID: 53605      | Tgl: 12/05/2025   | Penjualan cafe tanggal 12/05/2025
+  ✅ FOUND      JV.2025.05.00323       ID: 53804      | Tgl: 13/05/2025   | Uang masuk penjualan cafe tanggal 12/05/2025
+  ✅ FOUND      JV.2025.05.00319       ID: 53851      | Tgl: 13/05/2025   | Penjualan cafe tanggal 13/05/2025
+  ✅ FOUND      JV.2025.05.00324       ID: 53805      | Tgl: 13/05/2025   | Uang masuk penjualan cafe tanggal 13/05/2025
+  ✅ FOUND      JV.2025.05.00391       ID: 53956      | Tgl: 14/05/2025   | Penjualan cafe tanggal 14/05/2025
+  ✅ FOUND      JV.2025.05.00445       ID: 54407      | Tgl: 15/05/2025   | Uang masuk penjualan cafe tanggal 14/05/2025
+  ✅ FOUND      JV.2025.05.00443       ID: 54406      | Tgl: 15/05/2025   | Penjualan cafe tanggal 15/05/025
+  ✅ FOUND      JV.2025.05.00444       ID: 54312      | Tgl: 16/05/2025   | Uang masuk penjualan cafe tanggal 15/05/2025
+  ✅ FOUND      JV.2025.05.00555       ID: 54961      | Tgl: 16/05/2025   | Penjualan cafe tanggal 16/05/2025
+  ✅ FOUND      JV.2025.05.00559       ID: 54962      | Tgl: 17/05/2025   | Uang masuk penjualan cafe tanggal 16/05/2025
+  ✅ FOUND      JV.2025.06.00785       ID: 58191      | Tgl: 17/06/2025   | Uang masuk penjualan cafe tanggal 16/05/2025
+  ✅ FOUND      JV.2025.05.00556       ID: 54875      | Tgl: 17/05/2025   | Penjualan cafe tanggal 17/05/2025
+  ✅ FOUND      JV.2025.05.00560       ID: 55105      | Tgl: 18/05/2025   | Uang masuk penjualan cafe tanggal 17/05/2025
+  ✅ FOUND      JV.2025.05.00557       ID: 55056      | Tgl: 18/05/2025   | Penjualan cafe tanggal 18/05/2025
+  ✅ FOUND      JV.2025.05.00561       ID: 55058      | Tgl: 19/05/2025   | Uang masuk penjualan cafe tanggal 18/05/2025
+  ✅ FOUND      JV.2025.05.00558       ID: 55057      | Tgl: 19/05/2025   | Penjualan cafe tanggal 19/05/2025
+  ✅ FOUND      JV.2025.05.00562       ID: 54963      | Tgl: 20/05/2025   | Uang masuk penjualan cafe tanggal 19/05/2025
+  ✅ FOUND      JV.2025.05.00632       ID: 54974      | Tgl: 20/05/2025   | Penjualan cafe tanggal 20/05/2025
+  ✅ FOUND      JV.2025.05.00633       ID: 55115      | Tgl: 21/05/2025   | Uang masuk penjualan cafe tanggal 20/05/2025
+  ✅ FOUND      JV.2025.05.00631       ID: 54821      | Tgl: 21/05/2025   | Penjualan cafe tanggal 21/05/2025
+  ✅ FOUND      JV.2025.05.00634       ID: 54822      | Tgl: 22/05/2025   | Uang masuk penjualan cafe tanggal 21/05/2025
+  ✅ FOUND      JV.2025.05.00630       ID: 55114      | Tgl: 22/05/2025   | Penjualan cafe tanggal 22/05/2025
+  ✅ FOUND      JV.2025.05.00635       ID: 54823      | Tgl: 23/05/2025   | Uang masuk penjualan cafe tanggal 22/05/2025
+  ✅ FOUND      JV.2025.05.00797       ID: 55302      | Tgl: 23/05/2025   | Penjualan cafe tanggal 23/05/2025
+  ✅ FOUND      JV.2025.05.00799       ID: 55257      | Tgl: 24/05/2025   | Uang masuk penjualan cafe tanggal 23/05/2025
+  ✅ FOUND      JV.2025.05.00796       ID: 55179      | Tgl: 24/05/2025   | Penjualan cafe tanggal 24/05/2025
+  ✅ FOUND      JV.2025.05.00798       ID: 55256      | Tgl: 25/05/2025   | Uang masuk penjualan cafe tanggal 24/05/2025
+  ✅ FOUND      JV.2025.05.00795       ID: 55301      | Tgl: 25/05/2025   | Penjualan cafe tanggal 25/05/2025
+  ✅ FOUND      JV.2025.05.00800       ID: 55089      | Tgl: 26/05/2025   | Unag masuk penjualan cafe tanggal 25/05/2025
+  ✅ FOUND      JV.2025.05.00794       ID: 55048      | Tgl: 26/05/2025   | Penjualan cafe tanggal 26/05/2025
+  ✅ FOUND      JV.2025.05.00801       ID: 55258      | Tgl: 27/05/2025   | Unag masuk penjualan cafe tanggal 26/05/2025
+  ✅ FOUND      JV.2025.05.00793       ID: 55218      | Tgl: 27/05/2025   | Penjualan cafe tanggal 27/05/2025
+  ✅ FOUND      JV.2025.05.00802       ID: 55049      | Tgl: 28/05/2025   | Uang masuk penjualan cafe tanggal 27/05/2025
+  ✅ FOUND      JV.2025.05.00937       ID: 56710      | Tgl: 28/05/2025   | Penjualan cafe tanggal 28/05/2025
+  ✅ FOUND      JV.2025.05.00944       ID: 56661      | Tgl: 29/05/2025   | Uang masuk penjualan cafe tanggal 28/05/2025
+  ✅ FOUND      JV.2025.05.00938       ID: 56711      | Tgl: 29/05/2025   | Penjualan cafe tanggal 29/05/2025
+  ✅ FOUND      JV.2025.05.00943       ID: 56614      | Tgl: 30/05/2025   | Uang masuk penjualan cafe tanggal 29/05/2025
+  ✅ FOUND      JV.2025.05.00939       ID: 56404      | Tgl: 30/05/2025   | Penjualan cafe tanggal 30/05/2025
+  ✅ FOUND      JV.2025.05.00942       ID: 56556      | Tgl: 31/05/2025   | Uang masuk penjualan cafe tanggal 30/05/2025
+  ✅ FOUND      JV.2025.05.00940       ID: 56405      | Tgl: 31/05/2025   | Penjualan cafe tanggal 31/05/2025
+  ✅ FOUND      JV.2025.06.00259       ID: 56718      | Tgl: 01/06/2025   | Uang masuk penjualan cafe tanggal 31/05/2025
+  ✅ FOUND      JV.2025.06.00848       ID: 58811      | Tgl: 13/06/2025   | Setoran penjualan cash sales lapiaza
+1 Juni 2025
+  ✅ FOUND      JV.2025.06.00239       ID: 56611      | Tgl: 01/06/2025   | Penjualan cafe tanggal 01/06/2025
+  ✅ FOUND      JV.2025.06.00258       ID: 56613      | Tgl: 02/06/2025   | Uang masuk penjualan cafe tanggal 01/06/2025
+  ✅ FOUND      JV.2025.06.00849       ID: 58682      | Tgl: 13/06/2025   | Setoran penjualan cash sales lapiaza
+2 Juni 2025
+  ✅ FOUND      JV.2025.06.00240       ID: 56453      | Tgl: 02/06/2025   | Penjualan cafe tanggal 02/06/2025
+  ✅ FOUND      JV.2025.06.00257       ID: 56660      | Tgl: 03/06/2025   | Uang masuk penjualan cafe tanggal 02/06/2025
+  ✅ FOUND      JV.2025.06.00241       ID: 56659      | Tgl: 03/06/2025   | Penjualan cafe tanggal 03/06/2025
+  ✅ FOUND      JV.2025.06.00255       ID: 56555      | Tgl: 04/06/2025   | Uang masuk penjualan cafe tanggal 03/06/2025
+  ✅ FOUND      JV.2025.06.00242       ID: 56503      | Tgl: 04/06/2025   | Penjualan cafe tanggal 04/06/2025
+  ✅ FOUND      JV.2025.06.00254       ID: 56455      | Tgl: 05/06/2025   | Uang masuk penjualan cafe tanggal 04/06/2025
+  ✅ FOUND      JV.2025.06.00243       ID: 56553      | Tgl: 05/06/2025   | Penjualan cafe tanggal 05/06/2025
+  ✅ FOUND      JV.2025.06.00253       ID: 56716      | Tgl: 06/06/2025   | Uang masuk penjualan cafe tanggal 05/06/2025
+  ✅ FOUND      JV.2025.06.00850       ID: 58775      | Tgl: 13/06/2025   | Setoran penjualan cash sales lapiaza
+6 Juni 2025
+  ✅ FOUND      JV.2025.06.00244       ID: 56712      | Tgl: 06/06/2025   | Penjualan cafe tanggal 06/06/2025
+  ✅ FOUND      JV.2025.06.00252       ID: 56408      | Tgl: 07/06/2025   | Uang masuk penjualan cafe tanggal 06/06/2025
+  ✅ FOUND      JV.2025.06.00851       ID: 58581      | Tgl: 13/06/2025   | Setoran penjualan cash sales lapiaza
+7 Juni 2025
+  ✅ FOUND      JV.2025.06.00245       ID: 56554      | Tgl: 07/06/2025   | Penjualan cafe tanggal 07/06/2025
+  ✅ FOUND      JV.2025.06.00251       ID: 56454      | Tgl: 08/06/2025   | Uang masuk penjualan cafe tanggal 07/06/2025
+  ✅ FOUND      JV.2025.06.00852       ID: 58683      | Tgl: 13/06/2025   | Setoran penjualan cash sales lapiaza
+8 Juni 2025
+  ✅ FOUND      JV.2025.06.00246       ID: 56713      | Tgl: 08/06/2025   | Penjualan cafe tanggal 08/06/2025
+  ✅ FOUND      JV.2025.06.00248       ID: 56406      | Tgl: 09/06/2025   | Uang masuk penjualan cafe tanggal 08/06/2025
+  ✅ FOUND      JV.2025.06.00247       ID: 56714      | Tgl: 09/06/2025   | Penjualan cafe tanggal 09/06/2025
+  ✅ FOUND      JV.2025.06.00495       ID: 57611      | Tgl: 10/06/2025   | Uang masuk penjualan cafe tanggal 09/06/2025
+  ✅ FOUND      JV.2025.06.00799       ID: 58340      | Tgl: 27/06/2025   | Uang masuk penjualan cash la piazza tanggal 10.06.2025
+  ✅ FOUND      JV.2025.06.00496       ID: 57707      | Tgl: 11/06/2025   | Uang masuk penjualan cafe tanggal 10/06/2025
+  ✅ FOUND      JV.2025.06.00483       ID: 57704      | Tgl: 11/06/2025   | Penjualan cafe tanggal 11/06/2025
+  ✅ FOUND      JV.2025.06.00497       ID: 57569      | Tgl: 12/06/2025   | Uang masuk penjualan cafe tanggal 11/06/2025
+  ✅ FOUND      JV.2025.06.00484       ID: 57565      | Tgl: 12/06/2025   | Penjualan cafe tanggal 12/06/20025
+  ✅ FOUND      JV.2025.06.00498       ID: 57570      | Tgl: 13/06/2025   | Uang masuk penjualan cafe tanggal 12/06/2025
+  ✅ FOUND      JV.2025.06.00485       ID: 57705      | Tgl: 13/06/2025   | Penjualan cafe tanggal 13/06/2025
+  ✅ FOUND      JV.2025.06.00499       ID: 57655      | Tgl: 14/06/2025   | Uang masuk penjualan cafe tanggal 13/06/2025
+  ✅ FOUND      JV.2025.06.00800       ID: 58461      | Tgl: 27/06/2025   | Uang masuk penjualan cash la piazza tanggal 14.06.2025
+  ✅ FOUND      JV.2025.06.00486       ID: 57706      | Tgl: 14/06/2025   | Penjualan cafe tanggal 14/06/2025
+  ✅ FOUND      JV.2025.06.00500       ID: 57656      | Tgl: 15/06/2025   | Uang masuk penjualan cafe tanggal 14/06/2025
+  ✅ FOUND      JV.2025.06.00487       ID: 57566      | Tgl: 15/06/2025   | Penjualan cafe tanggal 15/06/2025
+  ✅ FOUND      JV.2025.06.00501       ID: 57757      | Tgl: 16/06/2025   | Uang masuk penjualan cafe tanggal 15/06/2025
+  ✅ FOUND      JV.2025.06.00488       ID: 57502      | Tgl: 16/06/2025   | Penjualan cafe tanggal 16/06/2025
+  ✅ FOUND      JV.2025.06.00489       ID: 57756      | Tgl: 17/06/2025   | Penjualan cafe tanggal 17/06/2025
+  ✅ FOUND      JV.2025.06.00786       ID: 58335      | Tgl: 18/06/2025   | Uang masuk penjualan cafe tanggal 17/06/2025
+  ✅ FOUND      JV.2025.06.00490       ID: 57609      | Tgl: 18/06/2025   | Penjualan cafe tanggal 18/06/2025
+  ✅ FOUND      JV.2025.06.00787       ID: 58286      | Tgl: 19/06/2025   | Uang masuk penjualan cafe tanggal 18/06/2025
+  ✅ FOUND      JV.2025.06.00491       ID: 57610      | Tgl: 19/06/2025   | Penjualan cafe tanggal 19/06/2025
+  ✅ FOUND      JV.2025.06.00788       ID: 58336      | Tgl: 20/06/2025   | Uang masuk penjualan cafe tanggal 19/06/2025
+  ✅ FOUND      JV.2025.06.00492       ID: 57567      | Tgl: 20/06/2025   | Penjualan cafe tanggal 20/06/2025
+  ✅ FOUND      JV.2025.06.00789       ID: 58287      | Tgl: 21/06/2025   | Uang masuk penjualan cafe tanggal 20/06/2025
+  ✅ FOUND      JV.2025.07.00998       ID: 61115      | Tgl: 07/07/2025   | Setoran penjualan cash sales La Piazza tanggal 21 Juni 2025
+  ✅ FOUND      JV.2025.06.00493       ID: 57568      | Tgl: 21/06/2025   | Penjualan cafe tanggal 21/06/2025
+  ✅ FOUND      JV.2025.06.00791       ID: 58216      | Tgl: 22/06/2025   | Uang masuk penjualan cafe tanggal 21/06/2025
+  ✅ FOUND      JV.2025.06.00494       ID: 57654      | Tgl: 22/06/2025   | Penjualan cafe tanggal 22/06/2025
+  ✅ FOUND      JV.2025.06.00792       ID: 58337      | Tgl: 23/06/2025   | Uang masuk penjualan cafe tanggal 22/06/2025
+  ✅ FOUND      JV.2025.07.00999       ID: 61269      | Tgl: 07/07/2025   | Setoran penjualan cash sales La Piazza tanggal 23 Juni 2025
+  ✅ FOUND      JV.2025.06.00777       ID: 58213      | Tgl: 23/06/2025   | Penjualan cafe tanggal 23/06/2025
+  ✅ FOUND      JV.2025.06.00793       ID: 58338      | Tgl: 24/06/2025   | Uang masuk penjualan cafe tanggal 23/06/2025
+  ✅ FOUND      JV.2025.06.00778       ID: 58460      | Tgl: 24/06/2025   | Penjualan cafe tanggal 24/06/2025
+  ✅ FOUND      JV.2025.06.00794       ID: 58392      | Tgl: 25/06/2025   | Uang masuk penjualan cafe tanggal 24/06/2025
+  ✅ FOUND      JV.2025.07.01000       ID: 61351      | Tgl: 07/07/2025   | Setoran penjualan cash sales La Piazza tanggal 25 Juni 2025
+  ✅ FOUND      JV.2025.06.00779       ID: 58283      | Tgl: 25/06/2025   | Penjualan cafe tanggal 25/06/2025
+  ✅ FOUND      JV.2025.06.00795       ID: 58192      | Tgl: 26/06/2025   | Uang masuk penjualan cafe tanggal 25/06/2025
+  ✅ FOUND      JV.2025.06.00780       ID: 58284      | Tgl: 26/06/2025   | Penjualan cafe tanggal 26/06/2025
+  ✅ FOUND      JV.2025.06.00797       ID: 58393      | Tgl: 27/06/2025   | Uang masuk penjualan cafe tanggal 26/06/2025
+  ✅ FOUND      JV.2025.07.01001       ID: 61352      | Tgl: 07/07/2025   | Setoran penjualan cash sales La Piazza tanggal 27 Juni 2025
+  ✅ FOUND      JV.2025.06.00781       ID: 58391      | Tgl: 27/06/2025   | Penjualan cafe tanggal 27/06/2025
+  ✅ FOUND      JV.2025.06.00798       ID: 58288      | Tgl: 28/06/2025   | Uang masuk penjualan cafe tanggal 27/06/2025
+  ✅ FOUND      JV.2025.06.00782       ID: 58285      | Tgl: 28/06/2025   | Penjualan cafe tanggal 28/06/2025
+  ✅ FOUND      JV.2025.06.00801       ID: 58462      | Tgl: 29/06/2025   | Uang masuk penjualan cafe tanggal 28/06/2025
+  ✅ FOUND      JV.2025.07.01002       ID: 61270      | Tgl: 07/07/2025   | Setoran penjualan cash sales La Piazza tanggal 29 Juni 2025
+  ✅ FOUND      JV.2025.06.00783       ID: 58334      | Tgl: 29/06/2025   | Penjualan cafe tanggal 29/06/2025
+  ✅ FOUND      JV.2025.06.00802       ID: 58394      | Tgl: 30/06/2025   | Uang masuk penjualan cafe tanggal 29/06/2025
+  ✅ FOUND      JV.2025.06.00784       ID: 58214      | Tgl: 30/06/2025   | Penjualan cafe tanggal 30/06/2025
+  ✅ FOUND      JV.2025.07.00041       ID: 58395      | Tgl: 01/07/2025   | Uang masuk penjualan cafe tanggal 30/06/2025
+  ✅ FOUND      JV.2025.07.00170       ID: 58582      | Tgl: 01/07/2025   | Penjualan cafe tanggal 01/07/2025
+  ✅ FOUND      JV.2025.07.00177       ID: 58730      | Tgl: 02/07/2025   | Uang masuk penjualan cafe tanggal 01/07/2025
+  ✅ FOUND      JV.2025.07.00171       ID: 58687      | Tgl: 02/07/2025   | Penjualan cafe tanggal 02/07/2025
+  ✅ FOUND      JV.2025.07.00178       ID: 58689      | Tgl: 03/07/2025   | Uang masuk penjualan cafe tanggal 02/07/2025
+  ✅ FOUND      JV.2025.07.00172       ID: 58777      | Tgl: 03/07/2025   | Penjualan cafe tanggal 03/07/2025
+  ✅ FOUND      JV.2025.07.00026       ID: 58457      | Tgl: 03/07/2025   | Refund lebih pembayaran karena salah input item penjualan
+  ✅ FOUND      JV.2025.07.00179       ID: 58628      | Tgl: 04/07/2025   | Uang masuk penjualan cafe tanggal 03/07/2025
+  ✅ FOUND      JV.2025.07.01005       ID: 61013      | Tgl: 07/07/2025   | Setoran penjualan cash sales La Piazza tanggal 04 Juli 2025
+  ✅ FOUND      JV.2025.07.00173       ID: 58583      | Tgl: 04/07/2025   | Penjualan cafe tanggal 04/07/2025
+  ✅ FOUND      JV.2025.07.00180       ID: 58779      | Tgl: 05/07/2025   | Uang masuk penjualan cafe tanggal 04/07/2025
+  ✅ FOUND      JV.2025.07.00174       ID: 58729      | Tgl: 05/07/2025   | Penjualan cafe tanggal 05/07/2025
+  ✅ FOUND      JV.2025.07.00181       ID: 58584      | Tgl: 06/07/2025   | Uang masuk penjualan cafe tanggal 05/07/2025
+  ✅ FOUND      JV.2025.07.00175       ID: 58778      | Tgl: 06/07/2025   | Penjualan cafe tanggal 06/07/2025
+  ✅ FOUND      JV.2025.07.00182       ID: 58731      | Tgl: 07/07/2025   | Uang masuk penjualan cafe tanggal 06/07/2025
+  ✅ FOUND      JV.2025.10.00269       ID: 65825      | Tgl: 07/10/2025   | Uang masuk penjualan cafe tanggal 06/07/2025
+  ✅ FOUND      JV.2025.07.00176       ID: 58688      | Tgl: 07/07/2025   | Penjualan cafe tanggal 07/07/2025
+  ✅ FOUND      JV.2025.07.00183       ID: 58690      | Tgl: 08/07/2025   | Uang masuk penjualan cafe tanggal 07/07/2025
+  ✅ FOUND      JV.2025.07.00416       ID: 59109      | Tgl: 08/07/2025   | Penjualan cafe tanggal 08/07/2025
+  ✅ FOUND      JV.2025.07.00631       ID: 59622      | Tgl: 09/07/2025   | Uang masuk penjualan cafe tanggal 08/07/2025
+  ✅ FOUND      JV.2025.07.00614       ID: 59704      | Tgl: 09/07/2025   | Penjualan cafe tanggal 09/07/2025
+  ✅ FOUND      JV.2025.07.00632       ID: 59569      | Tgl: 10/07/2025   | Uang masuk penjualan cafe tanggal 09/07/2025
+  ✅ FOUND      JV.2025.07.00615       ID: 59505      | Tgl: 10/07/2025   | Penjualan cafe tanggal 10/07/2025
+  ✅ FOUND      JV.2025.07.00633       ID: 59762      | Tgl: 11/07/2025   | Uang masuk penjualan cafe tanggal 10/07/2025
+  ✅ FOUND      JV.2025.07.00616       ID: 59617      | Tgl: 11/07/2025   | Penjualan cafe tanggal 11/07/2025
+  ✅ FOUND      JV.2025.07.00634       ID: 59509      | Tgl: 12/07/2025   | Uang masuk penjualan cafe tanggal 11/07/2025
+  ✅ FOUND      JV.2025.07.00617       ID: 59760      | Tgl: 12/07/2025   | Penjualan cafe tanggal 12/07/2025
+  ✅ FOUND      JV.2025.07.00635       ID: 59510      | Tgl: 13/07/2025   | Uang masuk penjualan cafe tanggal 12/07/2025
+  ✅ FOUND      JV.2025.07.00618       ID: 59666      | Tgl: 13/07/2025   | Penjualan cafe tanggal 13/07/2025
+  ✅ FOUND      JV.2025.07.00636       ID: 59623      | Tgl: 14/07/2025   | Uang masuk penjualan cafe tanggal 13/07/2025
+  ✅ FOUND      JV.2025.07.00619       ID: 59568      | Tgl: 14/07/2025   | Penjualan cafe tanggal 14/07/2025
+  ✅ FOUND      JV.2025.07.00637       ID: 59511      | Tgl: 15/07/2025   | Uang masuk penjualan cafe tanggal 14/07/2025
+  ✅ FOUND      JV.2025.07.00620       ID: 59618      | Tgl: 15/07/2025   | Penjualan cafe tanggal 15/07/2025
+  ✅ FOUND      JV.2025.07.00638       ID: 59668      | Tgl: 16/07/2025   | Uang masuk penjualan cafe tanggal 15/07/2025
+  ✅ FOUND      JV.2025.07.00621       ID: 59619      | Tgl: 16/07/2025   | Penjualan cafe tanggal 16/07/2025
+  ✅ FOUND      JV.2025.07.00639       ID: 59763      | Tgl: 17/07/2025   | Uang masuk penjualan cafe tanggal 16/07/2025
+  ✅ FOUND      JV.2025.07.00622       ID: 59506      | Tgl: 17/07/2025   | Penjualan cafe tanggal 17/07/2025
+  ✅ FOUND      JV.2025.07.00640       ID: 59764      | Tgl: 18/07/2025   | Uang masuk penjualan cafe tanggal 17/07/2025
+  ✅ FOUND      JV.2025.07.00623       ID: 59507      | Tgl: 18/07/2025   | Penjualan cafe tanggal 18/070/2025
+  ✅ FOUND      JV.2025.07.00641       ID: 59707      | Tgl: 19/07/2025   | Uang masuk penjualan cafe tanggal 18/07/2025
+  ✅ FOUND      JV.2025.07.01012       ID: 61023      | Tgl: 20/07/2025   | Setoran penjualan cash sales La Piazza tanggal 19 Juli 2025
+  ✅ FOUND      JV.2025.07.00624       ID: 59705      | Tgl: 19/07/2025   | Penjualan cafe tanggal 19/07/2025
+  ✅ FOUND      JV.2025.07.00642       ID: 59765      | Tgl: 20/07/2025   | Uang masuk penjualan cafe tanggal 19/07/2025
+  ✅ FOUND      JV.2025.07.00625       ID: 59620      | Tgl: 20/07/2025   | Penjualan cafe tanggal 20/07/2025
+  ✅ FOUND      JV.2025.07.00643       ID: 59570      | Tgl: 21/07/2025   | Uang masuk penjualan cafe tanggal 20/07/2025
+  ✅ FOUND      JV.2025.07.00626       ID: 59621      | Tgl: 21/07/2025   | Penjualan cafe tanggal 21/07/2025
+  ✅ FOUND      JV.2025.07.00644       ID: 59708      | Tgl: 22/07/2025   | Uang masuk penjualan cafe tanggal 21/07/2025
+  ✅ FOUND      JV.2025.07.00627       ID: 59706      | Tgl: 22/07/2025   | Penjualan cafe tanggal 22/07/2025
+  ✅ FOUND      JV.2025.07.00645       ID: 59766      | Tgl: 23/07/2025   | Uang masuk penjualan cafe tanggal 22/07/2025
+  ✅ FOUND      JV.2025.07.00920       ID: 60349      | Tgl: 23/07/2025   | Penjualan cafe tanggal 23/07/2025
+  ✅ FOUND      JV.2025.07.00984       ID: 60854      | Tgl: 24/07/2025   | Uang masuk penjualan cafe tanggal 23/07/2025
+  ✅ FOUND      JV.2025.07.00921       ID: 60650      | Tgl: 24/07/2025   | Penjualan cafe tanggal 24/07/2025
+  ✅ FOUND      JV.2025.07.00985       ID: 60855      | Tgl: 25/07/2025   | Uang masuk penjualan cafe tanggal 24/07/2025
+  ✅ FOUND      JV.2025.07.00922       ID: 60470      | Tgl: 25/07/2025   | Penjualan cafe tanggal 25/07/2025
+  ✅ FOUND      JV.2025.07.00986       ID: 60903      | Tgl: 26/07/2025   | Uang masuk penjualan cafe tanggal 25/07/2025
+  ✅ FOUND      JV.2025.07.01017       ID: 61216      | Tgl: 27/07/2025   | Setoran penjualan cash sales La Piazza tanggal 26 Juli 2025
+  ✅ FOUND      JV.2025.07.00923       ID: 60553      | Tgl: 26/07/2025   | Penjualan cafe tanggal 26/07/2025
+  ✅ FOUND      JV.2025.07.00987       ID: 60951      | Tgl: 27/07/2025   | Uang masuk penjualan cafe tanggal 26/07/2025
+  ✅ FOUND      JV.2025.07.00924       ID: 60501      | Tgl: 27/07/2025   | Penjualan cafe tanggal 27/07/2025
+  ✅ FOUND      JV.2025.07.00988       ID: 60856      | Tgl: 28/07/2025   | Uang masuk penjualan cafe tanggal 27/07/2025
+  ✅ FOUND      JV.2025.07.00925       ID: 60171      | Tgl: 28/07/2025   | Penjualan cafe tanggal 28/07/2025
+  ✅ FOUND      JV.2025.07.00989       ID: 60904      | Tgl: 29/07/2025   | Uang masuk penjualan cafe tanggal 28/07/2025
+  ✅ FOUND      JV.2025.07.00927       ID: 60172      | Tgl: 29/07/2025   | Penjualan cafe tanggal 29/07/2025
+  ✅ FOUND      JV.2025.07.00926       ID: 60554      | Tgl: 29/07/2025   | Penjualan cafe tanggal 29/07/2025
+  ✅ FOUND      JV.2025.07.00990       ID: 60905      | Tgl: 30/07/2025   | Uang masuk penjualan cafe tanggal 29/07/2025
+  ✅ FOUND      JV.2025.07.00928       ID: 60651      | Tgl: 30/07/2025   | Penjualan cafe tanggal 30/07/2025
+  ✅ FOUND      JV.2025.07.00991       ID: 60857      | Tgl: 31/07/2025   | Uang masuk penjualan cafe tanggal 30/07/2025
+  ✅ FOUND      JV.2025.07.00929       ID: 60173      | Tgl: 31/07/2025   | Penjualan cafe tanggal 31/07/2025
+  ✅ FOUND      JV.2025.08.00113       ID: 60858      | Tgl: 01/08/2025   | Uang masuk penjualan cafe tanggal 31/07/2025
+  ✅ FOUND      JV.2025.08.00425       ID: 61863      | Tgl: 01/08/2025   | Penjualan cafe tanggal 01/08/2025
+  ✅ FOUND      JV.2025.08.00431       ID: 61764      | Tgl: 02/08/2025   | Uang maasuk penjualan cafe tanggal 01/08/2025
+  ✅ FOUND      JV.2025.08.00426       ID: 61820      | Tgl: 02/08/2025   | Penjualan cafe tanggal 02/08/2025
+  ✅ FOUND      JV.2025.08.00432       ID: 61865      | Tgl: 03/08/2025   | Uang maasuk penjualan cafe tanggal 02/08/2025
+  ✅ FOUND      JV.2025.08.00427       ID: 61562      | Tgl: 03/08/2025   | Penjualan cafe tanggal 03/08/2025
+  ✅ FOUND      JV.2025.08.00433       ID: 61609      | Tgl: 04/08/2025   | Uang maasuk penjualan cafe tanggal 03/08/2025
+  ✅ FOUND      JV.2025.08.00428       ID: 61864      | Tgl: 04/08/2025   | Penjualan cafe tanggal 04/08/2025
+  ✅ FOUND      JV.2025.08.00434       ID: 61720      | Tgl: 05/08/2025   | Uang maasuk penjualan cafe tanggal 04/08/2025
+  ✅ FOUND      JV.2025.08.00429       ID: 61608      | Tgl: 05/08/2025   | Penjualan cafe tanggal 05/08/2025
+  ✅ FOUND      JV.2025.08.00435       ID: 61564      | Tgl: 06/08/2025   | Uang maasuk penjualan cafe tanggal 05/08/2025
+  ✅ FOUND      JV.2025.08.00430       ID: 61563      | Tgl: 06/08/2025   | Penjualan cafe tanggal 06/08/2025
+  ✅ FOUND      JV.2025.08.00436       ID: 61765      | Tgl: 07/08/2025   | Uang maasuk penjualan cafe tanggal 06/08/2025
+  ✅ FOUND      JV.2025.08.00171       ID: 61010      | Tgl: 07/08/2025   | Penjualan cafe tanggal 07/08/2025
+  ✅ FOUND      JV.2025.08.00437       ID: 61610      | Tgl: 08/08/2025   | Uang maasuk penjualan cafe tanggal 07/08/2025
+  ✅ FOUND      JV.2025.08.00181       ID: 61014      | Tgl: 08/08/2025   | Penjualan cafe tanggal 08/08/2025
+  ✅ FOUND      JV.2025.08.00182       ID: 61354      | Tgl: 09/08/2025   | Uang masuk penjualan cafe tanggal 08/08/2025
+  ✅ FOUND      JV.2025.08.00209       ID: 61123      | Tgl: 09/08/2025   | Penjualan cafe tanggal 09/08/2025
+  ✅ FOUND      JV.2025.08.00221       ID: 61287      | Tgl: 09/08/2025   | Setoran cash penjualan cafe tanggal 09/08/2025
+  ✅ FOUND      JV.2025.08.00212       ID: 61286      | Tgl: 10/08/2025   | Uang masuk penjualan cafe tanggal 09/08/2025
+  ✅ FOUND      JV.2025.08.00210       ID: 61025      | Tgl: 10/08/2025   | Penjualan cafe tanggal 10/08/2025
+  ✅ FOUND      JV.2025.08.00211       ID: 61285      | Tgl: 11/08/2025   | Uang masuk penjualan cafe tanggal 10/08/2025
+  ✅ FOUND      JV.2025.08.00453       ID: 61570      | Tgl: 11/08/2025   | Uang masuk setoran cash penjualan cafe tanggal 10/08/2025 via Gopay
+  ✅ FOUND      JV.2025.08.00273       ID: 61065      | Tgl: 11/08/2025   | Penjualan cafe tanggal 11/08/2025
+  ✅ FOUND      JV.2025.08.00274       ID: 61365      | Tgl: 12/08/2025   | Uang masuk penjualan cafe tanggal 11/08/2025
+  ✅ FOUND      JV.2025.08.00380       ID: 61707      | Tgl: 12/08/2025   | Penjualan cafe tanggal 12/08/2025
+  ✅ FOUND      JV.2025.08.00396       ID: 61853      | Tgl: 13/08/2025   | Uang masuk penjualan cafe tanggal 12/08/2025
+  ✅ FOUND      JV.2025.08.00383       ID: 61753      | Tgl: 13/08/2025   | Penjualan cafe tanggal 13/08/2025
+  ✅ FOUND      JV.2025.08.00397       ID: 61710      | Tgl: 14/08/2025   | Uang masuk penjualan cafe tanggal 13/08/2025
+  ✅ FOUND      JV.2025.08.00384       ID: 61805      | Tgl: 14/08/2025   | Penjualan cafe tanggal 14/08/2025
+  ✅ FOUND      JV.2025.08.00398       ID: 61654      | Tgl: 15/08/2025   | Uang masuk penjualan cafe tanggal 14/08/2025
+  ✅ FOUND      JV.2025.08.00402       ID: 61812      | Tgl: 15/08/2025   | Penjualan cafe tanggal 15/08/2025
+  ✅ FOUND      JV.2025.08.00405       ID: 61714      | Tgl: 16/08/2025   | Uang masuk penjualan cafe tanggal 15/08/2025
+  ✅ FOUND      JV.2025.08.00410       ID: 61558      | Tgl: 16/08/2025   | Penjualan cafe tanggal 16/08/2025
+  ✅ FOUND      JV.2025.08.00457       ID: 61572      | Tgl: 17/08/2025   | Uang masuk penjualan cafe tanggal 16/08/2025
+  ✅ FOUND      JV.2025.08.00411       ID: 61559      | Tgl: 17/08/2025   | Penjualan cafe tanggal 17/08/2025
+  ✅ FOUND      JV.2025.08.00513       ID: 61581      | Tgl: 18/08/2025   | Uang masuk penjualan cafe tanggal 17/08/2025
+  ✅ FOUND      JV.2025.08.00518       ID: 62050      | Tgl: 18/08/2025   | Penjualan cafe tanggal 18/08/2025
+  ✅ FOUND      JV.2025.08.00519       ID: 62100      | Tgl: 19/08/2025   | Uang masuk penjualan cafe tanggal 18/08/2025
+  ✅ FOUND      JV.2025.08.00610       ID: 61923      | Tgl: 19/08/2025   | Penjualan cafe tanggal 19/08/2025
+  ✅ FOUND      JV.2025.08.00611       ID: 62075      | Tgl: 20/08/2025   | Uang masuk penjualan cafe tanggal 19/08/2025
+  ✅ FOUND      JV.2025.08.00613       ID: 62076      | Tgl: 20/08/2025   | Uang masuk setoran cash penjualan cafe tanggal 19/08/2025
+  ✅ FOUND      JV.2025.08.00609       ID: 61922      | Tgl: 20/08/2025   | Penjualan cafe tanggal 20/08/2025
+  ✅ FOUND      JV.2025.08.00612       ID: 62173      | Tgl: 21/08/2025   | Uang masuk penjualan cafe tanggal 20/08/2025
+  ✅ FOUND      JV.2025.08.00649       ID: 62500      | Tgl: 21/08/2025   | Penjualan cafe tanggal 21/08/2025
+  ✅ FOUND      JV.2025.08.00650       ID: 62301      | Tgl: 22/08/2025   | Uang masuk penjualan cafe tanggal 21/08/2025
+  ✅ FOUND      JV.2025.08.00651       ID: 62550      | Tgl: 22/08/2025   | Penjualan cafe tanggal 22/08/2025
+  ✅ FOUND      JV.2025.08.00652       ID: 62352      | Tgl: 23/08/2025   | Uang masuk penjualan cafe tanggal 22/08/2025
+  ✅ FOUND      JV.2025.08.00723       ID: 62260      | Tgl: 23/08/2025   | Penjualan cafe tanggal 23/08/2025
+  ✅ FOUND      JV.2025.08.00724       ID: 62414      | Tgl: 24/08/2025   | Uang masuk penjualan cafe tanggal 23/08/2025
+  ✅ FOUND      JV.2025.08.00725       ID: 62261      | Tgl: 24/08/2025   | Penjualan cafe tanggal 24/08/2025
+  ✅ FOUND      JV.2025.08.00726       ID: 62510      | Tgl: 25/08/2025   | Uang masuk penjualan cafe tanggal 24/08/2025
+  ✅ FOUND      JV.2025.08.00727       ID: 62362      | Tgl: 25/08/2025   | Penjualan cafe tanggal 25/08/2025
+  ✅ FOUND      JV.2025.08.00728       ID: 62562      | Tgl: 26/08/2025   | Uang masuk penjualan cafe tanggal 25/08/2025
+  ✅ FOUND      JV.2025.08.01106       ID: 63300      | Tgl: 26/08/2025   | Penjualan cafe tanggal 26/08/2025
+  ✅ FOUND      JV.2025.08.01112       ID: 63550      | Tgl: 27/08/2025   | Uang masuk penjualan cafe tanggal 26/08/2025
+  ✅ FOUND      JV.2025.08.01107       ID: 63350      | Tgl: 27/08/2025   | Penjualan cafe tanggal 27/08/2025
+  ✅ FOUND      JV.2025.08.01113       ID: 63501      | Tgl: 28/08/2025   | Uang masuk penjualan cafe tanggal 27/08/2025
+  ✅ FOUND      JV.2025.08.01108       ID: 63400      | Tgl: 28/08/2025   | Penjualan cafe tanggal 28/08/2025
+  ✅ FOUND      JV.2025.08.01114       ID: 63302      | Tgl: 29/08/2025   | Uang masuk penjualan cafe tanggal 28/08/2025
+  ✅ FOUND      JV.2025.08.01109       ID: 63301      | Tgl: 29/08/2025   | Penjualan cafe tanggal 29/08/2025
+  ✅ FOUND      JV.2025.08.01115       ID: 63551      | Tgl: 30/08/2025   | Uang masuk penjualan cafe tanggal 29/08/2025
+  ✅ FOUND      JV.2025.08.01110       ID: 63450      | Tgl: 30/08/2025   | Penjualan cafe tanggal 30/08/2025
+  ✅ FOUND      JV.2025.08.01116       ID: 63502      | Tgl: 31/08/2025   | Uang masuk penjualan cafe tanggal 30/08/2025
+  ✅ FOUND      JV.2025.08.01111       ID: 63500      | Tgl: 31/08/2025   | Penjualan cafe tanggal 31/08/2025
+  ✅ FOUND      JV.2025.09.00074       ID: 63503      | Tgl: 01/09/2025   | Uang masuk penjualan cafe tanggal 31/08/2025
+  ✅ FOUND      JV.2025.09.00150       ID: 63467      | Tgl: 01/09/2025   | Penjualan cafe tanggal 01/09/2025
+  ✅ FOUND      JV.2025.09.00163       ID: 63527      | Tgl: 02/09/2025   | Uang masuk penjualan cafe tanggal 01/09/2025
+  ✅ FOUND      JV.2025.09.00151       ID: 63412      | Tgl: 02/09/2025   | Penjualan cafe tanggal 02/09/2025
+  ✅ FOUND      JV.2025.09.00162       ID: 63471      | Tgl: 03/09/2025   | Uang masuk penjualan cafe tanggal 02/09/2025
+  ✅ FOUND      JV.2025.09.00152       ID: 63615      | Tgl: 03/09/2025   | Penjualan cafe tanggal 03/09/2025
+  ✅ FOUND      JV.2025.09.00161       ID: 63414      | Tgl: 04/09/2025   | Uang masuk penjualan cafe tanggal 03/09/2025
+  ✅ FOUND      JV.2025.09.00153       ID: 63616      | Tgl: 05/09/2025   | Penjualan cafe tanggal 04/09/2025
+  ✅ FOUND      JV.2025.09.00160       ID: 63573      | Tgl: 05/09/2025   | Uang masuk penjualan cafe tanggal 04/09/2025
+  ✅ FOUND      JV.2025.09.00154       ID: 63468      | Tgl: 05/09/2025   | Penjualan cafe tanggal 05/09/2025
+  ✅ FOUND      JV.2025.09.00159       ID: 63526      | Tgl: 06/09/2025   | Uang masuk penjualan cafe tanggal 05/09/2025
+  ✅ FOUND      JV.2025.09.00155       ID: 63571      | Tgl: 06/09/2025   | Penjualan cafe tanggal 06/09/2025
+  ✅ FOUND      JV.2025.09.00158       ID: 63572      | Tgl: 07/09/2025   | Uang masuk penjualan cafe tanggal 06/09/2025
+  ✅ FOUND      JV.2025.09.00349       ID: 63755      | Tgl: 08/09/2025   | Uang masuk setor cash penjualan cafe tanggal 06/09/2025
+  ✅ FOUND      JV.2025.09.00156       ID: 63469      | Tgl: 07/09/2025   | Penjualan cafe tanggal 07/09/2025
+  ✅ FOUND      JV.2025.09.00157       ID: 63470      | Tgl: 08/09/2025   | Uang masuk penjualan cafe tanggal 07/09/2025
+  ✅ FOUND      JV.2025.09.00341       ID: 63340      | Tgl: 08/09/2025   | Penjualan cafe tanggal 08/09/2025
+  ✅ FOUND      JV.2025.09.00348       ID: 63806      | Tgl: 09/09/2025   | Uang masuk penjualan cafe tanggal 08/09/2025
+  ✅ FOUND      JV.2025.09.00342       ID: 63670      | Tgl: 09/09/2025   | Penjualan cafe tanggal 09/09/2025
+  ✅ FOUND      JV.2025.09.00350       ID: 63756      | Tgl: 10/09/2025   | Uang masuk penjualan cafe tanggal 09/09/2025
+  ✅ FOUND      JV.2025.09.00343       ID: 63341      | Tgl: 10/09/2025   | Penjualan cafe tanggal 10/09/2025
+  ✅ FOUND      JV.2025.09.00351       ID: 63757      | Tgl: 11/09/2025   | Uang masuk penjualan cafe tanggal 10/09/2025
+  ✅ FOUND      JV.2025.09.00344       ID: 63804      | Tgl: 11/09/2025   | Penjualan cafe tanggal 11/09/2025
+  ✅ FOUND      JV.2025.09.00352       ID: 63711      | Tgl: 12/09/2025   | Uang masuk penjualan cafe tanggal 11/09/2025
+  ✅ FOUND      JV.2025.09.00345       ID: 63805      | Tgl: 12/09/2025   | Penjualan cafe tanggal 12/09/2025
+  ✅ FOUND      JV.2025.09.00353       ID: 63712      | Tgl: 13/09/2025   | Uang masuk penjualan cafe tanggal 12/09/2025
+  ✅ FOUND      JV.2025.09.00346       ID: 63671      | Tgl: 13/09/2025   | Penjualan cafe tanggal 13/09/2025
+  ✅ FOUND      JV.2025.09.00354       ID: 63807      | Tgl: 14/09/2025   | Uang masuk penjualan cafe tanggal 13/09/2025
+  ✅ FOUND      JV.2025.09.00347       ID: 63672      | Tgl: 14/09/2025   | Penjualan cafe tanggal 14/09/2025
+  ✅ FOUND      JV.2025.09.00355       ID: 63673      | Tgl: 15/09/2025   | Uang masuk penjualan cafe tanggal 14/09/2025
+  ✅ FOUND      JV.2025.09.00586       ID: 64251      | Tgl: 15/09/2025   | Penjualan cafe tanggal 15/09/2025
+  ✅ FOUND      JV.2025.09.00591       ID: 64301      | Tgl: 16/09/2025   | Uang masuk penjualan cafe tanggal 15/09/2025
+  ✅ FOUND      JV.2025.09.00587       ID: 64252      | Tgl: 16/09/2025   | Penjualan cafe tanggal 16/09/2025
+  ✅ FOUND      JV.2025.09.00592       ID: 64351      | Tgl: 17/09/2025   | Uang masuk penjualan cafe tanggal 16/09/2025
+  ✅ FOUND      JV.2025.09.00588       ID: 64253      | Tgl: 17/09/2025   | Penjualan cafe tanggal 17/09/2025
+  ✅ FOUND      JV.2025.09.00593       ID: 64201      | Tgl: 18/09/2025   | Uang masuk penjualan cafe tanggal 17/09/2025
+  ✅ FOUND      JV.2025.09.00589       ID: 64350      | Tgl: 18/09/2025   | Penjualan cafe tanggal 18/09/2025
+  ✅ FOUND      JV.2025.09.00594       ID: 64254      | Tgl: 19/09/2025   | Uang masuk penjualan cafe tanggal 18/09/2025
+  ✅ FOUND      JV.2025.09.00614       ID: 64357      | Tgl: 19/09/2025   | Penjualan cafe tanggal 19/09/2025
+  ✅ FOUND      JV.2025.09.00617       ID: 64359      | Tgl: 20/09/2025   | Uang masuk penjualan cafe tanggal 19/09/2025
+  ✅ FOUND      JV.2025.09.00615       ID: 64358      | Tgl: 20/09/2025   | Penjualan cafe tanggal 20/09/2025
+  ✅ FOUND      JV.2025.09.00616       ID: 64203      | Tgl: 21/09/2025   | Uang masuk penjualan cafe tanggal 20/09/2025
+  ✅ FOUND      JV.2025.09.01194       ID: 65578      | Tgl: 21/09/2025   | Penjualan cafe tanggal 21/09/2025
+  ✅ FOUND      JV.2025.10.00278       ID: 65778      | Tgl: 22/09/2025   | Uang masuk penjualan cafe tanggal 21/09/2025
+  ✅ FOUND      JV.2025.09.01195       ID: 65645      | Tgl: 22/09/2025   | Penjualan cafe tanggal 22/09/2025
+  ✅ FOUND      JV.2025.10.00277       ID: 65917      | Tgl: 23/09/2025   | Uang masuk penjualan cafe tanggal 22/09/2025
+  ✅ FOUND      JV.2025.09.01196       ID: 65534      | Tgl: 23/09/2025   | Penjualan cafe tanggal 23/09/2025
+  ✅ FOUND      JV.2025.09.01223       ID: 65589      | Tgl: 24/09/2025   | Uang masuk penjualan cafe tanggal 23/09/2025
+  ✅ FOUND      JV.2025.09.01197       ID: 65853      | Tgl: 24/09/2025   | Penjualan cafe tanggal 24/09/2025
+  ✅ FOUND      JV.2025.09.01222       ID: 65775      | Tgl: 25/09/2025   | Uang masuk penjualan cafe tanggal 24/09/2025
+  ✅ FOUND      JV.2025.09.01198       ID: 65667      | Tgl: 25/09/2025   | Penjualan cafe tanggal 25/09/2025
+  ✅ FOUND      JV.2025.09.01221       ID: 65871      | Tgl: 26/09/2025   | Uang masuk penjualan cafe tanggal 25/09/2025
+  ✅ FOUND      JV.2025.09.01199       ID: 65668      | Tgl: 26/09/2025   | Penjualan cafe tanggal 26/09/2025
+  ✅ FOUND      JV.2025.09.01220       ID: 65958      | Tgl: 27/09/2025   | Uang masuk penjualan cafe tanggal 26/09/2025
+  ✅ FOUND      JV.2025.09.01207       ID: 65820      | Tgl: 27/09/2025   | Penjualan cafe tanggal 27/09/2025
+  ✅ FOUND      JV.2025.09.01219       ID: 65588      | Tgl: 28/09/2025   | Uang masuk penjualan cafe tanggal 27/09/2025
+  ✅ FOUND      JV.2025.09.01208       ID: 65952      | Tgl: 28/09/2025   | Penjualan cafe tanggal 28/09/2025
+  ✅ FOUND      JV.2025.09.01218       ID: 65957      | Tgl: 29/09/2025   | Uang masuk penjualan cafe tanggal 28/09/2025
+  ✅ FOUND      JV.2025.09.01209       ID: 65770      | Tgl: 29/09/2025   | Penjualan cafe tanggal 29/09/2025
+  ✅ FOUND      JV.2025.09.01217       ID: 65870      | Tgl: 30/09/2025   | Uang masuk penjualan cafe tanggal 29/09/2025
+  ✅ FOUND      JV.2025.09.01210       ID: 65908      | Tgl: 30/09/2025   | Penjualan cafe tanggal 30/09/2025
+  ✅ FOUND      JV.2025.10.00275       ID: 65914      | Tgl: 01/10/2025   | Uang masuk penjualan cafe tanggal 30/09/2025
+  ✅ FOUND      JV.2025.10.00254       ID: 65909      | Tgl: 01/10/2025   | Penjualan cafe tanggal 01/10/2025
+  ✅ FOUND      JV.2025.10.00274       ID: 65774      | Tgl: 02/10/2025   | Uang masuk penjualan cafe tanggal 01/10/2025
+  ✅ FOUND      JV.2025.10.00255       ID: 65821      | Tgl: 02/10/2025   | Penjualan cafe tanggal 02/10/2025
+  ✅ FOUND      JV.2025.10.00273       ID: 65773      | Tgl: 03/10/2025   | Uang masuk penjualan cafe tanggal 02/10/2025
+  ✅ FOUND      JV.2025.10.00256       ID: 65953      | Tgl: 03/10/2025   | Penjualan cafe tanggal 03/10/2025
+  ✅ FOUND      JV.2025.10.00272       ID: 65827      | Tgl: 04/10/2025   | Uang masuk penjualan cafe tanggal 03/10/2025
+  ✅ FOUND      JV.2025.10.00257       ID: 65822      | Tgl: 04/10/2025   | Penjualan cafe tanggal 04/10/2025
+  ✅ FOUND      JV.2025.10.00271       ID: 65587      | Tgl: 05/10/2025   | Uang masuk penjualan cafe tanggal 04/10/2025
+  ✅ FOUND      JV.2025.10.00258       ID: 65910      | Tgl: 05/10/2025   | Penjualan cafe tanggal 05/10/2025
+  ✅ FOUND      JV.2025.10.00270       ID: 65826      | Tgl: 06/10/2025   | Uang masuk penjualan cafe tanggal 05/10/2025
+  ✅ FOUND      JV.2025.10.00259       ID: 65954      | Tgl: 06/10/2025   | Penjualan cafe tanggal 06/10/2025
+  ✅ FOUND      JV.2025.10.00260       ID: 65911      | Tgl: 07/10/2025   | Penjualan cafe tanggal 07/10/2025
+  ✅ FOUND      JV.2025.10.00268       ID: 65824      | Tgl: 08/10/2025   | Uang masuk penjualan cafe tanggal 07/10/2025
+  ✅ FOUND      JV.2025.10.00261       ID: 65585      | Tgl: 08/10/2025   | Penjualan cafe tanggal 08/10/2025
+  ✅ FOUND      JV.2025.10.00264       ID: 65955      | Tgl: 09/10/2025   | Uang masuk penjualan cafe tanggal 08/10/2025
+  ✅ FOUND      JV.2025.10.00262       ID: 65868      | Tgl: 09/10/2025   | Penjualan cafe tanggal 09/10/2025
+  ✅ FOUND      JV.2025.10.00263       ID: 65676      | Tgl: 10/10/2025   | Uang masuk penjualan cafe tanggal 09/10/2025
+  ✅ FOUND      JV.2025.10.00266       ID: 65912      | Tgl: 10/10/2025   | Penjualan cafe strada tanggal 10/10/2025
+  ✅ FOUND      JV.2025.10.01251       ID: 75631      | Tgl: 11/10/2025   | Uang masuk penjualan cafe tanggal 10/10/2025
+  ✅ FOUND      JV.2025.10.00267       ID: 65913      | Tgl: 11/10/2025   | Uang masuk penjualan cafe tanggal 10/10/2025
+  ✅ FOUND      JV.2025.10.00992       ID: 67763      | Tgl: 11/10/2025   | Penjualan cafe tanggal 11/10/2025
+  ✅ FOUND      JV.2025.10.01218       ID: 72722      | Tgl: 12/10/2025   | Uang masuk penjualan cafe tanggal 11/10/2025
+  ✅ FOUND      JV.2025.10.00993       ID: 67810      | Tgl: 12/10/2025   | Penjualan cafe tanggal 12/10/2025
+  ✅ FOUND      JV.2025.10.01219       ID: 72535      | Tgl: 13/10/2025   | Uang masuk penjualan cafe tanggal 12/10/2025
+  ✅ FOUND      JV.2025.10.00994       ID: 67857      | Tgl: 13/10/2025   | Penjualan cafe tanggal 13/10/2025
+  ✅ FOUND      JV.2025.10.01220       ID: 72723      | Tgl: 14/10/2025   | Uang masuk penjualan cafe tanggal 13/10/2025
+  ✅ FOUND      JV.2025.10.00995       ID: 67811      | Tgl: 14/10/2025   | Penjualan cafe tanggal 14/10/2025
+  ✅ FOUND      JV.2025.10.01221       ID: 72818      | Tgl: 15/10/2025   | Uang masuk penjualan cafe tanggal 14/10/2025
+  ✅ FOUND      JV.2025.10.00996       ID: 67904      | Tgl: 15/10/2025   | Penjualan cafe tanggal 15/10/2025
+  ✅ FOUND      JV.2025.10.01222       ID: 72819      | Tgl: 16/10/2025   | Uang masuk penjualan cafe tanggal 15/10/2025
+  ✅ FOUND      JV.2025.10.00997       ID: 67858      | Tgl: 16/10/2025   | Penjualan cafe tanggal 16/10/2025
+  ✅ FOUND      JV.2025.10.01223       ID: 72724      | Tgl: 17/10/2025   | Uang masuk penjualan cafe tanggal 16/10/2025
+  ✅ FOUND      JV.2025.10.00998       ID: 67905      | Tgl: 17/10/2025   | Penjualan cafe tanggal 17/10/2025
+  ✅ FOUND      JV.2025.10.01224       ID: 72536      | Tgl: 18/10/2025   | Uang masuk penjualan cafe tanggal 17/10/2025
+  ✅ FOUND      JV.2025.10.01262       ID: 75633      | Tgl: 18/10/2025   | Uang masuk setoran cash penjualan tanggal 17/10/2025
+  ✅ FOUND      JV.2025.10.00999       ID: 67859      | Tgl: 18/10/2025   | Penjualan cafe tanggal 18/10/2025
+  ✅ FOUND      JV.2025.10.01225       ID: 72537      | Tgl: 19/10/2025   | Uang masuk penjualan cafe tanggal 18/10/2025
+  ✅ FOUND      JV.2025.10.01000       ID: 67906      | Tgl: 19/10/2025   | Penjualan cafe tanggal 19/10/2025
+  ✅ FOUND      JV.2025.10.01226       ID: 72671      | Tgl: 20/10/2025   | Uang masuk penjualan cafe tanggal 19/10/2025
+  ✅ FOUND      JV.2025.10.01227       ID: 72820      | Tgl: 21/10/2025   | Uang masuk penjualan cafe tanggal 20/10/2025
+  ✅ FOUND      JV.2025.10.01002       ID: 68150      | Tgl: 21/10/2025   | Penjualan cafe tanggal 21/10/2025
+  ✅ FOUND      JV.2025.10.01228       ID: 72725      | Tgl: 22/10/2025   | Uang masuk penjualan cafe tanggal 21/10/2025
+  ✅ FOUND      JV.2025.10.01003       ID: 68151      | Tgl: 22/10/2025   | Penjualan cafe tanggal 22/10/2025
+  ✅ FOUND      JV.2025.10.01229       ID: 72726      | Tgl: 23/10/2025   | Uang masuk penjualan cafe tanggal 22/10/2025
+  ✅ FOUND      JV.2025.10.01004       ID: 68200      | Tgl: 23/10/2025   | Penjualan cafe tanggal 23/10/2025
+  ✅ FOUND      JV.2025.10.01230       ID: 72727      | Tgl: 24/10/2025   | Uang masuk penjualan cafe tanggal 23/10/2025
+  ✅ FOUND      JV.2025.10.01005       ID: 68250      | Tgl: 24/10/2025   | Penjualan cafe tanggal 24/10/2025
+  ✅ FOUND      JV.2025.10.01231       ID: 72821      | Tgl: 25/10/2025   | Uang masuk penjualan cafe tanggal 24/10/2025
+  ✅ FOUND      JV.2025.10.01006       ID: 68300      | Tgl: 25/10/2025   | Penjualan cafe tanggal 25/10/2025
+  ✅ FOUND      JV.2025.10.01232       ID: 72728      | Tgl: 26/10/2025   | Uang masuk penjualan cafe tanggal 25/10/2025
+  ✅ FOUND      JV.2025.10.01007       ID: 68251      | Tgl: 26/10/2025   | Penjualan cafe tanggal 26/10/2025
+  ✅ FOUND      JV.2025.10.01233       ID: 72822      | Tgl: 27/10/2025   | Uang masuk penjualan cafe tanggal 26/10/2025
+  ✅ FOUND      JV.2025.10.01008       ID: 68301      | Tgl: 27/10/2025   | Penjualan cafe tanggal 27/10/2025
+  ✅ FOUND      JV.2025.10.01234       ID: 72768      | Tgl: 28/10/2025   | Uang masuk penjualan cafe tanggal 27/10/2025
+  ✅ FOUND      JV.2025.10.01055       ID: 69100      | Tgl: 28/10/2025   | Penjualan cafe tanggal 28/10/2025
+  ✅ FOUND      JV.2025.10.01235       ID: 72538      | Tgl: 29/10/2025   | Uang masuk penjualan cafe tanggal 28/10/2025
+  ✅ FOUND      JV.2025.10.01056       ID: 68903      | Tgl: 29/10/2025   | Penjualan cafe tanggal 29/10/2025
+  ✅ FOUND      JV.2025.10.01236       ID: 72729      | Tgl: 30/10/2025   | Uang masuk penjualan cafe tanggal 29/10/2025
+  ✅ FOUND      JV.2025.10.01057       ID: 68952      | Tgl: 30/10/2025   | Penjualan cafe tanggal 30/10/2025
+  ✅ FOUND      JV.2025.10.01237       ID: 72730      | Tgl: 31/10/2025   | Uang masuk penjualan cafe tanggal 30/10/2025
+  ✅ FOUND      JV.2025.10.01058       ID: 68904      | Tgl: 31/10/2025   | Penjualan cafe tanggal 31/10/2025
+  ✅ FOUND      JV.2025.11.00979       ID: 74483      | Tgl: 01/11/2025   | Uang masuk penjualan cafe tanggal 31/10/2025
+  ✅ FOUND      JV.2025.11.00112       ID: 68953      | Tgl: 01/11/2025   | Penjualan cafe tanggal 01/11/2025
+  ✅ FOUND      JV.2025.11.00980       ID: 74520      | Tgl: 02/11/2025   | Uang masuk penjualan cafe tanggal 01/11/2025
+  ✅ FOUND      JV.2025.11.00113       ID: 69051      | Tgl: 02/11/2025   | Penjualan cafe tanggal 02/11/2025
+  ✅ FOUND      JV.2025.11.00981       ID: 74567      | Tgl: 03/11/2025   | Uang masuk penjualan cafe tanggal 02/11/2025
+  ✅ FOUND      JV.2025.11.00114       ID: 69101      | Tgl: 03/11/2025   | Penjualan cafe tanggal 03/11/2025
+  ✅ FOUND      JV.2025.11.00982       ID: 74521      | Tgl: 04/11/2025   | Uang masuk penjualan cafe tanggal 03/11/2025
+  ✅ FOUND      JV.2025.11.00115       ID: 69102      | Tgl: 04/11/2025   | Penjualan cafe tanggal 04/11/2025
+  ✅ FOUND      JV.2025.11.00983       ID: 74436      | Tgl: 05/11/2025   | Uang masuk penjualan cafe tanggal 04/11/2025
+  ✅ FOUND      JV.2025.11.00116       ID: 69103      | Tgl: 05/11/2025   | Penjualan cafe tanggal 05/11/2025
+  ✅ FOUND      JV.2025.11.00984       ID: 74522      | Tgl: 06/11/2025   | Uang masuk penjualan cafe tanggal 05/11/2025
+  ✅ FOUND      JV.2025.11.00117       ID: 69150      | Tgl: 06/11/2025   | Penjualan cafe tanggal 06/11/2025
+  ✅ FOUND      JV.2025.11.00985       ID: 74523      | Tgl: 07/11/2025   | Uang masuk penjualan cafe tanggal 06/11/2025
+  ✅ FOUND      JV.2025.11.00118       ID: 69002      | Tgl: 07/11/2025   | Penjualan cafe tanggal 07/11/2025
+  ✅ FOUND      JV.2025.11.00986       ID: 74568      | Tgl: 08/11/2025   | Uang masuk penjualan cafe tanggal 07/11/2025
+  ✅ FOUND      JV.2025.11.00119       ID: 69200      | Tgl: 08/11/2025   | Penjualan cafe tanggal 08/11/2025
+  ✅ FOUND      JV.2025.11.00987       ID: 74524      | Tgl: 09/11/2025   | Uang masuk penjualan cafe tanggal 08/11/2025
+  ✅ FOUND      JV.2025.11.00263       ID: 69663      | Tgl: 09/11/2025   | Penjualan cafe tanggal 09/11/2025
+  ✅ FOUND      JV.2025.11.00988       ID: 74484      | Tgl: 10/11/2025   | Uang masuk penjualan cafe tanggal 09/11/2025
+  ✅ FOUND      JV.2025.11.00264       ID: 69759      | Tgl: 10/11/2025   | Penjualan cafe tanggal 10/11/2025
+  ✅ FOUND      JV.2025.11.00989       ID: 74437      | Tgl: 11/11/2025   | Uang masuk penjualan cafe tanggal 10/11/2025
+  ✅ FOUND      JV.2025.11.00265       ID: 69609      | Tgl: 11/11/2025   | Penjualan cafe tanggal 11/11/2025
+  ✅ FOUND      JV.2025.11.00990       ID: 74485      | Tgl: 12/11/2025   | Uang masuk penjualan cafe tanggal 11/11/2025
+  ✅ FOUND      JV.2025.11.00266       ID: 69817      | Tgl: 12/11/2025   | Penjualan cafe tanggal 12/11/2025
+  ✅ FOUND      JV.2025.11.00991       ID: 74569      | Tgl: 13/11/2025   | Uang masuk penjualan cafe tanggal 12/11/2025
+  ✅ FOUND      JV.2025.11.00267       ID: 69867      | Tgl: 13/11/2025   | Penjualan cafe tanggal 13/11/2025
+  ✅ FOUND      JV.2025.11.00992       ID: 74570      | Tgl: 14/11/2025   | Uang masuk penjualan cafe tanggal 13/11/2025
+  ✅ FOUND      JV.2025.11.00431       ID: 69846      | Tgl: 14/11/2025   | Penjualan cafe tanggal 14/11/2025
+  ✅ FOUND      JV.2025.11.00993       ID: 74525      | Tgl: 15/11/2025   | Uang masuk penjualan cafe tanggal 14/11/2025
+  ✅ FOUND      JV.2025.11.00432       ID: 69968      | Tgl: 15/11/2025   | Penjualan cafe tanggal 15/11/2025
+  ✅ FOUND      JV.2025.11.00994       ID: 74571      | Tgl: 16/11/2025   | Uang masuk penjualan cafe tanggal 15/11/2025
+  ✅ FOUND      JV.2025.11.00433       ID: 69847      | Tgl: 16/11/2025   | Penjualan cafe tanggal 16/11/2025
+  ✅ FOUND      JV.2025.11.00995       ID: 74526      | Tgl: 17/11/2025   | Uang masuk penjualan cafe tanggal 16/11/2025
+  ✅ FOUND      JV.2025.11.00434       ID: 70059      | Tgl: 17/11/2025   | Penjualan cafe tanggal 17/11/2025
+  ✅ FOUND      JV.2025.11.00996       ID: 74527      | Tgl: 18/11/2025   | Uang masuk penjualan cafe tanggal 17/11/2025
+  ✅ FOUND      JV.2025.11.00435       ID: 69740      | Tgl: 18/11/2025   | Penjualan cafe tanggal 18/11/2025
+  ✅ FOUND      JV.2025.11.00997       ID: 74486      | Tgl: 19/11/2025   | Uang masuk penjualan cafe tanggal 18/11/2025
+  ✅ FOUND      JV.2025.11.00436       ID: 69848      | Tgl: 19/11/2025   | Penjualan cafe tanggal 19/11/2025
+  ✅ FOUND      JV.2025.11.00998       ID: 74438      | Tgl: 20/11/2025   | Uang masuk penjualan cafe tanggal 19/11/2025
+  ✅ FOUND      JV.2025.11.00001       ID: 68100      | Tgl: 20/10/2025   | Penjualan cafe tanggal 20/11/2025
+  ✅ FOUND      JV.2025.11.00437       ID: 69849      | Tgl: 20/11/2025   | Penjualan cafe tanggal 20/11/2025
+  ✅ FOUND      JV.2025.11.00999       ID: 74610      | Tgl: 21/11/2025   | Uang masuk penjualan cafe tanggal 20/11/2025
+  ✅ FOUND      JV.2025.11.00438       ID: 70060      | Tgl: 21/11/2025   | Penjualan cafe tanggal 21/11/2025
+  ✅ FOUND      JV.2025.11.01000       ID: 74439      | Tgl: 22/11/2025   | Uang masuk penjualan cafe tanggal 21/11/2025
+  ✅ FOUND      JV.2025.11.01001       ID: 74611      | Tgl: 23/11/2025   | Uang masuk penjualan cafe tanggal 22/11/2025
+  ✅ FOUND      JV.2025.11.01028       ID: 80359      | Tgl: 23/11/2025   | Penjualan cafe tanggal 23/11/2025
+  ✅ FOUND      JV.2025.11.01002       ID: 74572      | Tgl: 24/11/2025   | Uang masuk penjualan cafe tanggal 23/11/2025
+  ✅ FOUND      JV.2025.11.01029       ID: 80179      | Tgl: 24/11/2025   | Penjualan cafe tanggal 24/11/2025
+  ✅ FOUND      JV.2025.11.01003       ID: 74612      | Tgl: 25/11/2025   | Uang masuk penjualan cafe tanggal 24/11/2025
+  ✅ FOUND      JV.2025.11.01004       ID: 74440      | Tgl: 26/11/2025   | Uang masuk penjualan cafe tanggal 25/11/2025
+  ✅ FOUND      JV.2025.11.01031       ID: 80360      | Tgl: 26/11/2025   | Penjualan cafe tanggal 26/11/2025
+  ✅ FOUND      JV.2025.11.01005       ID: 74528      | Tgl: 27/11/2025   | Uang masuk penjualan cafe tanggal 26/11/2025
+  ✅ FOUND      JV.2025.11.01032       ID: 80228      | Tgl: 27/11/2025   | Penjualan cafe tanggal 27/11/2025
+  ✅ FOUND      JV.2025.11.01006       ID: 74573      | Tgl: 28/11/2025   | Uang masuk penjualan cafe tanggal 27/11/2025
+  ✅ FOUND      JV.2025.11.01033       ID: 80361      | Tgl: 28/11/2025   | Penjualan cafe tanggal 28/11/2025
+  ✅ FOUND      JV.2025.11.01007       ID: 74441      | Tgl: 29/11/2025   | Uang masuk penjualan cafe tanggal 28/11/2025
+  ✅ FOUND      JV.2025.11.01034       ID: 80048      | Tgl: 29/11/2025   | Penjualan cafe tanggal 29/11/2025
+  ✅ FOUND      JV.2025.11.01008       ID: 74442      | Tgl: 30/11/2025   | Uang masuk penjualan cafe tanggal 29/11/2025
+  ✅ FOUND      JV.2025.11.01035       ID: 80229      | Tgl: 30/11/2025   | Penjualan cafe tanggal 30/11/2025
+  ✅ FOUND      JV.2025.11.01036       ID: 83109      | Tgl: 01/12/2025   | Penjualan cafe tanggal 01/12/2025
+  ✅ FOUND      JV.2025.12.01510       ID: 82916      | Tgl: 02/12/2025   | Penjualan cafe tanggal 02/12/2025
+  ✅ FOUND      JV.2025.12.01511       ID: 83163      | Tgl: 03/12/2025   | Uang masuk penjualan cafe tanggal 02/12/2025
+  ✅ FOUND      JV.2025.12.01512       ID: 83084      | Tgl: 03/12/2025   | Penjualan cafe tanggal 03/12/2025
+  ✅ FOUND      JV.2025.12.01513       ID: 83085      | Tgl: 04/12/2025   | Uang masuk penjualan cafe tanggal 03/12/2025
+  ✅ FOUND      JV.2025.12.01514       ID: 83086      | Tgl: 04/12/2025   | Penjualan cafe tanggal 04/12/2025
+  ✅ FOUND      JV.2025.12.01515       ID: 82917      | Tgl: 05/12/2025   | Uang masuk penjualan cafe tanggal 04/12/2025
+  ✅ FOUND      JV.2025.12.01516       ID: 83087      | Tgl: 05/12/2025   | Penjualan cafe tanggal 05/12/2025
+  ✅ FOUND      JV.2025.12.01517       ID: 82977      | Tgl: 06/12/2025   | Uang masuk penjualan cafe tanggal 05/12/2025
+  ✅ FOUND      JV.2025.12.01518       ID: 83019      | Tgl: 06/12/2025   | Penjualan cafe tanggal 06/12/2025
+  ✅ FOUND      JV.2025.12.01519       ID: 83020      | Tgl: 07/12/2025   | Uang masuk penjualan cafe tanggal 06/12/2025
+  ✅ FOUND      JV.2025.12.01520       ID: 83021      | Tgl: 07/12/2025   | Penjualan cafe tanggal 07/12/2025
+  ✅ FOUND      JV.2025.12.01521       ID: 83088      | Tgl: 08/12/2025   | Uang masuk penjualan cafe tanggal 07/12/2025
+  ✅ FOUND      JV.2025.12.01522       ID: 83164      | Tgl: 08/12/2025   | Penjualan cafe tanggal 08/12/2025
+  ✅ FOUND      JV.2025.12.01523       ID: 83089      | Tgl: 09/12/2025   | Uang masuk penjualan cafe tanggal 08/12/2025
+  ✅ FOUND      JV.2025.12.01524       ID: 82920      | Tgl: 09/12/2025   | Penjualan cafe tanggal 09/12/2025
+  ✅ FOUND      JV.2025.12.01525       ID: 83111      | Tgl: 10/12/2025   | Uang masuk penjualan cafe tanggal 09/12/2025
+  ✅ FOUND      JV.2025.12.01526       ID: 83112      | Tgl: 10/12/2025   | Penjualan cafe tanggal 10/12/2025
+  ✅ FOUND      JV.2025.12.01527       ID: 83165      | Tgl: 11/12/2025   | Uang masuk penjualan cafe tanggal 10/12/2025
+  ✅ FOUND      JV.2025.12.01528       ID: 83022      | Tgl: 11/12/2025   | Penjualan cafe tanggal 11/12/2025
+  ✅ FOUND      JV.2025.12.01529       ID: 83090      | Tgl: 12/12/2025   | Uang masuk penjualan cafe tanggal 11/12/2025
+  ✅ FOUND      JV.2025.12.01530       ID: 83166      | Tgl: 12/12/2025   | Penjualan cafe tanggal 12/12/2025
+  ✅ FOUND      JV.2026.04.00334       ID: 83811      | Tgl: 08/04/2026   | Penjualan cafe tanggal 08/04/2026
+  ✅ FOUND      JV.2026.04.00336       ID: 83619      | Tgl: 09/04/2026   | Uang masuk penjualan cafe tanggal 08/04/2026
+  ✅ FOUND      JV.2026.02.01263       ID: 80227      | Tgl: 22/11/2025   | Penjualan cafe tanggal 22/11/2026
+  ✅ FOUND      JV.2025.11.01030       ID: 80047      | Tgl: 25/11/2025   | Penjualan cafe tanggal 25/11/2026
+  ✅ FOUND      JV.2025.12.01509       ID: 82974      | Tgl: 02/12/2025   | Uang masuk penjualan cafe tanggal 01/12/2026
+
+Ditemukan  : 739
+Tidak ada  : 0
+
+──────────────────────────────────────────────────────────────────────
+FASE 2 — DELETE  (Keterangan: "Di buatkan kembali oleh BREW")
+──────────────────────────────────────────────────────────────────────
+  [  1/739] ✅ DELETED  | 17-04-2026, 08.21.44 WIB | JV.2025.01.00011       | Tgl jurnal: 01/01/2025   | Penjualan cafe tanggal 01/01/2025
+  [  2/739] ✅ DELETED  | 17-04-2026, 08.21.45 WIB | JV.2025.01.00013       | Tgl jurnal: 02/01/2025   | Penjualan cafe tanggal 02/01/2025
+  [  3/739] ✅ DELETED  | 17-04-2026, 08.21.46 WIB | JV.2025.01.00037       | Tgl jurnal: 03/01/2025   | Uang masuk penjualan cafe tanggal 02/01/2025
+  [  4/739] ✅ DELETED  | 17-04-2026, 08.21.46 WIB | JV.2025.01.00089       | Tgl jurnal: 03/01/2025   | Penjualan cafe tanggal 03/01/2025
+  [  5/739] ✅ DELETED  | 17-04-2026, 08.21.47 WIB | JV.2025.01.00090       | Tgl jurnal: 04/01/2025   | Uang masuk penjualan cafe tanggal 03/01/2025
+  [  6/739] ✅ DELETED  | 17-04-2026, 08.21.48 WIB | JV.2025.01.00091       | Tgl jurnal: 04/01/2025   | Penjualan cafe tanggal 04/01/2025
+  [  7/739] ✅ DELETED  | 17-04-2026, 08.21.49 WIB | JV.2025.01.00092       | Tgl jurnal: 05/01/2025   | Uang masuk penjualan cafe tanggal  03 & 04 Januari 2025
+  [  8/739] ✅ DELETED  | 17-04-2026, 08.21.49 WIB | JV.2025.01.00093       | Tgl jurnal: 05/01/2025   | Penjualan cafe tanggal 05/01/2025
+  [  9/739] ✅ DELETED  | 17-04-2026, 08.21.50 WIB | JV.2025.01.00094       | Tgl jurnal: 06/01/2025   | Uang masuk penjualan cafe tanggal 05/01/2025
+  [ 10/739] ✅ DELETED  | 17-04-2026, 08.21.51 WIB | JV.2025.01.00119       | Tgl jurnal: 06/01/2025   | Penjualan cafe tanggal 06/01/2025
+  [ 11/739] ✅ DELETED  | 17-04-2026, 08.21.52 WIB | JV.2025.01.00120       | Tgl jurnal: 07/01/2025   | Uang masuk penjualan cafe tanggal 06/01/2025
+  [ 12/739] ✅ DELETED  | 17-04-2026, 08.21.52 WIB | JV.2025.01.00121       | Tgl jurnal: 07/01/2025   | Penjualan cafe tanggal 07/01/2025
+  [ 13/739] ✅ DELETED  | 17-04-2026, 08.21.53 WIB | JV.2025.01.00122       | Tgl jurnal: 08/01/2025   | Uang masuk penjualan cafe tanggal 07/01/2025
+  [ 14/739] ✅ DELETED  | 17-04-2026, 08.21.54 WIB | JV.2025.01.00123       | Tgl jurnal: 08/01/2025   | Penjualan cafe 08/01/2025
+  [ 15/739] ✅ DELETED  | 17-04-2026, 08.21.55 WIB | JV.2025.01.00124       | Tgl jurnal: 09/01/2025   | Uang masuk penjualan cafe tanggal 08/01/2025
+  [ 16/739] ✅ DELETED  | 17-04-2026, 08.21.55 WIB | JV.2025.01.00274       | Tgl jurnal: 09/01/2025   | Penjualan cafe tanggal 09/01/2025
+  [ 17/739] ✅ DELETED  | 17-04-2026, 08.21.56 WIB | JV.2025.01.00288       | Tgl jurnal: 10/01/2025   | Uang masuk penjualan cafe tanggal 09/01/2025
+  [ 18/739] ✅ DELETED  | 17-04-2026, 08.21.57 WIB | JV.2025.01.00282       | Tgl jurnal: 10/01/2025   | Penjualan cafe tanggal 10/01/2025
+  [ 19/739] ✅ DELETED  | 17-04-2026, 08.21.58 WIB | JV.2025.01.00287       | Tgl jurnal: 11/01/2025   | Uang masuk penjualan cafe tanggal 10/01/2025
+  [ 20/739] ✅ DELETED  | 17-04-2026, 08.21.58 WIB | JV.2025.01.00284       | Tgl jurnal: 11/01/2025   | Penjualan cafe tanggal 11/01/2025
+  [ 21/739] ✅ DELETED  | 17-04-2026, 08.21.59 WIB | JV.2025.01.00289       | Tgl jurnal: 12/01/2025   | Uang masuk penjualan cafe tanggal 11/01/2025
+  [ 22/739] ✅ DELETED  | 17-04-2026, 08.22.00 WIB | JV.2025.01.00285       | Tgl jurnal: 12/01/2025   | Penjualan cafe tanggal 12/01/2025
+  [ 23/739] ✅ DELETED  | 17-04-2026, 08.22.01 WIB | JV.2025.01.00290       | Tgl jurnal: 13/01/2025   | Uang masuk penjualan cafe tanggal 12/01/2025
+  [ 24/739] ✅ DELETED  | 17-04-2026, 08.22.01 WIB | JV.2025.01.00286       | Tgl jurnal: 13/01/2025   | Penjualan cafe tanggal 13/01/2025
+  [ 25/739] ✅ DELETED  | 17-04-2026, 08.22.02 WIB | JV.2025.01.00291       | Tgl jurnal: 14/01/2025   | Uang masuk penjualan cafe tanggal 13/01/2025
+  [ 26/739] ✅ DELETED  | 17-04-2026, 08.22.03 WIB | JV.2025.01.00342       | Tgl jurnal: 14/01/2025   | Penjualan cafe tanggal 14/01/2025
+  [ 27/739] ✅ DELETED  | 17-04-2026, 08.22.03 WIB | JV.2025.01.00344       | Tgl jurnal: 15/01/2025   | Uang masuk penjualan cafe taggal 14/01/2025
+  [ 28/739] ✅ DELETED  | 17-04-2026, 08.22.04 WIB | JV.2025.01.00345       | Tgl jurnal: 15/01/2025   | Penjualan cafe tanggal 15/01/2025
+  [ 29/739] ✅ DELETED  | 17-04-2026, 08.22.05 WIB | JV.2025.01.00346       | Tgl jurnal: 16/01/2025   | Uang masuk penjualan cafe tanggal 15/01/2025
+  [ 30/739] ✅ DELETED  | 17-04-2026, 08.22.05 WIB | JV.2025.01.00347       | Tgl jurnal: 16/01/2025   | Penjualan cafe 16/01/2025
+  [ 31/739] ✅ DELETED  | 17-04-2026, 08.22.06 WIB | JV.2025.01.00348       | Tgl jurnal: 17/01/2025   | Uang masuk penjualan cafe tanggal 16/01/2025
+  [ 32/739] ✅ DELETED  | 17-04-2026, 08.22.07 WIB | JV.2025.01.00437       | Tgl jurnal: 17/01/2025   | Penjualan cafe tanggal 17/01/2025
+  [ 33/739] ✅ DELETED  | 17-04-2026, 08.22.08 WIB | JV.2025.01.00438       | Tgl jurnal: 18/01/2025   | Uang masuk penjualan cafe tanggal 17/01/2025
+  [ 34/739] ✅ DELETED  | 17-04-2026, 08.22.08 WIB | JV.2025.01.00439       | Tgl jurnal: 18/01/2025   | Penjualan cafe tanggal 18/01/2025
+  [ 35/739] ✅ DELETED  | 17-04-2026, 08.22.09 WIB | JV.2025.01.00440       | Tgl jurnal: 19/01/2025   | Uang masuk penjualan cafe tanggal 18/01/2025
+  [ 36/739] ✅ DELETED  | 17-04-2026, 08.22.10 WIB | JV.2025.01.00441       | Tgl jurnal: 19/01/2025   | Uang penjualan cafe tanggal 19/01/2025
+  [ 37/739] ✅ DELETED  | 17-04-2026, 08.22.11 WIB | JV.2025.01.00442       | Tgl jurnal: 20/01/2025   | Uang masuk penjualan cafe tanggal 19/01/2025
+  [ 38/739] ✅ DELETED  | 17-04-2026, 08.22.11 WIB | JV.2025.01.00457       | Tgl jurnal: 20/01/2025   | Uang penjualan cafe tanggal 20/01/2025
+  [ 39/739] ✅ DELETED  | 17-04-2026, 08.22.12 WIB | JV.2025.01.00458       | Tgl jurnal: 21/01/2025   | Uang masuk penjualan cafe tanggal 20/01/2025
+  [ 40/739] ✅ DELETED  | 17-04-2026, 08.22.13 WIB | JV.2025.01.00497       | Tgl jurnal: 21/01/2025   | Penjualan cafe tanggal 21/01/2025
+  [ 41/739] ✅ DELETED  | 17-04-2026, 08.22.14 WIB | JV.2025.01.00498       | Tgl jurnal: 22/01/2025   | Uang masuk penjualan cafe tanggal 21/01/2025
+  [ 42/739] ✅ DELETED  | 17-04-2026, 08.22.14 WIB | JV.2025.01.00499       | Tgl jurnal: 22/01/2025   | Penjualan cafe tanggal 22/01/2025
+  [ 43/739] ✅ DELETED  | 17-04-2026, 08.22.15 WIB | JV.2025.01.00500       | Tgl jurnal: 23/01/2025   | Uang masuk penjualan cafe tanggal 22/01/2025
+  [ 44/739] ✅ DELETED  | 17-04-2026, 08.22.16 WIB | JV.2025.01.00501       | Tgl jurnal: 23/01/2025   | Penjualan cafe tanggal 23/01/2025
+  [ 45/739] ✅ DELETED  | 17-04-2026, 08.22.17 WIB | JV.2025.01.00847       | Tgl jurnal: 24/01/2025   | Setoran cash penjualan cafe tgl 23/01/2025
+  [ 46/739] ✅ DELETED  | 17-04-2026, 08.22.17 WIB | JV.2025.01.00502       | Tgl jurnal: 24/01/2025   | Uang masuk penjualan cafe tanggal 23/01/2025
+  [ 47/739] ✅ DELETED  | 17-04-2026, 08.22.18 WIB | JV.2025.01.00528       | Tgl jurnal: 24/01/2025   | Penjualan cafe tanggal 24/01/2025
+  [ 48/739] ✅ DELETED  | 17-04-2026, 08.22.19 WIB | JV.2025.01.00848       | Tgl jurnal: 25/01/2025   | Setoran cash penjualan cafe tanggal 24/01/2025
+  [ 49/739] ✅ DELETED  | 17-04-2026, 08.22.19 WIB | JV.2025.01.00532       | Tgl jurnal: 25/01/2025   | Uang masuk penjualan cafe tanggal 24/01/2025
+  [ 50/739] ✅ DELETED  | 17-04-2026, 08.22.20 WIB | JV.2025.01.00529       | Tgl jurnal: 25/01/2025   | Penjualan cafe tanggal 25/01/2025
+  [ 51/739] ✅ DELETED  | 17-04-2026, 08.22.21 WIB | JV.2025.01.00533       | Tgl jurnal: 26/01/2025   | Uang masuk penjualan cafe tanggal 25/01/2025
+  [ 52/739] ✅ DELETED  | 17-04-2026, 08.22.21 WIB | JV.2025.02.00323       | Tgl jurnal: 30/01/2025   | Setoran cash penjualan tgl 25/01/2025
+  [ 53/739] ✅ DELETED  | 17-04-2026, 08.22.22 WIB | JV.2025.01.00530       | Tgl jurnal: 26/01/2025   | Penjualan cafe tanggal 26/01/2025
+  [ 54/739] ✅ DELETED  | 17-04-2026, 08.22.23 WIB | JV.2025.01.00534       | Tgl jurnal: 27/01/2025   | Uang masuk penjualan cafe tanggal 26/01/2025
+  [ 55/739] ✅ DELETED  | 17-04-2026, 08.22.24 WIB | JV.2025.01.00849       | Tgl jurnal: 30/01/2025   | Setoran cash penjualan cafe tgl 26/01/2025
+  [ 56/739] ✅ DELETED  | 17-04-2026, 08.22.24 WIB | JV.2025.01.00531       | Tgl jurnal: 27/01/2025   | Penjualan cafe tanggal 27/01/2025
+  [ 57/739] ✅ DELETED  | 17-04-2026, 08.22.25 WIB | JV.2025.01.00688       | Tgl jurnal: 28/01/2025   | Uang masuk penjualan cafe tanggal 27/01/2025
+  [ 58/739] ✅ DELETED  | 17-04-2026, 08.22.26 WIB | JV.2025.01.00850       | Tgl jurnal: 30/01/2025   | Setoran cash penjualan cafe tgl 27/01/2025
+  [ 59/739] ✅ DELETED  | 17-04-2026, 08.22.26 WIB | JV.2025.01.00689       | Tgl jurnal: 28/01/2025   | Penjualan cafe tanggal 28/01/2025
+  [ 60/739] ✅ DELETED  | 17-04-2026, 08.22.27 WIB | JV.2025.01.00691       | Tgl jurnal: 29/01/2025   | Uang masuk penjualan cafe tanggal 28/01/2025
+  [ 61/739] ✅ DELETED  | 17-04-2026, 08.22.28 WIB | JV.2025.01.00851       | Tgl jurnal: 30/01/2025   | Setoran cash penjualan cafe tgl 28/01/2025
+  [ 62/739] ✅ DELETED  | 17-04-2026, 08.22.29 WIB | JV.2025.01.00692       | Tgl jurnal: 29/01/2025   | Penjualan cafe tanggal 29/01/2025
+  [ 63/739] ✅ DELETED  | 17-04-2026, 08.22.29 WIB | JV.2025.01.00693       | Tgl jurnal: 30/01/2025   | Uang masuk penjualan cafe tanggal 29/01/2025
+  [ 64/739] ✅ DELETED  | 17-04-2026, 08.22.30 WIB | JV.2025.01.00694       | Tgl jurnal: 30/01/2025   | Penjualan cafe tanggal 30/01/2025
+  [ 65/739] ✅ DELETED  | 17-04-2026, 08.22.31 WIB | JV.2025.01.00785       | Tgl jurnal: 30/01/2025   | Uang masuk penjualan cafe tanggal 30/01/2025
+  [ 66/739] ✅ DELETED  | 17-04-2026, 08.22.31 WIB | JV.2025.02.00319       | Tgl jurnal: 01/02/2025   | Setoran cash penjualan cafe tanggal 30/01/2025
+  [ 67/739] ✅ DELETED  | 17-04-2026, 08.22.32 WIB | JV.2025.01.00781       | Tgl jurnal: 31/01/2025   | Penjualan cafe tanggal 31/01/2025
+  [ 68/739] ✅ DELETED  | 17-04-2026, 08.22.33 WIB | JV.2025.01.00787       | Tgl jurnal: 01/02/2025   | Uang masuk penjualan cafe tanggal 31/01/2025
+  [ 69/739] ✅ DELETED  | 17-04-2026, 08.22.34 WIB | JV.2025.02.00322       | Tgl jurnal: 04/02/2025   | Setoran cash penjualan cafe tanggal 31/01/2025
+  [ 70/739] ✅ DELETED  | 17-04-2026, 08.22.34 WIB | JV.2025.02.00029       | Tgl jurnal: 01/02/2025   | Penjualan cafe tanggal 01/02/2025
+  [ 71/739] ✅ DELETED  | 17-04-2026, 08.22.35 WIB | JV.2025.02.00320       | Tgl jurnal: 02/02/2025   | Setoran cash penjualan cafe tanggal 01/02/2025
+  [ 72/739] ✅ DELETED  | 17-04-2026, 08.22.36 WIB | JV.2025.02.00034       | Tgl jurnal: 02/02/2025   | Uang masuk penjualan cafe tanggal 01/02/2025
+  [ 73/739] ✅ DELETED  | 17-04-2026, 08.22.36 WIB | JV.2025.02.00612       | Tgl jurnal: 17/02/2025   | Uang masuk setoran cash penjualan cafe tgl 01/02/2025
+  [ 74/739] ✅ DELETED  | 17-04-2026, 08.22.37 WIB | JV.2025.02.00030       | Tgl jurnal: 02/02/2025   | Penjualan cafe tanggal 02/02/2025
+  [ 75/739] ✅ DELETED  | 17-04-2026, 08.22.38 WIB | JV.2025.02.00321       | Tgl jurnal: 03/02/2025   | Setoran cash penjualan cafe tanggal 02/02/2025
+  [ 76/739] ✅ DELETED  | 17-04-2026, 08.22.38 WIB | JV.2025.02.00035       | Tgl jurnal: 03/02/2025   | Uang masuk penjualan cafe tanggal 02/02/2025
+  [ 77/739] ✅ DELETED  | 17-04-2026, 08.22.39 WIB | JV.2025.02.00032       | Tgl jurnal: 03/02/2025   | Penjualan cafe tanggal 03/02/2025
+  [ 78/739] ✅ DELETED  | 17-04-2026, 08.22.40 WIB | JV.2025.02.00037       | Tgl jurnal: 04/02/2025   | Uang masuk penjualan cafe tanggal 03/02/2025
+  [ 79/739] ✅ DELETED  | 17-04-2026, 08.22.41 WIB | JV.2025.02.00311       | Tgl jurnal: 08/02/2025   | Setoran cash penjualan cafe tanggal 03/02/2025
+  [ 80/739] ✅ DELETED  | 17-04-2026, 08.22.41 WIB | JV.2025.02.00112       | Tgl jurnal: 04/02/2025   | Penjualan cafe strada tanggal 04/02/2025
+  [ 81/739] ✅ DELETED  | 17-04-2026, 08.22.42 WIB | JV.2025.02.00116       | Tgl jurnal: 05/02/2025   | Uang masuk penjualan cafe tanggal 04/02/2025
+  [ 82/739] ✅ DELETED  | 17-04-2026, 08.22.43 WIB | JV.2025.02.00113       | Tgl jurnal: 05/02/2025   | Penjualan cafe tanggal 05/02/2025
+  [ 83/739] ✅ DELETED  | 17-04-2026, 08.22.43 WIB | JV.2025.02.00117       | Tgl jurnal: 06/02/2025   | Uang masuk penjualan cafe tanggal 05/02/2025
+  [ 84/739] ✅ DELETED  | 17-04-2026, 08.22.44 WIB | JV.2025.02.00114       | Tgl jurnal: 06/02/2025   | Penjualan cafe tanggal 06/02/2025
+  [ 85/739] ✅ DELETED  | 17-04-2026, 08.22.45 WIB | JV.2025.02.00118       | Tgl jurnal: 07/02/2025   | Uang masuk penjualan cafe tanggal 06/02/2025
+  [ 86/739] ✅ DELETED  | 17-04-2026, 08.22.46 WIB | JV.2025.02.00304       | Tgl jurnal: 07/02/2025   | Penjualan cafe tanggal 07/02/2025
+  [ 87/739] ✅ DELETED  | 17-04-2026, 08.22.46 WIB | JV.2025.02.00893       | Tgl jurnal: 08/02/2025   | Uang masuk penjualan cafe tanggal 07/02/2025
+  [ 88/739] ✅ DELETED  | 17-04-2026, 08.22.47 WIB | JV.2025.02.00305       | Tgl jurnal: 08/02/2025   | Penjualan cafe tanggal 08/02/2025
+  [ 89/739] ✅ DELETED  | 17-04-2026, 08.22.48 WIB | JV.2025.02.00312       | Tgl jurnal: 09/02/2025   | Uang masuk penjualan cafe tanggal 08/02/2025
+  [ 90/739] ✅ DELETED  | 17-04-2026, 08.22.48 WIB | JV.2025.02.00314       | Tgl jurnal: 10/02/2025   | Setoran cash penjualan cafe tanggal 08/02/2025
+  [ 91/739] ✅ DELETED  | 17-04-2026, 08.22.49 WIB | JV.2025.02.00306       | Tgl jurnal: 09/02/2025   | Penjualan cafe tanggal 09/02/2025
+  [ 92/739] ✅ DELETED  | 17-04-2026, 08.22.50 WIB | JV.2025.02.00315       | Tgl jurnal: 10/02/2025   | Setoran cash penjualan cafe tanggal 09/02/2025
+  [ 93/739] ✅ DELETED  | 17-04-2026, 08.22.50 WIB | JV.2025.02.00313       | Tgl jurnal: 10/02/2025   | Uang masuk penjualan cafe tanggal 09/02/2025
+  [ 94/739] ✅ DELETED  | 17-04-2026, 08.22.51 WIB | JV.2025.02.00307       | Tgl jurnal: 10/02/2025   | Penjualan cafe tanggal 10/02/2025
+  [ 95/739] ✅ DELETED  | 17-04-2026, 08.22.52 WIB | JV.2025.02.00316       | Tgl jurnal: 11/02/2025   | Uang masuk penjualan cafe tanggal 10/02/2025
+  [ 96/739] ✅ DELETED  | 17-04-2026, 08.22.53 WIB | JV.2025.02.00308       | Tgl jurnal: 11/02/2025   | Penjualan cafe tanggal 11/02/2025
+  [ 97/739] ✅ DELETED  | 17-04-2026, 08.22.53 WIB | JV.2025.02.00317       | Tgl jurnal: 12/02/2025   | Uang masuk penjualan cafe tanggal 11/02/2025
+  [ 98/739] ✅ DELETED  | 17-04-2026, 08.22.54 WIB | JV.2025.02.00309       | Tgl jurnal: 12/02/2025   | Penjualan cafe tanggal 12/02/2025
+  [ 99/739] ✅ DELETED  | 17-04-2026, 08.22.55 WIB | JV.2025.02.00318       | Tgl jurnal: 13/02/2025   | Uang masuk penjualan cafe tanggal 12/02/2025
+  [100/739] ✅ DELETED  | 17-04-2026, 08.22.55 WIB | JV.2025.02.00310       | Tgl jurnal: 13/02/2025   | Penjualan cafe tanggal 13/02/2025
+  [101/739] ✅ DELETED  | 17-04-2026, 08.22.56 WIB | JV.2025.02.00605       | Tgl jurnal: 14/02/2025   | Uang masuk penjualan cafe tanggal 13/02/2025
+  [102/739] ✅ DELETED  | 17-04-2026, 08.22.57 WIB | JV.2025.02.00394       | Tgl jurnal: 14/02/2025   | Penjualan cafe tanggal 14/02/2025
+  [103/739] ✅ DELETED  | 17-04-2026, 08.22.58 WIB | JV.2025.02.00606       | Tgl jurnal: 15/02/2025   | Uang masuk penjualan cafe tanggal 14/02/2025
+  [104/739] ✅ DELETED  | 17-04-2026, 08.22.58 WIB | JV.2025.02.00395       | Tgl jurnal: 15/02/2025   | Penjualan cafe tanggal 15/02/2025
+  [105/739] ✅ DELETED  | 17-04-2026, 08.22.59 WIB | JV.2025.02.00609       | Tgl jurnal: 16/02/2025   | Uang masuk penjualan cafe tanggal 15/02/2025
+  [106/739] ✅ DELETED  | 17-04-2026, 08.23.00 WIB | JV.2025.02.00396       | Tgl jurnal: 16/02/2025   | Penjualan cafe tanggal 16/02/2025
+  [107/739] ✅ DELETED  | 17-04-2026, 08.23.00 WIB | JV.2025.02.00610       | Tgl jurnal: 17/02/2025   | Uang masuk penjualan cafe tanggal 16/02/2025
+  [108/739] ✅ DELETED  | 17-04-2026, 08.23.01 WIB | JV.2025.02.00397       | Tgl jurnal: 17/02/2025   | Penjualan cafe tanggal 17/02/2025
+  [109/739] ✅ DELETED  | 17-04-2026, 08.23.02 WIB | JV.2025.02.00611       | Tgl jurnal: 18/02/2025   | Uang masuk penjualan cafe tanggal 17/02/2025
+  [110/739] ✅ DELETED  | 17-04-2026, 08.23.03 WIB | JV.2025.02.00554       | Tgl jurnal: 18/02/2025   | Penjualan cafe tanggal 18/02/2025
+  [111/739] ✅ DELETED  | 17-04-2026, 08.23.03 WIB | JV.2025.02.00613       | Tgl jurnal: 19/02/2025   | Uang masuk penjualan cafe tanggal 18/02/2025
+  [112/739] ✅ DELETED  | 17-04-2026, 08.23.04 WIB | JV.2025.02.00555       | Tgl jurnal: 19/02/2025   | Penjualan cafe tanggal 19/02/2025
+  [113/739] ✅ DELETED  | 17-04-2026, 08.23.05 WIB | JV.2025.02.00614       | Tgl jurnal: 20/02/2025   | Uang masuk penjualan cafe tanggal 19/02/2025
+  [114/739] ✅ DELETED  | 17-04-2026, 08.23.05 WIB | JV.2025.02.00576       | Tgl jurnal: 20/02/2025   | Penjualan cafe tanggal 20/02/2025
+  [115/739] ✅ DELETED  | 17-04-2026, 08.23.06 WIB | JV.2025.02.00615       | Tgl jurnal: 21/02/2025   | Uang masuk penjualan cafe tanggal 20/02/2025
+  [116/739] ✅ DELETED  | 17-04-2026, 08.23.07 WIB | JV.2025.02.00752       | Tgl jurnal: 21/02/2025   | Penjualan cafe tanggal 21/02/2025
+  [117/739] ✅ DELETED  | 17-04-2026, 08.23.08 WIB | JV.2025.02.00850       | Tgl jurnal: 22/02/2025   | Uang masuk penjualan cafe tanggal 21/02/2025
+  [118/739] ✅ DELETED  | 17-04-2026, 08.23.08 WIB | JV.2025.02.00753       | Tgl jurnal: 22/02/2025   | Penjualan cafe tanggal 22/02/2025
+  [119/739] ✅ DELETED  | 17-04-2026, 08.23.09 WIB | JV.2025.02.00851       | Tgl jurnal: 23/02/2025   | Uang masuk penjualan cafe tanggal 22/02/2025
+  [120/739] ✅ DELETED  | 17-04-2026, 08.23.10 WIB | JV.2025.02.00754       | Tgl jurnal: 23/02/2025   | Penjualan cafe tanggal 23/02/2025
+  [121/739] ✅ DELETED  | 17-04-2026, 08.23.11 WIB | JV.2025.02.00852       | Tgl jurnal: 24/02/2025   | Uang masuk penjualan cafe tanggal 23/02/2025
+  [122/739] ✅ DELETED  | 17-04-2026, 08.23.11 WIB | JV.2025.02.00756       | Tgl jurnal: 24/02/2025   | Penjualan cafe tanggal 24/02/2025
+  [123/739] ✅ DELETED  | 17-04-2026, 08.23.12 WIB | JV.2025.02.00853       | Tgl jurnal: 25/02/2025   | Uang masuk penjualan cafe tanggal 24/02/2025
+  [124/739] ✅ DELETED  | 17-04-2026, 08.23.13 WIB | JV.2025.02.00872       | Tgl jurnal: 25/02/2025   | Penjualan cafe tanggal 25/02/2025
+  [125/739] ✅ DELETED  | 17-04-2026, 08.23.13 WIB | JV.2025.03.00007       | Tgl jurnal: 26/02/2025   | Uang masuk penjualan cafe tanggal 25/02/2025
+  [126/739] ✅ DELETED  | 17-04-2026, 08.23.14 WIB | JV.2025.02.00873       | Tgl jurnal: 26/02/2025   | Penjualan cafe tanggal 26/02/2025
+  [127/739] ✅ DELETED  | 17-04-2026, 08.23.15 WIB | JV.2025.02.00876       | Tgl jurnal: 27/02/2025   | Uang masuk penjualan cafe tanggal 26/02/2025
+  [128/739] ✅ DELETED  | 17-04-2026, 08.23.16 WIB | JV.2025.02.00874       | Tgl jurnal: 27/02/2025   | Penjualan cafe tanggal 27/02/2025
+  [129/739] ✅ DELETED  | 17-04-2026, 08.23.16 WIB | JV.2025.02.00877       | Tgl jurnal: 28/02/2025   | Uang masuk penjualan cafe tanggal 27/02/2025
+  [130/739] ✅ DELETED  | 17-04-2026, 08.23.17 WIB | JV.2025.02.00875       | Tgl jurnal: 28/02/2025   | Penjualan cafe tanggal 28/02/2025
+  [131/739] ✅ DELETED  | 17-04-2026, 08.23.18 WIB | JV.2025.03.00008       | Tgl jurnal: 01/03/2025   | Uang masuk penjualan cafe tanggal 28/02/2025
+  [132/739] ✅ DELETED  | 17-04-2026, 08.23.18 WIB | JV.2025.03.00053       | Tgl jurnal: 01/03/2025   | Penjualan cafe tanggal 01/03/2025
+  [133/739] ✅ DELETED  | 17-04-2026, 08.23.19 WIB | JV.2025.03.00064       | Tgl jurnal: 02/03/2025   | Uang masuk penjualan cafe tanggal 01/03/2025
+  [134/739] ✅ DELETED  | 17-04-2026, 08.23.20 WIB | JV.2025.03.00052       | Tgl jurnal: 02/03/2025   | Penjualan cafe tanggal 02/03/2025
+  [135/739] ✅ DELETED  | 17-04-2026, 08.23.20 WIB | JV.2025.03.00065       | Tgl jurnal: 03/03/2025   | Uang masuk penjualan cafe tanggal 02/03/2025
+  [136/739] ✅ DELETED  | 17-04-2026, 08.23.21 WIB | JV.2025.03.00051       | Tgl jurnal: 03/03/2025   | Penjualan cafe tanggal 03/03/2025
+  [137/739] ✅ DELETED  | 17-04-2026, 08.23.22 WIB | JV.2025.03.00110       | Tgl jurnal: 04/03/2025   | Uang masuk penjualan cafe tanggal 03/03/2025
+  [138/739] ✅ DELETED  | 17-04-2026, 08.23.23 WIB | JV.2025.03.00104       | Tgl jurnal: 04/03/2025   | Penjualan cafe tanggal 04/03/2025
+  [139/739] ✅ DELETED  | 17-04-2026, 08.23.23 WIB | JV.2025.03.00109       | Tgl jurnal: 05/03/2025   | Uang masuk penjualan cafe tanggal 04/03/2025
+  [140/739] ✅ DELETED  | 17-04-2026, 08.23.24 WIB | JV.2025.03.00106       | Tgl jurnal: 05/03/2025   | Penjualan cafe tanggal 05/03/2025
+  [141/739] ✅ DELETED  | 17-04-2026, 08.23.25 WIB | JV.2025.03.00111       | Tgl jurnal: 06/03/2025   | Uang masuk penjualan cafe tanggal 05/03/2025
+  [142/739] ✅ DELETED  | 17-04-2026, 08.23.25 WIB | JV.2025.03.00107       | Tgl jurnal: 06/03/2025   | Penjualan cafe tanggal 06/03/2025
+  [143/739] ✅ DELETED  | 17-04-2026, 08.23.26 WIB | JV.2025.03.00487       | Tgl jurnal: 07/03/2025   | Uang masuk penjualan cafe tanggal 06/03/2025
+  [144/739] ✅ DELETED  | 17-04-2026, 08.23.27 WIB | JV.2025.03.00490       | Tgl jurnal: 07/03/2025   | Penjualan cafe tanggal 07/03/2025
+  [145/739] ✅ DELETED  | 17-04-2026, 08.23.27 WIB | JV.2025.03.00488       | Tgl jurnal: 08/03/2025   | Uang masuk penjualan cafe tanggal 07/03/2025
+  [146/739] ✅ DELETED  | 17-04-2026, 08.23.28 WIB | JV.2025.03.00295       | Tgl jurnal: 08/03/2025   | Penjualan cafe tanggal 08/03/2025
+  [147/739] ✅ DELETED  | 17-04-2026, 08.23.29 WIB | JV.2025.03.00290       | Tgl jurnal: 09/03/2025   | Uang masuk penjualan cafe tanggal 08/03/2025
+  [148/739] ✅ DELETED  | 17-04-2026, 08.23.30 WIB | JV.2025.03.00296       | Tgl jurnal: 09/03/2025   | Penjualan cafe tanggal 09/03/2025
+  [149/739] ✅ DELETED  | 17-04-2026, 08.23.31 WIB | JV.2025.03.00291       | Tgl jurnal: 10/03/2025   | Uang masuk penjualan cafe tanggal 09/03/2025
+  [150/739] ✅ DELETED  | 17-04-2026, 08.23.31 WIB | JV.2025.03.00801       | Tgl jurnal: 12/03/2025   | Uang masuk setoran cash penjualan cafe tanggal 09/03/2025
+  [151/739] ✅ DELETED  | 17-04-2026, 08.23.32 WIB | JV.2025.03.00297       | Tgl jurnal: 10/03/2025   | Penjualan cafe tanggal 10/03/2025
+  [152/739] ✅ DELETED  | 17-04-2026, 08.23.33 WIB | JV.2025.03.00292       | Tgl jurnal: 11/03/2025   | Uang masuk penjualan cafe tanggal 10/03/2025
+  [153/739] ✅ DELETED  | 17-04-2026, 08.23.34 WIB | JV.2025.03.00299       | Tgl jurnal: 11/03/2025   | Penjualan cafe tanggal 11/03/2025
+  [154/739] ✅ DELETED  | 17-04-2026, 08.23.34 WIB | JV.2025.03.00293       | Tgl jurnal: 12/03/2025   | Uang masuk penjualan cafe tanggal 11/03/2025
+  [155/739] ✅ DELETED  | 17-04-2026, 08.23.35 WIB | JV.2025.03.00491       | Tgl jurnal: 12/03/2025   | Penjualan cafe tanggal 12/03/2025
+  [156/739] ✅ DELETED  | 17-04-2026, 08.23.36 WIB | JV.2025.03.00489       | Tgl jurnal: 13/03/2025   | Uang masuk penjualan cafe tanggal 12/03/2025
+  [157/739] ✅ DELETED  | 17-04-2026, 08.23.36 WIB | JV.2025.03.00376       | Tgl jurnal: 13/03/2025   | Penjualan cafe tanggal 13/03/2025
+  [158/739] ✅ DELETED  | 17-04-2026, 08.23.37 WIB | JV.2025.03.00378       | Tgl jurnal: 14/03/2025   | Uang masuk penjualan cafe tanggal 13/03/2025
+  [159/739] ✅ DELETED  | 17-04-2026, 08.23.38 WIB | JV.2025.03.00377       | Tgl jurnal: 14/03/2025   | Penjualan cafe tanggal 14/03/2025
+  [160/739] ✅ DELETED  | 17-04-2026, 08.23.39 WIB | JV.2025.03.00379       | Tgl jurnal: 15/03/2025   | Uang masuk penjualan cafe tanggal 14/03/2025
+  [161/739] ✅ DELETED  | 17-04-2026, 08.23.39 WIB | JV.2025.03.00431       | Tgl jurnal: 15/03/2025   | Penjualan cafe tanggal 15/03/2025
+  [162/739] ✅ DELETED  | 17-04-2026, 08.23.40 WIB | JV.2025.03.00459       | Tgl jurnal: 16/03/2025   | Uang masuk penjualan cafe tanggal 15/03/2025
+  [163/739] ✅ DELETED  | 17-04-2026, 08.23.41 WIB | JV.2025.03.00428       | Tgl jurnal: 16/03/2025   | Penjualan cafe tanggal 16/03/2025
+  [164/739] ✅ DELETED  | 17-04-2026, 08.23.41 WIB | JV.2025.03.00460       | Tgl jurnal: 17/03/2025   | Uang masuk penjualan cafe tanggal 16/03/2025
+  [165/739] ✅ DELETED  | 17-04-2026, 08.23.42 WIB | JV.2025.03.00461       | Tgl jurnal: 17/03/2025   | Penjualan cafe tanggal 17/03/2025
+  [166/739] ✅ DELETED  | 17-04-2026, 08.23.43 WIB | JV.2025.03.00462       | Tgl jurnal: 18/03/2025   | Uang masuk penjualan cafe tanggal 17/03/2025
+  [167/739] ✅ DELETED  | 17-04-2026, 08.23.44 WIB | JV.2025.03.00483       | Tgl jurnal: 18/03/2025   | Penjualan cafe tanggal 18/03/2025
+  [168/739] ✅ DELETED  | 17-04-2026, 08.23.45 WIB | JV.2025.03.00797       | Tgl jurnal: 19/03/2025   | Uang masuk penjualan cafe tanggal 18/03/2025
+  [169/739] ✅ DELETED  | 17-04-2026, 08.23.45 WIB | JV.2025.03.00507       | Tgl jurnal: 19/03/2025   | Penjualan cafe tanggal 19/03/2025
+  [170/739] ✅ DELETED  | 17-04-2026, 08.23.46 WIB | JV.2025.03.00522       | Tgl jurnal: 20/03/2025   | Uang masuk penjualan cafe tanggal 19/03/2025
+  [171/739] ✅ DELETED  | 17-04-2026, 08.23.47 WIB | JV.2025.03.00552       | Tgl jurnal: 20/03/2025   | Penjualan cafe tanggal 20/03/2025
+  [172/739] ✅ DELETED  | 17-04-2026, 08.23.47 WIB | JV.2025.03.00554       | Tgl jurnal: 21/03/2025   | Uang masuk penjualan cafe tanggal 20/03/2025
+  [173/739] ✅ DELETED  | 17-04-2026, 08.23.48 WIB | JV.2025.03.00618       | Tgl jurnal: 21/03/2025   | Penjualan cafe tanggal 21/03/2025
+  [174/739] ✅ DELETED  | 17-04-2026, 08.23.49 WIB | JV.2025.03.00634       | Tgl jurnal: 22/03/2025   | Uang masuk penjualan cafe tanggal 21/03/2025
+  [175/739] ✅ DELETED  | 17-04-2026, 08.23.50 WIB | JV.2025.03.00619       | Tgl jurnal: 22/03/2025   | Penjualan cafe tanggal 22/03/2025
+  [176/739] ✅ DELETED  | 17-04-2026, 08.23.50 WIB | JV.2025.03.00635       | Tgl jurnal: 23/03/2025   | Uang masuk penjualan cafe tanggal 22/03/2025
+  [177/739] ✅ DELETED  | 17-04-2026, 08.23.51 WIB | JV.2025.03.00620       | Tgl jurnal: 23/03/2025   | Penjualan cafe tanggal 23/03/2025
+  [178/739] ✅ DELETED  | 17-04-2026, 08.23.52 WIB | JV.2025.03.00636       | Tgl jurnal: 24/03/2025   | Uang masuk penjualan cafe tanggal 23/03/2025
+  [179/739] ✅ DELETED  | 17-04-2026, 08.23.53 WIB | JV.2025.03.00621       | Tgl jurnal: 24/03/2025   | Penjualan cafe tanggal 24/03/2025
+  [180/739] ✅ DELETED  | 17-04-2026, 08.23.53 WIB | JV.2025.03.00798       | Tgl jurnal: 25/03/2025   | Uang masuk penjualan cafe tanggal 24/03/2025
+  [181/739] ✅ DELETED  | 17-04-2026, 08.23.54 WIB | JV.2025.03.00629       | Tgl jurnal: 25/03/2025   | Penjualan cafe tanggal 25/03/2025
+  [182/739] ✅ DELETED  | 17-04-2026, 08.23.55 WIB | JV.2025.03.00637       | Tgl jurnal: 26/03/2025   | Uang masuk penjualan cafe tanggal 25/03/2025
+  [183/739] ✅ DELETED  | 17-04-2026, 08.23.56 WIB | JV.2025.03.00668       | Tgl jurnal: 26/03/2025   | Penjualan cafe tanggal 26/03/2025
+  [184/739] ✅ DELETED  | 17-04-2026, 08.23.56 WIB | JV.2025.03.00775       | Tgl jurnal: 27/03/2025   | Uang masuk penjualan cafe tanggal 26/03/2025
+  [185/739] ✅ DELETED  | 17-04-2026, 08.23.57 WIB | JV.2025.03.00673       | Tgl jurnal: 27/03/2025   | Penjualan cafe tanggal 27/03/2025
+  [186/739] ✅ DELETED  | 17-04-2026, 08.23.58 WIB | JV.2025.03.00776       | Tgl jurnal: 28/03/2025   | Uang masuk penjualan cafe tanggal 27/03/2025
+  [187/739] ✅ DELETED  | 17-04-2026, 08.23.58 WIB | JV.2025.03.00841       | Tgl jurnal: 31/03/2025   | Setoran penjualan cafe cash tgl 2
+8 mar lapiaza
+  [188/739] ✅ DELETED  | 17-04-2026, 08.23.59 WIB | JV.2025.03.00778       | Tgl jurnal: 29/03/2025   | Uang masuk penjualan cafe tanggal 28/03/2025
+  [189/739] ✅ DELETED  | 17-04-2026, 08.24.00 WIB | JV.2025.03.00683       | Tgl jurnal: 29/03/2025   | Penjualan cafe tanggal 29/03/2025
+  [190/739] ✅ DELETED  | 17-04-2026, 08.24.00 WIB | JV.2025.03.00779       | Tgl jurnal: 30/03/2025   | Uang masuk penjualan cafe tanggal 29/03/2025
+  [191/739] ✅ DELETED  | 17-04-2026, 08.24.01 WIB | JV.2025.03.00842       | Tgl jurnal: 31/03/2025   | Setoran penjualan cafe cash tgl 30 Mar Lapiaza
+  [192/739] ✅ DELETED  | 17-04-2026, 08.24.02 WIB | JV.2025.03.00684       | Tgl jurnal: 30/03/2025   | Penjualan cafe tanggal 30/03/2025
+  [193/739] ✅ DELETED  | 17-04-2026, 08.24.02 WIB | JV.2025.03.00780       | Tgl jurnal: 31/03/2025   | Uang masuk penjualan cafe tanggal 30/03/2025
+  [194/739] ✅ DELETED  | 17-04-2026, 08.24.03 WIB | JV.2025.04.00889       | Tgl jurnal: 03/04/2025   | Setoran penjualan cafe cash tgl 31 Mar Lapiazza
+  [195/739] ✅ DELETED  | 17-04-2026, 08.24.04 WIB | JV.2025.03.00685       | Tgl jurnal: 31/03/2025   | Penjualan cafe tanggal 31/03/2025
+  [196/739] ✅ DELETED  | 17-04-2026, 08.24.05 WIB | JV.2025.04.00031       | Tgl jurnal: 01/04/2025   | Uang masuk penjualan cafe tanggal 31/03/2025
+  [197/739] ✅ DELETED  | 17-04-2026, 08.24.05 WIB | JV.2025.04.00890       | Tgl jurnal: 03/04/2025   | Setoran penjualan cafe cash tgl 01 Apr Lapiazza
+  [198/739] ✅ DELETED  | 17-04-2026, 08.24.06 WIB | JV.2025.04.00006       | Tgl jurnal: 01/04/2025   | Penjualan cafe tanggal 01/04/2025
+  [199/739] ✅ DELETED  | 17-04-2026, 08.24.07 WIB | JV.2025.04.00032       | Tgl jurnal: 02/04/2025   | Uang masuk penjualan cafe tanggal 01/04/2025
+  [200/739] ✅ DELETED  | 17-04-2026, 08.24.08 WIB | JV.2025.04.00891       | Tgl jurnal: 03/04/2025   | Setoran penjualan cafe cash tgl 02 Apr Lapiazza
+  [201/739] ✅ DELETED  | 17-04-2026, 08.24.08 WIB | JV.2025.04.00038       | Tgl jurnal: 02/04/2025   | Penjualan cafe tanggal 02/04/2025
+  [202/739] ✅ DELETED  | 17-04-2026, 08.24.09 WIB | JV.2025.04.00137       | Tgl jurnal: 03/04/2025   | Uang masuk penjualan cafe tanggal 02/04/2025
+  [203/739] ✅ DELETED  | 17-04-2026, 08.24.10 WIB | JV.2025.04.00138       | Tgl jurnal: 04/04/2025   | Uang masuk penjualan cafe tanggal 02/04/2025
+  [204/739] ✅ DELETED  | 17-04-2026, 08.24.11 WIB | JV.2025.04.00040       | Tgl jurnal: 03/04/2025   | Penjualan cafe tanggal 03/04/2025
+  [205/739] ✅ DELETED  | 17-04-2026, 08.24.11 WIB | JV.2025.05.00147       | Tgl jurnal: 04/05/2025   | Uang masuk penjualan tanggal 03/04/2025
+  [206/739] ✅ DELETED  | 17-04-2026, 08.24.12 WIB | JV.2025.04.00066       | Tgl jurnal: 04/04/2025   | Penjualan cafe tanggal 04/04/2025
+  [207/739] ✅ DELETED  | 17-04-2026, 08.24.13 WIB | JV.2025.04.00139       | Tgl jurnal: 05/04/2025   | Uang masuk penjualan cafe tanggal 04/04/2025
+  [208/739] ✅ DELETED  | 17-04-2026, 08.24.13 WIB | JV.2025.04.00134       | Tgl jurnal: 05/04/2025   | Penjualan cafe tanggal 05/04/2025
+  [209/739] ✅ DELETED  | 17-04-2026, 08.24.14 WIB | JV.2025.04.00140       | Tgl jurnal: 06/04/2025   | Uang masuk penjualan cafe tanggal 05/04/2025
+  [210/739] ✅ DELETED  | 17-04-2026, 08.24.15 WIB | JV.2025.04.00135       | Tgl jurnal: 06/04/2025   | Penjualan cafe tanggal 06/04/2025
+  [211/739] ✅ DELETED  | 17-04-2026, 08.24.16 WIB | JV.2025.04.00141       | Tgl jurnal: 07/04/2025   | Uang masuk penjualan cafe tanggal 06/04/2025
+  [212/739] ✅ DELETED  | 17-04-2026, 08.24.16 WIB | JV.2025.04.00136       | Tgl jurnal: 07/04/2025   | Penjualan cafe tanggal 07/04/2025
+  [213/739] ✅ DELETED  | 17-04-2026, 08.24.17 WIB | JV.2025.04.00142       | Tgl jurnal: 08/04/2025   | Uang masuk penjualan cafe tanggal 07/04/2025
+  [214/739] ✅ DELETED  | 17-04-2026, 08.24.18 WIB | JV.2025.04.00186       | Tgl jurnal: 08/04/2025   | Penjualan cafe tanggal 08/04/2025
+  [215/739] ✅ DELETED  | 17-04-2026, 08.24.19 WIB | JV.2025.04.00896       | Tgl jurnal: 09/04/2025   | Uang masuk penjualan cafe tanggal 08/04/2025
+  [216/739] ✅ DELETED  | 17-04-2026, 08.24.19 WIB | JV.2025.04.00187       | Tgl jurnal: 09/04/2025   | Penjualan cafe tanggal 09/04/2025
+  [217/739] ✅ DELETED  | 17-04-2026, 08.24.20 WIB | JV.2025.04.00897       | Tgl jurnal: 10/04/2025   | Uang amsuk penjualan cafe tanggal 09/04/2025
+  [218/739] ✅ DELETED  | 17-04-2026, 08.24.21 WIB | JV.2025.04.00231       | Tgl jurnal: 10/04/2025   | Penjualan cafe tanggal 10/04/2025
+  [219/739] ✅ DELETED  | 17-04-2026, 08.24.21 WIB | JV.2025.04.00234       | Tgl jurnal: 11/04/2025   | Uang masuk penjualan cafe tanggal 10/04/2025
+  [220/739] ✅ DELETED  | 17-04-2026, 08.24.22 WIB | JV.2025.04.00232       | Tgl jurnal: 11/04/2025   | Penjualan cafe tanggal 11/04/2025
+  [221/739] ✅ DELETED  | 17-04-2026, 08.24.23 WIB | JV.2025.04.00233       | Tgl jurnal: 12/04/2025   | Uang masuk penjualan cafe tanggal 11/04/2025
+  [222/739] ✅ DELETED  | 17-04-2026, 08.24.23 WIB | JV.2025.04.00348       | Tgl jurnal: 12/04/2025   | Penjualan cafe tanggal 12/04/2025
+  [223/739] ✅ DELETED  | 17-04-2026, 08.24.24 WIB | JV.2025.04.00467       | Tgl jurnal: 13/04/2025   | Uang masuk penjualan cafe tanggal 12/04/2025
+  [224/739] ✅ DELETED  | 17-04-2026, 08.24.25 WIB | JV.2025.04.00466       | Tgl jurnal: 13/04/2025   | Uang masuk penjualan cash lapiz 12 apr 25
+  [225/739] ✅ DELETED  | 17-04-2026, 08.24.26 WIB | JV.2025.04.00349       | Tgl jurnal: 13/04/2025   | Penjualan cafe tanggal 13/04/2025
+  [226/739] ✅ DELETED  | 17-04-2026, 08.24.26 WIB | JV.2025.04.00465       | Tgl jurnal: 14/04/2025   | Uang masuk penjualan cafe tanggal 13/04/2025
+  [227/739] ✅ DELETED  | 17-04-2026, 08.24.27 WIB | JV.2025.04.00814       | Tgl jurnal: 29/04/2025   | Uang masuk penjualan cash tanggal 13/04/2025
+  [228/739] ✅ DELETED  | 17-04-2026, 08.24.28 WIB | JV.2025.04.00350       | Tgl jurnal: 14/04/2025   | Penjualan cafe tanggal 14/04/2025
+  [229/739] ✅ DELETED  | 17-04-2026, 08.24.29 WIB | JV.2025.04.00464       | Tgl jurnal: 15/04/2025   | Uang masuk penjualan cafe tanggal 14/04/2025
+  [230/739] ✅ DELETED  | 17-04-2026, 08.24.29 WIB | JV.2025.04.00374       | Tgl jurnal: 15/04/2025   | Penjualan cafe tanggal 15/04/2025
+  [231/739] ✅ DELETED  | 17-04-2026, 08.24.30 WIB | JV.2025.04.00463       | Tgl jurnal: 16/04/2025   | Uang masuk penjualan cafe tanggal 15/04/2025
+  [232/739] ✅ DELETED  | 17-04-2026, 08.24.31 WIB | JV.2025.04.00379       | Tgl jurnal: 16/04/2025   | Penjualan cafe tanggal 16/04/2025
+  [233/739] ✅ DELETED  | 17-04-2026, 08.24.31 WIB | JV.2025.04.00462       | Tgl jurnal: 17/04/2025   | Uang masuk penjualan cafe tanggal 16/04/2025
+  [234/739] ✅ DELETED  | 17-04-2026, 08.24.32 WIB | JV.2025.04.00813       | Tgl jurnal: 29/04/2025   | Uang masuk penjualan cash tanggal 16/04/2025
+  [235/739] ✅ DELETED  | 17-04-2026, 08.24.33 WIB | JV.2025.04.00436       | Tgl jurnal: 17/04/2025   | Penjualan cafe tanggal 17/04/2025
+  [236/739] ✅ DELETED  | 17-04-2026, 08.24.33 WIB | JV.2025.04.00461       | Tgl jurnal: 18/04/2025   | Uang masuk penjualan cafe tanggal 17/04/2025
+  [237/739] ✅ DELETED  | 17-04-2026, 08.24.34 WIB | JV.2025.04.00815       | Tgl jurnal: 29/04/2025   | Uang masuk penjualan cash tanggal 17/04/2025
+  [238/739] ✅ DELETED  | 17-04-2026, 08.24.35 WIB | JV.2025.04.00459       | Tgl jurnal: 19/04/2025   | Uang masuk penjualan cash strada lapiazza 18apr
+  [239/739] ✅ DELETED  | 17-04-2026, 08.24.36 WIB | JV.2025.04.00437       | Tgl jurnal: 18/04/2025   | Penjualan cafe tanggal 18/04/2025
+  [240/739] ✅ DELETED  | 17-04-2026, 08.24.36 WIB | JV.2025.04.00460       | Tgl jurnal: 19/04/2025   | Uang masuk penjualan cafe tanggal 18/04/2025
+  [241/739] ✅ DELETED  | 17-04-2026, 08.24.37 WIB | JV.2025.04.00442       | Tgl jurnal: 19/04/2025   | Penjualan cafe tanggal 19/04/2025
+  [242/739] ✅ DELETED  | 17-04-2026, 08.24.38 WIB | JV.2025.04.00458       | Tgl jurnal: 20/04/2025   | Uang masuk penjualan cafe tanggal 19/04/2025
+  [243/739] ✅ DELETED  | 17-04-2026, 08.24.39 WIB | JV.2025.04.00444       | Tgl jurnal: 20/04/2025   | Penjualan cafe tanggal 20/04/2025
+  [244/739] ✅ DELETED  | 17-04-2026, 08.24.39 WIB | JV.2025.04.00457       | Tgl jurnal: 21/04/2025   | Uang masuk penjualan cafe tanggal 20/04/2025
+  [245/739] ✅ DELETED  | 17-04-2026, 08.24.40 WIB | JV.2025.04.00443       | Tgl jurnal: 21/04/2025   | Penjualan cafe tanggal 21/04/2025
+  [246/739] ✅ DELETED  | 17-04-2026, 08.24.41 WIB | JV.2025.04.00456       | Tgl jurnal: 22/04/2025   | Uang masuk penjualan cafe tanggal 21/04/2025
+  [247/739] ✅ DELETED  | 17-04-2026, 08.24.42 WIB | JV.2025.04.00733       | Tgl jurnal: 22/04/2025   | Penjualan cafe tanggal 22/04/2025
+  [248/739] ✅ DELETED  | 17-04-2026, 08.24.42 WIB | JV.2025.04.00734       | Tgl jurnal: 23/04/2025   | Uang masuk penjualan cafe tanggal 22/04/2025
+  [249/739] ✅ DELETED  | 17-04-2026, 08.24.43 WIB | JV.2025.03.00828       | Tgl jurnal: 27/03/2025   | Setoran penjualan cash tanggal 23/04/2025
+  [250/739] ✅ DELETED  | 17-04-2026, 08.24.44 WIB | JV.2025.04.00735       | Tgl jurnal: 23/04/2025   | Penjualan cafe tanggal 23/04/2025
+  [251/739] ✅ DELETED  | 17-04-2026, 08.24.45 WIB | JV.2025.04.00736       | Tgl jurnal: 24/04/2025   | Uang masuk penjualan cafe tanggal 23/04/2025
+  [252/739] ✅ DELETED  | 17-04-2026, 08.24.45 WIB | JV.2025.04.00737       | Tgl jurnal: 24/04/2025   | Penjualan cafe tanggal 24/04/2025
+  [253/739] ✅ DELETED  | 17-04-2026, 08.24.46 WIB | JV.2025.04.00738       | Tgl jurnal: 25/04/2025   | Uang masuk penjualan cafe tanggal 24/04/2025
+  [254/739] ✅ DELETED  | 17-04-2026, 08.24.47 WIB | JV.2025.04.00812       | Tgl jurnal: 29/04/2025   | Uang masuk penjualan cash tanggal 24/04/2025
+  [255/739] ✅ DELETED  | 17-04-2026, 08.24.47 WIB | JV.2025.04.00739       | Tgl jurnal: 25/04/2025   | Penjualan cafe tanggal 25/04/2025
+  [256/739] ✅ DELETED  | 17-04-2026, 08.24.48 WIB | JV.2025.04.00745       | Tgl jurnal: 26/04/2025   | Uang masuk penjualan cafe tanggal 25/04/2025
+  [257/739] ✅ DELETED  | 17-04-2026, 08.24.49 WIB | JV.2025.04.00762       | Tgl jurnal: 26/04/2025   | Penjualan cafe tanggal 26/04/2025
+  [258/739] ✅ DELETED  | 17-04-2026, 08.24.50 WIB | JV.2025.04.00763       | Tgl jurnal: 27/04/2025   | Uang masuk penjualan cafe tanggal 26/04/2025
+  [259/739] ✅ DELETED  | 17-04-2026, 08.24.50 WIB | JV.2025.04.00764       | Tgl jurnal: 27/04/2025   | Penjualan cafe tanggal 27/04/2025
+  [260/739] ✅ DELETED  | 17-04-2026, 08.24.51 WIB | JV.2025.04.00765       | Tgl jurnal: 28/04/2025   | Uang masuk penjualan cafe tanggal 27/04/2025
+  [261/739] ✅ DELETED  | 17-04-2026, 08.24.52 WIB | JV.2025.04.00834       | Tgl jurnal: 28/04/2025   | Penjualan cafe tanggal 28/04/2025
+  [262/739] ✅ DELETED  | 17-04-2026, 08.24.52 WIB | JV.2025.04.00810       | Tgl jurnal: 29/04/2025   | Uang masuk penjualan cafe tanggal 28/04/2025
+  [263/739] ✅ DELETED  | 17-04-2026, 08.24.53 WIB | JV.2025.04.00835       | Tgl jurnal: 29/04/2025   | Penjualan cafe tanggal 29/04/2025
+  [264/739] ✅ DELETED  | 17-04-2026, 08.24.54 WIB | JV.2025.04.00811       | Tgl jurnal: 30/04/2025   | Uang masuk penjualan cafe tanggal 29/04/2025
+  [265/739] ✅ DELETED  | 17-04-2026, 08.24.55 WIB | JV.2025.04.00836       | Tgl jurnal: 30/04/2025   | Penjualan cafe tanggal 30/04/2025
+  [266/739] ✅ DELETED  | 17-04-2026, 08.24.55 WIB | JV.2025.05.00144       | Tgl jurnal: 01/05/2025   | Uang masuk penjualan cafe tanggal 30/04/2025
+  [267/739] ✅ DELETED  | 17-04-2026, 08.24.56 WIB | JV.2025.05.00150       | Tgl jurnal: 01/05/2025   | Penjualan cafe tanggal 01/05.2025
+  [268/739] ✅ DELETED  | 17-04-2026, 08.24.57 WIB | JV.2025.05.00145       | Tgl jurnal: 02/05/2025   | Uang masuk penjualan cafe 01/05/2025
+  [269/739] ✅ DELETED  | 17-04-2026, 08.24.57 WIB | JV.2025.05.00151       | Tgl jurnal: 02/05/2025   | Penjualan cafe tanggal 02/05/2025
+  [270/739] ✅ DELETED  | 17-04-2026, 08.24.58 WIB | JV.2025.05.00146       | Tgl jurnal: 03/05/2025   | Uang masuk penjualan cafe tanggal 02/05/2025
+  [271/739] ✅ DELETED  | 17-04-2026, 08.24.59 WIB | JV.2025.05.00152       | Tgl jurnal: 03/05/2025   | Penjualan cafe tanggal 03/05/2025
+  [272/739] ✅ DELETED  | 17-04-2026, 08.24.59 WIB | JV.2025.05.00153       | Tgl jurnal: 04/05/2025   | Penjualan cafe tanggal 04/05/2025
+  [273/739] ✅ DELETED  | 17-04-2026, 08.25.00 WIB | JV.2025.05.00148       | Tgl jurnal: 05/05/2025   | Uang masuk penjualan cafe tanggal 04/05/2025
+  [274/739] ✅ DELETED  | 17-04-2026, 08.25.01 WIB | JV.2025.05.00154       | Tgl jurnal: 05/05/2025   | Penjualan cafe tanggal 05/05/2025
+  [275/739] ✅ DELETED  | 17-04-2026, 08.25.02 WIB | JV.2025.05.00149       | Tgl jurnal: 06/05/2025   | Uang masuk penjualan cafe tanggal 05/05/2025
+  [276/739] ✅ DELETED  | 17-04-2026, 08.25.02 WIB | JV.2025.05.00972       | Tgl jurnal: 07/05/2025   | Uang Masuk Penjualan La Piazza 6 Mei 2025
+  [277/739] ✅ DELETED  | 17-04-2026, 08.25.03 WIB | JV.2025.05.00155       | Tgl jurnal: 06/05/2025   | Penjualan cafe tanggal 06/05/2025
+  [278/739] ✅ DELETED  | 17-04-2026, 08.25.04 WIB | JV.2025.05.00251       | Tgl jurnal: 07/05/2025   | Penjualan cafe tanggal 07/05/2025
+  [279/739] ✅ DELETED  | 17-04-2026, 08.25.05 WIB | JV.2025.05.00255       | Tgl jurnal: 08/05/2025   | Uang masuk penjualan cafe tanggal 07/05/2025
+  [280/739] ✅ DELETED  | 17-04-2026, 08.25.05 WIB | JV.2025.05.00254       | Tgl jurnal: 08/05/2025   | Penjualan cafe tanggal 08/05/2025
+  [281/739] ✅ DELETED  | 17-04-2026, 08.25.06 WIB | JV.2025.05.00256       | Tgl jurnal: 09/05/2025   | Uang masuk penjualan cafe tanggal 08/05/2025
+  [282/739] ✅ DELETED  | 17-04-2026, 08.25.07 WIB | JV.2025.05.00315       | Tgl jurnal: 09/05/2025   | Penjualan cafe tanggal 09/05/2025
+  [283/739] ✅ DELETED  | 17-04-2026, 08.25.07 WIB | JV.2025.05.00320       | Tgl jurnal: 10/05/2025   | Uang masuk penjualan cafe tanggal 09/05/2025
+  [284/739] ✅ DELETED  | 17-04-2026, 08.25.08 WIB | JV.2025.05.00316       | Tgl jurnal: 10/05/2025   | Penjualan cafe tanggal10/05/2025
+  [285/739] ✅ DELETED  | 17-04-2026, 08.25.09 WIB | JV.2025.05.00321       | Tgl jurnal: 11/05/2025   | Uang masuk penjualan cafe tanggal 10/05/2025
+  [286/739] ✅ DELETED  | 17-04-2026, 08.25.10 WIB | JV.2025.05.00317       | Tgl jurnal: 11/05/2025   | Penjualan cafe tanggal 11/05/2025
+  [287/739] ✅ DELETED  | 17-04-2026, 08.25.10 WIB | JV.2025.05.00322       | Tgl jurnal: 12/05/2025   | Uang masuk penjualan cafe tanggal 11/05/2025
+  [288/739] ✅ DELETED  | 17-04-2026, 08.25.11 WIB | JV.2025.05.00318       | Tgl jurnal: 12/05/2025   | Penjualan cafe tanggal 12/05/2025
+  [289/739] ✅ DELETED  | 17-04-2026, 08.25.12 WIB | JV.2025.05.00323       | Tgl jurnal: 13/05/2025   | Uang masuk penjualan cafe tanggal 12/05/2025
+  [290/739] ✅ DELETED  | 17-04-2026, 08.25.13 WIB | JV.2025.05.00319       | Tgl jurnal: 13/05/2025   | Penjualan cafe tanggal 13/05/2025
+  [291/739] ✅ DELETED  | 17-04-2026, 08.25.13 WIB | JV.2025.05.00324       | Tgl jurnal: 13/05/2025   | Uang masuk penjualan cafe tanggal 13/05/2025
+  [292/739] ✅ DELETED  | 17-04-2026, 08.25.14 WIB | JV.2025.05.00391       | Tgl jurnal: 14/05/2025   | Penjualan cafe tanggal 14/05/2025
+  [293/739] ✅ DELETED  | 17-04-2026, 08.25.15 WIB | JV.2025.05.00445       | Tgl jurnal: 15/05/2025   | Uang masuk penjualan cafe tanggal 14/05/2025
+  [294/739] ✅ DELETED  | 17-04-2026, 08.25.15 WIB | JV.2025.05.00443       | Tgl jurnal: 15/05/2025   | Penjualan cafe tanggal 15/05/025
+  [295/739] ✅ DELETED  | 17-04-2026, 08.25.16 WIB | JV.2025.05.00444       | Tgl jurnal: 16/05/2025   | Uang masuk penjualan cafe tanggal 15/05/2025
+  [296/739] ✅ DELETED  | 17-04-2026, 08.25.17 WIB | JV.2025.05.00555       | Tgl jurnal: 16/05/2025   | Penjualan cafe tanggal 16/05/2025
+  [297/739] ✅ DELETED  | 17-04-2026, 08.25.17 WIB | JV.2025.05.00559       | Tgl jurnal: 17/05/2025   | Uang masuk penjualan cafe tanggal 16/05/2025
+  [298/739] ✅ DELETED  | 17-04-2026, 08.25.18 WIB | JV.2025.06.00785       | Tgl jurnal: 17/06/2025   | Uang masuk penjualan cafe tanggal 16/05/2025
+  [299/739] ✅ DELETED  | 17-04-2026, 08.25.19 WIB | JV.2025.05.00556       | Tgl jurnal: 17/05/2025   | Penjualan cafe tanggal 17/05/2025
+  [300/739] ✅ DELETED  | 17-04-2026, 08.25.20 WIB | JV.2025.05.00560       | Tgl jurnal: 18/05/2025   | Uang masuk penjualan cafe tanggal 17/05/2025
+  [301/739] ✅ DELETED  | 17-04-2026, 08.25.20 WIB | JV.2025.05.00557       | Tgl jurnal: 18/05/2025   | Penjualan cafe tanggal 18/05/2025
+  [302/739] ✅ DELETED  | 17-04-2026, 08.25.21 WIB | JV.2025.05.00561       | Tgl jurnal: 19/05/2025   | Uang masuk penjualan cafe tanggal 18/05/2025
+  [303/739] ✅ DELETED  | 17-04-2026, 08.25.22 WIB | JV.2025.05.00558       | Tgl jurnal: 19/05/2025   | Penjualan cafe tanggal 19/05/2025
+  [304/739] ✅ DELETED  | 17-04-2026, 08.25.22 WIB | JV.2025.05.00562       | Tgl jurnal: 20/05/2025   | Uang masuk penjualan cafe tanggal 19/05/2025
+  [305/739] ✅ DELETED  | 17-04-2026, 08.25.23 WIB | JV.2025.05.00632       | Tgl jurnal: 20/05/2025   | Penjualan cafe tanggal 20/05/2025
+  [306/739] ✅ DELETED  | 17-04-2026, 08.25.24 WIB | JV.2025.05.00633       | Tgl jurnal: 21/05/2025   | Uang masuk penjualan cafe tanggal 20/05/2025
+  [307/739] ✅ DELETED  | 17-04-2026, 08.25.25 WIB | JV.2025.05.00631       | Tgl jurnal: 21/05/2025   | Penjualan cafe tanggal 21/05/2025
+  [308/739] ✅ DELETED  | 17-04-2026, 08.25.25 WIB | JV.2025.05.00634       | Tgl jurnal: 22/05/2025   | Uang masuk penjualan cafe tanggal 21/05/2025
+  [309/739] ✅ DELETED  | 17-04-2026, 08.25.26 WIB | JV.2025.05.00630       | Tgl jurnal: 22/05/2025   | Penjualan cafe tanggal 22/05/2025
+  [310/739] ✅ DELETED  | 17-04-2026, 08.25.27 WIB | JV.2025.05.00635       | Tgl jurnal: 23/05/2025   | Uang masuk penjualan cafe tanggal 22/05/2025
+  [311/739] ✅ DELETED  | 17-04-2026, 08.25.27 WIB | JV.2025.05.00797       | Tgl jurnal: 23/05/2025   | Penjualan cafe tanggal 23/05/2025
+  [312/739] ✅ DELETED  | 17-04-2026, 08.25.28 WIB | JV.2025.05.00799       | Tgl jurnal: 24/05/2025   | Uang masuk penjualan cafe tanggal 23/05/2025
+  [313/739] ✅ DELETED  | 17-04-2026, 08.25.29 WIB | JV.2025.05.00796       | Tgl jurnal: 24/05/2025   | Penjualan cafe tanggal 24/05/2025
+  [314/739] ✅ DELETED  | 17-04-2026, 08.25.30 WIB | JV.2025.05.00798       | Tgl jurnal: 25/05/2025   | Uang masuk penjualan cafe tanggal 24/05/2025
+  [315/739] ✅ DELETED  | 17-04-2026, 08.25.30 WIB | JV.2025.05.00795       | Tgl jurnal: 25/05/2025   | Penjualan cafe tanggal 25/05/2025
+  [316/739] ✅ DELETED  | 17-04-2026, 08.25.31 WIB | JV.2025.05.00800       | Tgl jurnal: 26/05/2025   | Unag masuk penjualan cafe tanggal 25/05/2025
+  [317/739] ✅ DELETED  | 17-04-2026, 08.25.32 WIB | JV.2025.05.00794       | Tgl jurnal: 26/05/2025   | Penjualan cafe tanggal 26/05/2025
+  [318/739] ✅ DELETED  | 17-04-2026, 08.25.33 WIB | JV.2025.05.00801       | Tgl jurnal: 27/05/2025   | Unag masuk penjualan cafe tanggal 26/05/2025
+  [319/739] ✅ DELETED  | 17-04-2026, 08.25.33 WIB | JV.2025.05.00793       | Tgl jurnal: 27/05/2025   | Penjualan cafe tanggal 27/05/2025
+  [320/739] ✅ DELETED  | 17-04-2026, 08.25.34 WIB | JV.2025.05.00802       | Tgl jurnal: 28/05/2025   | Uang masuk penjualan cafe tanggal 27/05/2025
+  [321/739] ✅ DELETED  | 17-04-2026, 08.25.35 WIB | JV.2025.05.00937       | Tgl jurnal: 28/05/2025   | Penjualan cafe tanggal 28/05/2025
+  [322/739] ✅ DELETED  | 17-04-2026, 08.25.35 WIB | JV.2025.05.00944       | Tgl jurnal: 29/05/2025   | Uang masuk penjualan cafe tanggal 28/05/2025
+  [323/739] ✅ DELETED  | 17-04-2026, 08.25.36 WIB | JV.2025.05.00938       | Tgl jurnal: 29/05/2025   | Penjualan cafe tanggal 29/05/2025
+  [324/739] ✅ DELETED  | 17-04-2026, 08.25.37 WIB | JV.2025.05.00943       | Tgl jurnal: 30/05/2025   | Uang masuk penjualan cafe tanggal 29/05/2025
+  [325/739] ✅ DELETED  | 17-04-2026, 08.25.37 WIB | JV.2025.05.00939       | Tgl jurnal: 30/05/2025   | Penjualan cafe tanggal 30/05/2025
+  [326/739] ✅ DELETED  | 17-04-2026, 08.25.38 WIB | JV.2025.05.00942       | Tgl jurnal: 31/05/2025   | Uang masuk penjualan cafe tanggal 30/05/2025
+  [327/739] ✅ DELETED  | 17-04-2026, 08.25.39 WIB | JV.2025.05.00940       | Tgl jurnal: 31/05/2025   | Penjualan cafe tanggal 31/05/2025
+  [328/739] ✅ DELETED  | 17-04-2026, 08.25.40 WIB | JV.2025.06.00259       | Tgl jurnal: 01/06/2025   | Uang masuk penjualan cafe tanggal 31/05/2025
+  [329/739] ✅ DELETED  | 17-04-2026, 08.25.40 WIB | JV.2025.06.00848       | Tgl jurnal: 13/06/2025   | Setoran penjualan cash sales lapiaza
+1 Juni 2025
+  [330/739] ✅ DELETED  | 17-04-2026, 08.25.41 WIB | JV.2025.06.00239       | Tgl jurnal: 01/06/2025   | Penjualan cafe tanggal 01/06/2025
+  [331/739] ✅ DELETED  | 17-04-2026, 08.25.42 WIB | JV.2025.06.00258       | Tgl jurnal: 02/06/2025   | Uang masuk penjualan cafe tanggal 01/06/2025
+  [332/739] ✅ DELETED  | 17-04-2026, 08.25.43 WIB | JV.2025.06.00849       | Tgl jurnal: 13/06/2025   | Setoran penjualan cash sales lapiaza
+2 Juni 2025
+  [333/739] ✅ DELETED  | 17-04-2026, 08.25.43 WIB | JV.2025.06.00240       | Tgl jurnal: 02/06/2025   | Penjualan cafe tanggal 02/06/2025
+  [334/739] ✅ DELETED  | 17-04-2026, 08.25.44 WIB | JV.2025.06.00257       | Tgl jurnal: 03/06/2025   | Uang masuk penjualan cafe tanggal 02/06/2025
+  [335/739] ✅ DELETED  | 17-04-2026, 08.25.45 WIB | JV.2025.06.00241       | Tgl jurnal: 03/06/2025   | Penjualan cafe tanggal 03/06/2025
+  [336/739] ✅ DELETED  | 17-04-2026, 08.25.45 WIB | JV.2025.06.00255       | Tgl jurnal: 04/06/2025   | Uang masuk penjualan cafe tanggal 03/06/2025
+  [337/739] ✅ DELETED  | 17-04-2026, 08.25.46 WIB | JV.2025.06.00242       | Tgl jurnal: 04/06/2025   | Penjualan cafe tanggal 04/06/2025
+  [338/739] ✅ DELETED  | 17-04-2026, 08.25.47 WIB | JV.2025.06.00254       | Tgl jurnal: 05/06/2025   | Uang masuk penjualan cafe tanggal 04/06/2025
+  [339/739] ✅ DELETED  | 17-04-2026, 08.25.47 WIB | JV.2025.06.00243       | Tgl jurnal: 05/06/2025   | Penjualan cafe tanggal 05/06/2025
+  [340/739] ✅ DELETED  | 17-04-2026, 08.25.48 WIB | JV.2025.06.00253       | Tgl jurnal: 06/06/2025   | Uang masuk penjualan cafe tanggal 05/06/2025
+  [341/739] ✅ DELETED  | 17-04-2026, 08.25.49 WIB | JV.2025.06.00850       | Tgl jurnal: 13/06/2025   | Setoran penjualan cash sales lapiaza
+6 Juni 2025
+  [342/739] ✅ DELETED  | 17-04-2026, 08.25.50 WIB | JV.2025.06.00244       | Tgl jurnal: 06/06/2025   | Penjualan cafe tanggal 06/06/2025
+  [343/739] ✅ DELETED  | 17-04-2026, 08.25.50 WIB | JV.2025.06.00252       | Tgl jurnal: 07/06/2025   | Uang masuk penjualan cafe tanggal 06/06/2025
+  [344/739] ✅ DELETED  | 17-04-2026, 08.25.51 WIB | JV.2025.06.00851       | Tgl jurnal: 13/06/2025   | Setoran penjualan cash sales lapiaza
+7 Juni 2025
+  [345/739] ✅ DELETED  | 17-04-2026, 08.25.52 WIB | JV.2025.06.00245       | Tgl jurnal: 07/06/2025   | Penjualan cafe tanggal 07/06/2025
+  [346/739] ✅ DELETED  | 17-04-2026, 08.25.52 WIB | JV.2025.06.00251       | Tgl jurnal: 08/06/2025   | Uang masuk penjualan cafe tanggal 07/06/2025
+  [347/739] ✅ DELETED  | 17-04-2026, 08.25.53 WIB | JV.2025.06.00852       | Tgl jurnal: 13/06/2025   | Setoran penjualan cash sales lapiaza
+8 Juni 2025
+  [348/739] ✅ DELETED  | 17-04-2026, 08.25.54 WIB | JV.2025.06.00246       | Tgl jurnal: 08/06/2025   | Penjualan cafe tanggal 08/06/2025
+  [349/739] ✅ DELETED  | 17-04-2026, 08.25.55 WIB | JV.2025.06.00248       | Tgl jurnal: 09/06/2025   | Uang masuk penjualan cafe tanggal 08/06/2025
+  [350/739] ✅ DELETED  | 17-04-2026, 08.25.55 WIB | JV.2025.06.00247       | Tgl jurnal: 09/06/2025   | Penjualan cafe tanggal 09/06/2025
+  [351/739] ✅ DELETED  | 17-04-2026, 08.25.56 WIB | JV.2025.06.00495       | Tgl jurnal: 10/06/2025   | Uang masuk penjualan cafe tanggal 09/06/2025
+  [352/739] ✅ DELETED  | 17-04-2026, 08.25.57 WIB | JV.2025.06.00799       | Tgl jurnal: 27/06/2025   | Uang masuk penjualan cash la piazza tanggal 10.06.2025
+  [353/739] ✅ DELETED  | 17-04-2026, 08.25.57 WIB | JV.2025.06.00496       | Tgl jurnal: 11/06/2025   | Uang masuk penjualan cafe tanggal 10/06/2025
+  [354/739] ✅ DELETED  | 17-04-2026, 08.25.58 WIB | JV.2025.06.00483       | Tgl jurnal: 11/06/2025   | Penjualan cafe tanggal 11/06/2025
+  [355/739] ✅ DELETED  | 17-04-2026, 08.25.59 WIB | JV.2025.06.00497       | Tgl jurnal: 12/06/2025   | Uang masuk penjualan cafe tanggal 11/06/2025
+  [356/739] ✅ DELETED  | 17-04-2026, 08.26.00 WIB | JV.2025.06.00484       | Tgl jurnal: 12/06/2025   | Penjualan cafe tanggal 12/06/20025
+  [357/739] ✅ DELETED  | 17-04-2026, 08.26.00 WIB | JV.2025.06.00498       | Tgl jurnal: 13/06/2025   | Uang masuk penjualan cafe tanggal 12/06/2025
+  [358/739] ✅ DELETED  | 17-04-2026, 08.26.01 WIB | JV.2025.06.00485       | Tgl jurnal: 13/06/2025   | Penjualan cafe tanggal 13/06/2025
+  [359/739] ✅ DELETED  | 17-04-2026, 08.26.02 WIB | JV.2025.06.00499       | Tgl jurnal: 14/06/2025   | Uang masuk penjualan cafe tanggal 13/06/2025
+  [360/739] ✅ DELETED  | 17-04-2026, 08.26.02 WIB | JV.2025.06.00800       | Tgl jurnal: 27/06/2025   | Uang masuk penjualan cash la piazza tanggal 14.06.2025
+  [361/739] ✅ DELETED  | 17-04-2026, 08.26.03 WIB | JV.2025.06.00486       | Tgl jurnal: 14/06/2025   | Penjualan cafe tanggal 14/06/2025
+  [362/739] ✅ DELETED  | 17-04-2026, 08.26.04 WIB | JV.2025.06.00500       | Tgl jurnal: 15/06/2025   | Uang masuk penjualan cafe tanggal 14/06/2025
+  [363/739] ✅ DELETED  | 17-04-2026, 08.26.05 WIB | JV.2025.06.00487       | Tgl jurnal: 15/06/2025   | Penjualan cafe tanggal 15/06/2025
+  [364/739] ✅ DELETED  | 17-04-2026, 08.26.05 WIB | JV.2025.06.00501       | Tgl jurnal: 16/06/2025   | Uang masuk penjualan cafe tanggal 15/06/2025
+  [365/739] ✅ DELETED  | 17-04-2026, 08.26.06 WIB | JV.2025.06.00488       | Tgl jurnal: 16/06/2025   | Penjualan cafe tanggal 16/06/2025
+  [366/739] ✅ DELETED  | 17-04-2026, 08.26.07 WIB | JV.2025.06.00489       | Tgl jurnal: 17/06/2025   | Penjualan cafe tanggal 17/06/2025
+  [367/739] ✅ DELETED  | 17-04-2026, 08.26.08 WIB | JV.2025.06.00786       | Tgl jurnal: 18/06/2025   | Uang masuk penjualan cafe tanggal 17/06/2025
+  [368/739] ✅ DELETED  | 17-04-2026, 08.26.08 WIB | JV.2025.06.00490       | Tgl jurnal: 18/06/2025   | Penjualan cafe tanggal 18/06/2025
+  [369/739] ✅ DELETED  | 17-04-2026, 08.26.09 WIB | JV.2025.06.00787       | Tgl jurnal: 19/06/2025   | Uang masuk penjualan cafe tanggal 18/06/2025
+  [370/739] ✅ DELETED  | 17-04-2026, 08.26.10 WIB | JV.2025.06.00491       | Tgl jurnal: 19/06/2025   | Penjualan cafe tanggal 19/06/2025
+  [371/739] ✅ DELETED  | 17-04-2026, 08.26.11 WIB | JV.2025.06.00788       | Tgl jurnal: 20/06/2025   | Uang masuk penjualan cafe tanggal 19/06/2025
+  [372/739] ✅ DELETED  | 17-04-2026, 08.26.11 WIB | JV.2025.06.00492       | Tgl jurnal: 20/06/2025   | Penjualan cafe tanggal 20/06/2025
+  [373/739] ✅ DELETED  | 17-04-2026, 08.26.12 WIB | JV.2025.06.00789       | Tgl jurnal: 21/06/2025   | Uang masuk penjualan cafe tanggal 20/06/2025
+  [374/739] ✅ DELETED  | 17-04-2026, 08.26.13 WIB | JV.2025.07.00998       | Tgl jurnal: 07/07/2025   | Setoran penjualan cash sales La Piazza tanggal 21 Juni 2025
+  [375/739] ✅ DELETED  | 17-04-2026, 08.26.14 WIB | JV.2025.06.00493       | Tgl jurnal: 21/06/2025   | Penjualan cafe tanggal 21/06/2025
+  [376/739] ✅ DELETED  | 17-04-2026, 08.26.14 WIB | JV.2025.06.00791       | Tgl jurnal: 22/06/2025   | Uang masuk penjualan cafe tanggal 21/06/2025
+  [377/739] ✅ DELETED  | 17-04-2026, 08.26.15 WIB | JV.2025.06.00494       | Tgl jurnal: 22/06/2025   | Penjualan cafe tanggal 22/06/2025
+  [378/739] ✅ DELETED  | 17-04-2026, 08.26.16 WIB | JV.2025.06.00792       | Tgl jurnal: 23/06/2025   | Uang masuk penjualan cafe tanggal 22/06/2025
+  [379/739] ✅ DELETED  | 17-04-2026, 08.26.16 WIB | JV.2025.07.00999       | Tgl jurnal: 07/07/2025   | Setoran penjualan cash sales La Piazza tanggal 23 Juni 2025
+  [380/739] ✅ DELETED  | 17-04-2026, 08.26.17 WIB | JV.2025.06.00777       | Tgl jurnal: 23/06/2025   | Penjualan cafe tanggal 23/06/2025
+  [381/739] ✅ DELETED  | 17-04-2026, 08.26.18 WIB | JV.2025.06.00793       | Tgl jurnal: 24/06/2025   | Uang masuk penjualan cafe tanggal 23/06/2025
+  [382/739] ✅ DELETED  | 17-04-2026, 08.26.19 WIB | JV.2025.06.00778       | Tgl jurnal: 24/06/2025   | Penjualan cafe tanggal 24/06/2025
+  [383/739] ✅ DELETED  | 17-04-2026, 08.26.19 WIB | JV.2025.06.00794       | Tgl jurnal: 25/06/2025   | Uang masuk penjualan cafe tanggal 24/06/2025
+  [384/739] ✅ DELETED  | 17-04-2026, 08.26.20 WIB | JV.2025.07.01000       | Tgl jurnal: 07/07/2025   | Setoran penjualan cash sales La Piazza tanggal 25 Juni 2025
+  [385/739] ✅ DELETED  | 17-04-2026, 08.26.21 WIB | JV.2025.06.00779       | Tgl jurnal: 25/06/2025   | Penjualan cafe tanggal 25/06/2025
+  [386/739] ✅ DELETED  | 17-04-2026, 08.26.21 WIB | JV.2025.06.00795       | Tgl jurnal: 26/06/2025   | Uang masuk penjualan cafe tanggal 25/06/2025
+  [387/739] ✅ DELETED  | 17-04-2026, 08.26.22 WIB | JV.2025.06.00780       | Tgl jurnal: 26/06/2025   | Penjualan cafe tanggal 26/06/2025
+  [388/739] ✅ DELETED  | 17-04-2026, 08.26.23 WIB | JV.2025.06.00797       | Tgl jurnal: 27/06/2025   | Uang masuk penjualan cafe tanggal 26/06/2025
+  [389/739] ✅ DELETED  | 17-04-2026, 08.26.24 WIB | JV.2025.07.01001       | Tgl jurnal: 07/07/2025   | Setoran penjualan cash sales La Piazza tanggal 27 Juni 2025
+  [390/739] ✅ DELETED  | 17-04-2026, 08.26.24 WIB | JV.2025.06.00781       | Tgl jurnal: 27/06/2025   | Penjualan cafe tanggal 27/06/2025
+  [391/739] ✅ DELETED  | 17-04-2026, 08.26.25 WIB | JV.2025.06.00798       | Tgl jurnal: 28/06/2025   | Uang masuk penjualan cafe tanggal 27/06/2025
+  [392/739] ✅ DELETED  | 17-04-2026, 08.26.26 WIB | JV.2025.06.00782       | Tgl jurnal: 28/06/2025   | Penjualan cafe tanggal 28/06/2025
+  [393/739] ✅ DELETED  | 17-04-2026, 08.26.27 WIB | JV.2025.06.00801       | Tgl jurnal: 29/06/2025   | Uang masuk penjualan cafe tanggal 28/06/2025
+  [394/739] ✅ DELETED  | 17-04-2026, 08.26.27 WIB | JV.2025.07.01002       | Tgl jurnal: 07/07/2025   | Setoran penjualan cash sales La Piazza tanggal 29 Juni 2025
+  [395/739] ✅ DELETED  | 17-04-2026, 08.26.28 WIB | JV.2025.06.00783       | Tgl jurnal: 29/06/2025   | Penjualan cafe tanggal 29/06/2025
+  [396/739] ✅ DELETED  | 17-04-2026, 08.26.29 WIB | JV.2025.06.00802       | Tgl jurnal: 30/06/2025   | Uang masuk penjualan cafe tanggal 29/06/2025
+  [397/739] ✅ DELETED  | 17-04-2026, 08.26.29 WIB | JV.2025.06.00784       | Tgl jurnal: 30/06/2025   | Penjualan cafe tanggal 30/06/2025
+  [398/739] ✅ DELETED  | 17-04-2026, 08.26.30 WIB | JV.2025.07.00041       | Tgl jurnal: 01/07/2025   | Uang masuk penjualan cafe tanggal 30/06/2025
+  [399/739] ✅ DELETED  | 17-04-2026, 08.26.31 WIB | JV.2025.07.00170       | Tgl jurnal: 01/07/2025   | Penjualan cafe tanggal 01/07/2025
+  [400/739] ✅ DELETED  | 17-04-2026, 08.26.32 WIB | JV.2025.07.00177       | Tgl jurnal: 02/07/2025   | Uang masuk penjualan cafe tanggal 01/07/2025
+  [401/739] ✅ DELETED  | 17-04-2026, 08.26.32 WIB | JV.2025.07.00171       | Tgl jurnal: 02/07/2025   | Penjualan cafe tanggal 02/07/2025
+  [402/739] ✅ DELETED  | 17-04-2026, 08.26.33 WIB | JV.2025.07.00178       | Tgl jurnal: 03/07/2025   | Uang masuk penjualan cafe tanggal 02/07/2025
+  [403/739] ✅ DELETED  | 17-04-2026, 08.26.34 WIB | JV.2025.07.00172       | Tgl jurnal: 03/07/2025   | Penjualan cafe tanggal 03/07/2025
+  [404/739] ✅ DELETED  | 17-04-2026, 08.26.34 WIB | JV.2025.07.00026       | Tgl jurnal: 03/07/2025   | Refund lebih pembayaran karena salah input item penjualan
+  [405/739] ✅ DELETED  | 17-04-2026, 08.26.35 WIB | JV.2025.07.00179       | Tgl jurnal: 04/07/2025   | Uang masuk penjualan cafe tanggal 03/07/2025
+  [406/739] ✅ DELETED  | 17-04-2026, 08.26.36 WIB | JV.2025.07.01005       | Tgl jurnal: 07/07/2025   | Setoran penjualan cash sales La Piazza tanggal 04 Juli 2025
+  [407/739] ✅ DELETED  | 17-04-2026, 08.26.37 WIB | JV.2025.07.00173       | Tgl jurnal: 04/07/2025   | Penjualan cafe tanggal 04/07/2025
+  [408/739] ✅ DELETED  | 17-04-2026, 08.26.37 WIB | JV.2025.07.00180       | Tgl jurnal: 05/07/2025   | Uang masuk penjualan cafe tanggal 04/07/2025
+  [409/739] ✅ DELETED  | 17-04-2026, 08.26.38 WIB | JV.2025.07.00174       | Tgl jurnal: 05/07/2025   | Penjualan cafe tanggal 05/07/2025
+  [410/739] ✅ DELETED  | 17-04-2026, 08.26.39 WIB | JV.2025.07.00181       | Tgl jurnal: 06/07/2025   | Uang masuk penjualan cafe tanggal 05/07/2025
+  [411/739] ✅ DELETED  | 17-04-2026, 08.26.40 WIB | JV.2025.07.00175       | Tgl jurnal: 06/07/2025   | Penjualan cafe tanggal 06/07/2025
+  [412/739] ✅ DELETED  | 17-04-2026, 08.26.40 WIB | JV.2025.07.00182       | Tgl jurnal: 07/07/2025   | Uang masuk penjualan cafe tanggal 06/07/2025
+  [413/739] ✅ DELETED  | 17-04-2026, 08.26.41 WIB | JV.2025.10.00269       | Tgl jurnal: 07/10/2025   | Uang masuk penjualan cafe tanggal 06/07/2025
+  [414/739] ✅ DELETED  | 17-04-2026, 08.26.42 WIB | JV.2025.07.00176       | Tgl jurnal: 07/07/2025   | Penjualan cafe tanggal 07/07/2025
+  [415/739] ✅ DELETED  | 17-04-2026, 08.26.42 WIB | JV.2025.07.00183       | Tgl jurnal: 08/07/2025   | Uang masuk penjualan cafe tanggal 07/07/2025
+  [416/739] ✅ DELETED  | 17-04-2026, 08.26.43 WIB | JV.2025.07.00416       | Tgl jurnal: 08/07/2025   | Penjualan cafe tanggal 08/07/2025
+  [417/739] ✅ DELETED  | 17-04-2026, 08.26.44 WIB | JV.2025.07.00631       | Tgl jurnal: 09/07/2025   | Uang masuk penjualan cafe tanggal 08/07/2025
+  [418/739] ✅ DELETED  | 17-04-2026, 08.26.44 WIB | JV.2025.07.00614       | Tgl jurnal: 09/07/2025   | Penjualan cafe tanggal 09/07/2025
+  [419/739] ✅ DELETED  | 17-04-2026, 08.26.45 WIB | JV.2025.07.00632       | Tgl jurnal: 10/07/2025   | Uang masuk penjualan cafe tanggal 09/07/2025
+  [420/739] ✅ DELETED  | 17-04-2026, 08.26.46 WIB | JV.2025.07.00615       | Tgl jurnal: 10/07/2025   | Penjualan cafe tanggal 10/07/2025
+  [421/739] ✅ DELETED  | 17-04-2026, 08.26.47 WIB | JV.2025.07.00633       | Tgl jurnal: 11/07/2025   | Uang masuk penjualan cafe tanggal 10/07/2025
+  [422/739] ✅ DELETED  | 17-04-2026, 08.26.47 WIB | JV.2025.07.00616       | Tgl jurnal: 11/07/2025   | Penjualan cafe tanggal 11/07/2025
+  [423/739] ✅ DELETED  | 17-04-2026, 08.26.48 WIB | JV.2025.07.00634       | Tgl jurnal: 12/07/2025   | Uang masuk penjualan cafe tanggal 11/07/2025
+  [424/739] ✅ DELETED  | 17-04-2026, 08.26.49 WIB | JV.2025.07.00617       | Tgl jurnal: 12/07/2025   | Penjualan cafe tanggal 12/07/2025
+  [425/739] ✅ DELETED  | 17-04-2026, 08.26.49 WIB | JV.2025.07.00635       | Tgl jurnal: 13/07/2025   | Uang masuk penjualan cafe tanggal 12/07/2025
+  [426/739] ✅ DELETED  | 17-04-2026, 08.26.50 WIB | JV.2025.07.00618       | Tgl jurnal: 13/07/2025   | Penjualan cafe tanggal 13/07/2025
+  [427/739] ✅ DELETED  | 17-04-2026, 08.26.51 WIB | JV.2025.07.00636       | Tgl jurnal: 14/07/2025   | Uang masuk penjualan cafe tanggal 13/07/2025
+  [428/739] ✅ DELETED  | 17-04-2026, 08.26.52 WIB | JV.2025.07.00619       | Tgl jurnal: 14/07/2025   | Penjualan cafe tanggal 14/07/2025
+  [429/739] ✅ DELETED  | 17-04-2026, 08.26.52 WIB | JV.2025.07.00637       | Tgl jurnal: 15/07/2025   | Uang masuk penjualan cafe tanggal 14/07/2025
+  [430/739] ✅ DELETED  | 17-04-2026, 08.26.53 WIB | JV.2025.07.00620       | Tgl jurnal: 15/07/2025   | Penjualan cafe tanggal 15/07/2025
+  [431/739] ✅ DELETED  | 17-04-2026, 08.26.54 WIB | JV.2025.07.00638       | Tgl jurnal: 16/07/2025   | Uang masuk penjualan cafe tanggal 15/07/2025
+  [432/739] ✅ DELETED  | 17-04-2026, 08.26.55 WIB | JV.2025.07.00621       | Tgl jurnal: 16/07/2025   | Penjualan cafe tanggal 16/07/2025
+  [433/739] ✅ DELETED  | 17-04-2026, 08.26.55 WIB | JV.2025.07.00639       | Tgl jurnal: 17/07/2025   | Uang masuk penjualan cafe tanggal 16/07/2025
+  [434/739] ✅ DELETED  | 17-04-2026, 08.26.56 WIB | JV.2025.07.00622       | Tgl jurnal: 17/07/2025   | Penjualan cafe tanggal 17/07/2025
+  [435/739] ✅ DELETED  | 17-04-2026, 08.26.57 WIB | JV.2025.07.00640       | Tgl jurnal: 18/07/2025   | Uang masuk penjualan cafe tanggal 17/07/2025
+  [436/739] ✅ DELETED  | 17-04-2026, 08.26.57 WIB | JV.2025.07.00623       | Tgl jurnal: 18/07/2025   | Penjualan cafe tanggal 18/070/2025
+  [437/739] ✅ DELETED  | 17-04-2026, 08.26.58 WIB | JV.2025.07.00641       | Tgl jurnal: 19/07/2025   | Uang masuk penjualan cafe tanggal 18/07/2025
+  [438/739] ✅ DELETED  | 17-04-2026, 08.26.59 WIB | JV.2025.07.01012       | Tgl jurnal: 20/07/2025   | Setoran penjualan cash sales La Piazza tanggal 19 Juli 2025
+  [439/739] ✅ DELETED  | 17-04-2026, 08.27.00 WIB | JV.2025.07.00624       | Tgl jurnal: 19/07/2025   | Penjualan cafe tanggal 19/07/2025
+  [440/739] ✅ DELETED  | 17-04-2026, 08.27.00 WIB | JV.2025.07.00642       | Tgl jurnal: 20/07/2025   | Uang masuk penjualan cafe tanggal 19/07/2025
+  [441/739] ✅ DELETED  | 17-04-2026, 08.27.01 WIB | JV.2025.07.00625       | Tgl jurnal: 20/07/2025   | Penjualan cafe tanggal 20/07/2025
+  [442/739] ✅ DELETED  | 17-04-2026, 08.27.02 WIB | JV.2025.07.00643       | Tgl jurnal: 21/07/2025   | Uang masuk penjualan cafe tanggal 20/07/2025
+  [443/739] ✅ DELETED  | 17-04-2026, 08.27.02 WIB | JV.2025.07.00626       | Tgl jurnal: 21/07/2025   | Penjualan cafe tanggal 21/07/2025
+  [444/739] ✅ DELETED  | 17-04-2026, 08.27.03 WIB | JV.2025.07.00644       | Tgl jurnal: 22/07/2025   | Uang masuk penjualan cafe tanggal 21/07/2025
+  [445/739] ✅ DELETED  | 17-04-2026, 08.27.04 WIB | JV.2025.07.00627       | Tgl jurnal: 22/07/2025   | Penjualan cafe tanggal 22/07/2025
+  [446/739] ✅ DELETED  | 17-04-2026, 08.27.05 WIB | JV.2025.07.00645       | Tgl jurnal: 23/07/2025   | Uang masuk penjualan cafe tanggal 22/07/2025
+  [447/739] ✅ DELETED  | 17-04-2026, 08.27.05 WIB | JV.2025.07.00920       | Tgl jurnal: 23/07/2025   | Penjualan cafe tanggal 23/07/2025
+  [448/739] ✅ DELETED  | 17-04-2026, 08.27.06 WIB | JV.2025.07.00984       | Tgl jurnal: 24/07/2025   | Uang masuk penjualan cafe tanggal 23/07/2025
+  [449/739] ✅ DELETED  | 17-04-2026, 08.27.07 WIB | JV.2025.07.00921       | Tgl jurnal: 24/07/2025   | Penjualan cafe tanggal 24/07/2025
+  [450/739] ✅ DELETED  | 17-04-2026, 08.27.08 WIB | JV.2025.07.00985       | Tgl jurnal: 25/07/2025   | Uang masuk penjualan cafe tanggal 24/07/2025
+  [451/739] ✅ DELETED  | 17-04-2026, 08.27.08 WIB | JV.2025.07.00922       | Tgl jurnal: 25/07/2025   | Penjualan cafe tanggal 25/07/2025
+  [452/739] ✅ DELETED  | 17-04-2026, 08.27.09 WIB | JV.2025.07.00986       | Tgl jurnal: 26/07/2025   | Uang masuk penjualan cafe tanggal 25/07/2025
+  [453/739] ✅ DELETED  | 17-04-2026, 08.27.10 WIB | JV.2025.07.01017       | Tgl jurnal: 27/07/2025   | Setoran penjualan cash sales La Piazza tanggal 26 Juli 2025
+  [454/739] ✅ DELETED  | 17-04-2026, 08.27.10 WIB | JV.2025.07.00923       | Tgl jurnal: 26/07/2025   | Penjualan cafe tanggal 26/07/2025
+  [455/739] ✅ DELETED  | 17-04-2026, 08.27.11 WIB | JV.2025.07.00987       | Tgl jurnal: 27/07/2025   | Uang masuk penjualan cafe tanggal 26/07/2025
+  [456/739] ✅ DELETED  | 17-04-2026, 08.27.12 WIB | JV.2025.07.00924       | Tgl jurnal: 27/07/2025   | Penjualan cafe tanggal 27/07/2025
+  [457/739] ✅ DELETED  | 17-04-2026, 08.27.13 WIB | JV.2025.07.00988       | Tgl jurnal: 28/07/2025   | Uang masuk penjualan cafe tanggal 27/07/2025
+  [458/739] ✅ DELETED  | 17-04-2026, 08.27.14 WIB | JV.2025.07.00925       | Tgl jurnal: 28/07/2025   | Penjualan cafe tanggal 28/07/2025
+  [459/739] ✅ DELETED  | 17-04-2026, 08.27.14 WIB | JV.2025.07.00989       | Tgl jurnal: 29/07/2025   | Uang masuk penjualan cafe tanggal 28/07/2025
+  [460/739] ✅ DELETED  | 17-04-2026, 08.27.15 WIB | JV.2025.07.00927       | Tgl jurnal: 29/07/2025   | Penjualan cafe tanggal 29/07/2025
+  [461/739] ✅ DELETED  | 17-04-2026, 08.27.16 WIB | JV.2025.07.00926       | Tgl jurnal: 29/07/2025   | Penjualan cafe tanggal 29/07/2025
+  [462/739] ✅ DELETED  | 17-04-2026, 08.27.16 WIB | JV.2025.07.00990       | Tgl jurnal: 30/07/2025   | Uang masuk penjualan cafe tanggal 29/07/2025
+  [463/739] ✅ DELETED  | 17-04-2026, 08.27.17 WIB | JV.2025.07.00928       | Tgl jurnal: 30/07/2025   | Penjualan cafe tanggal 30/07/2025
+  [464/739] ✅ DELETED  | 17-04-2026, 08.27.18 WIB | JV.2025.07.00991       | Tgl jurnal: 31/07/2025   | Uang masuk penjualan cafe tanggal 30/07/2025
+  [465/739] ✅ DELETED  | 17-04-2026, 08.27.18 WIB | JV.2025.07.00929       | Tgl jurnal: 31/07/2025   | Penjualan cafe tanggal 31/07/2025
+  [466/739] ✅ DELETED  | 17-04-2026, 08.27.19 WIB | JV.2025.08.00113       | Tgl jurnal: 01/08/2025   | Uang masuk penjualan cafe tanggal 31/07/2025
+  [467/739] ✅ DELETED  | 17-04-2026, 08.27.20 WIB | JV.2025.08.00425       | Tgl jurnal: 01/08/2025   | Penjualan cafe tanggal 01/08/2025
+  [468/739] ✅ DELETED  | 17-04-2026, 08.27.21 WIB | JV.2025.08.00431       | Tgl jurnal: 02/08/2025   | Uang maasuk penjualan cafe tanggal 01/08/2025
+  [469/739] ✅ DELETED  | 17-04-2026, 08.27.21 WIB | JV.2025.08.00426       | Tgl jurnal: 02/08/2025   | Penjualan cafe tanggal 02/08/2025
+  [470/739] ✅ DELETED  | 17-04-2026, 08.27.22 WIB | JV.2025.08.00432       | Tgl jurnal: 03/08/2025   | Uang maasuk penjualan cafe tanggal 02/08/2025
+  [471/739] ✅ DELETED  | 17-04-2026, 08.27.23 WIB | JV.2025.08.00427       | Tgl jurnal: 03/08/2025   | Penjualan cafe tanggal 03/08/2025
+  [472/739] ✅ DELETED  | 17-04-2026, 08.27.23 WIB | JV.2025.08.00433       | Tgl jurnal: 04/08/2025   | Uang maasuk penjualan cafe tanggal 03/08/2025
+  [473/739] ✅ DELETED  | 17-04-2026, 08.27.24 WIB | JV.2025.08.00428       | Tgl jurnal: 04/08/2025   | Penjualan cafe tanggal 04/08/2025
+  [474/739] ✅ DELETED  | 17-04-2026, 08.27.25 WIB | JV.2025.08.00434       | Tgl jurnal: 05/08/2025   | Uang maasuk penjualan cafe tanggal 04/08/2025
+  [475/739] ✅ DELETED  | 17-04-2026, 08.27.26 WIB | JV.2025.08.00429       | Tgl jurnal: 05/08/2025   | Penjualan cafe tanggal 05/08/2025
+  [476/739] ✅ DELETED  | 17-04-2026, 08.27.26 WIB | JV.2025.08.00435       | Tgl jurnal: 06/08/2025   | Uang maasuk penjualan cafe tanggal 05/08/2025
+  [477/739] ✅ DELETED  | 17-04-2026, 08.27.27 WIB | JV.2025.08.00430       | Tgl jurnal: 06/08/2025   | Penjualan cafe tanggal 06/08/2025
+  [478/739] ✅ DELETED  | 17-04-2026, 08.27.28 WIB | JV.2025.08.00436       | Tgl jurnal: 07/08/2025   | Uang maasuk penjualan cafe tanggal 06/08/2025
+  [479/739] ✅ DELETED  | 17-04-2026, 08.27.28 WIB | JV.2025.08.00171       | Tgl jurnal: 07/08/2025   | Penjualan cafe tanggal 07/08/2025
+  [480/739] ✅ DELETED  | 17-04-2026, 08.27.29 WIB | JV.2025.08.00437       | Tgl jurnal: 08/08/2025   | Uang maasuk penjualan cafe tanggal 07/08/2025
+  [481/739] ✅ DELETED  | 17-04-2026, 08.27.30 WIB | JV.2025.08.00181       | Tgl jurnal: 08/08/2025   | Penjualan cafe tanggal 08/08/2025
+  [482/739] ✅ DELETED  | 17-04-2026, 08.27.31 WIB | JV.2025.08.00182       | Tgl jurnal: 09/08/2025   | Uang masuk penjualan cafe tanggal 08/08/2025
+  [483/739] ✅ DELETED  | 17-04-2026, 08.27.31 WIB | JV.2025.08.00209       | Tgl jurnal: 09/08/2025   | Penjualan cafe tanggal 09/08/2025
+  [484/739] ✅ DELETED  | 17-04-2026, 08.27.32 WIB | JV.2025.08.00221       | Tgl jurnal: 09/08/2025   | Setoran cash penjualan cafe tanggal 09/08/2025
+  [485/739] ✅ DELETED  | 17-04-2026, 08.27.33 WIB | JV.2025.08.00212       | Tgl jurnal: 10/08/2025   | Uang masuk penjualan cafe tanggal 09/08/2025
+  [486/739] ✅ DELETED  | 17-04-2026, 08.27.33 WIB | JV.2025.08.00210       | Tgl jurnal: 10/08/2025   | Penjualan cafe tanggal 10/08/2025
+  [487/739] ✅ DELETED  | 17-04-2026, 08.27.34 WIB | JV.2025.08.00211       | Tgl jurnal: 11/08/2025   | Uang masuk penjualan cafe tanggal 10/08/2025
+  [488/739] ✅ DELETED  | 17-04-2026, 08.27.35 WIB | JV.2025.08.00453       | Tgl jurnal: 11/08/2025   | Uang masuk setoran cash penjualan cafe tanggal 10/08/2025 via Gopay
+  [489/739] ✅ DELETED  | 17-04-2026, 08.27.35 WIB | JV.2025.08.00273       | Tgl jurnal: 11/08/2025   | Penjualan cafe tanggal 11/08/2025
+  [490/739] ✅ DELETED  | 17-04-2026, 08.27.36 WIB | JV.2025.08.00274       | Tgl jurnal: 12/08/2025   | Uang masuk penjualan cafe tanggal 11/08/2025
+  [491/739] ✅ DELETED  | 17-04-2026, 08.27.37 WIB | JV.2025.08.00380       | Tgl jurnal: 12/08/2025   | Penjualan cafe tanggal 12/08/2025
+  [492/739] ✅ DELETED  | 17-04-2026, 08.27.38 WIB | JV.2025.08.00396       | Tgl jurnal: 13/08/2025   | Uang masuk penjualan cafe tanggal 12/08/2025
+  [493/739] ✅ DELETED  | 17-04-2026, 08.27.38 WIB | JV.2025.08.00383       | Tgl jurnal: 13/08/2025   | Penjualan cafe tanggal 13/08/2025
+  [494/739] ✅ DELETED  | 17-04-2026, 08.27.39 WIB | JV.2025.08.00397       | Tgl jurnal: 14/08/2025   | Uang masuk penjualan cafe tanggal 13/08/2025
+  [495/739] ✅ DELETED  | 17-04-2026, 08.27.40 WIB | JV.2025.08.00384       | Tgl jurnal: 14/08/2025   | Penjualan cafe tanggal 14/08/2025
+  [496/739] ✅ DELETED  | 17-04-2026, 08.27.40 WIB | JV.2025.08.00398       | Tgl jurnal: 15/08/2025   | Uang masuk penjualan cafe tanggal 14/08/2025
+  [497/739] ✅ DELETED  | 17-04-2026, 08.27.41 WIB | JV.2025.08.00402       | Tgl jurnal: 15/08/2025   | Penjualan cafe tanggal 15/08/2025
+  [498/739] ✅ DELETED  | 17-04-2026, 08.27.42 WIB | JV.2025.08.00405       | Tgl jurnal: 16/08/2025   | Uang masuk penjualan cafe tanggal 15/08/2025
+  [499/739] ✅ DELETED  | 17-04-2026, 08.27.42 WIB | JV.2025.08.00410       | Tgl jurnal: 16/08/2025   | Penjualan cafe tanggal 16/08/2025
+  [500/739] ✅ DELETED  | 17-04-2026, 08.27.43 WIB | JV.2025.08.00457       | Tgl jurnal: 17/08/2025   | Uang masuk penjualan cafe tanggal 16/08/2025
+  [501/739] ✅ DELETED  | 17-04-2026, 08.27.44 WIB | JV.2025.08.00411       | Tgl jurnal: 17/08/2025   | Penjualan cafe tanggal 17/08/2025
+  [502/739] ✅ DELETED  | 17-04-2026, 08.27.45 WIB | JV.2025.08.00513       | Tgl jurnal: 18/08/2025   | Uang masuk penjualan cafe tanggal 17/08/2025
+  [503/739] ✅ DELETED  | 17-04-2026, 08.27.45 WIB | JV.2025.08.00518       | Tgl jurnal: 18/08/2025   | Penjualan cafe tanggal 18/08/2025
+  [504/739] ✅ DELETED  | 17-04-2026, 08.27.46 WIB | JV.2025.08.00519       | Tgl jurnal: 19/08/2025   | Uang masuk penjualan cafe tanggal 18/08/2025
+  [505/739] ✅ DELETED  | 17-04-2026, 08.27.47 WIB | JV.2025.08.00610       | Tgl jurnal: 19/08/2025   | Penjualan cafe tanggal 19/08/2025
+  [506/739] ✅ DELETED  | 17-04-2026, 08.27.48 WIB | JV.2025.08.00611       | Tgl jurnal: 20/08/2025   | Uang masuk penjualan cafe tanggal 19/08/2025
+  [507/739] ✅ DELETED  | 17-04-2026, 08.27.48 WIB | JV.2025.08.00613       | Tgl jurnal: 20/08/2025   | Uang masuk setoran cash penjualan cafe tanggal 19/08/2025
+  [508/739] ✅ DELETED  | 17-04-2026, 08.27.49 WIB | JV.2025.08.00609       | Tgl jurnal: 20/08/2025   | Penjualan cafe tanggal 20/08/2025
+  [509/739] ✅ DELETED  | 17-04-2026, 08.27.50 WIB | JV.2025.08.00612       | Tgl jurnal: 21/08/2025   | Uang masuk penjualan cafe tanggal 20/08/2025
+  [510/739] ✅ DELETED  | 17-04-2026, 08.27.51 WIB | JV.2025.08.00649       | Tgl jurnal: 21/08/2025   | Penjualan cafe tanggal 21/08/2025
+  [511/739] ✅ DELETED  | 17-04-2026, 08.27.51 WIB | JV.2025.08.00650       | Tgl jurnal: 22/08/2025   | Uang masuk penjualan cafe tanggal 21/08/2025
+  [512/739] ✅ DELETED  | 17-04-2026, 08.27.52 WIB | JV.2025.08.00651       | Tgl jurnal: 22/08/2025   | Penjualan cafe tanggal 22/08/2025
+  [513/739] ✅ DELETED  | 17-04-2026, 08.27.53 WIB | JV.2025.08.00652       | Tgl jurnal: 23/08/2025   | Uang masuk penjualan cafe tanggal 22/08/2025
+  [514/739] ✅ DELETED  | 17-04-2026, 08.27.53 WIB | JV.2025.08.00723       | Tgl jurnal: 23/08/2025   | Penjualan cafe tanggal 23/08/2025
+  [515/739] ✅ DELETED  | 17-04-2026, 08.27.54 WIB | JV.2025.08.00724       | Tgl jurnal: 24/08/2025   | Uang masuk penjualan cafe tanggal 23/08/2025
+  [516/739] ✅ DELETED  | 17-04-2026, 08.27.55 WIB | JV.2025.08.00725       | Tgl jurnal: 24/08/2025   | Penjualan cafe tanggal 24/08/2025
+  [517/739] ✅ DELETED  | 17-04-2026, 08.27.56 WIB | JV.2025.08.00726       | Tgl jurnal: 25/08/2025   | Uang masuk penjualan cafe tanggal 24/08/2025
+  [518/739] ✅ DELETED  | 17-04-2026, 08.27.56 WIB | JV.2025.08.00727       | Tgl jurnal: 25/08/2025   | Penjualan cafe tanggal 25/08/2025
+  [519/739] ✅ DELETED  | 17-04-2026, 08.27.57 WIB | JV.2025.08.00728       | Tgl jurnal: 26/08/2025   | Uang masuk penjualan cafe tanggal 25/08/2025
+  [520/739] ✅ DELETED  | 17-04-2026, 08.27.58 WIB | JV.2025.08.01106       | Tgl jurnal: 26/08/2025   | Penjualan cafe tanggal 26/08/2025
+  [521/739] ✅ DELETED  | 17-04-2026, 08.27.59 WIB | JV.2025.08.01112       | Tgl jurnal: 27/08/2025   | Uang masuk penjualan cafe tanggal 26/08/2025
+  [522/739] ✅ DELETED  | 17-04-2026, 08.27.59 WIB | JV.2025.08.01107       | Tgl jurnal: 27/08/2025   | Penjualan cafe tanggal 27/08/2025
+  [523/739] ✅ DELETED  | 17-04-2026, 08.28.00 WIB | JV.2025.08.01113       | Tgl jurnal: 28/08/2025   | Uang masuk penjualan cafe tanggal 27/08/2025
+  [524/739] ✅ DELETED  | 17-04-2026, 08.28.01 WIB | JV.2025.08.01108       | Tgl jurnal: 28/08/2025   | Penjualan cafe tanggal 28/08/2025
+  [525/739] ✅ DELETED  | 17-04-2026, 08.28.02 WIB | JV.2025.08.01114       | Tgl jurnal: 29/08/2025   | Uang masuk penjualan cafe tanggal 28/08/2025
+  [526/739] ✅ DELETED  | 17-04-2026, 08.28.02 WIB | JV.2025.08.01109       | Tgl jurnal: 29/08/2025   | Penjualan cafe tanggal 29/08/2025
+  [527/739] ✅ DELETED  | 17-04-2026, 08.28.03 WIB | JV.2025.08.01115       | Tgl jurnal: 30/08/2025   | Uang masuk penjualan cafe tanggal 29/08/2025
+  [528/739] ✅ DELETED  | 17-04-2026, 08.28.04 WIB | JV.2025.08.01110       | Tgl jurnal: 30/08/2025   | Penjualan cafe tanggal 30/08/2025
+  [529/739] ✅ DELETED  | 17-04-2026, 08.28.04 WIB | JV.2025.08.01116       | Tgl jurnal: 31/08/2025   | Uang masuk penjualan cafe tanggal 30/08/2025
+  [530/739] ✅ DELETED  | 17-04-2026, 08.28.05 WIB | JV.2025.08.01111       | Tgl jurnal: 31/08/2025   | Penjualan cafe tanggal 31/08/2025
+  [531/739] ✅ DELETED  | 17-04-2026, 08.28.06 WIB | JV.2025.09.00074       | Tgl jurnal: 01/09/2025   | Uang masuk penjualan cafe tanggal 31/08/2025
+  [532/739] ✅ DELETED  | 17-04-2026, 08.28.07 WIB | JV.2025.09.00150       | Tgl jurnal: 01/09/2025   | Penjualan cafe tanggal 01/09/2025
+  [533/739] ✅ DELETED  | 17-04-2026, 08.28.08 WIB | JV.2025.09.00163       | Tgl jurnal: 02/09/2025   | Uang masuk penjualan cafe tanggal 01/09/2025
+  [534/739] ✅ DELETED  | 17-04-2026, 08.28.08 WIB | JV.2025.09.00151       | Tgl jurnal: 02/09/2025   | Penjualan cafe tanggal 02/09/2025
+  [535/739] ✅ DELETED  | 17-04-2026, 08.28.09 WIB | JV.2025.09.00162       | Tgl jurnal: 03/09/2025   | Uang masuk penjualan cafe tanggal 02/09/2025
+  [536/739] ✅ DELETED  | 17-04-2026, 08.28.10 WIB | JV.2025.09.00152       | Tgl jurnal: 03/09/2025   | Penjualan cafe tanggal 03/09/2025
+  [537/739] ✅ DELETED  | 17-04-2026, 08.28.10 WIB | JV.2025.09.00161       | Tgl jurnal: 04/09/2025   | Uang masuk penjualan cafe tanggal 03/09/2025
+  [538/739] ✅ DELETED  | 17-04-2026, 08.28.11 WIB | JV.2025.09.00153       | Tgl jurnal: 05/09/2025   | Penjualan cafe tanggal 04/09/2025
+  [539/739] ✅ DELETED  | 17-04-2026, 08.28.12 WIB | JV.2025.09.00160       | Tgl jurnal: 05/09/2025   | Uang masuk penjualan cafe tanggal 04/09/2025
+  [540/739] ✅ DELETED  | 17-04-2026, 08.28.13 WIB | JV.2025.09.00154       | Tgl jurnal: 05/09/2025   | Penjualan cafe tanggal 05/09/2025
+  [541/739] ✅ DELETED  | 17-04-2026, 08.28.13 WIB | JV.2025.09.00159       | Tgl jurnal: 06/09/2025   | Uang masuk penjualan cafe tanggal 05/09/2025
+  [542/739] ✅ DELETED  | 17-04-2026, 08.28.14 WIB | JV.2025.09.00155       | Tgl jurnal: 06/09/2025   | Penjualan cafe tanggal 06/09/2025
+  [543/739] ✅ DELETED  | 17-04-2026, 08.28.15 WIB | JV.2025.09.00158       | Tgl jurnal: 07/09/2025   | Uang masuk penjualan cafe tanggal 06/09/2025
+  [544/739] ✅ DELETED  | 17-04-2026, 08.28.16 WIB | JV.2025.09.00349       | Tgl jurnal: 08/09/2025   | Uang masuk setor cash penjualan cafe tanggal 06/09/2025
+  [545/739] ✅ DELETED  | 17-04-2026, 08.28.16 WIB | JV.2025.09.00156       | Tgl jurnal: 07/09/2025   | Penjualan cafe tanggal 07/09/2025
+  [546/739] ✅ DELETED  | 17-04-2026, 08.28.17 WIB | JV.2025.09.00157       | Tgl jurnal: 08/09/2025   | Uang masuk penjualan cafe tanggal 07/09/2025
+  [547/739] ✅ DELETED  | 17-04-2026, 08.28.18 WIB | JV.2025.09.00341       | Tgl jurnal: 08/09/2025   | Penjualan cafe tanggal 08/09/2025
+  [548/739] ✅ DELETED  | 17-04-2026, 08.28.18 WIB | JV.2025.09.00348       | Tgl jurnal: 09/09/2025   | Uang masuk penjualan cafe tanggal 08/09/2025
+  [549/739] ✅ DELETED  | 17-04-2026, 08.28.19 WIB | JV.2025.09.00342       | Tgl jurnal: 09/09/2025   | Penjualan cafe tanggal 09/09/2025
+  [550/739] ✅ DELETED  | 17-04-2026, 08.28.20 WIB | JV.2025.09.00350       | Tgl jurnal: 10/09/2025   | Uang masuk penjualan cafe tanggal 09/09/2025
+  [551/739] ✅ DELETED  | 17-04-2026, 08.28.21 WIB | JV.2025.09.00343       | Tgl jurnal: 10/09/2025   | Penjualan cafe tanggal 10/09/2025
+  [552/739] ✅ DELETED  | 17-04-2026, 08.28.22 WIB | JV.2025.09.00351       | Tgl jurnal: 11/09/2025   | Uang masuk penjualan cafe tanggal 10/09/2025
+  [553/739] ✅ DELETED  | 17-04-2026, 08.28.22 WIB | JV.2025.09.00344       | Tgl jurnal: 11/09/2025   | Penjualan cafe tanggal 11/09/2025
+  [554/739] ✅ DELETED  | 17-04-2026, 08.28.23 WIB | JV.2025.09.00352       | Tgl jurnal: 12/09/2025   | Uang masuk penjualan cafe tanggal 11/09/2025
+  [555/739] ✅ DELETED  | 17-04-2026, 08.28.24 WIB | JV.2025.09.00345       | Tgl jurnal: 12/09/2025   | Penjualan cafe tanggal 12/09/2025
+  [556/739] ✅ DELETED  | 17-04-2026, 08.28.25 WIB | JV.2025.09.00353       | Tgl jurnal: 13/09/2025   | Uang masuk penjualan cafe tanggal 12/09/2025
+  [557/739] ✅ DELETED  | 17-04-2026, 08.28.25 WIB | JV.2025.09.00346       | Tgl jurnal: 13/09/2025   | Penjualan cafe tanggal 13/09/2025
+  [558/739] ✅ DELETED  | 17-04-2026, 08.28.26 WIB | JV.2025.09.00354       | Tgl jurnal: 14/09/2025   | Uang masuk penjualan cafe tanggal 13/09/2025
+  [559/739] ✅ DELETED  | 17-04-2026, 08.28.27 WIB | JV.2025.09.00347       | Tgl jurnal: 14/09/2025   | Penjualan cafe tanggal 14/09/2025
+  [560/739] ✅ DELETED  | 17-04-2026, 08.28.28 WIB | JV.2025.09.00355       | Tgl jurnal: 15/09/2025   | Uang masuk penjualan cafe tanggal 14/09/2025
+  [561/739] ✅ DELETED  | 17-04-2026, 08.28.28 WIB | JV.2025.09.00586       | Tgl jurnal: 15/09/2025   | Penjualan cafe tanggal 15/09/2025
+  [562/739] ✅ DELETED  | 17-04-2026, 08.28.29 WIB | JV.2025.09.00591       | Tgl jurnal: 16/09/2025   | Uang masuk penjualan cafe tanggal 15/09/2025
+  [563/739] ✅ DELETED  | 17-04-2026, 08.28.30 WIB | JV.2025.09.00587       | Tgl jurnal: 16/09/2025   | Penjualan cafe tanggal 16/09/2025
+  [564/739] ✅ DELETED  | 17-04-2026, 08.28.30 WIB | JV.2025.09.00592       | Tgl jurnal: 17/09/2025   | Uang masuk penjualan cafe tanggal 16/09/2025
+  [565/739] ✅ DELETED  | 17-04-2026, 08.28.31 WIB | JV.2025.09.00588       | Tgl jurnal: 17/09/2025   | Penjualan cafe tanggal 17/09/2025
+  [566/739] ✅ DELETED  | 17-04-2026, 08.28.32 WIB | JV.2025.09.00593       | Tgl jurnal: 18/09/2025   | Uang masuk penjualan cafe tanggal 17/09/2025
+  [567/739] ✅ DELETED  | 17-04-2026, 08.28.33 WIB | JV.2025.09.00589       | Tgl jurnal: 18/09/2025   | Penjualan cafe tanggal 18/09/2025
+  [568/739] ✅ DELETED  | 17-04-2026, 08.28.33 WIB | JV.2025.09.00594       | Tgl jurnal: 19/09/2025   | Uang masuk penjualan cafe tanggal 18/09/2025
+  [569/739] ✅ DELETED  | 17-04-2026, 08.28.34 WIB | JV.2025.09.00614       | Tgl jurnal: 19/09/2025   | Penjualan cafe tanggal 19/09/2025
+  [570/739] ✅ DELETED  | 17-04-2026, 08.28.35 WIB | JV.2025.09.00617       | Tgl jurnal: 20/09/2025   | Uang masuk penjualan cafe tanggal 19/09/2025
+  [571/739] ✅ DELETED  | 17-04-2026, 08.28.36 WIB | JV.2025.09.00615       | Tgl jurnal: 20/09/2025   | Penjualan cafe tanggal 20/09/2025
+  [572/739] ✅ DELETED  | 17-04-2026, 08.28.36 WIB | JV.2025.09.00616       | Tgl jurnal: 21/09/2025   | Uang masuk penjualan cafe tanggal 20/09/2025
+  [573/739] ✅ DELETED  | 17-04-2026, 08.28.37 WIB | JV.2025.09.01194       | Tgl jurnal: 21/09/2025   | Penjualan cafe tanggal 21/09/2025
+  [574/739] ✅ DELETED  | 17-04-2026, 08.28.38 WIB | JV.2025.10.00278       | Tgl jurnal: 22/09/2025   | Uang masuk penjualan cafe tanggal 21/09/2025
+  [575/739] ✅ DELETED  | 17-04-2026, 08.28.39 WIB | JV.2025.09.01195       | Tgl jurnal: 22/09/2025   | Penjualan cafe tanggal 22/09/2025
+  [576/739] ✅ DELETED  | 17-04-2026, 08.28.39 WIB | JV.2025.10.00277       | Tgl jurnal: 23/09/2025   | Uang masuk penjualan cafe tanggal 22/09/2025
+  [577/739] ✅ DELETED  | 17-04-2026, 08.28.40 WIB | JV.2025.09.01196       | Tgl jurnal: 23/09/2025   | Penjualan cafe tanggal 23/09/2025
+  [578/739] ✅ DELETED  | 17-04-2026, 08.28.41 WIB | JV.2025.09.01223       | Tgl jurnal: 24/09/2025   | Uang masuk penjualan cafe tanggal 23/09/2025
+  [579/739] ✅ DELETED  | 17-04-2026, 08.28.41 WIB | JV.2025.09.01197       | Tgl jurnal: 24/09/2025   | Penjualan cafe tanggal 24/09/2025
+  [580/739] ✅ DELETED  | 17-04-2026, 08.28.42 WIB | JV.2025.09.01222       | Tgl jurnal: 25/09/2025   | Uang masuk penjualan cafe tanggal 24/09/2025
+  [581/739] ✅ DELETED  | 17-04-2026, 08.28.43 WIB | JV.2025.09.01198       | Tgl jurnal: 25/09/2025   | Penjualan cafe tanggal 25/09/2025
+  [582/739] ✅ DELETED  | 17-04-2026, 08.28.44 WIB | JV.2025.09.01221       | Tgl jurnal: 26/09/2025   | Uang masuk penjualan cafe tanggal 25/09/2025
+  [583/739] ✅ DELETED  | 17-04-2026, 08.28.44 WIB | JV.2025.09.01199       | Tgl jurnal: 26/09/2025   | Penjualan cafe tanggal 26/09/2025
+  [584/739] ✅ DELETED  | 17-04-2026, 08.28.45 WIB | JV.2025.09.01220       | Tgl jurnal: 27/09/2025   | Uang masuk penjualan cafe tanggal 26/09/2025
+  [585/739] ✅ DELETED  | 17-04-2026, 08.28.46 WIB | JV.2025.09.01207       | Tgl jurnal: 27/09/2025   | Penjualan cafe tanggal 27/09/2025
+  [586/739] ✅ DELETED  | 17-04-2026, 08.28.46 WIB | JV.2025.09.01219       | Tgl jurnal: 28/09/2025   | Uang masuk penjualan cafe tanggal 27/09/2025
+  [587/739] ✅ DELETED  | 17-04-2026, 08.28.47 WIB | JV.2025.09.01208       | Tgl jurnal: 28/09/2025   | Penjualan cafe tanggal 28/09/2025
+  [588/739] ✅ DELETED  | 17-04-2026, 08.28.48 WIB | JV.2025.09.01218       | Tgl jurnal: 29/09/2025   | Uang masuk penjualan cafe tanggal 28/09/2025
+  [589/739] ✅ DELETED  | 17-04-2026, 08.28.49 WIB | JV.2025.09.01209       | Tgl jurnal: 29/09/2025   | Penjualan cafe tanggal 29/09/2025
+  [590/739] ✅ DELETED  | 17-04-2026, 08.28.49 WIB | JV.2025.09.01217       | Tgl jurnal: 30/09/2025   | Uang masuk penjualan cafe tanggal 29/09/2025
+  [591/739] ✅ DELETED  | 17-04-2026, 08.28.50 WIB | JV.2025.09.01210       | Tgl jurnal: 30/09/2025   | Penjualan cafe tanggal 30/09/2025
+  [592/739] ✅ DELETED  | 17-04-2026, 08.28.51 WIB | JV.2025.10.00275       | Tgl jurnal: 01/10/2025   | Uang masuk penjualan cafe tanggal 30/09/2025
+  [593/739] ✅ DELETED  | 17-04-2026, 08.28.52 WIB | JV.2025.10.00254       | Tgl jurnal: 01/10/2025   | Penjualan cafe tanggal 01/10/2025
+  [594/739] ✅ DELETED  | 17-04-2026, 08.28.52 WIB | JV.2025.10.00274       | Tgl jurnal: 02/10/2025   | Uang masuk penjualan cafe tanggal 01/10/2025
+  [595/739] ✅ DELETED  | 17-04-2026, 08.28.53 WIB | JV.2025.10.00255       | Tgl jurnal: 02/10/2025   | Penjualan cafe tanggal 02/10/2025
+  [596/739] ✅ DELETED  | 17-04-2026, 08.28.54 WIB | JV.2025.10.00273       | Tgl jurnal: 03/10/2025   | Uang masuk penjualan cafe tanggal 02/10/2025
+  [597/739] ✅ DELETED  | 17-04-2026, 08.28.54 WIB | JV.2025.10.00256       | Tgl jurnal: 03/10/2025   | Penjualan cafe tanggal 03/10/2025
+  [598/739] ✅ DELETED  | 17-04-2026, 08.28.55 WIB | JV.2025.10.00272       | Tgl jurnal: 04/10/2025   | Uang masuk penjualan cafe tanggal 03/10/2025
+  [599/739] ✅ DELETED  | 17-04-2026, 08.28.56 WIB | JV.2025.10.00257       | Tgl jurnal: 04/10/2025   | Penjualan cafe tanggal 04/10/2025
+  [600/739] ✅ DELETED  | 17-04-2026, 08.28.57 WIB | JV.2025.10.00271       | Tgl jurnal: 05/10/2025   | Uang masuk penjualan cafe tanggal 04/10/2025
+  [601/739] ✅ DELETED  | 17-04-2026, 08.28.57 WIB | JV.2025.10.00258       | Tgl jurnal: 05/10/2025   | Penjualan cafe tanggal 05/10/2025
+  [602/739] ✅ DELETED  | 17-04-2026, 08.28.58 WIB | JV.2025.10.00270       | Tgl jurnal: 06/10/2025   | Uang masuk penjualan cafe tanggal 05/10/2025
+  [603/739] ✅ DELETED  | 17-04-2026, 08.28.59 WIB | JV.2025.10.00259       | Tgl jurnal: 06/10/2025   | Penjualan cafe tanggal 06/10/2025
+  [604/739] ✅ DELETED  | 17-04-2026, 08.28.59 WIB | JV.2025.10.00260       | Tgl jurnal: 07/10/2025   | Penjualan cafe tanggal 07/10/2025
+  [605/739] ✅ DELETED  | 17-04-2026, 08.29.00 WIB | JV.2025.10.00268       | Tgl jurnal: 08/10/2025   | Uang masuk penjualan cafe tanggal 07/10/2025
+  [606/739] ✅ DELETED  | 17-04-2026, 08.29.01 WIB | JV.2025.10.00261       | Tgl jurnal: 08/10/2025   | Penjualan cafe tanggal 08/10/2025
+  [607/739] ✅ DELETED  | 17-04-2026, 08.29.02 WIB | JV.2025.10.00264       | Tgl jurnal: 09/10/2025   | Uang masuk penjualan cafe tanggal 08/10/2025
+  [608/739] ✅ DELETED  | 17-04-2026, 08.29.02 WIB | JV.2025.10.00262       | Tgl jurnal: 09/10/2025   | Penjualan cafe tanggal 09/10/2025
+  [609/739] ✅ DELETED  | 17-04-2026, 08.29.03 WIB | JV.2025.10.00263       | Tgl jurnal: 10/10/2025   | Uang masuk penjualan cafe tanggal 09/10/2025
+  [610/739] ✅ DELETED  | 17-04-2026, 08.29.04 WIB | JV.2025.10.00266       | Tgl jurnal: 10/10/2025   | Penjualan cafe strada tanggal 10/10/2025
+  [611/739] ✅ DELETED  | 17-04-2026, 08.29.05 WIB | JV.2025.10.01251       | Tgl jurnal: 11/10/2025   | Uang masuk penjualan cafe tanggal 10/10/2025
+  [612/739] ✅ DELETED  | 17-04-2026, 08.29.05 WIB | JV.2025.10.00267       | Tgl jurnal: 11/10/2025   | Uang masuk penjualan cafe tanggal 10/10/2025
+  [613/739] ✅ DELETED  | 17-04-2026, 08.29.06 WIB | JV.2025.10.00992       | Tgl jurnal: 11/10/2025   | Penjualan cafe tanggal 11/10/2025
+  [614/739] ✅ DELETED  | 17-04-2026, 08.29.07 WIB | JV.2025.10.01218       | Tgl jurnal: 12/10/2025   | Uang masuk penjualan cafe tanggal 11/10/2025
+  [615/739] ✅ DELETED  | 17-04-2026, 08.29.08 WIB | JV.2025.10.00993       | Tgl jurnal: 12/10/2025   | Penjualan cafe tanggal 12/10/2025
+  [616/739] ✅ DELETED  | 17-04-2026, 08.29.09 WIB | JV.2025.10.01219       | Tgl jurnal: 13/10/2025   | Uang masuk penjualan cafe tanggal 12/10/2025
+  [617/739] ✅ DELETED  | 17-04-2026, 08.29.09 WIB | JV.2025.10.00994       | Tgl jurnal: 13/10/2025   | Penjualan cafe tanggal 13/10/2025
+  [618/739] ✅ DELETED  | 17-04-2026, 08.29.10 WIB | JV.2025.10.01220       | Tgl jurnal: 14/10/2025   | Uang masuk penjualan cafe tanggal 13/10/2025
+  [619/739] ✅ DELETED  | 17-04-2026, 08.29.11 WIB | JV.2025.10.00995       | Tgl jurnal: 14/10/2025   | Penjualan cafe tanggal 14/10/2025
+  [620/739] ✅ DELETED  | 17-04-2026, 08.29.11 WIB | JV.2025.10.01221       | Tgl jurnal: 15/10/2025   | Uang masuk penjualan cafe tanggal 14/10/2025
+  [621/739] ✅ DELETED  | 17-04-2026, 08.29.12 WIB | JV.2025.10.00996       | Tgl jurnal: 15/10/2025   | Penjualan cafe tanggal 15/10/2025
+  [622/739] ✅ DELETED  | 17-04-2026, 08.29.13 WIB | JV.2025.10.01222       | Tgl jurnal: 16/10/2025   | Uang masuk penjualan cafe tanggal 15/10/2025
+  [623/739] ✅ DELETED  | 17-04-2026, 08.29.14 WIB | JV.2025.10.00997       | Tgl jurnal: 16/10/2025   | Penjualan cafe tanggal 16/10/2025
+  [624/739] ✅ DELETED  | 17-04-2026, 08.29.14 WIB | JV.2025.10.01223       | Tgl jurnal: 17/10/2025   | Uang masuk penjualan cafe tanggal 16/10/2025
+  [625/739] ✅ DELETED  | 17-04-2026, 08.29.15 WIB | JV.2025.10.00998       | Tgl jurnal: 17/10/2025   | Penjualan cafe tanggal 17/10/2025
+  [626/739] ✅ DELETED  | 17-04-2026, 08.29.16 WIB | JV.2025.10.01224       | Tgl jurnal: 18/10/2025   | Uang masuk penjualan cafe tanggal 17/10/2025
+  [627/739] ✅ DELETED  | 17-04-2026, 08.29.16 WIB | JV.2025.10.01262       | Tgl jurnal: 18/10/2025   | Uang masuk setoran cash penjualan tanggal 17/10/2025
+  [628/739] ✅ DELETED  | 17-04-2026, 08.29.17 WIB | JV.2025.10.00999       | Tgl jurnal: 18/10/2025   | Penjualan cafe tanggal 18/10/2025
+  [629/739] ✅ DELETED  | 17-04-2026, 08.29.18 WIB | JV.2025.10.01225       | Tgl jurnal: 19/10/2025   | Uang masuk penjualan cafe tanggal 18/10/2025
+  [630/739] ✅ DELETED  | 17-04-2026, 08.29.19 WIB | JV.2025.10.01000       | Tgl jurnal: 19/10/2025   | Penjualan cafe tanggal 19/10/2025
+  [631/739] ✅ DELETED  | 17-04-2026, 08.29.19 WIB | JV.2025.10.01226       | Tgl jurnal: 20/10/2025   | Uang masuk penjualan cafe tanggal 19/10/2025
+  [632/739] ✅ DELETED  | 17-04-2026, 08.29.20 WIB | JV.2025.10.01227       | Tgl jurnal: 21/10/2025   | Uang masuk penjualan cafe tanggal 20/10/2025
+  [633/739] ✅ DELETED  | 17-04-2026, 08.29.21 WIB | JV.2025.10.01002       | Tgl jurnal: 21/10/2025   | Penjualan cafe tanggal 21/10/2025
+  [634/739] ✅ DELETED  | 17-04-2026, 08.29.22 WIB | JV.2025.10.01228       | Tgl jurnal: 22/10/2025   | Uang masuk penjualan cafe tanggal 21/10/2025
+  [635/739] ✅ DELETED  | 17-04-2026, 08.29.22 WIB | JV.2025.10.01003       | Tgl jurnal: 22/10/2025   | Penjualan cafe tanggal 22/10/2025
+  [636/739] ✅ DELETED  | 17-04-2026, 08.29.23 WIB | JV.2025.10.01229       | Tgl jurnal: 23/10/2025   | Uang masuk penjualan cafe tanggal 22/10/2025
+  [637/739] ✅ DELETED  | 17-04-2026, 08.29.24 WIB | JV.2025.10.01004       | Tgl jurnal: 23/10/2025   | Penjualan cafe tanggal 23/10/2025
+  [638/739] ✅ DELETED  | 17-04-2026, 08.29.24 WIB | JV.2025.10.01230       | Tgl jurnal: 24/10/2025   | Uang masuk penjualan cafe tanggal 23/10/2025
+  [639/739] ✅ DELETED  | 17-04-2026, 08.29.25 WIB | JV.2025.10.01005       | Tgl jurnal: 24/10/2025   | Penjualan cafe tanggal 24/10/2025
+  [640/739] ✅ DELETED  | 17-04-2026, 08.29.26 WIB | JV.2025.10.01231       | Tgl jurnal: 25/10/2025   | Uang masuk penjualan cafe tanggal 24/10/2025
+  [641/739] ✅ DELETED  | 17-04-2026, 08.29.26 WIB | JV.2025.10.01006       | Tgl jurnal: 25/10/2025   | Penjualan cafe tanggal 25/10/2025
+  [642/739] ✅ DELETED  | 17-04-2026, 08.29.27 WIB | JV.2025.10.01232       | Tgl jurnal: 26/10/2025   | Uang masuk penjualan cafe tanggal 25/10/2025
+  [643/739] ✅ DELETED  | 17-04-2026, 08.29.28 WIB | JV.2025.10.01007       | Tgl jurnal: 26/10/2025   | Penjualan cafe tanggal 26/10/2025
+  [644/739] ✅ DELETED  | 17-04-2026, 08.29.29 WIB | JV.2025.10.01233       | Tgl jurnal: 27/10/2025   | Uang masuk penjualan cafe tanggal 26/10/2025
+  [645/739] ✅ DELETED  | 17-04-2026, 08.29.29 WIB | JV.2025.10.01008       | Tgl jurnal: 27/10/2025   | Penjualan cafe tanggal 27/10/2025
+  [646/739] ✅ DELETED  | 17-04-2026, 08.29.30 WIB | JV.2025.10.01234       | Tgl jurnal: 28/10/2025   | Uang masuk penjualan cafe tanggal 27/10/2025
+  [647/739] ✅ DELETED  | 17-04-2026, 08.29.31 WIB | JV.2025.10.01055       | Tgl jurnal: 28/10/2025   | Penjualan cafe tanggal 28/10/2025
+  [648/739] ✅ DELETED  | 17-04-2026, 08.29.32 WIB | JV.2025.10.01235       | Tgl jurnal: 29/10/2025   | Uang masuk penjualan cafe tanggal 28/10/2025
+  [649/739] ✅ DELETED  | 17-04-2026, 08.29.32 WIB | JV.2025.10.01056       | Tgl jurnal: 29/10/2025   | Penjualan cafe tanggal 29/10/2025
+  [650/739] ✅ DELETED  | 17-04-2026, 08.29.33 WIB | JV.2025.10.01236       | Tgl jurnal: 30/10/2025   | Uang masuk penjualan cafe tanggal 29/10/2025
+  [651/739] ✅ DELETED  | 17-04-2026, 08.29.34 WIB | JV.2025.10.01057       | Tgl jurnal: 30/10/2025   | Penjualan cafe tanggal 30/10/2025
+  [652/739] ✅ DELETED  | 17-04-2026, 08.29.34 WIB | JV.2025.10.01237       | Tgl jurnal: 31/10/2025   | Uang masuk penjualan cafe tanggal 30/10/2025
+  [653/739] ✅ DELETED  | 17-04-2026, 08.29.35 WIB | JV.2025.10.01058       | Tgl jurnal: 31/10/2025   | Penjualan cafe tanggal 31/10/2025
+  [654/739] ✅ DELETED  | 17-04-2026, 08.29.36 WIB | JV.2025.11.00979       | Tgl jurnal: 01/11/2025   | Uang masuk penjualan cafe tanggal 31/10/2025
+  [655/739] ✅ DELETED  | 17-04-2026, 08.29.36 WIB | JV.2025.11.00112       | Tgl jurnal: 01/11/2025   | Penjualan cafe tanggal 01/11/2025
+  [656/739] ✅ DELETED  | 17-04-2026, 08.29.37 WIB | JV.2025.11.00980       | Tgl jurnal: 02/11/2025   | Uang masuk penjualan cafe tanggal 01/11/2025
+  [657/739] ✅ DELETED  | 17-04-2026, 08.29.38 WIB | JV.2025.11.00113       | Tgl jurnal: 02/11/2025   | Penjualan cafe tanggal 02/11/2025
+  [658/739] ✅ DELETED  | 17-04-2026, 08.29.39 WIB | JV.2025.11.00981       | Tgl jurnal: 03/11/2025   | Uang masuk penjualan cafe tanggal 02/11/2025
+  [659/739] ✅ DELETED  | 17-04-2026, 08.29.39 WIB | JV.2025.11.00114       | Tgl jurnal: 03/11/2025   | Penjualan cafe tanggal 03/11/2025
+  [660/739] ✅ DELETED  | 17-04-2026, 08.29.40 WIB | JV.2025.11.00982       | Tgl jurnal: 04/11/2025   | Uang masuk penjualan cafe tanggal 03/11/2025
+  [661/739] ✅ DELETED  | 17-04-2026, 08.29.41 WIB | JV.2025.11.00115       | Tgl jurnal: 04/11/2025   | Penjualan cafe tanggal 04/11/2025
+  [662/739] ✅ DELETED  | 17-04-2026, 08.29.42 WIB | JV.2025.11.00983       | Tgl jurnal: 05/11/2025   | Uang masuk penjualan cafe tanggal 04/11/2025
+  [663/739] ✅ DELETED  | 17-04-2026, 08.29.42 WIB | JV.2025.11.00116       | Tgl jurnal: 05/11/2025   | Penjualan cafe tanggal 05/11/2025
+  [664/739] ✅ DELETED  | 17-04-2026, 08.29.43 WIB | JV.2025.11.00984       | Tgl jurnal: 06/11/2025   | Uang masuk penjualan cafe tanggal 05/11/2025
+  [665/739] ✅ DELETED  | 17-04-2026, 08.29.44 WIB | JV.2025.11.00117       | Tgl jurnal: 06/11/2025   | Penjualan cafe tanggal 06/11/2025
+  [666/739] ✅ DELETED  | 17-04-2026, 08.29.44 WIB | JV.2025.11.00985       | Tgl jurnal: 07/11/2025   | Uang masuk penjualan cafe tanggal 06/11/2025
+  [667/739] ✅ DELETED  | 17-04-2026, 08.29.45 WIB | JV.2025.11.00118       | Tgl jurnal: 07/11/2025   | Penjualan cafe tanggal 07/11/2025
+  [668/739] ✅ DELETED  | 17-04-2026, 08.29.46 WIB | JV.2025.11.00986       | Tgl jurnal: 08/11/2025   | Uang masuk penjualan cafe tanggal 07/11/2025
+  [669/739] ✅ DELETED  | 17-04-2026, 08.29.46 WIB | JV.2025.11.00119       | Tgl jurnal: 08/11/2025   | Penjualan cafe tanggal 08/11/2025
+  [670/739] ✅ DELETED  | 17-04-2026, 08.29.47 WIB | JV.2025.11.00987       | Tgl jurnal: 09/11/2025   | Uang masuk penjualan cafe tanggal 08/11/2025
+  [671/739] ✅ DELETED  | 17-04-2026, 08.29.48 WIB | JV.2025.11.00263       | Tgl jurnal: 09/11/2025   | Penjualan cafe tanggal 09/11/2025
+  [672/739] ✅ DELETED  | 17-04-2026, 08.29.49 WIB | JV.2025.11.00988       | Tgl jurnal: 10/11/2025   | Uang masuk penjualan cafe tanggal 09/11/2025
+  [673/739] ✅ DELETED  | 17-04-2026, 08.29.49 WIB | JV.2025.11.00264       | Tgl jurnal: 10/11/2025   | Penjualan cafe tanggal 10/11/2025
+  [674/739] ✅ DELETED  | 17-04-2026, 08.29.50 WIB | JV.2025.11.00989       | Tgl jurnal: 11/11/2025   | Uang masuk penjualan cafe tanggal 10/11/2025
+  [675/739] ✅ DELETED  | 17-04-2026, 08.29.51 WIB | JV.2025.11.00265       | Tgl jurnal: 11/11/2025   | Penjualan cafe tanggal 11/11/2025
+  [676/739] ✅ DELETED  | 17-04-2026, 08.29.51 WIB | JV.2025.11.00990       | Tgl jurnal: 12/11/2025   | Uang masuk penjualan cafe tanggal 11/11/2025
+  [677/739] ✅ DELETED  | 17-04-2026, 08.29.52 WIB | JV.2025.11.00266       | Tgl jurnal: 12/11/2025   | Penjualan cafe tanggal 12/11/2025
+  [678/739] ✅ DELETED  | 17-04-2026, 08.29.53 WIB | JV.2025.11.00991       | Tgl jurnal: 13/11/2025   | Uang masuk penjualan cafe tanggal 12/11/2025
+  [679/739] ✅ DELETED  | 17-04-2026, 08.29.53 WIB | JV.2025.11.00267       | Tgl jurnal: 13/11/2025   | Penjualan cafe tanggal 13/11/2025
+  [680/739] ✅ DELETED  | 17-04-2026, 08.29.54 WIB | JV.2025.11.00992       | Tgl jurnal: 14/11/2025   | Uang masuk penjualan cafe tanggal 13/11/2025
+  [681/739] ✅ DELETED  | 17-04-2026, 08.29.55 WIB | JV.2025.11.00431       | Tgl jurnal: 14/11/2025   | Penjualan cafe tanggal 14/11/2025
+  [682/739] ✅ DELETED  | 17-04-2026, 08.29.56 WIB | JV.2025.11.00993       | Tgl jurnal: 15/11/2025   | Uang masuk penjualan cafe tanggal 14/11/2025
+  [683/739] ✅ DELETED  | 17-04-2026, 08.29.56 WIB | JV.2025.11.00432       | Tgl jurnal: 15/11/2025   | Penjualan cafe tanggal 15/11/2025
+  [684/739] ✅ DELETED  | 17-04-2026, 08.29.57 WIB | JV.2025.11.00994       | Tgl jurnal: 16/11/2025   | Uang masuk penjualan cafe tanggal 15/11/2025
+  [685/739] ✅ DELETED  | 17-04-2026, 08.29.58 WIB | JV.2025.11.00433       | Tgl jurnal: 16/11/2025   | Penjualan cafe tanggal 16/11/2025
+  [686/739] ✅ DELETED  | 17-04-2026, 08.29.58 WIB | JV.2025.11.00995       | Tgl jurnal: 17/11/2025   | Uang masuk penjualan cafe tanggal 16/11/2025
+  [687/739] ✅ DELETED  | 17-04-2026, 08.29.59 WIB | JV.2025.11.00434       | Tgl jurnal: 17/11/2025   | Penjualan cafe tanggal 17/11/2025
+  [688/739] ✅ DELETED  | 17-04-2026, 08.30.00 WIB | JV.2025.11.00996       | Tgl jurnal: 18/11/2025   | Uang masuk penjualan cafe tanggal 17/11/2025
+  [689/739] ✅ DELETED  | 17-04-2026, 08.30.00 WIB | JV.2025.11.00435       | Tgl jurnal: 18/11/2025   | Penjualan cafe tanggal 18/11/2025
+  [690/739] ✅ DELETED  | 17-04-2026, 08.30.01 WIB | JV.2025.11.00997       | Tgl jurnal: 19/11/2025   | Uang masuk penjualan cafe tanggal 18/11/2025
+  [691/739] ✅ DELETED  | 17-04-2026, 08.30.02 WIB | JV.2025.11.00436       | Tgl jurnal: 19/11/2025   | Penjualan cafe tanggal 19/11/2025
+  [692/739] ✅ DELETED  | 17-04-2026, 08.30.03 WIB | JV.2025.11.00998       | Tgl jurnal: 20/11/2025   | Uang masuk penjualan cafe tanggal 19/11/2025
+  [693/739] ✅ DELETED  | 17-04-2026, 08.30.03 WIB | JV.2025.11.00001       | Tgl jurnal: 20/10/2025   | Penjualan cafe tanggal 20/11/2025
+  [694/739] ✅ DELETED  | 17-04-2026, 08.30.04 WIB | JV.2025.11.00437       | Tgl jurnal: 20/11/2025   | Penjualan cafe tanggal 20/11/2025
+  [695/739] ✅ DELETED  | 17-04-2026, 08.30.05 WIB | JV.2025.11.00999       | Tgl jurnal: 21/11/2025   | Uang masuk penjualan cafe tanggal 20/11/2025
+  [696/739] ✅ DELETED  | 17-04-2026, 08.30.06 WIB | JV.2025.11.00438       | Tgl jurnal: 21/11/2025   | Penjualan cafe tanggal 21/11/2025
+  [697/739] ✅ DELETED  | 17-04-2026, 08.30.06 WIB | JV.2025.11.01000       | Tgl jurnal: 22/11/2025   | Uang masuk penjualan cafe tanggal 21/11/2025
+  [698/739] ✅ DELETED  | 17-04-2026, 08.30.07 WIB | JV.2025.11.01001       | Tgl jurnal: 23/11/2025   | Uang masuk penjualan cafe tanggal 22/11/2025
+  [699/739] ✅ DELETED  | 17-04-2026, 08.30.08 WIB | JV.2025.11.01028       | Tgl jurnal: 23/11/2025   | Penjualan cafe tanggal 23/11/2025
+  [700/739] ✅ DELETED  | 17-04-2026, 08.30.08 WIB | JV.2025.11.01002       | Tgl jurnal: 24/11/2025   | Uang masuk penjualan cafe tanggal 23/11/2025
+  [701/739] ✅ DELETED  | 17-04-2026, 08.30.09 WIB | JV.2025.11.01029       | Tgl jurnal: 24/11/2025   | Penjualan cafe tanggal 24/11/2025
+  [702/739] ✅ DELETED  | 17-04-2026, 08.30.10 WIB | JV.2025.11.01003       | Tgl jurnal: 25/11/2025   | Uang masuk penjualan cafe tanggal 24/11/2025
+  [703/739] ✅ DELETED  | 17-04-2026, 08.30.11 WIB | JV.2025.11.01004       | Tgl jurnal: 26/11/2025   | Uang masuk penjualan cafe tanggal 25/11/2025
+  [704/739] ✅ DELETED  | 17-04-2026, 08.30.11 WIB | JV.2025.11.01031       | Tgl jurnal: 26/11/2025   | Penjualan cafe tanggal 26/11/2025
+  [705/739] ✅ DELETED  | 17-04-2026, 08.30.12 WIB | JV.2025.11.01005       | Tgl jurnal: 27/11/2025   | Uang masuk penjualan cafe tanggal 26/11/2025
+  [706/739] ✅ DELETED  | 17-04-2026, 08.30.13 WIB | JV.2025.11.01032       | Tgl jurnal: 27/11/2025   | Penjualan cafe tanggal 27/11/2025
+  [707/739] ✅ DELETED  | 17-04-2026, 08.30.14 WIB | JV.2025.11.01006       | Tgl jurnal: 28/11/2025   | Uang masuk penjualan cafe tanggal 27/11/2025
+  [708/739] ✅ DELETED  | 17-04-2026, 08.30.14 WIB | JV.2025.11.01033       | Tgl jurnal: 28/11/2025   | Penjualan cafe tanggal 28/11/2025
+  [709/739] ✅ DELETED  | 17-04-2026, 08.30.15 WIB | JV.2025.11.01007       | Tgl jurnal: 29/11/2025   | Uang masuk penjualan cafe tanggal 28/11/2025
+  [710/739] ✅ DELETED  | 17-04-2026, 08.30.16 WIB | JV.2025.11.01034       | Tgl jurnal: 29/11/2025   | Penjualan cafe tanggal 29/11/2025
+  [711/739] ✅ DELETED  | 17-04-2026, 08.30.17 WIB | JV.2025.11.01008       | Tgl jurnal: 30/11/2025   | Uang masuk penjualan cafe tanggal 29/11/2025
+  [712/739] ✅ DELETED  | 17-04-2026, 08.30.17 WIB | JV.2025.11.01035       | Tgl jurnal: 30/11/2025   | Penjualan cafe tanggal 30/11/2025
+  [713/739] ✅ DELETED  | 17-04-2026, 08.30.18 WIB | JV.2025.11.01036       | Tgl jurnal: 01/12/2025   | Penjualan cafe tanggal 01/12/2025
+  [714/739] ✅ DELETED  | 17-04-2026, 08.30.19 WIB | JV.2025.12.01510       | Tgl jurnal: 02/12/2025   | Penjualan cafe tanggal 02/12/2025
+  [715/739] ✅ DELETED  | 17-04-2026, 08.30.19 WIB | JV.2025.12.01511       | Tgl jurnal: 03/12/2025   | Uang masuk penjualan cafe tanggal 02/12/2025
+  [716/739] ✅ DELETED  | 17-04-2026, 08.30.20 WIB | JV.2025.12.01512       | Tgl jurnal: 03/12/2025   | Penjualan cafe tanggal 03/12/2025
+  [717/739] ✅ DELETED  | 17-04-2026, 08.30.21 WIB | JV.2025.12.01513       | Tgl jurnal: 04/12/2025   | Uang masuk penjualan cafe tanggal 03/12/2025
+  [718/739] ✅ DELETED  | 17-04-2026, 08.30.22 WIB | JV.2025.12.01514       | Tgl jurnal: 04/12/2025   | Penjualan cafe tanggal 04/12/2025
+  [719/739] ✅ DELETED  | 17-04-2026, 08.30.22 WIB | JV.2025.12.01515       | Tgl jurnal: 05/12/2025   | Uang masuk penjualan cafe tanggal 04/12/2025
+  [720/739] ✅ DELETED  | 17-04-2026, 08.30.23 WIB | JV.2025.12.01516       | Tgl jurnal: 05/12/2025   | Penjualan cafe tanggal 05/12/2025
+  [721/739] ✅ DELETED  | 17-04-2026, 08.30.24 WIB | JV.2025.12.01517       | Tgl jurnal: 06/12/2025   | Uang masuk penjualan cafe tanggal 05/12/2025
+  [722/739] ✅ DELETED  | 17-04-2026, 08.30.24 WIB | JV.2025.12.01518       | Tgl jurnal: 06/12/2025   | Penjualan cafe tanggal 06/12/2025
+  [723/739] ✅ DELETED  | 17-04-2026, 08.30.25 WIB | JV.2025.12.01519       | Tgl jurnal: 07/12/2025   | Uang masuk penjualan cafe tanggal 06/12/2025
+  [724/739] ✅ DELETED  | 17-04-2026, 08.30.26 WIB | JV.2025.12.01520       | Tgl jurnal: 07/12/2025   | Penjualan cafe tanggal 07/12/2025
+  [725/739] ✅ DELETED  | 17-04-2026, 08.30.27 WIB | JV.2025.12.01521       | Tgl jurnal: 08/12/2025   | Uang masuk penjualan cafe tanggal 07/12/2025
+  [726/739] ✅ DELETED  | 17-04-2026, 08.30.27 WIB | JV.2025.12.01522       | Tgl jurnal: 08/12/2025   | Penjualan cafe tanggal 08/12/2025
+  [727/739] ✅ DELETED  | 17-04-2026, 08.30.28 WIB | JV.2025.12.01523       | Tgl jurnal: 09/12/2025   | Uang masuk penjualan cafe tanggal 08/12/2025
+  [728/739] ✅ DELETED  | 17-04-2026, 08.30.29 WIB | JV.2025.12.01524       | Tgl jurnal: 09/12/2025   | Penjualan cafe tanggal 09/12/2025
+  [729/739] ✅ DELETED  | 17-04-2026, 08.30.29 WIB | JV.2025.12.01525       | Tgl jurnal: 10/12/2025   | Uang masuk penjualan cafe tanggal 09/12/2025
+  [730/739] ✅ DELETED  | 17-04-2026, 08.30.30 WIB | JV.2025.12.01526       | Tgl jurnal: 10/12/2025   | Penjualan cafe tanggal 10/12/2025
+  [731/739] ✅ DELETED  | 17-04-2026, 08.30.31 WIB | JV.2025.12.01527       | Tgl jurnal: 11/12/2025   | Uang masuk penjualan cafe tanggal 10/12/2025
+  [732/739] ✅ DELETED  | 17-04-2026, 08.30.32 WIB | JV.2025.12.01528       | Tgl jurnal: 11/12/2025   | Penjualan cafe tanggal 11/12/2025
+  [733/739] ✅ DELETED  | 17-04-2026, 08.30.32 WIB | JV.2025.12.01529       | Tgl jurnal: 12/12/2025   | Uang masuk penjualan cafe tanggal 11/12/2025
+  [734/739] ✅ DELETED  | 17-04-2026, 08.30.33 WIB | JV.2025.12.01530       | Tgl jurnal: 12/12/2025   | Penjualan cafe tanggal 12/12/2025
+  [735/739] ✅ DELETED  | 17-04-2026, 08.30.34 WIB | JV.2026.04.00334       | Tgl jurnal: 08/04/2026   | Penjualan cafe tanggal 08/04/2026
+  [736/739] ✅ DELETED  | 17-04-2026, 08.30.34 WIB | JV.2026.04.00336       | Tgl jurnal: 09/04/2026   | Uang masuk penjualan cafe tanggal 08/04/2026
+  [737/739] ✅ DELETED  | 17-04-2026, 08.30.35 WIB | JV.2026.02.01263       | Tgl jurnal: 22/11/2025   | Penjualan cafe tanggal 22/11/2026
+  [738/739] ✅ DELETED  | 17-04-2026, 08.30.36 WIB | JV.2025.11.01030       | Tgl jurnal: 25/11/2025   | Penjualan cafe tanggal 25/11/2026
+  [739/739] ✅ DELETED  | 17-04-2026, 08.30.37 WIB | JV.2025.12.01509       | Tgl jurnal: 02/12/2025   | Uang masuk penjualan cafe tanggal 01/12/2026
+
+──────────────────────────────────────────────────────────────────────
+RINGKASAN AKHIR
+──────────────────────────────────────────────────────────────────────
+Selesai pada : 17-04-2026, 08.30.37 WIB
+Total proses : 739
+Berhasil     : 739
+Gagal        : 0
+Tidak ada    : 0
+Log tersimpan: /Users/questmotors/strada-brew/scripts/finance/logs/mass_delete_20260417_081642.log

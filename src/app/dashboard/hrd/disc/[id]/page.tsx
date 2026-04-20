@@ -229,13 +229,13 @@ export default async function DiscResultPage({ params }: Props) {
           </div>
         </div>
 
-        {/* Graph III — Change (Perceived Self) */}
+        {/* Graph II — Natural Style (Real Self) */}
         <div style={{ backgroundColor: '#fff', borderRadius: '20px', padding: '24px', border: '1.5px solid #E8E4E0' }}>
-          <h2 style={{ fontSize: '14px', fontWeight: 800, color: '#020000', margin: '0 0 4px' }}>Grafik III — Diri yang Dipersepsikan</h2>
-          <p style={{ fontSize: '12px', color: '#8A8A8D', margin: '0 0 20px' }}>Change = Most – Least (cerminan kepribadian asli)</p>
+          <h2 style={{ fontSize: '14px', fontWeight: 800, color: '#020000', margin: '0 0 4px' }}>Grafik II — Natural Style</h2>
+          <p style={{ fontSize: '12px', color: '#8A8A8D', margin: '0 0 20px' }}>Kecenderungan alami (Real Self / This is me)</p>
           <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-end', height: '200px' }}>
             {DIMS.map(d => (
-              <GraphBar key={d} dim={d} value={results.graph3[d]} max={12} label={DISC_DIMENSIONS[d].label.split(' ')[0]} />
+              <GraphBar key={d} dim={d} value={results.plot2[d]} max={16} label={DISC_DIMENSIONS[d].label.split(' ')[0]} />
             ))}
           </div>
         </div>
@@ -378,7 +378,7 @@ export default async function DiscResultPage({ params }: Props) {
       <div className="disc-report-grid-4" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '12px', marginBottom: '20px' }}>
         {DIMS.map(d => {
           const dd = DISC_DIMENSIONS[d]
-          const score = results.graph3[d]
+          const score = results.plot2[d]
           const isActive = d === primary || results.secondaryTypes.includes(d)
           return (
             <div key={d} style={{ backgroundColor: isActive ? dd.lightBg : '#F7F5F2', borderRadius: '16px', padding: '16px', border: `1.5px solid ${isActive ? dd.color + '40' : '#E8E4E0'}` }}>

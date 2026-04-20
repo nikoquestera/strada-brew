@@ -1,0 +1,50 @@
+BREW — Mass Patch Jurnal Uang Masuk SMS (1000.02.04 → 1000.02.05 / split OVO)
+Mode       : 🔍 DRY RUN — tidak ada yang disimpan
+Filter tgl : 2025-08-31 s/d 2025-09-05
+Keyword    : "BREW - UANG MASUK STRADA SMS"
+Source kode: 1000.02.04 (DEBIT)
+Normal days: 1000.02.04 → 1000.02.05 (Bank BCA SMS 4599993999)
+OVO days   : 1000.02.04 split → 1000.02.05 (non-OVO sum) + 1000.02.01 (OVO, Bank BCA LPZ 4281688817)
+OVO dates (14): 2025-08-31, 2025-09-19, 2025-09-25, 2025-10-09, 2025-10-13, 2025-10-27, 2025-12-08, 2025-12-29, 2026-01-13, 2026-01-31, 2026-02-12, 2026-02-13, 2026-02-14, 2026-03-08
+Dijalankan : 19-04-2026, 16.31.07 WIB
+Log file   : /Users/questmotors/strada-brew/scripts/finance/logs/mass_patch_sms_jurnal_20260419_163107.log
+
+Menghubungkan ke Accurate...
+✅ Terhubung. Session: a06e43cd-cf3a-417e-a6ef-f90e75576f3f
+
+──────────────────────────────────────────────────────────────────────
+FASE 1 — AMBIL DAFTAR JURNAL
+──────────────────────────────────────────────────────────────────────
+Mencari jurnal dengan keyword: "BREW - UANG MASUK STRADA SMS" (tanggal: 2025-08-31 s/d 2025-09-05) ...
+  Halaman 1: 100 total, 0 cocok (kumulatif: 0)
+  Halaman 2: 100 total, 0 cocok (kumulatif: 0)
+  Halaman 3: 60 total, 6 cocok (kumulatif: 6)
+
+Total jurnal ditemukan: 6
+
+──────────────────────────────────────────────────────────────────────
+FASE 2 — PREVIEW (ambil detail & identifikasi perubahan)
+──────────────────────────────────────────────────────────────────────
+
+Perlu diubah       : 6
+  → 1000.02.05 only (normal)    : 5
+  → split SMS+LPZ   (OVO day) : 1
+Tidak ada perubahan: 0
+Gagal fetch detail : 0
+
+Daftar jurnal yang akan diubah:
+  85106                     | 06/09/2025   | [normal]    | BREW - UANG MASUK STRADA SMS 05/09/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 1.496.900,8)
+  84922                     | 05/09/2025   | [normal]    | BREW - UANG MASUK STRADA SMS 04/09/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 707.388,9)
+  84721                     | 04/09/2025   | [normal]    | BREW - UANG MASUK STRADA SMS 03/09/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 371.133,19)
+  84754                     | 03/09/2025   | [normal]    | BREW - UANG MASUK STRADA SMS 02/09/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 268.241,58)
+  84921                     | 02/09/2025   | [normal]    | BREW - UANG MASUK STRADA SMS 01/09/2025
+    Baris 1: DEBIT 1000.02.04 → 1000.02.05  (Rp 578.952,04)
+  84920                     | 01/09/2025   | [OVO SPLIT] | BREW - UANG MASUK STRADA SMS 31/08/2025
+    → 1000.02.05 DEBIT Rp 861.290,47 (MASUK CASH+KREDIT BCA+DEBIT BCA+QRIS BCA+GO-BIZ)
+    → 1000.02.01 DEBIT Rp 59.520 (MASUK OVO)
+
+=== DRY RUN SELESAI — tidak ada perubahan yang disimpan ===

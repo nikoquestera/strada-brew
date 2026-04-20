@@ -81,11 +81,14 @@ class Logger {
 
 async function getAccurateConnection() {
   const { data: tokenData, error } = await supabase.from('accurate_tokens').select('*').limit(1).maybeSingle()
-  if (error || !tokenData) throw new Error('No Accurate tokens found in database.')
+  if (error || !tokenData) throw new Error(`No Accurate tokens found in database. Supabase error: ${error?.message ?? 'null row'}`)
 
   let accessToken = tokenData.access_token
+  const expiresAt = new Date(tokenData.expires_at)
+  const isExpired = expiresAt <= new Date()
+  console.log(`Token expires_at: ${tokenData.expires_at} — ${isExpired ? 'EXPIRED, refreshing...' : 'still valid'}`)
 
-  if (new Date(tokenData.expires_at) <= new Date()) {
+  if (isExpired) {
     console.log('Token expired, refreshing...')
     const authHeader = Buffer.from(
       `${process.env.ACCURATE_OAUTH_CLIENT_ID}:${process.env.ACCURATE_OAUTH_CLIENT_SECRET}`
@@ -105,19 +108,40 @@ async function getAccurateConnection() {
     }).eq('id', tokenData.id)
   }
 
-  const dbListRes = await axios.get('https://account.accurate.id/api/db-list.do', {
-    headers: { Authorization: `Bearer ${accessToken}` }
-  })
-  const dbId = dbListRes.data.d[0].id
+  async function tryGetSession(token: string) {
+    const dbListRes = await axios.get('https://account.accurate.id/api/db-list.do', {
+      headers: { Authorization: `Bearer ${token}` }
+    })
+    const dbId = dbListRes.data.d[0].id
+    const sessionRes = await axios.get(`https://account.accurate.id/api/open-db.do?id=${dbId}`, {
+      headers: { Authorization: `Bearer ${token}` }
+    })
+    return {
+      accessToken: token,
+      sessionId: sessionRes.data.session,
+      apiBaseUrl: `${sessionRes.data.host}/accurate`
+    }
+  }
 
-  const sessionRes = await axios.get(`https://account.accurate.id/api/open-db.do?id=${dbId}`, {
-    headers: { Authorization: `Bearer ${accessToken}` }
-  })
+  try {
+    return await tryGetSession(accessToken)
+  } catch (e: any) {
+    if (e.response?.status !== 401) throw e
 
-  return {
-    accessToken,
-    sessionId: sessionRes.data.session,
-    apiBaseUrl: `${sessionRes.data.host}/accurate`
+    const envToken = process.env.ACCURATE_ACCESS_TOKEN
+    if (!envToken) throw new Error('DB token returned 401 and ACCURATE_ACCESS_TOKEN is not set in env.local.')
+
+    console.log('⚠️  DB token invalid (401). Trying ACCURATE_ACCESS_TOKEN from env.local...')
+    const conn = await tryGetSession(envToken)
+
+    // Update DB with the working token
+    await supabase.from('accurate_tokens').update({
+      access_token: envToken,
+      updated_at: new Date().toISOString()
+    }).eq('id', tokenData.id)
+    console.log('✅ DB updated with token from env.local.')
+
+    return conn
   }
 }
 
@@ -329,5 +353,12 @@ async function main() {
 
 main().catch(e => {
   console.error('\n❌ Fatal error:', e.message)
+  if (e.response) {
+    console.error('  Status :', e.response.status)
+    console.error('  URL    :', e.config?.url)
+    console.error('  Body   :', JSON.stringify(e.response.data ?? null, null, 2))
+  } else if (e.config) {
+    console.error('  URL    :', e.config.url)
+  }
   process.exit(1)
 })

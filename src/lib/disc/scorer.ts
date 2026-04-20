@@ -69,16 +69,16 @@ export function computeDiscResults(answers: DiscAnswers): DiscResults {
   const pattern2 = findPatternByPlot(plot2)
   const pattern3 = findPatternByPlot(plot3)
 
-  const ranked = DIMS.slice().sort((a, b) => plot3[b] - plot3[a])
+  const ranked = DIMS.slice().sort((a, b) => plot2[b] - plot2[a])
   const primaryType = ranked[0]
-  const secondaryTypes = ranked.slice(1).filter(d => plot3[d] > 0)
+  const secondaryTypes = ranked.slice(1).filter(d => plot2[d] > 0)
 
   return { 
     graph1, graph2, graph3, 
     plot1, plot2, plot3,
     primaryType, secondaryTypes, 
-    patternKey: pattern3.type,
-    pattern: pattern3, 
+    patternKey: pattern2.type,
+    pattern: pattern2, 
     pattern1, 
     pattern2 
   }
