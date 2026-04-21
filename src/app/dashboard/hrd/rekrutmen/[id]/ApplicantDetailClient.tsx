@@ -340,7 +340,7 @@ export default function ApplicantDetailClient({ applicant }: Props) {
           </button>
           <div style={{ flex: 1 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-              <h1 style={{ color: '#020000', fontWeight: 800, fontSize: '18px', margin: 0 }}>{editData.full_name}</h1>
+              <h1 style={{ color: '#4C4845', fontWeight: 800, fontSize: '18px', margin: 0 }}>{editData.full_name}</h1>
               <span style={{ padding: '4px 10px', borderRadius: '8px', backgroundColor: `${stageInfo?.color || '#8A8A8D'}15`, color: stageInfo?.color || '#8A8A8D', fontSize: '11px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
                 {stageInfo?.label || 'Baru Masuk'}
               </span>
@@ -395,7 +395,7 @@ export default function ApplicantDetailClient({ applicant }: Props) {
                 </div>
               </div>
               <button onClick={handleRunScore} disabled={isProcessing} className="appl-run-score"
-                style={{ padding: '8px 20px', borderRadius: '12px', border: 'none', cursor: isProcessing ? 'not-allowed' : 'pointer', fontSize: '13px', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '8px', backgroundColor: isProcessing ? '#F7F5F2' : '#020000', color: isProcessing ? '#8A8A8D' : '#fff', transition: 'all 0.2s', boxShadow: isProcessing ? 'none' : '0 4px 12px rgba(0,0,0,0.1)' }}>
+                style={{ padding: '8px 20px', borderRadius: '12px', border: 'none', cursor: isProcessing ? 'not-allowed' : 'pointer', fontSize: '13px', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '8px', backgroundColor: isProcessing ? '#F7F5F2' : '#037894', color: isProcessing ? '#8A8A8D' : '#fff', transition: 'all 0.2s', boxShadow: isProcessing ? 'none' : '0 4px 12px rgba(3,120,148,0.2)' }}>
                 {isProcessing
                   ? <><span style={{ display: 'inline-block', animation: 'quest-spin 1s linear infinite' }}>⚙</span> Sedang Menganalisa...</>
                   : scores.length > 0 ? '↻ Re-run AI Analysis' : '✦ Run Quest AI Scoring'}
@@ -430,8 +430,8 @@ export default function ApplicantDetailClient({ applicant }: Props) {
                 <div style={{ paddingRight: '40px', borderRight: '1px solid #F0EDE9' }}>
                   <div style={{ textAlign: 'center' }}>
                     <div style={{ position: 'relative', display: 'inline-block' }}>
-                      <div style={{ fontSize: '72px', fontWeight: 900, color: '#020000', lineHeight: 1 }}>{latestScore.overall_score}</div>
-                      <div style={{ fontSize: '14px', color: '#8A8A8D', fontWeight: 700, marginTop: '4px' }}>DARI 100</div>
+                      <div style={{ fontSize: '72px', fontWeight: 900, color: '#037894', lineHeight: 1 }}>{latestScore.overall_score}</div>
+                      <div style={{ fontSize: '14px', color: '#8FC6C5', fontWeight: 800, marginTop: '4px', letterSpacing: '2px' }}>DARI 100</div>
                     </div>
                     
                     {latestScore.recommendation && (
@@ -444,7 +444,7 @@ export default function ApplicantDetailClient({ applicant }: Props) {
                         fontWeight: 800,
                         backgroundColor: latestScore.recommendation === 'Highly Recommended' ? '#005353' : latestScore.recommendation === 'Recommended' ? '#037894' : latestScore.recommendation === 'Consider' ? '#DE9733' : '#FF4F31',
                         color: '#fff',
-                        boxShadow: '0 4px 12px rgba(0,0,0,0.08)'
+                        boxShadow: `0 4px 12px ${latestScore.recommendation === 'Highly Recommended' ? 'rgba(0,83,83,0.2)' : latestScore.recommendation === 'Recommended' ? 'rgba(3,120,148,0.2)' : 'rgba(222,151,51,0.2)'}`
                       }}>
                         {latestScore.recommendation.toUpperCase()}
                       </div>
@@ -452,8 +452,8 @@ export default function ApplicantDetailClient({ applicant }: Props) {
                     
                     {latestScore.processed_at && (
                       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', marginTop: '16px' }}>
-                        <Clock size={12} color="#8A8A8D" />
-                        <span style={{ fontSize: '11px', color: '#8A8A8D', fontWeight: 500 }}>{formatTs(latestScore.processed_at)}</span>
+                        <Clock size={12} color="#8FC6C5" />
+                        <span style={{ fontSize: '11px', color: '#8FC6C5', fontWeight: 600 }}>{formatTs(latestScore.processed_at)}</span>
                       </div>
                     )}
                   </div>
@@ -461,19 +461,19 @@ export default function ApplicantDetailClient({ applicant }: Props) {
                   {/* Small Breakdown */}
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '32px' }}>
                     {[
-                      { label: 'Pengalaman', value: latestScore.experience_score, max: 25 },
-                      { label: 'Sertifikasi', value: latestScore.certification_score, max: 20 },
-                      { label: 'Motivasi', value: latestScore.motivation_score, max: 20 },
-                      { label: 'Profil', value: latestScore.profile_score, max: 20 },
-                      { label: 'Kelengkapan', value: latestScore.completeness_score, max: 15 },
+                      { label: 'Pengalaman', value: Math.min(latestScore.experience_score || 0, 25), max: 25 },
+                      { label: 'Sertifikasi', value: Math.min(latestScore.certification_score || 0, 20), max: 20 },
+                      { label: 'Motivasi', value: Math.min(latestScore.motivation_score || 0, 20), max: 20 },
+                      { label: 'Profil', value: Math.min(latestScore.profile_score || 0, 20), max: 20 },
+                      { label: 'Kelengkapan', value: Math.min(latestScore.completeness_score || 0, 15), max: 15 },
                     ].map(item => (
                       <div key={item.label}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
                           <span style={{ fontSize: '11px', color: '#4C4845', fontWeight: 700 }}>{item.label}</span>
-                          <span style={{ fontSize: '11px', color: '#037894', fontWeight: 800 }}>{item.value || 0}/{item.max}</span>
+                          <span style={{ fontSize: '11px', color: '#037894', fontWeight: 800 }}>{item.value}/{item.max}</span>
                         </div>
                         <div style={{ height: '6px', borderRadius: '3px', backgroundColor: '#F0F4F5' }}>
-                          <div style={{ height: '100%', borderRadius: '3px', backgroundColor: '#037894', width: `${((item.value || 0) / item.max) * 100}%`, transition: 'width 0.5s cubic-bezier(0.4, 0, 0.2, 1)' }} />
+                          <div style={{ height: '100%', borderRadius: '3px', backgroundColor: '#037894', width: `${(item.value / item.max) * 100}%`, transition: 'width 0.5s cubic-bezier(0.4, 0, 0.2, 1)' }} />
                         </div>
                       </div>
                     ))}
@@ -485,7 +485,7 @@ export default function ApplicantDetailClient({ applicant }: Props) {
                   {latestScore.summary && (
                     <div>
                       <h3 style={{ fontSize: '12px', fontWeight: 800, color: '#8A8A8D', textTransform: 'uppercase', letterSpacing: '1.5px', marginBottom: '10px' }}>Ringkasan Analisis</h3>
-                      <p style={{ fontSize: '15px', color: '#020000', lineHeight: 1.7, margin: 0, fontWeight: 500 }}>{latestScore.summary}</p>
+                      <p style={{ fontSize: '15px', color: '#037894', lineHeight: 1.7, margin: 0, fontWeight: 500 }}>{latestScore.summary}</p>
                     </div>
                   )}
 
@@ -517,7 +517,7 @@ export default function ApplicantDetailClient({ applicant }: Props) {
                   {latestScore.quest_notes && (
                     <div style={{ backgroundColor: '#F7F5F2', padding: '16px 20px', borderRadius: '16px', border: '1px solid #E8E4E0' }}>
                       <h3 style={{ fontSize: '11px', fontWeight: 800, color: '#8A8A8D', textTransform: 'uppercase', letterSpacing: '1.5px', marginBottom: '8px' }}>Instruksi Khusus HR</h3>
-                      <p style={{ fontSize: '13px', color: '#4C4845', lineHeight: 1.6, margin: 0, fontStyle: 'italic' }}>&quot;{latestScore.quest_notes}&quot;</p>
+                      <p style={{ fontSize: '13px', color: '#037894', lineHeight: 1.6, margin: 0, fontStyle: 'italic' }}>&quot;{latestScore.quest_notes}&quot;</p>
                     </div>
                   )}
                 </div>
@@ -532,7 +532,7 @@ export default function ApplicantDetailClient({ applicant }: Props) {
 
               {/* Contact */}
             <div style={{ backgroundColor: '#fff', borderRadius: '16px', padding: '24px', border: '1.5px solid #E8E4E0' }}>
-              <h3 style={{ fontSize: '14px', fontWeight: 700, color: '#020000', margin: '0 0 16px' }}>Informasi Kontak</h3>
+              <h3 style={{ fontSize: '14px', fontWeight: 700, color: '#4C4845', margin: '0 0 16px' }}>Informasi Kontak</h3>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
                 {[
                   { icon: <Phone size={14} />, label: 'No. HP', value: editData.phone },
@@ -546,7 +546,7 @@ export default function ApplicantDetailClient({ applicant }: Props) {
                     <div style={{ color: '#037894', marginTop: '2px', flexShrink: 0 }}>{item.icon}</div>
                     <div>
                       <p style={{ fontSize: '11px', color: '#8A8A8D', margin: '0 0 2px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>{item.label}</p>
-                      <p style={{ fontSize: '13px', color: '#020000', margin: 0, fontWeight: 500 }}>{item.value}</p>
+                      <p style={{ fontSize: '13px', color: '#4C4845', margin: 0, fontWeight: 500 }}>{item.value}</p>
                     </div>
                   </div>
                 ))}
@@ -555,7 +555,7 @@ export default function ApplicantDetailClient({ applicant }: Props) {
 
             {/* Experience */}
             <div style={{ backgroundColor: '#fff', borderRadius: '16px', padding: '24px', border: '1.5px solid #E8E4E0' }}>
-              <h3 style={{ fontSize: '14px', fontWeight: 700, color: '#020000', margin: '0 0 16px' }}>Pengalaman & Sertifikasi</h3>
+              <h3 style={{ fontSize: '14px', fontWeight: 700, color: '#4C4845', margin: '0 0 16px' }}>Pengalaman & Sertifikasi</h3>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 16px', borderRadius: '12px', backgroundColor: '#F7F5F2' }}>
                   <span style={{ fontSize: '13px', color: '#4C4845' }}>Pengalaman kafe</span>
@@ -587,8 +587,8 @@ export default function ApplicantDetailClient({ applicant }: Props) {
             {/* Motivation */}
             {editData.hr_notes && (
               <div style={{ backgroundColor: '#fff', borderRadius: '16px', padding: '24px', border: '1.5px solid #E8E4E0' }}>
-                <h3 style={{ fontSize: '14px', fontWeight: 700, color: '#020000', margin: '0 0 12px' }}>Motivasi</h3>
-                <p style={{ fontSize: '14px', color: '#4C4845', lineHeight: 1.7, margin: 0, fontStyle: 'italic' }}>&quot;{editData.hr_notes}&quot;</p>
+                <h3 style={{ fontSize: '14px', fontWeight: 700, color: '#4C4845', margin: '0 0 12px' }}>Motivasi</h3>
+                <p style={{ fontSize: '14px', color: '#037894', lineHeight: 1.7, margin: 0, fontStyle: 'italic' }}>&quot;{editData.hr_notes}&quot;</p>
               </div>
             )}
 
@@ -596,7 +596,7 @@ export default function ApplicantDetailClient({ applicant }: Props) {
             <div style={{ backgroundColor: '#fff', borderRadius: '16px', padding: '24px', border: '1.5px solid #E8E4E0' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
                 <MessageSquare size={14} color="#037894" />
-                <h3 style={{ fontSize: '14px', fontWeight: 700, color: '#020000', margin: 0 }}>Catatan Screening</h3>
+                <h3 style={{ fontSize: '14px', fontWeight: 700, color: '#4C4845', margin: 0 }}>Catatan Screening</h3>
               </div>
               <p style={{ fontSize: '12px', color: '#8A8A8D', margin: '0 0 10px', lineHeight: 1.5 }}>
                 Panduan untuk Quest AI dalam mengevaluasi kandidat ini — misalnya kriteria khusus, kekhawatiran, atau konteks peran.
@@ -605,7 +605,7 @@ export default function ApplicantDetailClient({ applicant }: Props) {
                 value={screeningNotes}
                 onChange={e => setScreeningNotes(e.target.value)}
                 placeholder="Contoh: Kandidat ini dilamar untuk outlet Senopati yang butuh barista berpengalaman minimal 2 tahun. Prioritaskan pengalaman specialty coffee..."
-                style={{ width: '100%', minHeight: '100px', padding: '12px', borderRadius: '10px', border: '1.5px solid #E8E4E0', fontSize: '13px', color: '#020000', lineHeight: 1.6, resize: 'vertical', boxSizing: 'border-box', fontFamily: 'inherit', outline: 'none' }}
+                style={{ width: '100%', minHeight: '100px', padding: '12px', borderRadius: '10px', border: '1.5px solid #E8E4E0', fontSize: '13px', color: '#037894', lineHeight: 1.6, resize: 'vertical', boxSizing: 'border-box', fontFamily: 'inherit', outline: 'none' }}
               />
               <button onClick={handleSaveNotes} disabled={savingNotes}
                 style={{ marginTop: '10px', padding: '8px 20px', borderRadius: '8px', border: 'none', cursor: savingNotes ? 'not-allowed' : 'pointer', fontSize: '13px', fontWeight: 700, backgroundColor: notesSaved ? '#005353' : '#037894', color: '#fff', transition: 'background-color 0.2s' }}>
@@ -618,7 +618,7 @@ export default function ApplicantDetailClient({ applicant }: Props) {
               <div style={{ backgroundColor: '#fff', borderRadius: '16px', padding: '24px', border: '1.5px solid #E8E4E0' }}>
                 <button onClick={() => setExpandedHistory(p => !p)}
                   style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
-                  <h3 style={{ fontSize: '14px', fontWeight: 700, color: '#020000', margin: 0 }}>
+                  <h3 style={{ fontSize: '14px', fontWeight: 700, color: '#4C4845', margin: 0 }}>
                     Riwayat Scoring ({scores.length} run)
                   </h3>
                   <span style={{ fontSize: '12px', color: '#037894', fontWeight: 600 }}>{expandedHistory ? '▲ Tutup' : '▼ Lihat semua'}</span>
@@ -639,7 +639,7 @@ export default function ApplicantDetailClient({ applicant }: Props) {
                           )}
                           <div>
                             {i === 0 && <span style={{ fontSize: '10px', fontWeight: 700, color: '#037894', textTransform: 'uppercase', letterSpacing: '1px' }}>Terbaru</span>}
-                            {s.recommendation && <p style={{ fontSize: '12px', fontWeight: 600, color: '#020000', margin: '1px 0 0' }}>{s.recommendation}</p>}
+                            {s.recommendation && <p style={{ fontSize: '12px', fontWeight: 600, color: '#4C4845', margin: '1px 0 0' }}>{s.recommendation}</p>}
                           </div>
                         </div>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '4px', flexShrink: 0 }}>
@@ -656,7 +656,7 @@ export default function ApplicantDetailClient({ applicant }: Props) {
             {/* Activity timeline */}
             {applicantActivities.length > 0 && (
               <div style={{ backgroundColor: '#fff', borderRadius: '16px', padding: '24px', border: '1.5px solid #E8E4E0' }}>
-                <h3 style={{ fontSize: '14px', fontWeight: 700, color: '#020000', margin: '0 0 16px' }}>Timeline Aktivitas</h3>
+                <h3 style={{ fontSize: '14px', fontWeight: 700, color: '#4C4845', margin: '0 0 16px' }}>Timeline Aktivitas</h3>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                   {applicantActivities.slice(0, 10).map((act: ApplicantActivity) => (
                     <div key={act.id} style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
@@ -686,7 +686,7 @@ export default function ApplicantDetailClient({ applicant }: Props) {
             <div style={{ backgroundColor: '#fff', borderRadius: '16px', padding: '20px', border: '1.5px solid #E8E4E0' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
                 <Brain size={14} color="#037894" />
-                <h3 style={{ fontSize: '13px', fontWeight: 700, color: '#020000', margin: 0 }}>Tes Kandidat</h3>
+                <h3 style={{ fontSize: '13px', fontWeight: 700, color: '#4C4845', margin: 0 }}>Tes Kandidat</h3>
               </div>
 
               <div style={{ padding: '12px 12px 10px', borderRadius: '12px', backgroundColor: '#F7F5F2', marginBottom: '12px' }}>
@@ -712,7 +712,7 @@ export default function ApplicantDetailClient({ applicant }: Props) {
                       return (
                         <div key={s.id} style={{ padding: '10px 12px', borderRadius: '10px', backgroundColor: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px', border: '1px solid #E8E4E0' }}>
                           <div>
-                            <code style={{ fontSize: '13px', fontWeight: 800, color: '#020000', letterSpacing: '2px' }}>{s.access_code}</code>
+                            <code style={{ fontSize: '13px', fontWeight: 800, color: '#4C4845', letterSpacing: '2px' }}>{s.access_code}</code>
                             {s.results?.pattern?.pattern && <p style={{ fontSize: '11px', color: '#037894', fontWeight: 700, margin: '1px 0 0' }}>{s.results.pattern.pattern}</p>}
                           </div>
                           <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
@@ -756,7 +756,7 @@ export default function ApplicantDetailClient({ applicant }: Props) {
                       return (
                         <div key={s.id} style={{ padding: '10px 12px', borderRadius: '10px', backgroundColor: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px', border: '1px solid #E8E4E0' }}>
                           <div>
-                            <code style={{ fontSize: '13px', fontWeight: 800, color: '#020000', letterSpacing: '2px' }}>{s.access_code}</code>
+                            <code style={{ fontSize: '13px', fontWeight: 800, color: '#4C4845', letterSpacing: '2px' }}>{s.access_code}</code>
                             {typeof s.score === 'number' && <p style={{ fontSize: '11px', color: '#037894', fontWeight: 700, margin: '1px 0 0' }}>Skor {s.score}/{s.total_points || 50}</p>}
                           </div>
                           <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
@@ -780,7 +780,7 @@ export default function ApplicantDetailClient({ applicant }: Props) {
 
             {/* Actions */}
             <div style={{ backgroundColor: '#fff', borderRadius: '16px', padding: '20px', border: '1.5px solid #E8E4E0' }}>
-              <h3 style={{ fontSize: '13px', fontWeight: 700, color: '#020000', margin: '0 0 12px' }}>Aksi</h3>
+              <h3 style={{ fontSize: '13px', fontWeight: 700, color: '#4C4845', margin: '0 0 12px' }}>Aksi</h3>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 <button onClick={() => { setMessageChannel('whatsapp'); setShowMessageModal(true) }}
                   style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 16px', borderRadius: '10px', backgroundColor: '#E6F4F1', color: '#005353', border: 'none', cursor: 'pointer', fontWeight: 600, fontSize: '13px' }}>
@@ -803,7 +803,7 @@ export default function ApplicantDetailClient({ applicant }: Props) {
                 ].map(item => (
                   <div key={item.label} style={{ display: 'flex', justifyContent: 'space-between' }}>
                     <span style={{ fontSize: '12px', color: '#8A8A8D' }}>{item.label}</span>
-                    <span style={{ fontSize: '12px', fontWeight: 600, color: '#020000' }}>{item.value}</span>
+                    <span style={{ fontSize: '12px', fontWeight: 600, color: '#4C4845' }}>{item.value}</span>
                   </div>
                 ))}
               </div>
@@ -818,7 +818,7 @@ export default function ApplicantDetailClient({ applicant }: Props) {
           onClick={e => { if (e.target === e.currentTarget) setShowEditModal(false) }}>
           <div style={{ backgroundColor: '#fff', borderRadius: '20px', padding: '28px', width: '100%', maxWidth: '560px', maxHeight: '90vh', overflowY: 'auto' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-              <h3 style={{ fontSize: '16px', fontWeight: 700, color: '#020000', margin: 0 }}>Edit Data Pelamar</h3>
+              <h3 style={{ fontSize: '16px', fontWeight: 700, color: '#4C4845', margin: 0 }}>Edit Data Pelamar</h3>
               <button onClick={() => setShowEditModal(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '20px', color: '#8A8A8D' }}>×</button>
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
@@ -829,7 +829,7 @@ export default function ApplicantDetailClient({ applicant }: Props) {
                     type={field.type}
                     value={editForm[field.key]}
                     onChange={e => setEdit(field.key, e.target.value)}
-                    style={{ width: '100%', padding: '10px 12px', borderRadius: '10px', border: '1.5px solid #E8E4E0', fontSize: '13px', color: '#020000', boxSizing: 'border-box', outline: 'none' }}
+                    style={{ width: '100%', padding: '10px 12px', borderRadius: '10px', border: '1.5px solid #E8E4E0', fontSize: '13px', color: '#4C4845', boxSizing: 'border-box', outline: 'none' }}
                   />
                 </div>
               ))}
@@ -837,7 +837,7 @@ export default function ApplicantDetailClient({ applicant }: Props) {
                 <div>
                   <label style={{ fontSize: '12px', fontWeight: 600, color: '#4C4845', display: 'block', marginBottom: '5px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Pengalaman Kafe</label>
                   <select value={editForm.has_cafe_experience ? 'ya' : 'tidak'} onChange={e => setEdit('has_cafe_experience', e.target.value === 'ya')}
-                    style={{ width: '100%', padding: '10px 12px', borderRadius: '10px', border: '1.5px solid #E8E4E0', fontSize: '13px', color: '#020000', boxSizing: 'border-box', outline: 'none' }}>
+                    style={{ width: '100%', padding: '10px 12px', borderRadius: '10px', border: '1.5px solid #E8E4E0', fontSize: '13px', color: '#4C4845', boxSizing: 'border-box', outline: 'none' }}>
                     <option value="tidak">Belum ada</option>
                     <option value="ya">Ada</option>
                   </select>
@@ -847,19 +847,19 @@ export default function ApplicantDetailClient({ applicant }: Props) {
                     <label style={{ fontSize: '12px', fontWeight: 600, color: '#4C4845', display: 'block', marginBottom: '5px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Tahun Pengalaman</label>
                     <input type="number" min={0} max={30} value={editForm.cafe_experience_years}
                       onChange={e => setEdit('cafe_experience_years', parseInt(e.target.value) || 0)}
-                      style={{ width: '100%', padding: '10px 12px', borderRadius: '10px', border: '1.5px solid #E8E4E0', fontSize: '13px', color: '#020000', boxSizing: 'border-box', outline: 'none' }} />
+                      style={{ width: '100%', padding: '10px 12px', borderRadius: '10px', border: '1.5px solid #E8E4E0', fontSize: '13px', color: '#4C4845', boxSizing: 'border-box', outline: 'none' }} />
                   </div>
                 )}
               </div>
               <div>
                 <label style={{ fontSize: '12px', fontWeight: 600, color: '#4C4845', display: 'block', marginBottom: '5px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Detail Pengalaman</label>
                 <textarea value={editForm.cafe_experience_detail} onChange={e => setEdit('cafe_experience_detail', e.target.value)}
-                  style={{ width: '100%', padding: '10px 12px', borderRadius: '10px', border: '1.5px solid #E8E4E0', fontSize: '13px', color: '#020000', boxSizing: 'border-box', minHeight: '70px', resize: 'vertical', fontFamily: 'inherit', outline: 'none' }} />
+                  style={{ width: '100%', padding: '10px 12px', borderRadius: '10px', border: '1.5px solid #E8E4E0', fontSize: '13px', color: '#4C4845', boxSizing: 'border-box', minHeight: '70px', resize: 'vertical', fontFamily: 'inherit', outline: 'none' }} />
               </div>
               <div>
                 <label style={{ fontSize: '12px', fontWeight: 600, color: '#4C4845', display: 'block', marginBottom: '5px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Sertifikasi Barista</label>
                 <select value={editForm.has_barista_cert ? 'ya' : 'tidak'} onChange={e => setEdit('has_barista_cert', e.target.value === 'ya')}
-                  style={{ width: '100%', padding: '10px 12px', borderRadius: '10px', border: '1.5px solid #E8E4E0', fontSize: '13px', color: '#020000', boxSizing: 'border-box', outline: 'none' }}>
+                  style={{ width: '100%', padding: '10px 12px', borderRadius: '10px', border: '1.5px solid #E8E4E0', fontSize: '13px', color: '#4C4845', boxSizing: 'border-box', outline: 'none' }}>
                   <option value="tidak">Tidak ada</option>
                   <option value="ya">Ada</option>
                 </select>
@@ -868,13 +868,13 @@ export default function ApplicantDetailClient({ applicant }: Props) {
                 <div>
                   <label style={{ fontSize: '12px', fontWeight: 600, color: '#4C4845', display: 'block', marginBottom: '5px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Detail Sertifikasi</label>
                   <input type="text" value={editForm.cert_detail} onChange={e => setEdit('cert_detail', e.target.value)}
-                    style={{ width: '100%', padding: '10px 12px', borderRadius: '10px', border: '1.5px solid #E8E4E0', fontSize: '13px', color: '#020000', boxSizing: 'border-box', outline: 'none' }} />
+                    style={{ width: '100%', padding: '10px 12px', borderRadius: '10px', border: '1.5px solid #E8E4E0', fontSize: '13px', color: '#4C4845', boxSizing: 'border-box', outline: 'none' }} />
                 </div>
               )}
               <div>
                 <label style={{ fontSize: '12px', fontWeight: 600, color: '#4C4845', display: 'block', marginBottom: '5px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Motivasi / Catatan</label>
                 <textarea value={editForm.hr_notes} onChange={e => setEdit('hr_notes', e.target.value)}
-                  style={{ width: '100%', padding: '10px 12px', borderRadius: '10px', border: '1.5px solid #E8E4E0', fontSize: '13px', color: '#020000', boxSizing: 'border-box', minHeight: '80px', resize: 'vertical', fontFamily: 'inherit', outline: 'none' }} />
+                  style={{ width: '100%', padding: '10px 12px', borderRadius: '10px', border: '1.5px solid #E8E4E0', fontSize: '13px', color: '#4C4845', boxSizing: 'border-box', minHeight: '80px', resize: 'vertical', fontFamily: 'inherit', outline: 'none' }} />
               </div>
               <div style={{ display: 'flex', gap: '10px', paddingTop: '4px' }}>
                 <button onClick={() => setShowEditModal(false)}
@@ -897,7 +897,7 @@ export default function ApplicantDetailClient({ applicant }: Props) {
           onClick={e => { if (e.target === e.currentTarget) { setShowMessageModal(false); setMessageOptions(null); setSelectedMessage(null) } }}>
           <div style={{ backgroundColor: '#fff', borderRadius: '20px 20px 0 0', padding: '28px', width: '100%', maxWidth: '600px', maxHeight: '85vh', overflowY: 'auto' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-              <h3 style={{ fontSize: '16px', fontWeight: 700, color: '#020000', margin: 0 }}>
+              <h3 style={{ fontSize: '16px', fontWeight: 700, color: '#4C4845', margin: 0 }}>
                 {messageChannel === 'whatsapp' ? '📱 Kirim WhatsApp' : '📧 Kirim Email'}
               </h3>
               <button onClick={() => { setShowMessageModal(false); setMessageOptions(null); setSelectedMessage(null) }}

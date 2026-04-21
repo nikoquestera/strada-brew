@@ -88,14 +88,23 @@ export default async function JobDetailPage({
         )}
 
         {/* CTA */}
-        <div className="bg-gradient-to-br from-strada-blue to-[#025668] rounded-3xl p-10 text-center shadow-md text-white">
-          <h2 className="text-2xl font-extrabold mb-3 tracking-tight">Siap bergabung bersama tim kami?</h2>
-          <p className="text-blue-100 text-sm font-medium mb-8">Proses pendaftaran cepat dan mudah, hanya perlu beberapa menit.</p>
+        <div className="bg-gradient-to-br from-strada-blue to-[#025668] rounded-[40px] p-10 md:p-16 text-center shadow-xl text-white relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl"></div>
+          
+          <h2 className="text-[11px] font-black tracking-[0.3em] uppercase mb-4 opacity-80">SIAP BERGABUNG?</h2>
+          <h3 className="text-3xl md:text-4xl font-[900] mb-6 tracking-tight">Kirim Lamaran Kamu</h3>
+          <p className="text-blue-50 text-base md:text-lg max-w-xl mx-auto mb-10 leading-relaxed font-medium">
+            Proses lamaran kami singkat dan mudah. Tim HR Strada Coffee meninjau setiap profil secara personal untuk memastikan kecocokan dengan kultur kami.
+          </p>
           
           <Link href={`/apply?job=${job.job_id}`} 
-            className="inline-block bg-white text-strada-blue px-10 py-4 rounded-full font-bold text-[15px] shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
+            className="inline-block bg-white text-strada-blue px-12 py-4 rounded-full font-[900] text-base shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 active:translate-y-0">
             Lamar Sekarang →
           </Link>
+          
+          <p className="text-[11px] text-blue-200/60 mt-8 font-bold uppercase tracking-widest">
+            Data kamu aman & hanya digunakan untuk proses rekrutmen
+          </p>
         </div>
       </div>
     </div>

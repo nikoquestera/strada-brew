@@ -2,7 +2,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
-import { ArrowLeft, User, Clock, Star, Calendar, FileText, Plus, Check } from 'lucide-react'
+import { ArrowLeft, User, Clock, Star, Calendar, FileText, Plus, Check, Edit, X } from 'lucide-react'
 
 function formatTs(ts?: string) {
   if (!ts) return null
@@ -55,6 +55,46 @@ export default function KaryawanDetailClient({ employee, timeline, evaluations, 
   const [leaveForm, setLeaveForm] = useState({ leave_type: 'annual', start_date: '', end_date: '', days_count: 0, reason: '' })
   const [kpiForm, setKpiForm] = useState({ period: '', kpi_name: '', target: '', weight: 10 })
   const [saving, setSaving] = useState(false)
+
+  // Edit Profil
+  const [showEditProfil, setShowEditProfil] = useState(false)
+  const [editForm, setEditProfilForm] = useState({ ...employee })
+  const [editing, setEditing] = useState(false)
+
+  async function handleUpdateProfil() {
+    setEditing(true)
+    try {
+      const { error } = await supabase
+        .from('employees')
+        .update({
+          id_number: editForm.id_number,
+          birth_date: editForm.birth_date,
+          gender: editForm.gender,
+          email: editForm.email,
+          phone: editForm.phone,
+          address: editForm.address,
+          position: editForm.position,
+          department: editForm.department,
+          entity: editForm.entity,
+          outlet: editForm.outlet,
+          employment_type: editForm.employment_type,
+          join_date: editForm.join_date,
+          contract_start: editForm.contract_start,
+          contract_end: editForm.contract_end,
+          base_salary: editForm.base_salary,
+          notes: editForm.notes
+        })
+        .eq('id', employee.id)
+      if (error) throw error
+      alert('Profil berhasil diperbarui!')
+      setShowEditProfil(false)
+      router.refresh()
+    } catch (err: any) {
+      alert(`Gagal memperbarui profil: ${err.message}`)
+    } finally {
+      setEditing(false)
+    }
+  }
 
   // Quest AI scoring
   const [empScores, setEmpScores] = useState<any[]>([])
@@ -297,53 +337,127 @@ function buildFallbackHTML(docId: string, docName: string, emp: any, today: stri
           .kpi-grid { grid-template-columns: 1fr !important; }
         }
         .tab-btn { white-space: nowrap; border: none; cursor: pointer; transition: all 0.15s; }
-        .tab-btn:hover { color: #ffffff !important; background: rgba(255,255,255,0.07) !important; }
+        .tab-btn:hover { color: #037894 !important; background: #F9FBFB !important; }
         .emp-form-btn:hover { opacity: 0.85 !important; }
         .emp-cancel-btn:hover { background: #E8E4E0 !important; }
       `}</style>
 
       <div style={{ minHeight: '100vh', backgroundColor: '#F7F5F2' }}>
 
+        {/* Edit Modal */}
+        {showEditProfil && (
+          <div style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.5)', backdropBlur: '4px', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
+            <div style={{ backgroundColor: '#fff', borderRadius: '24px', width: '100%', maxWidth: '800px', maxHeight: '90vh', overflowY: 'auto', padding: '32px', boxShadow: '0 20px 60px rgba(0,0,0,0.15)' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px' }}>
+                <h2 style={{ fontSize: '24px', fontWeight: 900, color: '#020000', margin: 0 }}>Edit Profil Karyawan</h2>
+                <button onClick={() => setShowEditProfil(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#8A8A8D' }}><X size={24} /></button>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
+                <div>
+                  <div className="form-section-title" style={{ fontSize: '11px', fontWeight: 800, color: '#8A8A8D', textTransform: 'uppercase', letterSpacing: '1.5px', marginBottom: '16px', borderBottom: '1.5px solid #F0EEEC', paddingBottom: '8px' }}>Data Pribadi</div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                    <div>
+                      <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, marginBottom: '6px' }}>NIK KTP</label>
+                      <input style={{ width: '100%', padding: '12px 16px', backgroundColor: '#F9F8F6', border: '1.5px solid #E8E4E0', borderRadius: '12px', fontSize: '14px', fontWeight: 500, outline: 'none' }} value={editForm.id_number || ''} onChange={e => setEditProfilForm(f => ({ ...f, id_number: e.target.value }))} />
+                    </div>
+                    <div>
+                      <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, marginBottom: '6px' }}>Email</label>
+                      <input type="email" style={{ width: '100%', padding: '12px 16px', backgroundColor: '#F9F8F6', border: '1.5px solid #E8E4E0', borderRadius: '12px', fontSize: '14px', fontWeight: 500, outline: 'none' }} value={editForm.email || ''} onChange={e => setEditProfilForm(f => ({ ...f, email: e.target.value }))} />
+                    </div>
+                    <div>
+                      <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, marginBottom: '6px' }}>No. HP</label>
+                      <input style={{ width: '100%', padding: '12px 16px', backgroundColor: '#F9F8F6', border: '1.5px solid #E8E4E0', borderRadius: '12px', fontSize: '14px', fontWeight: 500, outline: 'none' }} value={editForm.phone || ''} onChange={e => setEditProfilForm(f => ({ ...f, phone: e.target.value }))} />
+                    </div>
+                    <div>
+                      <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, marginBottom: '6px' }}>Alamat</label>
+                      <textarea style={{ width: '100%', padding: '12px 16px', backgroundColor: '#F9F8F6', border: '1.5px solid #E8E4E0', borderRadius: '12px', fontSize: '14px', fontWeight: 500, outline: 'none', minHeight: '80px' }} value={editForm.address || ''} onChange={e => setEditProfilForm(f => ({ ...f, address: e.target.value }))} />
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <div className="form-section-title" style={{ fontSize: '11px', fontWeight: 800, color: '#8A8A8D', textTransform: 'uppercase', letterSpacing: '1.5px', marginBottom: '16px', borderBottom: '1.5px solid #F0EEEC', paddingBottom: '8px' }}>Data Pekerjaan</div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                    <div>
+                      <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, marginBottom: '6px' }}>Posisi</label>
+                      <input style={{ width: '100%', padding: '12px 16px', backgroundColor: '#F9F8F6', border: '1.5px solid #E8E4E0', borderRadius: '12px', fontSize: '14px', fontWeight: 500, outline: 'none' }} value={editForm.position || ''} onChange={e => setEditProfilForm(f => ({ ...f, position: e.target.value }))} />
+                    </div>
+                    <div>
+                      <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, marginBottom: '6px' }}>Departemen</label>
+                      <input style={{ width: '100%', padding: '12px 16px', backgroundColor: '#F9F8F6', border: '1.5px solid #E8E4E0', borderRadius: '12px', fontSize: '14px', fontWeight: 500, outline: 'none' }} value={editForm.department || ''} onChange={e => setEditProfilForm(f => ({ ...f, department: e.target.value }))} />
+                    </div>
+                    <div>
+                      <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, marginBottom: '6px' }}>Entity</label>
+                      <input style={{ width: '100%', padding: '12px 16px', backgroundColor: '#F9F8F6', border: '1.5px solid #E8E4E0', borderRadius: '12px', fontSize: '14px', fontWeight: 500, outline: 'none' }} value={editForm.entity || ''} onChange={e => setEditProfilForm(f => ({ ...f, entity: e.target.value }))} />
+                    </div>
+                    <div>
+                      <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, marginBottom: '6px' }}>Gaji Pokok</label>
+                      <input type="number" style={{ width: '100%', padding: '12px 16px', backgroundColor: '#F9F8F6', border: '1.5px solid #E8E4E0', borderRadius: '12px', fontSize: '14px', fontWeight: 500, outline: 'none' }} value={editForm.base_salary || ''} onChange={e => setEditProfilForm(f => ({ ...f, base_salary: Number(e.target.value) }))} />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div style={{ marginTop: '32px', display: 'flex', justifyContent: 'flex-end', gap: '12px' }}>
+                <button onClick={() => setShowEditProfil(false)} style={{ padding: '12px 24px', borderRadius: '12px', border: '1.5px solid #E8E4E0', backgroundColor: '#fff', fontWeight: 700, cursor: 'pointer' }}>Batal</button>
+                <button onClick={handleUpdateProfil} disabled={editing} style={{ padding: '12px 32px', borderRadius: '12px', border: 'none', backgroundColor: '#037894', color: '#fff', fontWeight: 700, cursor: editing ? 'not-allowed' : 'pointer' }}>
+                  {editing ? 'Menyimpan...' : 'Simpan Perubahan'}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Header */}
-        <div style={{ backgroundColor: '#020000', padding: '0' }}>
-          <div style={{ padding: '16px 24px', display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap' }} className="emp-header">
+        <div style={{ backgroundColor: '#ffffff', borderBottom: '1.5px solid #E8E4E0', padding: '0' }}>
+          <div style={{ padding: '20px 24px', display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap' }} className="emp-header">
             <button onClick={() => router.push('/dashboard/hrd/karyawan')}
               className="brew-back-btn"
-              style={{ color: 'rgba(228,222,216,0.5)', background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px', padding: 0, flexShrink: 0, transition: 'color 0.15s' }}>
+              style={{ color: '#8A8A8D', background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px', padding: 0, flexShrink: 0, transition: 'color 0.15s', fontWeight: 600 }}>
               <ArrowLeft size={15} /> Karyawan
             </button>
 
             <div style={{ flex: 1, minWidth: 0 }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
-                <div style={{ width: '40px', height: '40px', borderRadius: '50%', backgroundColor: '#037894', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                  <span style={{ color: '#fff', fontWeight: 800, fontSize: '16px' }}>{employee.full_name[0]}</span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
+                <div style={{ width: '48px', height: '48px', borderRadius: '16px', backgroundColor: '#F0F4F5', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, border: '1px solid #E8E4E0' }}>
+                  <span style={{ color: '#037894', fontWeight: 900, fontSize: '20px' }}>{employee.full_name[0]}</span>
                 </div>
                 <div>
-                  <p style={{ color: '#ffffff', fontWeight: 800, fontSize: '18px', margin: 0, lineHeight: 1.2 }}>{employee.full_name}</p>
-                  <p style={{ color: '#8FC6C5', fontSize: '12px', margin: 0 }}>{employee.position} · {employee.department} · {employee.entity}</p>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <p style={{ color: '#020000', fontWeight: 900, fontSize: '22px', margin: 0, lineHeight: 1.1, trackingTight: '-0.02em' }}>{employee.full_name}</p>
+                    <span style={{ fontSize: '10px', fontWeight: 800, padding: '3px 10px', borderRadius: '6px', backgroundColor: s.bg, color: s.color, textTransform: 'uppercase' }}>
+                      {employee.status}
+                    </span>
+                  </div>
+                  <p style={{ color: '#8A8A8D', fontSize: '13px', margin: '4px 0 0', fontWeight: 600 }}>{employee.position} · {employee.department} · {employee.entity}</p>
                 </div>
               </div>
             </div>
 
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <span style={{ fontSize: '11px', fontWeight: 700, padding: '5px 12px', borderRadius: '8px', backgroundColor: s.bg, color: s.color }}>
-                {employee.status.toUpperCase()}
-              </span>
-              <span style={{ fontSize: '11px', color: 'rgba(228,222,216,0.4)', fontWeight: 600 }}>{employee.employee_id}</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <button onClick={() => setShowEditProfil(true)}
+                style={{ padding: '10px 20px', borderRadius: '12px', border: '1.5px solid #E8E4E0', backgroundColor: '#fff', color: '#020000', fontSize: '13px', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', transition: 'all 0.2s' }}>
+                <Edit size={16} /> Edit Profil
+              </button>
+              <div style={{ textAlign: 'right' }}>
+                <p style={{ fontSize: '11px', color: '#8A8A8D', fontWeight: 800, margin: 0, letterSpacing: '1px' }}>ID KARYAWAN</p>
+                <p style={{ fontSize: '14px', color: '#037894', fontWeight: 900, margin: 0 }}>{employee.employee_id}</p>
+              </div>
             </div>
           </div>
 
           {/* Tabs */}
-          <div style={{ display: 'flex', gap: '0', paddingLeft: '24px', overflowX: 'auto' }} className="emp-tabs">
+          <div style={{ display: 'flex', gap: '0', paddingLeft: '24px', overflowX: 'auto', borderTop: '1px solid #F0EEEC' }} className="emp-tabs">
             {tabs.map(t => (
               <button key={t.key} onClick={() => setTab(t.key)} className="tab-btn"
-                style={{ padding: '12px 18px', fontSize: '13px', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '6px',
-                  backgroundColor: 'transparent', color: tab === t.key ? '#ffffff' : 'rgba(228,222,216,0.4)',
-                  borderBottom: tab === t.key ? '2px solid #037894' : '2px solid transparent' }}>
+                style={{ padding: '14px 20px', fontSize: '13px', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '8px',
+                  backgroundColor: 'transparent', color: tab === t.key ? '#037894' : '#8A8A8D',
+                  borderBottom: tab === t.key ? '3px solid #037894' : '3px solid transparent' }}>
                 {t.icon} {t.label}
                 {t.count !== undefined && t.count > 0 && (
-                  <span style={{ fontSize: '11px', fontWeight: 700, padding: '1px 6px', borderRadius: '10px',
-                    backgroundColor: tab === t.key ? '#037894' : 'rgba(255,255,255,0.1)', color: '#fff' }}>{t.count}</span>
+                  <span style={{ fontSize: '11px', fontWeight: 800, padding: '2px 8px', borderRadius: '8px',
+                    backgroundColor: tab === t.key ? '#037894' : '#F0F4F5', color: tab === t.key ? '#fff' : '#8A8A8D' }}>{t.count}</span>
                 )}
               </button>
             ))}
@@ -396,69 +510,69 @@ function buildFallbackHTML(docId: string, docName: string, emp: any, today: stri
 
           {/* ── QUEST AI SCORING (profil tab) ── */}
           {tab === 'profil' && (
-            <div style={{ marginTop: '20px', backgroundColor: '#020000', borderRadius: '16px', padding: '24px', border: '1.5px solid rgba(3,120,148,0.3)' }}>
+            <div style={{ marginTop: '20px', backgroundColor: '#fff', borderRadius: '24px', padding: '24px', border: '1.5px solid rgba(3,120,148,0.2)', boxShadow: '0 8px 30px rgba(3,120,148,0.04)' }}>
               <style>{`@keyframes kary-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }`}</style>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <Star size={14} color="#037894" />
-                  <span style={{ fontSize: '12px', fontWeight: 700, color: '#8FC6C5', letterSpacing: '2px', textTransform: 'uppercase' }}>Quest AI Profile Score</span>
+                  <Star size={16} color="#037894" fill="#037894" />
+                  <span style={{ fontSize: '12px', fontWeight: 800, color: '#037894', letterSpacing: '2px', textTransform: 'uppercase' }}>Quest AI Profile Score</span>
                 </div>
                 <button onClick={handleEmpRunScore} disabled={isEmpProcessing}
-                  style={{ padding: '5px 14px', borderRadius: '10px', border: 'none', cursor: isEmpProcessing ? 'not-allowed' : 'pointer', fontSize: '11px', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '5px', backgroundColor: isEmpProcessing ? 'rgba(3,120,148,0.15)' : '#037894', color: isEmpProcessing ? '#037894' : '#fff' }}>
+                  style={{ padding: '6px 16px', borderRadius: '12px', border: 'none', cursor: isEmpProcessing ? 'not-allowed' : 'pointer', fontSize: '12px', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '6px', backgroundColor: isEmpProcessing ? '#F7F5F2' : '#037894', color: isEmpProcessing ? '#037894' : '#fff', transition: 'all 0.2s' }}>
                   {isEmpProcessing
                     ? <><span style={{ display: 'inline-block', animation: 'kary-spin 1s linear infinite' }}>⚙</span> Scoring...</>
                     : empScores.length > 0 ? '↻ Re-run Score' : '✦ Run Score'}
                 </button>
               </div>
 
-              {!latestEmpScore && <p style={{ color: 'rgba(228,222,216,0.4)', fontSize: '13px', margin: 0 }}>Belum ada scoring untuk karyawan ini.</p>}
+              {!latestEmpScore && <p style={{ color: '#8A8A8D', fontSize: '13px', margin: 0, fontWeight: 500 }}>Belum ada scoring untuk karyawan ini.</p>}
               {latestEmpScore?.status === 'processing' && (
                 <p style={{ color: '#037894', fontSize: '14px', fontWeight: 600, margin: 0 }}>
                   <span style={{ display: 'inline-block', animation: 'kary-spin 1s linear infinite' }}>⚙</span> Sedang dianalisa...
                 </p>
               )}
               {latestEmpScore?.status === 'failed' && (
-                <p style={{ color: '#FF4F31', fontSize: '13px', margin: 0 }}>⚠ Scoring gagal. Klik Re-run Score untuk mencoba lagi.</p>
+                <p style={{ color: '#FF4F31', fontSize: '13px', margin: 0, fontWeight: 500 }}>⚠ Scoring gagal. Klik Re-run Score untuk mencoba lagi.</p>
               )}
               {latestEmpScore?.status === 'completed' && (
-                <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '24px', alignItems: 'start' }}>
-                  <div style={{ textAlign: 'center' }}>
-                    <div style={{ fontSize: '52px', fontWeight: 800, color: '#fff', lineHeight: 1 }}>{latestEmpScore.overall_score}</div>
-                    <div style={{ fontSize: '11px', color: 'rgba(228,222,216,0.4)', marginTop: '2px' }}>dari 100</div>
+                <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '32px', alignItems: 'start' }}>
+                  <div style={{ textAlign: 'center', padding: '10px 0' }}>
+                    <div style={{ fontSize: '64px', fontWeight: 900, color: '#037894', lineHeight: 1 }}>{latestEmpScore.overall_score}</div>
+                    <div style={{ fontSize: '11px', color: '#8FC6C5', fontWeight: 800, marginTop: '2px', letterSpacing: '1px' }}>DARI 100</div>
                     {latestEmpScore.recommendation && (
-                      <div style={{ marginTop: '8px', padding: '3px 10px', borderRadius: '20px', fontSize: '11px', fontWeight: 700, display: 'inline-block',
+                      <div style={{ marginTop: '12px', padding: '4px 12px', borderRadius: '12px', fontSize: '11px', fontWeight: 800, display: 'inline-block',
                         backgroundColor: latestEmpScore.recommendation === 'Highly Recommended' ? '#005353' : latestEmpScore.recommendation === 'Recommended' ? '#037894' : latestEmpScore.recommendation === 'Consider' ? '#DE9733' : '#FF4F31',
-                        color: '#fff' }}>
+                        color: '#fff', textTransform: 'uppercase', boxShadow: '0 4px 10px rgba(0,0,0,0.05)' }}>
                         {latestEmpScore.recommendation}
                       </div>
                     )}
                     {latestEmpScore.processed_at && (
-                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px', marginTop: '6px' }}>
-                        <Clock size={10} color="rgba(228,222,216,0.3)" />
-                        <span style={{ fontSize: '10px', color: 'rgba(228,222,216,0.3)' }}>{formatTs(latestEmpScore.processed_at)}</span>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px', marginTop: '12px' }}>
+                        <Clock size={10} color="#8FC6C5" />
+                        <span style={{ fontSize: '10px', color: '#8FC6C5', fontWeight: 600 }}>{formatTs(latestEmpScore.processed_at)}</span>
                       </div>
                     )}
                   </div>
-                  <div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                     {[
-                      { label: 'Pengalaman', value: latestEmpScore.experience_score, max: 25 },
-                      { label: 'Sertifikasi', value: latestEmpScore.certification_score, max: 20 },
-                      { label: 'Motivasi', value: latestEmpScore.motivation_score, max: 20 },
-                      { label: 'Profil', value: latestEmpScore.profile_score, max: 20 },
-                      { label: 'Kelengkapan', value: latestEmpScore.completeness_score, max: 15 },
+                      { label: 'Pengalaman', value: Math.min(latestEmpScore.experience_score || 0, 25), max: 25 },
+                      { label: 'Sertifikasi', value: Math.min(latestEmpScore.certification_score || 0, 20), max: 20 },
+                      { label: 'Motivasi', value: Math.min(latestEmpScore.motivation_score || 0, 20), max: 20 },
+                      { label: 'Profil', value: Math.min(latestEmpScore.profile_score || 0, 20), max: 20 },
+                      { label: 'Kelengkapan', value: Math.min(latestEmpScore.completeness_score || 0, 15), max: 15 },
                     ].map(item => (
-                      <div key={item.label} style={{ marginBottom: '7px' }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '2px' }}>
-                          <span style={{ fontSize: '11px', color: 'rgba(228,222,216,0.5)' }}>{item.label}</span>
-                          <span style={{ fontSize: '11px', color: 'rgba(228,222,216,0.7)', fontWeight: 600 }}>{item.value || 0}/{item.max}</span>
+                      <div key={item.label}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
+                          <span style={{ fontSize: '11px', color: '#4C4845', fontWeight: 700 }}>{item.label}</span>
+                          <span style={{ fontSize: '11px', color: '#037894', fontWeight: 800 }}>{item.value}/{item.max}</span>
                         </div>
-                        <div style={{ height: '4px', borderRadius: '2px', backgroundColor: 'rgba(255,255,255,0.1)' }}>
-                          <div style={{ height: '100%', borderRadius: '2px', backgroundColor: '#037894', width: `${((item.value || 0) / item.max) * 100}%` }} />
+                        <div style={{ height: '6px', borderRadius: '3px', backgroundColor: '#F0F4F5' }}>
+                          <div style={{ height: '100%', borderRadius: '3px', backgroundColor: '#037894', width: `${(item.value / item.max) * 100}%`, transition: 'width 0.5s cubic-bezier(0.4, 0, 0.2, 1)' }} />
                         </div>
                       </div>
                     ))}
                     {latestEmpScore.summary && (
-                      <p style={{ fontSize: '12px', color: 'rgba(228,222,216,0.55)', lineHeight: 1.5, margin: '10px 0 0', fontStyle: 'italic' }}>"{latestEmpScore.summary}"</p>
+                      <p style={{ fontSize: '13px', color: '#4C4845', lineHeight: 1.6, margin: '12px 0 0', fontStyle: 'italic', fontWeight: 500 }}>"{latestEmpScore.summary}"</p>
                     )}
                   </div>
                 </div>
@@ -466,23 +580,23 @@ function buildFallbackHTML(docId: string, docName: string, emp: any, today: stri
 
               {/* History */}
               {empScores.length > 1 && (
-                <div style={{ marginTop: '16px', borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: '14px' }}>
+                <div style={{ marginTop: '16px', borderTop: '1px solid #F0EEEC', paddingTop: '14px' }}>
                   <button onClick={() => setExpandedEmpHistory(p => !p)}
-                    style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '12px', color: '#8FC6C5', fontWeight: 600, padding: 0 }}>
+                    style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '12px', color: '#037894', fontWeight: 700, padding: 0 }}>
                     {expandedEmpHistory ? '▲ Tutup riwayat' : `▼ Lihat ${empScores.length} riwayat scoring`}
                   </button>
                   {expandedEmpHistory && (
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', marginTop: '10px' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '12px' }}>
                       {empScores.map((s: any, i: number) => (
-                        <div key={s.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px 12px', borderRadius: '8px', backgroundColor: 'rgba(255,255,255,0.05)' }}>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                            <span style={{ fontSize: '15px', fontWeight: 800, color: s.overall_score >= 75 ? '#82A13B' : s.overall_score >= 50 ? '#DE9733' : '#FF4F31' }}>{s.overall_score || '—'}</span>
-                            {i === 0 && <span style={{ fontSize: '10px', color: '#037894', fontWeight: 700 }}>TERBARU</span>}
-                            {s.recommendation && <span style={{ fontSize: '11px', color: 'rgba(228,222,216,0.5)' }}>{s.recommendation}</span>}
+                        <div key={s.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 16px', borderRadius: '12px', backgroundColor: '#F9FBFB', border: '1px solid #F0F4F5' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                            <span style={{ fontSize: '16px', fontWeight: 900, color: (s.overall_score || 0) >= 75 ? '#005353' : (s.overall_score || 0) >= 50 ? '#037894' : '#FF4F31' }}>{s.overall_score || '—'}</span>
+                            {i === 0 && <span style={{ fontSize: '10px', color: '#037894', fontWeight: 800, padding: '2px 8px', backgroundColor: '#E6F4F8', borderRadius: '6px' }}>TERBARU</span>}
+                            {s.recommendation && <span style={{ fontSize: '11px', color: '#8A8A8D', fontWeight: 600 }}>{s.recommendation}</span>}
                           </div>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                            <Clock size={10} color="rgba(228,222,216,0.3)" />
-                            <span style={{ fontSize: '11px', color: 'rgba(228,222,216,0.3)' }}>{formatTs(s.processed_at || s.created_at)}</span>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                            <Clock size={10} color="#8FC6C5" />
+                            <span style={{ fontSize: '10px', color: '#8FC6C5', fontWeight: 500 }}>{formatTs(s.processed_at || s.created_at)}</span>
                           </div>
                         </div>
                       ))}
@@ -799,9 +913,9 @@ function buildFallbackHTML(docId: string, docName: string, emp: any, today: stri
                   <div style={{ display: 'flex', gap: '8px' }}>
                     <button onClick={() => setShowAddLeave(false)} style={{ flex: 1, padding: '10px', borderRadius: '10px', border: '1.5px solid #E8E4E0', backgroundColor: 'transparent', color: '#4C4845', fontSize: '13px', cursor: 'pointer' }}>Batal</button>
                     <button onClick={addLeave} disabled={saving || !leaveForm.start_date || !leaveForm.end_date}
-                      style={{ flex: 2, padding: '10px', borderRadius: '10px', backgroundColor: '#037894', color: '#fff', fontSize: '13px', fontWeight: 700, border: 'none', cursor: 'pointer' }}>
-                      Ajukan
-                    </button>
+                      style={{ padding: '7px 16px', borderRadius: '8px', backgroundColor: '#037894', color: '#fff', fontSize: '12px', fontWeight: 700, border: 'none', cursor: 'pointer' }}>
+                      Ajukan Cuti
+                      </button>
                   </div>
                 </div>
               )}
@@ -876,9 +990,9 @@ function buildFallbackHTML(docId: string, docName: string, emp: any, today: stri
                         </button>
                         {generatedDocs[doc.id] && (
                           <button onClick={() => setViewingDoc({ title: doc.name, html: generatedDocs[doc.id] })}
-                            style={{ padding: '8px 12px', borderRadius: '8px', backgroundColor: '#E6F4F1', color: '#005353', fontSize: '12px', fontWeight: 700, border: 'none', cursor: 'pointer' }}>
-                            View
-                          </button>
+                            style={{ padding: '7px 16px', borderRadius: '8px', backgroundColor: '#037894', color: '#fff', fontSize: '12px', fontWeight: 700, border: 'none', cursor: 'pointer' }}>
+                            Lihat
+                            </button>
                         )}
                       </div>
                     </div>
@@ -943,13 +1057,13 @@ function buildFallbackHTML(docId: string, docName: string, emp: any, today: stri
                               w.document.close()
                             }
                           }}
-                          style={{ padding: '7px 16px', borderRadius: '8px', backgroundColor: '#020000', color: '#fff', fontSize: '12px', fontWeight: 700, border: 'none', cursor: 'pointer' }}>
-                          🖨 Print / Save PDF
-                        </button>
+                          style={{ padding: '7px 16px', borderRadius: '8px', backgroundColor: '#037894', color: '#fff', fontSize: '12px', fontWeight: 700, border: 'none', cursor: 'pointer' }}>
+                          Print
+                          </button>
                         <button onClick={() => setViewingDoc(null)}
-                          style={{ padding: '7px 12px', borderRadius: '8px', backgroundColor: '#F0EEEC', color: '#4C4845', fontSize: '12px', fontWeight: 700, border: 'none', cursor: 'pointer' }}>
-                          ✕ Tutup
-                        </button>
+                          style={{ padding: '7px 16px', borderRadius: '8px', backgroundColor: '#037894', color: '#fff', fontSize: '12px', fontWeight: 700, border: 'none', cursor: 'pointer' }}>
+                          Tutup
+                          </button>
                       </div>
                     </div>
                     <div style={{ overflowY: 'auto', flex: 1, padding: '4px' }}>

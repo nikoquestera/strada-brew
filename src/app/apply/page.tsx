@@ -259,8 +259,11 @@ function ApplyContent() {
       <section id="lowongan" className="py-24 px-6 bg-[#F9F8F6]">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-[900] text-gray-900 mb-4 tracking-tight">Posisi Aktif</h2>
-            <p className="text-gray-500 font-medium">Temukan peran yang sesuai dengan aspirasi karier Anda.</p>
+            <h2 className="text-[11px] font-black text-strada-blue tracking-[0.2em] uppercase mb-4">Siap Bergabung?</h2>
+            <h3 className="text-3xl md:text-4xl font-[900] text-gray-900 mb-6 tracking-tight">Cek Posisi Aktif</h3>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto font-medium">
+              Lihat daftar lowongan terbaru kami di bawah ini. Kami selalu mencari individu berbakat yang ingin bertumbuh bersama Strada Coffee.
+            </p>
           </div>
 
           {jobs.length === 0 ? (
@@ -300,6 +303,25 @@ function ApplyContent() {
               ))}
             </div>
           )}
+
+          {/* New Footer CTA */}
+          <div className="mt-20 p-10 md:p-16 bg-white rounded-[48px] border border-gray-100 shadow-sm text-center">
+            <h2 className="text-2xl md:text-3xl font-[900] text-gray-900 mb-4 tracking-tight">Belum menemukan posisi yang pas?</h2>
+            <p className="text-gray-600 max-w-xl mx-auto mb-8 font-medium leading-relaxed">
+              Kami akan terus memperbarui daftar lowongan kami. Ikuti media sosial kami untuk mendapatkan info terbaru tentang kesempatan berkarir di Strada Coffee.
+            </p>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+              <a href="https://instagram.com/stradacoffee" target="_blank" rel="noreferrer"
+                className="w-full sm:w-auto px-8 py-3 bg-gray-50 text-gray-900 rounded-full font-bold text-sm border border-gray-200 hover:bg-gray-100 transition-all">
+                Instagram @stradacoffee
+              </a>
+              <button 
+                onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                className="w-full sm:w-auto px-8 py-3 bg-strada-blue text-white rounded-full font-bold text-sm hover:bg-strada-dark-teal transition-all">
+                Kembali ke Atas ↑
+              </button>
+            </div>
+          </div>
 
           <div className="mt-20 text-center">
             <img src="/strada-logo.svg" alt="Strada Coffee" className="h-8 w-auto filter grayscale opacity-20 mx-auto mb-4" />

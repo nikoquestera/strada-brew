@@ -2,7 +2,7 @@
 import { useState } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
-import { Users, FileText, Calculator, Home, LogOut, Menu, X, Briefcase, FolderOpen, Scale, Brain, Key, Loader2 } from 'lucide-react'
+import { Users, FileText, Calculator, Home, LogOut, Menu, X, Briefcase, FolderOpen, Scale, Brain, Key, Loader2, Settings } from 'lucide-react'
 
 interface Props {
   children: React.ReactNode
@@ -14,12 +14,12 @@ const hrdNav = [
   { label: 'Karyawan', href: '/dashboard/hrd/karyawan', icon: Users },
   { label: 'Rekrutmen', href: '/dashboard/hrd/rekrutmen', icon: FileText },
   { label: 'Job Posting', href: '/dashboard/hrd/jobs', icon: Briefcase },
-  { label: 'Dokumen', href: '/dashboard/hrd/dokumen', icon: FolderOpen },
-  { label: 'Payroll', href: '/dashboard/hrd/payroll', icon: Calculator },
   { label: 'Scoring Weights', href: '/dashboard/hrd/rekrutmen/weights', icon: Scale },
   { label: 'Tes Kepribadian', href: '/dashboard/hrd/disc', icon: Brain },
   { label: 'Tes Intelegensi', href: '/dashboard/hrd/cfit', icon: Brain },
   { label: 'Pengaturan', href: '/dashboard/hrd/pengaturan', icon: Settings },
+  { label: 'Dokumen', href: '/dashboard/hrd/dokumen', icon: FolderOpen },
+  { label: 'Payroll', href: '/dashboard/hrd/payroll', icon: Calculator },
 ]
 
 export default function DashboardShell({ children, userEmail }: Props) {
@@ -74,13 +74,6 @@ export default function DashboardShell({ children, userEmail }: Props) {
       {/* Module label + switcher */}
       <div className="px-6 pt-6 pb-2 flex items-center justify-between">
         <p className="text-gray-400 text-[10px] font-bold tracking-[3px] uppercase m-0">HRD Module</p>
-        <button
-          onClick={() => router.push('/dashboard/purchasing')}
-          className="text-[10px] text-gray-400 hover:text-[#037894] font-semibold border border-gray-200 hover:border-[#037894] px-2 py-0.5 rounded-full transition-all"
-          title="Buka Purchasing & Gudang"
-        >
-          → Purchasing
-        </button>
       </div>
 
       {/* Nav */}
