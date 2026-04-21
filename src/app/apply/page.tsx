@@ -255,19 +255,68 @@ function ApplyContent() {
         </div>
       </section>
 
+      {/* Process Section */}
+      <section id="proses" className="py-24 px-6 bg-strada-foam/20">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-[11px] font-black text-strada-blue tracking-[0.2em] uppercase mb-4">Langkah Bergabung</h2>
+            <h3 className="text-3xl md:text-4xl font-[900] text-gray-900 mb-6 tracking-tight">Cara Melamar di Strada Coffee</h3>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto font-medium">
+              Kami merancang proses rekrutmen yang transparan dan efisien untuk menemukan talenta terbaik.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {[
+              { 
+                step: '01', 
+                title: 'Pilih Posisi', 
+                desc: 'Cek daftar lowongan aktif di bawah dan pilih posisi yang sesuai dengan passion dan keahlian Anda.',
+                icon: '🎯'
+              },
+              { 
+                step: '02', 
+                title: 'Isi Formulir', 
+                desc: 'Lengkapi data diri dan pengalaman Anda. Proses ini singkat dan hanya membutuhkan waktu sekitar 5 menit.',
+                icon: '📝'
+              },
+              { 
+                step: '03', 
+                title: 'Review & Seleksi', 
+                desc: 'Tim HR kami akan meninjau setiap lamaran. Kandidat terpilih akan dihubungi untuk tahap interview.',
+                icon: '🤝'
+              },
+            ].map((item, i) => (
+              <div key={i} className="bg-white p-10 rounded-[40px] border border-gray-100 shadow-sm relative overflow-hidden group hover:shadow-xl transition-all duration-500">
+                <div className="text-4xl mb-6">{item.icon}</div>
+                <div className="absolute top-6 right-8 text-5xl font-black text-gray-50 group-hover:text-strada-blue/5 transition-colors">{item.step}</div>
+                <h4 className="text-xl font-extrabold text-gray-900 mb-4">{item.title}</h4>
+                <p className="text-sm text-gray-500 leading-relaxed font-medium">{item.desc}</p>
+              </div>
+            ))}
+          </div>
+          
+          <div className="mt-12 text-center">
+            <p className="text-xs font-bold text-gray-400 uppercase tracking-widest bg-white border border-gray-100 px-6 py-3 rounded-full inline-block">
+              Data Anda aman dan hanya digunakan untuk keperluan rekrutmen internal
+            </p>
+          </div>
+        </div>
+      </section>
+
       {/* Jobs Section */}
-      <section id="lowongan" className="py-24 px-6 bg-[#F9F8F6]">
+      <section id="lowongan" className="py-24 px-6 bg-white">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-[11px] font-black text-strada-blue tracking-[0.2em] uppercase mb-4">Siap Bergabung?</h2>
-            <h3 className="text-3xl md:text-4xl font-[900] text-gray-900 mb-6 tracking-tight">Cek Posisi Aktif</h3>
+            <h2 className="text-[11px] font-black text-strada-blue tracking-[0.2em] uppercase mb-4">Kesempatan Berkarir</h2>
+            <h3 className="text-3xl md:text-4xl font-[900] text-gray-900 mb-6 tracking-tight">Posisi Aktif</h3>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto font-medium">
-              Lihat daftar lowongan terbaru kami di bawah ini. Kami selalu mencari individu berbakat yang ingin bertumbuh bersama Strada Coffee.
+              Temukan peran yang tepat untuk perjalanan karir Anda selanjutnya.
             </p>
           </div>
 
           {jobs.length === 0 ? (
-            <div className="text-center py-20 px-6 bg-white rounded-[32px] border border-gray-100 shadow-sm">
+            <div className="text-center py-20 px-6 bg-gray-50 rounded-[40px] border border-gray-100 shadow-sm">
               <span className="text-5xl mb-4 block">☕</span>
               <p className="text-xl font-bold text-gray-900 mb-2">Belum ada posisi terbuka</p>
               <p className="text-gray-500 font-medium">Pantau terus halaman ini untuk lowongan terbaru dari Strada Coffee.</p>
@@ -277,7 +326,7 @@ function ApplyContent() {
               {jobs.map(job => (
                 <div key={job.id} 
                   onClick={() => nextRouter.push(`/jobs/${job.job_id}`)}
-                  className="group bg-white rounded-[32px] p-8 border border-gray-200/60 shadow-sm hover:shadow-xl hover:border-strada-blue/20 transition-all duration-500 cursor-pointer flex flex-col md:flex-row md:items-center gap-8">
+                  className="group bg-white rounded-[32px] p-8 border border-gray-100 shadow-sm hover:shadow-xl hover:border-strada-blue/20 transition-all duration-500 cursor-pointer flex flex-col md:flex-row md:items-center gap-8">
                   
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-3 flex-wrap mb-3">
@@ -305,19 +354,19 @@ function ApplyContent() {
           )}
 
           {/* New Footer CTA */}
-          <div className="mt-20 p-10 md:p-16 bg-white rounded-[48px] border border-gray-100 shadow-sm text-center">
+          <div className="mt-20 p-10 md:p-16 bg-strada-foam/10 rounded-[48px] border border-gray-100 shadow-sm text-center">
             <h2 className="text-2xl md:text-3xl font-[900] text-gray-900 mb-4 tracking-tight">Belum menemukan posisi yang pas?</h2>
             <p className="text-gray-600 max-w-xl mx-auto mb-8 font-medium leading-relaxed">
               Kami akan terus memperbarui daftar lowongan kami. Ikuti media sosial kami untuk mendapatkan info terbaru tentang kesempatan berkarir di Strada Coffee.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <a href="https://instagram.com/stradacoffee" target="_blank" rel="noreferrer"
-                className="w-full sm:w-auto px-8 py-3 bg-gray-50 text-gray-900 rounded-full font-bold text-sm border border-gray-200 hover:bg-gray-100 transition-all">
-                Instagram @stradacoffee
+              <a href="https://www.instagram.com/stradacoffee.id/" target="_blank" rel="noreferrer"
+                className="w-full sm:w-auto px-8 py-3 bg-white text-gray-900 rounded-full font-bold text-sm border border-gray-200 hover:bg-gray-50 transition-all shadow-sm">
+                Instagram @stradacoffee.id
               </a>
               <button 
                 onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-                className="w-full sm:w-auto px-8 py-3 bg-strada-blue text-white rounded-full font-bold text-sm hover:bg-strada-dark-teal transition-all">
+                className="w-full sm:w-auto px-8 py-3 bg-strada-blue text-white rounded-full font-bold text-sm hover:bg-strada-dark-teal transition-all shadow-md">
                 Kembali ke Atas ↑
               </button>
             </div>
