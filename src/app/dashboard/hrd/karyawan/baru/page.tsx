@@ -53,7 +53,7 @@ const Field = ({ k, label, form, set, errors, required, type = 'text', options, 
   )
 }
 
-const Toggle = ({ k, label, form, set }: { k: string; label: string; form: Record<string, unknown>; set: (k: string, v: unknown) => void }) => (
+const Toggle = ({ k, label, form, set }: { k: string; label: string; form: Record<string, any>; set: (k: string, v: any) => void }) => (
   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 14px', borderRadius: '10px', backgroundColor: form[k] ? 'rgba(3,120,148,0.06)' : '#F7F5F2', border: `1px solid ${form[k] ? 'rgba(3,120,148,0.2)' : '#E8E4E0'}` }}>
     <span style={{ fontSize: '13px', color: '#020000', fontWeight: form[k] ? 600 : 400 }}>{label}</span>
     <button type="button" onClick={() => set(k, !form[k])}
@@ -172,17 +172,24 @@ export default function KaryawanBaruPage() {
       birth_date: form.birth_date || null,
       gender: form.gender || null,
       address: form.address || null,
+      address_ktp: form.address || null, // sync new column
       id_number: form.id_number || null,
+      identity_number: form.id_number || null, // sync both
       email: form.email || null,
       phone: form.phone || null,
       marital_status: form.marital_status || null,
       education: form.education || null,
       place_of_birth: form.place_of_birth || null,
+      birth_place: form.place_of_birth || null, // sync new column
       emergency_contact_name: form.emergency_contact_name || null,
       emergency_contact_phone: form.emergency_contact_phone || null,
+      // BPJS — save to both legacy and new column names
       bpjs_tk: form.bpjs_tk || null,
+      bpjs_ketenagakerjaan_number: form.bpjs_tk || null,
       bpjs_kesehatan: form.bpjs_kesehatan || null,
+      bpjs_kesehatan_number: form.bpjs_kesehatan || null,
       npwp: form.npwp || null,
+      npwp_number: form.npwp || null,
       bank_name: form.bank_name || null,
       bank_account_number: form.bank_account_number || null,
       bank_account_name: form.bank_account_name || null,

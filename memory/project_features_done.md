@@ -1,8 +1,38 @@
 ---
 name: Completed Features
-description: All features built and deployed as of 2026-04-07
+description: All features built and deployed as of 2026-04-24
 type: project
 ---
+
+**HRD Dashboard Full Audit & Bug Fixes (2026-04-24)**
+- DB: `employee_timeline_event_type_check` constraint updated to include `'internal_note'` event type
+- DB: `happiest_workplace` column added to `employees` (was missing, caused Personalia form submit to fail)
+- DB: RLS on `employee_timeline` — added explicit anon+authenticated policies
+- Catatan Internal HR: save now uses optimistic update — note appears immediately after Simpan
+- Catatan Screening (rekrutmen): same optimistic update fix
+- KaryawanDetailClient Profil tab: now shows data from both new AND legacy column names (bpjs_kesehatan_number || bpjs_kesehatan, address_ktp || address, etc.)
+- KaryawanDetailClient editForm: initialized with fallbacks so old employees show correct values
+- KaryawanDetailClient handleUpdateProfil: now writes to both old and new column names on save
+- KaryawanBaruPage: now saves to both old columns (bpjs_kesehatan, bpjs_tk, npwp, address) AND new columns (bpjs_kesehatan_number, bpjs_ketenagakerjaan_number, npwp_number, address_ktp)
+- Profil tab: added "Edit Profil" button inline (more discoverable), shows Grade + PKWT Ke-, Nama Bank, Catatan Khusus section
+
+**CV/Resume Upload & Display (2026-04-23)**
+- Apply form: optional CV upload in step 3, uploads directly to Supabase storage `cvs` bucket
+- `applicants.cv_url` column stores the public URL
+- Rekrutmen detail: CV section in left column — shows iframe for PDF, download link; HR can also upload
+- Karyawan detail: CV tab shows linked applicant's CV (via `employees.applicant_id` → `applicants.cv_url`)
+- HR can update CV from either the rekrutmen or karyawan view
+
+**Catatan Internal HR — dedicated tab (2026-04-23)**
+- Moved from Profil tab to its own "Catatan" tab (next to Dokumen)
+- Notes saved with timestamp to `employee_timeline` (event_type='internal_note')
+- Combined view: pre-hire screening notes (from `applicant_activities`) + post-hire internal notes (from `employee_timeline`) shown together, labeled by phase (Fase Rekrutmen vs Internal HR)
+- Requires `employees.applicant_id` link to show pre-hire notes; works without link for standalone employees
+- Catatan Screening Internal (rekrutmen page) already existed and saves timestamped entries with actor name
+
+**Profil tab restored (2026-04-23)**
+- Employee profile data now visible in Profil tab: Identitas & Kontak, Alamat, Informasi Pekerjaan, Data Keuangan
+- Was accidentally removed — now shows read-only cards with all filled employee fields
 
 **Quest AI Scoring (fully working)**
 - Route: `POST /api/quest/score` — fetches applicant + job context, runs Claude, saves to `applicant_quest_scores`

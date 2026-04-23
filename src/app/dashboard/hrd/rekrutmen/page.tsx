@@ -11,9 +11,13 @@ export default async function RekrutmenPage() {
     .select(`
       id, full_name, email, phone, position_applied,
       outlet_preference, source, pipeline_stage, quest_score,
+      screening_notes,
       created_at,
       applicant_quest_scores (
         id, overall_score, recommendation, status, summary, processed_at
+      ),
+      personalia_sessions (
+        id, access_code, status
       )
     `)
     .order('created_at', { ascending: false })

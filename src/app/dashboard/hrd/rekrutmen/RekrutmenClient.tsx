@@ -31,6 +31,7 @@ interface Applicant {
   source?: string
   pipeline_stage?: PipelineStage
   quest_score?: number
+  screening_notes?: string
   created_at: string
   applicant_quest_scores?: QuestScore[]
 }
@@ -50,13 +51,30 @@ function QuestScoreWidget({ applicantId, scoreData, onScored }: {
   onScored: (id: string) => Promise<void>
 }) {
   const [triggering, setTriggering] = useState(false)
+  const [progress, setProgress] = useState(0)
 
   const status = scoreData?.status
   const score = scoreData?.overall_score
 
+  useEffect(() => {
+    let interval: NodeJS.Timeout
+    if (triggering || status === 'processing') {
+      interval = setInterval(() => {
+        setProgress(prev => {
+          if (prev >= 95) return 95
+          return prev + (prev < 30 ? 5 : prev < 70 ? 2 : 1)
+        })
+      }, 500)
+    } else {
+      setProgress(0)
+    }
+    return () => clearInterval(interval)
+  }, [triggering, status])
+
   async function trigger(e: React.MouseEvent) {
     e.stopPropagation()
     setTriggering(true)
+    setProgress(10)
     try {
       await fetch('/api/quest/score', {
         method: 'POST',
@@ -69,12 +87,23 @@ function QuestScoreWidget({ applicantId, scoreData, onScored }: {
     }
   }
 
-  // Spinning while scoring
+  // Progress Bar while scoring
   if (triggering || status === 'processing') {
     return (
-      <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 text-strada-blue shrink-0 border border-blue-100">
-        <RefreshCw size={12} className="animate-spin" />
-        <span className="text-[11px] font-bold">Scoring</span>
+      <div className="w-full">
+        <div className="flex items-center justify-between mb-1.5">
+          <div className="flex items-center gap-1.5 text-strada-blue">
+            <RefreshCw size={10} className="animate-spin" />
+            <span className="text-[10px] font-black uppercase tracking-widest">Analisa AI</span>
+          </div>
+          <span className="text-[10px] font-black text-strada-blue">{progress}%</span>
+        </div>
+        <div className="h-1.5 w-full bg-blue-50 rounded-full overflow-hidden border border-blue-100/50">
+          <div 
+            className="h-full bg-strada-blue transition-all duration-500 ease-out"
+            style={{ width: `${progress}%` }}
+          />
+        </div>
       </div>
     )
   }
@@ -360,6 +389,13 @@ export default function RekrutmenClient({ initialApplicants }: { initialApplican
                       <p className="text-[11px] font-medium text-gray-500 flex items-center gap-1.5 mb-3">
                         <span className="w-1.5 h-1.5 rounded-full bg-gray-300"></span> {applicant.outlet_preference}
                       </p>
+                    )}
+
+                    {applicant.screening_notes && (
+                      <div className="px-3 py-2 rounded-xl bg-amber-50 border border-amber-100 mb-3 group/notes overflow-hidden">
+                        <p className="text-[10px] font-black text-amber-700 uppercase tracking-widest mb-0.5">Catatan HR</p>
+                        <p className="text-[11px] text-amber-900 font-medium line-clamp-2 leading-relaxed">&quot;{applicant.screening_notes}&quot;</p>
+                      </div>
                     )}
 
                     {scoreData?.status === 'completed' && scoreData.summary && (

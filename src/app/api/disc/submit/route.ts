@@ -12,7 +12,7 @@ export async function POST(req: NextRequest) {
 
   const { data: session, error } = await supabase
     .from('disc_sessions')
-    .select('id, status, expires_at')
+    .select('id, status, expires_at, applicant_id')
     .eq('access_code', access_code.toUpperCase().trim())
     .maybeSingle()
 
@@ -41,6 +41,16 @@ export async function POST(req: NextRequest) {
     .eq('id', session.id)
 
   if (updateError) return NextResponse.json({ error: updateError.message }, { status: 500 })
+
+  // Trigger AI Scoring (background)
+  if (session.applicant_id) {
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
+    fetch(`${appUrl}/api/quest/score`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ applicant_id: session.applicant_id }),
+    }).catch(e => console.error('Auto-score trigger failed:', e))
+  }
 
   return NextResponse.json({ success: true, results })
 }

@@ -19,14 +19,15 @@ export default async function ApplicantDetailPage({
       source, pipeline_stage, quest_score, created_at,
       has_cafe_experience, cafe_experience_years,
       cafe_experience_detail, has_barista_cert, cert_detail,
-      education_level, hr_notes, status, screening_notes,
+      education_level, hr_notes, status, screening_notes, cv_url,
       applicant_quest_scores (*),
       applicant_activities (*),
       disc_sessions ( id, access_code, status, sent_at, completed_at, results ),
       applicant_tests (
         id, access_code, status, sent_at, started_at, completed_at, score, score_percentage, total_points,
         tests ( title )
-      )
+      ),
+      personalia_sessions ( id, access_code, status, created_at, completed_at )
     `)
     .eq('id', id)
     .single()

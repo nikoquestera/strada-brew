@@ -13,6 +13,7 @@ type: project
 - has_barista_cert (bool), cert_detail
 - education_level, hr_notes (applicant motivation text)
 - screening_notes (TEXT) — HR guidance for Quest AI scoring
+- cv_url (TEXT) — public URL to uploaded CV/resume in Supabase storage `cvs` bucket
 - source, status, pipeline_stage, quest_score (cached overall score)
 - created_at
 
@@ -49,7 +50,8 @@ type: project
 - score, score_percentage, total_points, answers (JSONB)
 - sent_at, started_at, completed_at, expires_at (default NOW()+7days)
 
-`employees`, `employee_timeline`, `employee_evaluations`, `employee_kpis`, `employee_leaves`, `employee_document_status` — karyawan module
+`employees` — karyawan module; includes `applicant_id UUID` FK to `applicants(id)` (links employee back to their original application; null for manually-added employees)
+`employee_timeline`, `employee_evaluations`, `employee_kpis`, `employee_leaves`, `employee_document_status` — karyawan sub-tables
 
 **RLS policies**
 - All tables: `authenticated` role has full access

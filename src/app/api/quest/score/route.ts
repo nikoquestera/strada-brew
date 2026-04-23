@@ -144,10 +144,13 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ success: true, score: sanitisedResult.overall_score, score_id: scoreId })
   } catch (err) {
     console.error('Quest scoring error:', err)
+    // REMOVED: Saving failed status. Instead, DELETE the temporary processing record
+    // so the history stays clean of errors as requested.
     await supabase
       .from('applicant_quest_scores')
-      .update({ status: 'failed' })
+      .delete()
       .eq('id', scoreId)
+      
     return NextResponse.json({ error: 'Scoring failed', detail: String(err) }, { status: 500 })
   }
 }

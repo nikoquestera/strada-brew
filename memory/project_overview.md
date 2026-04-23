@@ -14,7 +14,7 @@ BREW is Strada Coffee Indonesia's internal HR system — a Next.js 16 App Router
 **Stack**
 - Next.js 16.2.2 with App Router (Turbopack)
 - Supabase (PostgREST, RLS, server + client helpers)
-- Anthropic claude-sonnet-4-6 for Quest AI scoring and message templates
+- Google Gemini 1.5 Pro for Quest AI scoring, message templates, and price list extraction
 - Resend for transactional email (from: brew@stradacoffee.com)
 - Vercel CLI for deploys; Git integration auto-deploys main → production
 

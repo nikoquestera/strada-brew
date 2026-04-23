@@ -2,14 +2,14 @@
 import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
-import { ArrowLeft, User, Clock, Star, Calendar, FileText, Plus, Check, Edit, X } from 'lucide-react'
+import { ArrowLeft, User, Users, Briefcase, Clock, Star, Calendar, FileText, Plus, Check, Edit, X, MessageSquare } from 'lucide-react'
 
 function formatTs(ts?: string) {
   if (!ts) return null
   return new Date(ts).toLocaleString('id-ID', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })
 }
 
-type Tab = 'profil' | 'timeline' | 'evaluasi' | 'kpi' | 'cuti' | 'dokumen'
+type Tab = 'profil' | 'keluarga' | 'riwayat' | 'timeline' | 'evaluasi' | 'kpi' | 'cuti' | 'dokumen' | 'catatan' | 'cv'
 
 interface Props {
   employee: Record<string, any>
@@ -20,6 +20,8 @@ interface Props {
   leaveBalance: Record<string, any> | null
   docTemplates: Record<string, any>[]
   docStatus: Record<string, any>[]
+  applicantScreeningNotes: Record<string, any>[]
+  applicantCvUrl: string | null
 }
 
 const TIMELINE_ICONS: Record<string, string> = {
@@ -36,7 +38,7 @@ const TIMELINE_COLORS: Record<string, string> = {
   resignation: '#8A8A8D', default: '#037894'
 }
 
-export default function KaryawanDetailClient({ employee, timeline, evaluations, kpis, leaves, leaveBalance, docTemplates, docStatus }: Props) {
+export default function KaryawanDetailClient({ employee, timeline, evaluations, kpis, leaves, leaveBalance, docTemplates, docStatus, applicantScreeningNotes, applicantCvUrl }: Props) {
   const router = useRouter()
   const supabase = createClient()
   const [tab, setTab] = useState<Tab>('profil')
@@ -58,7 +60,16 @@ export default function KaryawanDetailClient({ employee, timeline, evaluations, 
 
   // Edit Profil
   const [showEditProfil, setShowEditProfil] = useState(false)
-  const [editForm, setEditProfilForm] = useState({ ...employee })
+  const [editForm, setEditProfilForm] = useState<Record<string, any>>({
+    ...employee,
+    // Normalize: prefer new column names, fall back to legacy
+    identity_number: employee.identity_number || employee.id_number,
+    address_ktp: employee.address_ktp || employee.address,
+    nickname: employee.nickname || employee.nick_name,
+    bpjs_kesehatan_number: employee.bpjs_kesehatan_number || employee.bpjs_kesehatan,
+    bpjs_ketenagakerjaan_number: employee.bpjs_ketenagakerjaan_number || employee.bpjs_tk,
+    npwp_number: employee.npwp_number || employee.npwp,
+  })
   const [editing, setEditing] = useState(false)
 
   async function handleUpdateProfil() {
@@ -67,22 +78,52 @@ export default function KaryawanDetailClient({ employee, timeline, evaluations, 
       const { error } = await supabase
         .from('employees')
         .update({
-          id_number: editForm.id_number,
-          birth_date: editForm.birth_date,
+          // Identity
+          full_name: editForm.full_name,
+          nickname: editForm.nickname,
+          nick_name: editForm.nickname, // sync legacy column
+          identity_number: editForm.identity_number,
+          id_number: editForm.identity_number, // sync legacy column
+          birth_place: editForm.birth_place,
+          birth_date: editForm.birth_date || null,
+          religion: editForm.religion,
+          blood_type: editForm.blood_type,
           gender: editForm.gender,
           email: editForm.email,
           phone: editForm.phone,
-          address: editForm.address,
+          home_phone: editForm.home_phone,
+          address_ktp: editForm.address_ktp,
+          address: editForm.address_ktp, // sync legacy column
+          address_domicile: editForm.address_domicile,
+          postal_code: editForm.postal_code,
+
+          // Work
           position: editForm.position,
           department: editForm.department,
           entity: editForm.entity,
           outlet: editForm.outlet,
           employment_type: editForm.employment_type,
-          join_date: editForm.join_date,
-          contract_start: editForm.contract_start,
-          contract_end: editForm.contract_end,
-          base_salary: editForm.base_salary,
-          notes: editForm.notes
+          join_date: editForm.join_date || null,
+          contract_start: editForm.contract_start || null,
+          contract_end: editForm.contract_end || null,
+          base_salary: editForm.base_salary || null,
+
+          // Family
+          marital_status: editForm.marital_status,
+          marital_since: editForm.marital_since || null,
+
+          // Financial — write to both new and legacy columns
+          bpjs_kesehatan_number: editForm.bpjs_kesehatan_number,
+          bpjs_kesehatan: editForm.bpjs_kesehatan_number, // sync legacy
+          bpjs_ketenagakerjaan_number: editForm.bpjs_ketenagakerjaan_number,
+          bpjs_tk: editForm.bpjs_ketenagakerjaan_number, // sync legacy
+          npwp_number: editForm.npwp_number,
+          npwp: editForm.npwp_number, // sync legacy
+          bank_account_number: editForm.bank_account_number,
+          bank_account_name: editForm.bank_account_name,
+
+          notes: editForm.notes,
+          case_notes: editForm.notes
         })
         .eq('id', employee.id)
       if (error) throw error
@@ -94,6 +135,71 @@ export default function KaryawanDetailClient({ employee, timeline, evaluations, 
     } finally {
       setEditing(false)
     }
+  }
+
+  // CV state (linked applicant's CV)
+  const [empCvUrl, setEmpCvUrl] = useState<string>(applicantCvUrl || '')
+  const [uploadingEmpCv, setUploadingEmpCv] = useState(false)
+
+  async function handleEmpCvUpload(file: File) {
+    if (!employee.applicant_id) return
+    setUploadingEmpCv(true)
+    try {
+      const ext = file.name.split('.').pop() || 'pdf'
+      const path = `cv_${employee.applicant_id}_${Date.now()}.${ext}`
+      const { data, error } = await supabase.storage.from('cvs').upload(path, file, { contentType: file.type, upsert: true })
+      if (!error && data) {
+        const { data: urlData } = supabase.storage.from('cvs').getPublicUrl(data.path)
+        const newUrl = urlData.publicUrl
+        await supabase.from('applicants').update({ cv_url: newUrl }).eq('id', employee.applicant_id)
+        setEmpCvUrl(newUrl)
+      }
+    } finally {
+      setUploadingEmpCv(false)
+    }
+  }
+
+  // Internal notes (saved per-entry to employee_timeline with event_type='internal_note')
+  const [noteInput, setNoteInput] = useState<string>('')
+  const [savingNotes, setSavingNotes] = useState(false)
+  const [notesSaved, setNotesSaved] = useState(false)
+  const [internalNotesList, setInternalNotesList] = useState<Record<string, any>[]>(
+    timeline.filter(t => t.event_type === 'internal_note')
+      .sort((a: any, b: any) => new Date(b.created_at || 0).getTime() - new Date(a.created_at || 0).getTime())
+  )
+
+  async function handleSaveNotes() {
+    if (!noteInput.trim()) return
+    setSavingNotes(true)
+    const textToSave = noteInput.trim()
+    const nowIso = new Date().toISOString()
+    const { data: inserted, error } = await supabase.from('employee_timeline').insert([{
+      employee_id: employee.id,
+      event_type: 'internal_note',
+      title: textToSave,
+      description: null,
+      effective_date: nowIso.split('T')[0],
+    }]).select().single()
+    if (!error) {
+      // Optimistically push the new note so it appears immediately
+      const newNote = inserted ?? {
+        id: `temp-${Date.now()}`,
+        employee_id: employee.id,
+        event_type: 'internal_note',
+        title: textToSave,
+        description: null,
+        effective_date: nowIso.split('T')[0],
+        created_at: nowIso,
+      }
+      setInternalNotesList(prev => [newNote, ...prev])
+      setNoteInput('')
+      setNotesSaved(true)
+      setTimeout(() => setNotesSaved(false), 2000)
+    } else {
+      console.error('[handleSaveNotes] error:', error)
+      alert('Gagal menyimpan catatan: ' + error.message)
+    }
+    setSavingNotes(false)
   }
 
   // Quest AI scoring
@@ -304,13 +410,18 @@ function buildFallbackHTML(docId: string, docName: string, emp: any, today: stri
     setLeaveList(prev => prev.map(l => l.id === leaveId ? { ...l, status: approved ? 'approved' : 'rejected' } : l))
   }
 
+  const totalNotes = internalNotesList.length + applicantScreeningNotes.length
   const tabs: { key: Tab; label: string; icon: React.ReactNode; count?: number }[] = [
     { key: 'profil', label: 'Profil', icon: <User size={14} /> },
-    { key: 'timeline', label: 'Timeline', icon: <Clock size={14} />, count: timelineEvents.length },
+    { key: 'keluarga', label: 'Keluarga', icon: <Users size={14} /> },
+    { key: 'riwayat', label: 'Riwayat', icon: <Briefcase size={14} /> },
+    { key: 'timeline', label: 'Timeline', icon: <Clock size={14} />, count: timelineEvents.filter(t => t.event_type !== 'internal_note').length },
     { key: 'evaluasi', label: 'Evaluasi', icon: <Star size={14} />, count: evaluations.length },
     { key: 'kpi', label: 'KPI', icon: <Star size={14} />, count: kpiList.length },
     { key: 'cuti', label: 'Cuti', icon: <Calendar size={14} />, count: leaveList.length },
     { key: 'dokumen', label: 'Dokumen', icon: <FileText size={14} /> },
+    { key: 'catatan', label: 'Catatan', icon: <MessageSquare size={14} />, count: totalNotes > 0 ? totalNotes : undefined },
+    { key: 'cv', label: 'CV', icon: <FileText size={14} /> },
   ]
 
   const docStatusDisplay: Record<string, { label: string; color: string; bg: string }> = {
@@ -346,56 +457,45 @@ function buildFallbackHTML(docId: string, docName: string, emp: any, today: stri
 
         {/* Edit Modal */}
         {showEditProfil && (
-          <div style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.5)', backdropBlur: '4px', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
-            <div style={{ backgroundColor: '#fff', borderRadius: '24px', width: '100%', maxWidth: '800px', maxHeight: '90vh', overflowY: 'auto', padding: '32px', boxShadow: '0 20px 60px rgba(0,0,0,0.15)' }}>
+          <div style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(4px)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
+            <div style={{ backgroundColor: '#fff', borderRadius: '24px', width: '100%', maxWidth: '900px', maxHeight: '90vh', overflowY: 'auto', padding: '32px', boxShadow: '0 20px 60px rgba(0,0,0,0.15)' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px' }}>
                 <h2 style={{ fontSize: '24px', fontWeight: 900, color: '#020000', margin: 0 }}>Edit Profil Karyawan</h2>
                 <button onClick={() => setShowEditProfil(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#8A8A8D' }}><X size={24} /></button>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
-                <div>
-                  <div className="form-section-title" style={{ fontSize: '11px', fontWeight: 800, color: '#8A8A8D', textTransform: 'uppercase', letterSpacing: '1.5px', marginBottom: '16px', borderBottom: '1.5px solid #F0EEEC', paddingBottom: '8px' }}>Data Pribadi</div>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                    <div>
-                      <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, marginBottom: '6px' }}>NIK KTP</label>
-                      <input style={{ width: '100%', padding: '12px 16px', backgroundColor: '#F9F8F6', border: '1.5px solid #E8E4E0', borderRadius: '12px', fontSize: '14px', fontWeight: 500, outline: 'none' }} value={editForm.id_number || ''} onChange={e => setEditProfilForm(f => ({ ...f, id_number: e.target.value }))} />
-                    </div>
-                    <div>
-                      <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, marginBottom: '6px' }}>Email</label>
-                      <input type="email" style={{ width: '100%', padding: '12px 16px', backgroundColor: '#F9F8F6', border: '1.5px solid #E8E4E0', borderRadius: '12px', fontSize: '14px', fontWeight: 500, outline: 'none' }} value={editForm.email || ''} onChange={e => setEditProfilForm(f => ({ ...f, email: e.target.value }))} />
-                    </div>
-                    <div>
-                      <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, marginBottom: '6px' }}>No. HP</label>
-                      <input style={{ width: '100%', padding: '12px 16px', backgroundColor: '#F9F8F6', border: '1.5px solid #E8E4E0', borderRadius: '12px', fontSize: '14px', fontWeight: 500, outline: 'none' }} value={editForm.phone || ''} onChange={e => setEditProfilForm(f => ({ ...f, phone: e.target.value }))} />
-                    </div>
-                    <div>
-                      <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, marginBottom: '6px' }}>Alamat</label>
-                      <textarea style={{ width: '100%', padding: '12px 16px', backgroundColor: '#F9F8F6', border: '1.5px solid #E8E4E0', borderRadius: '12px', fontSize: '14px', fontWeight: 500, outline: 'none', minHeight: '80px' }} value={editForm.address || ''} onChange={e => setEditProfilForm(f => ({ ...f, address: e.target.value }))} />
-                    </div>
-                  </div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '24px' }}>
+                {/* Column 1: Identity */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                  <div className="form-section-title" style={{ fontSize: '11px', fontWeight: 800, color: '#8A8A8D', textTransform: 'uppercase', letterSpacing: '1.5px', borderBottom: '1.5px solid #F0EEEC', paddingBottom: '8px' }}>Identitas</div>
+                  <div><label style={lbl}>Nama Lengkap</label><input style={{...ist, width:'100%', padding:'10px'}} value={editForm.full_name || ''} onChange={e => setEditProfilForm(f => ({ ...f, full_name: e.target.value }))} /></div>
+                  <div><label style={lbl}>Nama Panggilan</label><input style={{...ist, width:'100%', padding:'10px'}} value={editForm.nickname || ''} onChange={e => setEditProfilForm(f => ({ ...f, nickname: e.target.value }))} /></div>
+                  <div><label style={lbl}>NIK KTP/SIM</label><input style={{...ist, width:'100%', padding:'10px'}} value={editForm.identity_number || ''} onChange={e => setEditProfilForm(f => ({ ...f, identity_number: e.target.value }))} /></div>
+                  <div><label style={lbl}>Email</label><input style={{...ist, width:'100%', padding:'10px'}} value={editForm.email || ''} onChange={e => setEditProfilForm(f => ({ ...f, email: e.target.value }))} /></div>
+                  <div><label style={lbl}>No. HP</label><input style={{...ist, width:'100%', padding:'10px'}} value={editForm.phone || ''} onChange={e => setEditProfilForm(f => ({ ...f, phone: e.target.value }))} /></div>
+                  <div><label style={lbl}>Telp Rumah</label><input style={{...ist, width:'100%', padding:'10px'}} value={editForm.home_phone || ''} onChange={e => setEditProfilForm(f => ({ ...f, home_phone: e.target.value }))} /></div>
                 </div>
 
-                <div>
-                  <div className="form-section-title" style={{ fontSize: '11px', fontWeight: 800, color: '#8A8A8D', textTransform: 'uppercase', letterSpacing: '1.5px', marginBottom: '16px', borderBottom: '1.5px solid #F0EEEC', paddingBottom: '8px' }}>Data Pekerjaan</div>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                    <div>
-                      <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, marginBottom: '6px' }}>Posisi</label>
-                      <input style={{ width: '100%', padding: '12px 16px', backgroundColor: '#F9F8F6', border: '1.5px solid #E8E4E0', borderRadius: '12px', fontSize: '14px', fontWeight: 500, outline: 'none' }} value={editForm.position || ''} onChange={e => setEditProfilForm(f => ({ ...f, position: e.target.value }))} />
-                    </div>
-                    <div>
-                      <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, marginBottom: '6px' }}>Departemen</label>
-                      <input style={{ width: '100%', padding: '12px 16px', backgroundColor: '#F9F8F6', border: '1.5px solid #E8E4E0', borderRadius: '12px', fontSize: '14px', fontWeight: 500, outline: 'none' }} value={editForm.department || ''} onChange={e => setEditProfilForm(f => ({ ...f, department: e.target.value }))} />
-                    </div>
-                    <div>
-                      <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, marginBottom: '6px' }}>Entity</label>
-                      <input style={{ width: '100%', padding: '12px 16px', backgroundColor: '#F9F8F6', border: '1.5px solid #E8E4E0', borderRadius: '12px', fontSize: '14px', fontWeight: 500, outline: 'none' }} value={editForm.entity || ''} onChange={e => setEditProfilForm(f => ({ ...f, entity: e.target.value }))} />
-                    </div>
-                    <div>
-                      <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, marginBottom: '6px' }}>Gaji Pokok</label>
-                      <input type="number" style={{ width: '100%', padding: '12px 16px', backgroundColor: '#F9F8F6', border: '1.5px solid #E8E4E0', borderRadius: '12px', fontSize: '14px', fontWeight: 500, outline: 'none' }} value={editForm.base_salary || ''} onChange={e => setEditProfilForm(f => ({ ...f, base_salary: Number(e.target.value) }))} />
-                    </div>
-                  </div>
+                {/* Column 2: Personal & Family */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                  <div className="form-section-title" style={{ fontSize: '11px', fontWeight: 800, color: '#8A8A8D', textTransform: 'uppercase', letterSpacing: '1.5px', borderBottom: '1.5px solid #F0EEEC', paddingBottom: '8px' }}>Pribadi & Keluarga</div>
+                  <div><label style={lbl}>Tempat Lahir</label><input style={{...ist, width:'100%', padding:'10px'}} value={editForm.birth_place || ''} onChange={e => setEditProfilForm(f => ({ ...f, birth_place: e.target.value }))} /></div>
+                  <div><label style={lbl}>Tanggal Lahir</label><input type="date" style={{...ist, width:'100%', padding:'10px'}} value={editForm.birth_date || ''} onChange={e => setEditProfilForm(f => ({ ...f, birth_date: e.target.value }))} /></div>
+                  <div><label style={lbl}>Agama</label><input style={{...ist, width:'100%', padding:'10px'}} value={editForm.religion || ''} onChange={e => setEditProfilForm(f => ({ ...f, religion: e.target.value }))} /></div>
+                  <div><label style={lbl}>Gol. Darah</label><input style={{...ist, width:'100%', padding:'10px'}} value={editForm.blood_type || ''} onChange={e => setEditProfilForm(f => ({ ...f, blood_type: e.target.value }))} /></div>
+                  <div><label style={lbl}>Status Nikah</label><input style={{...ist, width:'100%', padding:'10px'}} value={editForm.marital_status || ''} onChange={e => setEditProfilForm(f => ({ ...f, marital_status: e.target.value }))} /></div>
+                  <div><label style={lbl}>Alamat KTP</label><textarea style={{...ist, width:'100%', padding:'10px'}} value={editForm.address_ktp || ''} onChange={e => setEditProfilForm(f => ({ ...f, address_ktp: e.target.value }))} /></div>
+                </div>
+
+                {/* Column 3: Work & Financial */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                  <div className="form-section-title" style={{ fontSize: '11px', fontWeight: 800, color: '#8A8A8D', textTransform: 'uppercase', letterSpacing: '1.5px', borderBottom: '1.5px solid #F0EEEC', paddingBottom: '8px' }}>Pekerjaan & Finansial</div>
+                  <div><label style={lbl}>Posisi</label><input style={{...ist, width:'100%', padding:'10px'}} value={editForm.position || ''} onChange={e => setEditProfilForm(f => ({ ...f, position: e.target.value }))} /></div>
+                  <div><label style={lbl}>Departemen</label><input style={{...ist, width:'100%', padding:'10px'}} value={editForm.department || ''} onChange={e => setEditProfilForm(f => ({ ...f, department: e.target.value }))} /></div>
+                  <div><label style={lbl}>Gaji Pokok</label><input type="number" style={{...ist, width:'100%', padding:'10px'}} value={editForm.base_salary || ''} onChange={e => setEditProfilForm(f => ({ ...f, base_salary: Number(e.target.value) }))} /></div>
+                  <div><label style={lbl}>NPWP</label><input style={{...ist, width:'100%', padding:'10px'}} value={editForm.npwp_number || ''} onChange={e => setEditProfilForm(f => ({ ...f, npwp_number: e.target.value }))} /></div>
+                  <div><label style={lbl}>BPJS Kes</label><input style={{...ist, width:'100%', padding:'10px'}} value={editForm.bpjs_kesehatan_number || ''} onChange={e => setEditProfilForm(f => ({ ...f, bpjs_kesehatan_number: e.target.value }))} /></div>
+                  <div><label style={lbl}>No. Rekening</label><input style={{...ist, width:'100%', padding:'10px'}} value={editForm.bank_account_number || ''} onChange={e => setEditProfilForm(f => ({ ...f, bank_account_number: e.target.value }))} /></div>
                 </div>
               </div>
 
@@ -425,7 +525,7 @@ function buildFallbackHTML(docId: string, docName: string, emp: any, today: stri
                 </div>
                 <div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <p style={{ color: '#020000', fontWeight: 900, fontSize: '22px', margin: 0, lineHeight: 1.1, trackingTight: '-0.02em' }}>{employee.full_name}</p>
+                    <p style={{ color: '#020000', fontWeight: 900, fontSize: '22px', margin: 0, lineHeight: 1.1, letterSpacing: '-0.02em' }}>{employee.full_name}</p>
                     <span style={{ fontSize: '10px', fontWeight: 800, padding: '3px 10px', borderRadius: '6px', backgroundColor: s.bg, color: s.color, textTransform: 'uppercase' }}>
                       {employee.status}
                     </span>
@@ -466,45 +566,256 @@ function buildFallbackHTML(docId: string, docName: string, emp: any, today: stri
 
         <div style={{ padding: '24px', maxWidth: '960px', margin: '0 auto' }}>
 
-          {/* ── PROFIL TAB ── */}
+          {/* ── KELUARGA TAB ── */}
+          {tab === 'keluarga' && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+               <div style={{ backgroundColor: '#fff', borderRadius: '16px', padding: '24px', border: '1.5px solid #E8E4E0' }}>
+                  <h3 style={{ fontSize: '14px', fontWeight: 700, color: '#020000', margin: '0 0 16px', textTransform: 'uppercase' }}>Daftar Anggota Keluarga</h3>
+                  <div style={{ overflowX: 'auto' }}>
+                    <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px' }}>
+                      <thead>
+                        <tr style={{ backgroundColor: '#F7F5F2', borderBottom: '1.5px solid #E8E4E0' }}>
+                          {['Hubungan', 'Nama', 'L/P', 'Tgl Lahir', 'Pendidikan', 'Pekerjaan'].map(h => <th key={h} style={{ padding: '12px', textAlign: 'left', fontWeight: 700, color: '#8A8A8D' }}>{h}</th>)}
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {(employee.family_data || []).map((f: any, i: number) => (
+                          <tr key={i} style={{ borderBottom: '1px solid #F0EEEC' }}>
+                            <td style={{ padding: '12px', fontWeight: 600, color: '#037894' }}>{f.relation}</td>
+                            <td style={{ padding: '12px', color: '#020000' }}>{f.name}</td>
+                            <td style={{ padding: '12px', color: '#4C4845' }}>{f.gender}</td>
+                            <td style={{ padding: '12px', color: '#4C4845' }}>{f.birth_date}</td>
+                            <td style={{ padding: '12px', color: '#4C4845' }}>{f.education}</td>
+                            <td style={{ padding: '12px', color: '#4C4845' }}>{f.occupation}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+               </div>
+
+               {employee.internal_relations && employee.internal_relations.length > 0 && (
+                  <div style={{ backgroundColor: '#fff', borderRadius: '16px', padding: '24px', border: '1.5px solid #E8E4E0' }}>
+                    <h3 style={{ fontSize: '14px', fontWeight: 700, color: '#020000', margin: '0 0 16px', textTransform: 'uppercase' }}>Saudara / Kenalan di Strada</h3>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '12px' }}>
+                      {employee.internal_relations.map((r: any, i: number) => (
+                        <div key={i} style={{ padding: '12px', borderRadius: '12px', backgroundColor: '#F7F5F2', border: '1px solid #E8E4E0' }}>
+                           <p style={{ fontSize: '13px', fontWeight: 700, margin: '0 0 2px' }}>{r.name}</p>
+                           <p style={{ fontSize: '11px', color: '#8A8A8D', margin: 0 }}>{r.position} · {r.relationship}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+               )}
+            </div>
+          )}
+
+          {/* ── RIWAYAT TAB ── */}
+          {tab === 'riwayat' && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+               <div style={{ backgroundColor: '#fff', borderRadius: '16px', padding: '24px', border: '1.5px solid #E8E4E0' }}>
+                  <h3 style={{ fontSize: '14px', fontWeight: 700, color: '#020000', margin: '0 0 16px', textTransform: 'uppercase' }}>Riwayat Pekerjaan</h3>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                    {(employee.work_history || []).map((w: any, i: number) => (
+                      <div key={i} style={{ padding: '16px', borderRadius: '14px', border: '1.5px solid #F0EEEC', backgroundColor: '#F9FBFB' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                           <span style={{ fontSize: '14px', fontWeight: 800, color: '#037894' }}>{w.company_name}</span>
+                           <span style={{ fontSize: '11px', fontWeight: 700, color: '#8A8A8D', padding: '4px 10px', backgroundColor: '#fff', borderRadius: '8px', border: '1px solid #E8E4E0' }}>{w.duration}</span>
+                        </div>
+                        <p style={{ fontSize: '13px', fontWeight: 700, color: '#020000', margin: '0 0 4px' }}>{w.position}</p>
+                        <p style={{ fontSize: '12px', color: '#4C4845', margin: '0 0 8px' }}>Gaji: {w.salary}</p>
+                        <p style={{ fontSize: '12px', color: '#8A8A8D', margin: 0, fontStyle: 'italic' }}>Alasan pindah: {w.reason_for_leaving}</p>
+                      </div>
+                    ))}
+                  </div>
+                  <div style={{ marginTop: '20px', padding: '12px', borderRadius: '12px', backgroundColor: '#E6F4F1' }}>
+                     <p style={{ fontSize: '11px', fontWeight: 700, color: '#037894', textTransform: 'uppercase', marginBottom: '4px' }}>Paling Senang Bekerja Di</p>
+                     <p style={{ fontSize: '13px', color: '#005353', margin: 0 }}><strong>{employee.happiest_workplace || '-'}</strong>: {employee.happiest_workplace_reason || '-'}</p>
+                  </div>
+               </div>
+
+               <div style={{ backgroundColor: '#fff', borderRadius: '16px', padding: '24px', border: '1.5px solid #E8E4E0' }}>
+                  <h3 style={{ fontSize: '14px', fontWeight: 700, color: '#020000', margin: '0 0 16px', textTransform: 'uppercase' }}>Pendidikan & Bahasa</h3>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+                    <div>
+                       <p style={{ fontSize: '11px', fontWeight: 800, color: '#8A8A8D', textTransform: 'uppercase', marginBottom: '10px' }}>Sekolah Resmi</p>
+                       <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                         {(employee.education_history || []).map((ed: any, i: number) => ed.school_name && (
+                           <div key={i} style={{ padding: '10px', borderRadius: '10px', backgroundColor: '#F7F5F2' }}>
+                              <p style={{ fontSize: '12px', fontWeight: 800, margin: 0 }}>{ed.level}: {ed.school_name}</p>
+                              <p style={{ fontSize: '11px', color: '#4C4845', margin: 0 }}>{ed.major} · {ed.city} · {ed.graduation_year}</p>
+                           </div>
+                         ))}
+                       </div>
+                    </div>
+                    <div>
+                       <p style={{ fontSize: '11px', fontWeight: 800, color: '#8A8A8D', textTransform: 'uppercase', marginBottom: '10px' }}>Keahlian Bahasa</p>
+                       <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                         {(employee.language_skills || []).map((l: any, i: number) => (
+                           <div key={i} style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 12px', backgroundColor: '#F9FBFB', borderRadius: '8px', border: '1px solid #F0EEEC' }}>
+                              <span style={{ fontSize: '12px', fontWeight: 700 }}>{l.language}</span>
+                              <span style={{ fontSize: '11px', color: '#037894', fontWeight: 700 }}>Lisan: {l.spoken} · Tulis: {l.written}</span>
+                           </div>
+                         ))}
+                       </div>
+                    </div>
+                  </div>
+               </div>
+
+               {employee.training_history && employee.training_history.length > 0 && (
+                  <div style={{ backgroundColor: '#fff', borderRadius: '16px', padding: '24px', border: '1.5px solid #E8E4E0' }}>
+                    <h3 style={{ fontSize: '14px', fontWeight: 700, color: '#020000', margin: '0 0 16px', textTransform: 'uppercase' }}>Kursus & Training</h3>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                      {employee.training_history.map((t: any, i: number) => t.name && (
+                        <div key={i} style={{ padding: '12px', borderRadius: '12px', backgroundColor: '#F9FBFB', border: '1px solid #F0EEEC' }}>
+                           <p style={{ fontSize: '13px', fontWeight: 700, margin: '0 0 2px' }}>{t.name}</p>
+                           <p style={{ fontSize: '11px', color: '#4C4845', margin: 0 }}>{t.location} · {t.duration} · {t.year}</p>
+                           {t.description && <p style={{ fontSize: '11px', color: '#8A8A8D', marginTop: '4px', fontStyle: 'italic' }}>{t.description}</p>}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+               )}
+
+               <div style={{ backgroundColor: '#fff', borderRadius: '16px', padding: '24px', border: '1.5px solid #E8E4E0' }}>
+                  <h3 style={{ fontSize: '14px', fontWeight: 700, color: '#020000', margin: '0 0 16px', textTransform: 'uppercase' }}>Minat & Lainnya</h3>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+                    <div>
+                       <p style={{ fontSize: '11px', fontWeight: 800, color: '#8A8A8D', textTransform: 'uppercase', marginBottom: '10px' }}>Minat Pekerjaan</p>
+                       {(employee.job_interests || []).map((j: any, i: number) => j.type && (
+                         <div key={i} style={{ marginBottom: '4px', fontSize: '12px', display: 'flex', gap: '8px' }}>
+                            <span style={{ fontWeight: 800, color: '#037894' }}>#{j.rank}</span>
+                            <span>{j.type}</span>
+                         </div>
+                       ))}
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                       <div>
+                          <p style={{ fontSize: '11px', fontWeight: 800, color: '#8A8A8D', textTransform: 'uppercase', marginBottom: '2px' }}>Penempatan Luar Kota</p>
+                          <p style={{ fontSize: '13px', margin: 0 }}>{employee.willing_to_be_relocated ? '✓ Bersedia' : `✗ Tidak (${employee.relocation_refusal_reason || 'Tanpa alasan'})`}</p>
+                       </div>
+                       <div>
+                          <p style={{ fontSize: '11px', fontWeight: 800, color: '#8A8A8D', textTransform: 'uppercase', marginBottom: '2px' }}>Aktivitas Sosial</p>
+                          <p style={{ fontSize: '12px', color: '#4C4845', margin: 0 }}><strong>Olahraga:</strong> {employee.social_sports || '-'}</p>
+                          <p style={{ fontSize: '12px', color: '#4C4845', margin: 0 }}><strong>Hobby:</strong> {employee.social_hobbies || '-'}</p>
+                          <p style={{ fontSize: '12px', color: '#4C4845', margin: 0 }}><strong>Organisasi:</strong> {employee.social_organizations || '-'}</p>
+                       </div>
+                    </div>
+                  </div>
+               </div>
+            </div>
+          )}
+
+          {/* ── PROFIL DATA VIEW ── */}
           {tab === 'profil' && (
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }} className="emp-grid">
-              {[
-                { title: 'Data Pribadi', fields: [
-                  ['NIK KTP', employee.id_number || '-'],
-                  ['Tanggal Lahir', employee.birth_date ? new Date(employee.birth_date).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) : '-'],
-                  ['Jenis Kelamin', employee.gender === 'L' ? 'Laki-laki' : employee.gender === 'P' ? 'Perempuan' : '-'],
-                  ['Email', employee.email || '-'],
-                  ['No. HP', employee.phone || '-'],
-                  ['Alamat', employee.address || '-'],
-                ]},
-                { title: 'Data Pekerjaan', fields: [
-                  ['Posisi', employee.position],
-                  ['Departemen', employee.department],
-                  ['Entity', employee.entity],
-                  ['Outlet', employee.outlet || '-'],
-                  ['Tipe Kontrak', employee.employment_type || '-'],
-                  ['Tanggal Masuk', new Date(employee.join_date).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })],
-                ]},
-                { title: 'Kontrak', fields: [
-                  ['Mulai Kontrak', employee.contract_start ? new Date(employee.contract_start).toLocaleDateString('id-ID') : '-'],
-                  ['Akhir Kontrak', employee.contract_end ? new Date(employee.contract_end).toLocaleDateString('id-ID') : 'Tidak ada (Tetap)'],
-                  ['Gaji Pokok', employee.base_salary ? 'Rp ' + Number(employee.base_salary).toLocaleString('id-ID') : '-'],
-                ]},
-                { title: 'Catatan', fields: [['Catatan Internal', employee.notes || '-']] },
-              ].map(section => (
-                <div key={section.title} style={{ backgroundColor: '#fff', borderRadius: '16px', padding: '20px', border: '1.5px solid #E8E4E0' }}>
-                  <h3 style={{ fontSize: '13px', fontWeight: 700, color: '#020000', margin: '0 0 14px', textTransform: 'uppercase', letterSpacing: '1px' }}>{section.title}</h3>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                    {section.fields.map(([k, v]) => (
-                      <div key={k} style={{ display: 'flex', justifyContent: 'space-between', gap: '12px', padding: '7px 0', borderBottom: '1px solid #F0EEEC' }}>
-                        <span style={{ fontSize: '12px', color: '#8A8A8D', flexShrink: 0 }}>{k}</span>
-                        <span style={{ fontSize: '13px', color: '#020000', fontWeight: 500, textAlign: 'right', wordBreak: 'break-word' }}>{v}</span>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+
+              {/* Identitas & Kontak */}
+              <div style={{ backgroundColor: '#fff', borderRadius: '16px', padding: '24px', border: '1.5px solid #E8E4E0' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px', paddingBottom: '10px', borderBottom: '1.5px solid #F0EEEC' }}>
+                  <p style={{ fontSize: '11px', fontWeight: 800, color: '#037894', textTransform: 'uppercase', letterSpacing: '2px', margin: 0 }}>Identitas & Kontak</p>
+                  <button onClick={() => setShowEditProfil(true)} style={{ padding: '6px 14px', borderRadius: '8px', border: '1.5px solid #037894', backgroundColor: 'transparent', color: '#037894', fontSize: '12px', fontWeight: 700, cursor: 'pointer' }}>
+                    Edit Profil
+                  </button>
+                </div>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px' }} className="emp-grid">
+                  {[
+                    { label: 'Nama Lengkap', value: employee.full_name },
+                    { label: 'Nama Panggilan', value: employee.nickname || employee.nick_name },
+                    { label: 'NIK / No. KTP', value: employee.identity_number || employee.id_number },
+                    { label: 'Email', value: employee.email },
+                    { label: 'No. HP', value: employee.phone },
+                    { label: 'Telp Rumah', value: employee.home_phone },
+                    { label: 'Tempat Lahir', value: employee.birth_place || employee.place_of_birth },
+                    { label: 'Tanggal Lahir', value: employee.birth_date ? new Date(employee.birth_date).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) : null },
+                    { label: 'Agama', value: employee.religion },
+                    { label: 'Gol. Darah', value: employee.blood_type },
+                    { label: 'Jenis Kelamin', value: employee.gender },
+                    { label: 'Status Pernikahan', value: employee.marital_status },
+                  ].filter(f => f.value).map(({ label, value }) => (
+                    <div key={label}>
+                      <p style={{ fontSize: '11px', fontWeight: 700, color: '#8A8A8D', textTransform: 'uppercase', letterSpacing: '0.5px', margin: '0 0 4px' }}>{label}</p>
+                      <p style={{ fontSize: '13px', color: '#020000', fontWeight: 600, margin: 0 }}>{value}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Alamat — fall back to legacy 'address' column */}
+              {(employee.address_ktp || employee.address || employee.address_domicile) && (
+                <div style={{ backgroundColor: '#fff', borderRadius: '16px', padding: '24px', border: '1.5px solid #E8E4E0' }}>
+                  <p style={{ fontSize: '11px', fontWeight: 800, color: '#037894', textTransform: 'uppercase', letterSpacing: '2px', margin: '0 0 16px', paddingBottom: '10px', borderBottom: '1.5px solid #F0EEEC' }}>Alamat</p>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+                    {(employee.address_ktp || employee.address) && <div>
+                      <p style={{ fontSize: '11px', fontWeight: 700, color: '#8A8A8D', textTransform: 'uppercase', letterSpacing: '0.5px', margin: '0 0 4px' }}>Alamat KTP</p>
+                      <p style={{ fontSize: '13px', color: '#020000', margin: 0, lineHeight: 1.6 }}>{employee.address_ktp || employee.address}</p>
+                    </div>}
+                    {employee.address_domicile && <div>
+                      <p style={{ fontSize: '11px', fontWeight: 700, color: '#8A8A8D', textTransform: 'uppercase', letterSpacing: '0.5px', margin: '0 0 4px' }}>Alamat Domisili</p>
+                      <p style={{ fontSize: '13px', color: '#020000', margin: 0, lineHeight: 1.6 }}>{employee.address_domicile}</p>
+                    </div>}
+                    {employee.postal_code && <div>
+                      <p style={{ fontSize: '11px', fontWeight: 700, color: '#8A8A8D', textTransform: 'uppercase', letterSpacing: '0.5px', margin: '0 0 4px' }}>Kode Pos</p>
+                      <p style={{ fontSize: '13px', color: '#020000', fontWeight: 600, margin: 0 }}>{employee.postal_code}</p>
+                    </div>}
+                  </div>
+                </div>
+              )}
+
+              {/* Informasi Pekerjaan */}
+              <div style={{ backgroundColor: '#fff', borderRadius: '16px', padding: '24px', border: '1.5px solid #E8E4E0' }}>
+                <p style={{ fontSize: '11px', fontWeight: 800, color: '#037894', textTransform: 'uppercase', letterSpacing: '2px', margin: '0 0 16px', paddingBottom: '10px', borderBottom: '1.5px solid #F0EEEC' }}>Informasi Pekerjaan</p>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px' }} className="emp-grid">
+                  {[
+                    { label: 'Posisi', value: employee.position },
+                    { label: 'Departemen', value: employee.department },
+                    { label: 'Entitas', value: employee.entity },
+                    { label: 'Outlet', value: employee.outlet },
+                    { label: 'Tipe Kontrak', value: employee.employment_type },
+                    { label: 'Tanggal Masuk', value: employee.join_date ? new Date(employee.join_date).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) : null },
+                    { label: 'Mulai Kontrak', value: employee.contract_start ? new Date(employee.contract_start).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }) : null },
+                    { label: 'Akhir Kontrak', value: employee.contract_end ? new Date(employee.contract_end).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }) : null },
+                    { label: 'Gaji Pokok', value: employee.base_salary ? `Rp ${Number(employee.base_salary).toLocaleString('id-ID')}` : null },
+                    { label: 'Grade', value: employee.grade },
+                    { label: 'PKWT Ke-', value: employee.pkwt_ke ? String(employee.pkwt_ke) : null },
+                  ].filter(f => f.value).map(({ label, value }) => (
+                    <div key={label}>
+                      <p style={{ fontSize: '11px', fontWeight: 700, color: '#8A8A8D', textTransform: 'uppercase', letterSpacing: '0.5px', margin: '0 0 4px' }}>{label}</p>
+                      <p style={{ fontSize: '13px', color: '#020000', fontWeight: 600, margin: 0 }}>{value}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Data Keuangan — fall back to legacy columns */}
+              {(employee.bpjs_kesehatan_number || employee.bpjs_kesehatan || employee.npwp_number || employee.npwp || employee.bank_account_number) && (
+                <div style={{ backgroundColor: '#fff', borderRadius: '16px', padding: '24px', border: '1.5px solid #E8E4E0' }}>
+                  <p style={{ fontSize: '11px', fontWeight: 800, color: '#037894', textTransform: 'uppercase', letterSpacing: '2px', margin: '0 0 16px', paddingBottom: '10px', borderBottom: '1.5px solid #F0EEEC' }}>Data Keuangan & Jaminan</p>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px' }} className="emp-grid">
+                    {[
+                      { label: 'BPJS Kesehatan', value: employee.bpjs_kesehatan_number || employee.bpjs_kesehatan },
+                      { label: 'BPJS Ketenagakerjaan', value: employee.bpjs_ketenagakerjaan_number || employee.bpjs_tk },
+                      { label: 'NPWP', value: employee.npwp_number || employee.npwp },
+                      { label: 'Nama Bank', value: employee.bank_name },
+                      { label: 'No. Rekening', value: employee.bank_account_number },
+                      { label: 'Nama Rekening', value: employee.bank_account_name },
+                    ].filter(f => f.value).map(({ label, value }) => (
+                      <div key={label}>
+                        <p style={{ fontSize: '11px', fontWeight: 700, color: '#8A8A8D', textTransform: 'uppercase', letterSpacing: '0.5px', margin: '0 0 4px' }}>{label}</p>
+                        <p style={{ fontSize: '13px', color: '#020000', fontWeight: 600, margin: 0 }}>{value}</p>
                       </div>
                     ))}
                   </div>
                 </div>
-              ))}
+              )}
+
+              {/* Notes / Case Notes */}
+              {(employee.notes || employee.case_notes) && (
+                <div style={{ backgroundColor: '#fff', borderRadius: '16px', padding: '24px', border: '1.5px solid #E8E4E0' }}>
+                  <p style={{ fontSize: '11px', fontWeight: 800, color: '#037894', textTransform: 'uppercase', letterSpacing: '2px', margin: '0 0 12px', paddingBottom: '10px', borderBottom: '1.5px solid #F0EEEC' }}>Catatan Khusus</p>
+                  <p style={{ fontSize: '13px', color: '#4C4845', lineHeight: 1.7, margin: 0, whiteSpace: 'pre-wrap' }}>{employee.notes || employee.case_notes}</p>
+                </div>
+              )}
             </div>
           )}
 
@@ -606,6 +917,7 @@ function buildFallbackHTML(docId: string, docName: string, emp: any, today: stri
               )}
             </div>
           )}
+
 
           {/* ── TIMELINE TAB ── */}
           {tab === 'timeline' && (
@@ -1072,6 +1384,133 @@ function buildFallbackHTML(docId: string, docName: string, emp: any, today: stri
                   </div>
                 </div>
               )}
+            </div>
+          )}
+
+          {/* ── CATATAN TAB ── */}
+          {tab === 'catatan' && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+
+              {/* New Note Input */}
+              <div style={{ backgroundColor: '#fff', borderRadius: '16px', padding: '24px', border: '1.5px solid #E8E4E0' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+                  <MessageSquare size={14} color="#037894" />
+                  <span style={{ fontSize: '14px', fontWeight: 700, color: '#020000' }}>Catatan Internal HR</span>
+                </div>
+                <p style={{ fontSize: '12px', color: '#8A8A8D', margin: '0 0 14px', lineHeight: 1.5 }}>
+                  Catatan ini hanya visible untuk tim HRD dan akan digabungkan dengan catatan fase rekrutmen.
+                </p>
+                <textarea
+                  value={noteInput}
+                  onChange={e => setNoteInput(e.target.value)}
+                  placeholder="Tulis catatan internal di sini..."
+                  style={{ width: '100%', minHeight: '90px', padding: '12px', borderRadius: '10px', border: '1.5px solid #E8E4E0', fontSize: '13px', color: '#037894', lineHeight: 1.6, resize: 'vertical', boxSizing: 'border-box', fontFamily: 'inherit', outline: 'none' }}
+                />
+                <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '10px' }}>
+                  <button onClick={handleSaveNotes} disabled={savingNotes || !noteInput.trim()}
+                    style={{ padding: '9px 24px', borderRadius: '10px', border: 'none', cursor: (savingNotes || !noteInput.trim()) ? 'not-allowed' : 'pointer', fontSize: '13px', fontWeight: 700, backgroundColor: notesSaved ? '#005353' : '#037894', color: '#fff', opacity: !noteInput.trim() ? 0.5 : 1, transition: 'all 0.2s' }}>
+                    {notesSaved ? '✓ Tersimpan' : savingNotes ? 'Menyimpan...' : 'Simpan Catatan'}
+                  </button>
+                </div>
+              </div>
+
+              {/* Combined Notes Timeline */}
+              <div style={{ backgroundColor: '#fff', borderRadius: '16px', padding: '24px', border: '1.5px solid #E8E4E0' }}>
+                {(internalNotesList.length + applicantScreeningNotes.length) > 0 ? (
+                  <>
+                    <p style={{ fontSize: '11px', fontWeight: 800, color: '#8A8A8D', textTransform: 'uppercase', letterSpacing: '1.5px', margin: '0 0 16px' }}>
+                      Semua Catatan — {internalNotesList.length + applicantScreeningNotes.length} entri
+                    </p>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                      {([
+                        ...internalNotesList.map(n => ({ ...(n as Record<string, any>), _type: 'internal' })),
+                        ...applicantScreeningNotes.map(n => ({ ...(n as Record<string, any>), _type: 'screening' })),
+                      ] as Record<string, any>[])
+                        .sort((a, b) => new Date(b.created_at || 0).getTime() - new Date(a.created_at || 0).getTime())
+                        .map((note, idx) => (
+                          <div key={note.id || idx} style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
+                            <div style={{ width: '28px', height: '28px', borderRadius: '50%', backgroundColor: note._type === 'screening' ? '#FEF8E6' : '#E6F4F8', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, fontSize: '14px' }}>
+                              {note._type === 'screening' ? '🔍' : '📝'}
+                            </div>
+                            <div style={{ flex: 1, backgroundColor: '#F9FBFB', borderRadius: '12px', padding: '12px 16px', border: '1px solid #F0EEEC' }}>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px', flexWrap: 'wrap' }}>
+                                <span style={{ fontSize: '9px', fontWeight: 800, padding: '2px 8px', borderRadius: '6px', textTransform: 'uppercase', letterSpacing: '0.5px', backgroundColor: note._type === 'screening' ? '#FEF8E6' : '#E6F4F8', color: note._type === 'screening' ? '#DE9733' : '#037894' }}>
+                                  {note._type === 'screening' ? 'Fase Rekrutmen' : 'Internal HR'}
+                                </span>
+                                {note.actor_name && <span style={{ fontSize: '11px', color: '#8A8A8D', fontWeight: 600 }}>{note.actor_name}</span>}
+                              </div>
+                              <p style={{ fontSize: '13px', color: '#020000', margin: '0 0 6px', lineHeight: 1.5, whiteSpace: 'pre-wrap' }}>
+                                {note._type === 'screening' ? note.note : note.title}
+                              </p>
+                              <span style={{ fontSize: '10px', color: '#8A8A8D', fontWeight: 600 }}>
+                                {note.created_at ? new Date(note.created_at).toLocaleString('id-ID', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : ''}
+                              </span>
+                            </div>
+                          </div>
+                        ))}
+                    </div>
+                  </>
+                ) : (
+                  <div style={{ textAlign: 'center', padding: '40px 0', color: '#8A8A8D' }}>
+                    <p style={{ fontSize: '14px', margin: '0 0 6px', fontWeight: 600 }}>Belum ada catatan</p>
+                    <p style={{ fontSize: '12px', margin: 0 }}>Catatan yang disimpan akan muncul di sini.</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* ── CV TAB ── */}
+          {tab === 'cv' && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+              <div style={{ backgroundColor: '#fff', borderRadius: '16px', padding: '24px', border: '1.5px solid #E8E4E0' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px', flexWrap: 'wrap', gap: '10px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <FileText size={16} color="#037894" />
+                    <span style={{ fontSize: '14px', fontWeight: 700, color: '#020000' }}>CV / Resume Karyawan</span>
+                  </div>
+                  <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                    {empCvUrl && (
+                      <a href={empCvUrl} target="_blank" rel="noopener noreferrer"
+                        style={{ padding: '8px 18px', borderRadius: '10px', backgroundColor: '#E6F4F1', color: '#005353', fontSize: '12px', fontWeight: 700, textDecoration: 'none' }}>
+                        ↓ Unduh CV
+                      </a>
+                    )}
+                    {employee.applicant_id && (
+                      <label style={{ padding: '8px 18px', borderRadius: '10px', border: '1.5px solid #E8E4E0', backgroundColor: '#fff', color: '#4C4845', fontSize: '12px', fontWeight: 700, cursor: uploadingEmpCv ? 'wait' : 'pointer', opacity: uploadingEmpCv ? 0.6 : 1, display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        <input type="file" accept=".pdf,.doc,.docx,image/*" style={{ display: 'none' }} disabled={uploadingEmpCv}
+                          onChange={e => { const f = e.target.files?.[0]; if (f) handleEmpCvUpload(f) }} />
+                        {uploadingEmpCv ? '⏳ Uploading...' : empCvUrl ? '↑ Ganti CV' : '↑ Upload CV'}
+                      </label>
+                    )}
+                  </div>
+                </div>
+
+                {empCvUrl ? (
+                  empCvUrl.toLowerCase().endsWith('.pdf') ? (
+                    <iframe src={empCvUrl} style={{ width: '100%', height: '700px', borderRadius: '12px', border: '1.5px solid #E8E4E0' }} title="CV Karyawan" />
+                  ) : (
+                    <div style={{ padding: '40px', borderRadius: '12px', backgroundColor: '#F7F5F2', textAlign: 'center' }}>
+                      <FileText size={40} color="#8A8A8D" style={{ margin: '0 auto 12px', display: 'block', opacity: 0.4 }} />
+                      <p style={{ fontSize: '13px', color: '#4C4845', margin: '0 0 16px' }}>File CV tersedia. Klik tombol Unduh untuk membuka.</p>
+                      <a href={empCvUrl} target="_blank" rel="noopener noreferrer"
+                        style={{ display: 'inline-block', padding: '10px 24px', borderRadius: '10px', backgroundColor: '#037894', color: '#fff', fontSize: '13px', fontWeight: 700, textDecoration: 'none' }}>
+                        Buka File CV
+                      </a>
+                    </div>
+                  )
+                ) : (
+                  <div style={{ padding: '60px', borderRadius: '12px', border: '2px dashed #E8E4E0', textAlign: 'center', backgroundColor: '#F9FBFB' }}>
+                    <FileText size={40} color="#D4CFC9" style={{ margin: '0 auto 12px', display: 'block' }} />
+                    <p style={{ fontSize: '14px', color: '#8A8A8D', margin: '0 0 6px', fontWeight: 600 }}>Belum ada CV</p>
+                    <p style={{ fontSize: '12px', color: '#8A8A8D', margin: 0 }}>
+                      {employee.applicant_id
+                        ? 'Pelamar tidak mengupload CV saat mendaftar. Gunakan tombol Upload CV di atas.'
+                        : 'Karyawan ini tidak memiliki data lamaran yang terhubung.'}
+                    </p>
+                  </div>
+                )}
+              </div>
             </div>
           )}
 

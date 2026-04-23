@@ -16,6 +16,30 @@ function ApplyContent() {
   const [submitting, setSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
   const [step, setStep] = useState(1)
+  const [cvUrl, setCvUrl] = useState<string>('')
+  const [uploadingCv, setUploadingCv] = useState(false)
+  const [cvFileName, setCvFileName] = useState<string>('')
+
+  async function handleCvUpload(file: File) {
+    setUploadingCv(true)
+    try {
+      const ext = file.name.split('.').pop() || 'pdf'
+      const path = `cv_${Date.now()}_${Math.random().toString(36).slice(2)}.${ext}`
+      const { data, error } = await supabase.storage.from('cvs').upload(path, file, {
+        contentType: file.type,
+        upsert: false,
+      })
+      if (!error && data) {
+        const { data: urlData } = supabase.storage.from('cvs').getPublicUrl(data.path)
+        setCvUrl(urlData.publicUrl)
+        setCvFileName(file.name)
+      }
+    } catch {
+      // CV upload is optional, fail silently
+    } finally {
+      setUploadingCv(false)
+    }
+  }
 
   const [form, setForm] = useState({
     full_name: '',
@@ -79,45 +103,49 @@ function ApplyContent() {
   async function handleSubmit() {
     setSubmitting(true)
     try {
-      const { data: newApplicant } = await supabase
-        .from('applicants')
-        .insert([{
-          ...form,
-          job_posting_id: selectedJob?.id ?? null,
-          source: 'website',
-          status: 'new',
-          pipeline_stage: 'baru_masuk',
-        }])
-        .select('id')
-        .single()
+      const res = await fetch('/api/apply', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          form: { ...form, cv_url: cvUrl || null },
+          job_posting_id: selectedJob?.id
+        }),
+      })
 
-      if (newApplicant?.id) {
-        await supabase.from('applicant_quest_scores').insert([{
-          applicant_id: newApplicant.id,
-          status: 'pending',
-        }])
-        try {
-          await fetch('/api/notify/new-applicant', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              applicant_id: newApplicant.id,
-              ...form,
-              position_applied: form.position_applied || selectedJob?.title || '-',
-            }),
-          })
-        } catch { /* non-blocking */ }
-        try {
-          fetch('/api/quest/score', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ applicant_id: newApplicant.id }),
-          })
-        } catch { /* non-blocking */ }
+      const data = await res.json()
+
+      if (!res.ok) {
+        console.error('API Error:', data.error)
+        alert(`Gagal menyimpan data: ${data.error}`)
+        setSubmitting(false)
+        return
       }
-      setSubmitted(true)
-    } catch {
-      alert('Terjadi kesalahan. Silakan coba lagi.')
+
+      if (data.id) {
+        // Notify and trigger scoring (non-blocking)
+        fetch('/api/notify/new-applicant', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            applicant_id: data.id,
+            ...form,
+            position_applied: form.position_applied || selectedJob?.title || '-',
+          }),
+        }).catch(err => console.error('Notify error:', err))
+
+        fetch('/api/quest/score', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ applicant_id: data.id }),
+        }).catch(err => console.error('Scoring trigger error:', err))
+
+        setSubmitted(true)
+      } else {
+        alert('Gagal membuat ID pelamar. Silakan hubungi admin.')
+      }
+    } catch (err) {
+      console.error('Unexpected error:', err)
+      alert(`Terjadi kesalahan sistem: ${err instanceof Error ? err.message : 'Unknown error'}`)
     } finally {
       setSubmitting(false)
     }
@@ -620,6 +648,40 @@ function ApplyContent() {
                   <p className="text-[12px] text-gray-500 font-medium mt-2 flex items-center gap-1.5">
                     <span className="text-strada-amber">💡</span> Jawaban yang tulus dan personal akan menjadi nilai tambah.
                   </p>
+                </div>
+
+                {/* CV Upload */}
+                <div>
+                  <label className="block text-[14px] font-bold text-gray-900 mb-1">
+                    Upload CV / Resume <span className="text-gray-400 font-medium">(opsional)</span>
+                  </label>
+                  <p className="text-[12px] text-gray-500 mb-3">Format PDF, DOC, DOCX, atau gambar. Maks 10 MB.</p>
+                  {cvUrl ? (
+                    <div className="flex items-center gap-3 p-4 rounded-2xl bg-green-50 border border-green-200">
+                      <span className="text-green-600 text-lg">✓</span>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-[13px] font-bold text-green-700 truncate">{cvFileName}</p>
+                        <p className="text-[11px] text-green-600">CV berhasil diupload</p>
+                      </div>
+                      <button onClick={() => { setCvUrl(''); setCvFileName('') }}
+                        className="text-[11px] font-bold text-gray-500 hover:text-red-500 transition-colors">
+                        Hapus
+                      </button>
+                    </div>
+                  ) : (
+                    <label className={`flex flex-col items-center justify-center gap-3 p-8 rounded-2xl border-2 border-dashed cursor-pointer transition-all ${uploadingCv ? 'border-strada-blue bg-blue-50 opacity-70 cursor-wait' : 'border-gray-200 hover:border-strada-blue hover:bg-blue-50/30'}`}>
+                      <input type="file" accept=".pdf,.doc,.docx,image/*" className="hidden"
+                        disabled={uploadingCv}
+                        onChange={e => { const f = e.target.files?.[0]; if (f) handleCvUpload(f) }} />
+                      <span className="text-3xl">{uploadingCv ? '⏳' : '📄'}</span>
+                      <div className="text-center">
+                        <p className="text-[13px] font-bold text-gray-700">
+                          {uploadingCv ? 'Mengupload...' : 'Klik untuk pilih file'}
+                        </p>
+                        <p className="text-[11px] text-gray-400 mt-1">atau drag & drop di sini</p>
+                      </div>
+                    </label>
+                  )}
                 </div>
 
                 {/* Summary card */}

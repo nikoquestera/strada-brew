@@ -94,34 +94,41 @@ Berikan response dalam format JSON berikut (TANPA teks lain di luar JSON):
   "quest_notes": "<analisa mendalam 2-3 paragraf untuk HR dalam Bahasa Indonesia — jelaskan reasoning di balik skor, bagaimana faktor-faktor saling berinteraksi, dan rekomendasi konkret untuk langkah selanjutnya>"
 }`
 
-  const apiKey = process.env.ANTHROPIC_API_KEY
+  const apiKey = process.env.GEMINI_API_KEY
   if (!apiKey) {
-    throw new Error('ANTHROPIC_API_KEY not configured in environment variables')
+    throw new Error('GEMINI_API_KEY not configured in environment variables')
   }
 
-  const response = await fetch('https://api.anthropic.com/v1/messages', {
+  const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${apiKey}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'x-api-key': apiKey,
-      'anthropic-version': '2023-06-01'
     },
     body: JSON.stringify({
-      model: 'claude-sonnet-4-6',
-      max_tokens: 1500,
-      system: systemPrompt,
-      messages: [{ role: 'user', content: userPrompt }]
+      contents: [{
+        role: 'user',
+        parts: [{
+          text: `${systemPrompt}\n\n${userPrompt}`
+        }]
+      }],
+      generationConfig: {
+        temperature: 0.2,
+        topP: 0.8,
+        topK: 40,
+        maxOutputTokens: 2048,
+        responseMimeType: 'application/json'
+      }
     })
   })
 
   if (!response.ok) {
     const errorText = await response.text()
-    console.error('Anthropic API error:', response.status, errorText)
-    throw new Error(`Anthropic API returned ${response.status}: ${errorText}`)
+    console.error('Gemini API error:', response.status, errorText)
+    throw new Error(`Gemini API returned ${response.status}: ${errorText}`)
   }
 
   const data = await response.json()
-  const text = data.content?.[0]?.text || '{}'
+  const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '{}'
 
   try {
     const clean = text.replace(/```json|```/g, '').trim()

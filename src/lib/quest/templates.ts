@@ -45,19 +45,36 @@ Format JSON:
   "option3": "<teks pesan singkat>"
 }`
 
-  const response = await fetch('https://api.anthropic.com/v1/messages', {
+  const apiKey = process.env.GEMINI_API_KEY
+  if (!apiKey) {
+    console.warn('GEMINI_API_KEY not configured, using fallback templates.')
+    return {
+      option1: `Yth. ${options.applicant_name}, terima kasih atas lamaran Anda untuk posisi ${options.position} di Strada Coffee.`,
+      option2: `Halo ${options.applicant_name}! Tim HR Strada Coffee di sini.`,
+      option3: `Hi ${options.applicant_name}, Strada Coffee HR di sini.`
+    }
+  }
+
+  const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${apiKey}`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      model: 'claude-3-5-sonnet-20240620',
-      max_tokens: 1000,
-      system: finalSystemPrompt,
-      messages: [{ role: 'user', content: userPrompt }]
+      contents: [{
+        role: 'user',
+        parts: [{
+          text: `${finalSystemPrompt}\n\n${userPrompt}`
+        }]
+      }],
+      generationConfig: {
+        temperature: 0.7,
+        maxOutputTokens: 1024,
+        responseMimeType: 'application/json'
+      }
     })
   })
 
   const data = await response.json()
-  const text = data.content?.[0]?.text || '{}'
+  const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '{}'
 
   try {
     const clean = text.replace(/```json|```/g, '').trim()

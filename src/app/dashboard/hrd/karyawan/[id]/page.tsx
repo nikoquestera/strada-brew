@@ -27,10 +27,10 @@ export default async function KaryawanDetailPage({
   }
 
   // Fetch semua relasi dengan try/catch agar tidak crash jika tabel belum ada
-  const safe = async (fn: () => Promise<any>) => {
+  const safe = async (fn: () => PromiseLike<any>) => {
     try { const r = await fn(); return r.data || [] } catch { return [] }
   }
-  const safeOne = async (fn: () => Promise<any>) => {
+  const safeOne = async (fn: () => PromiseLike<any>) => {
     try { const r = await fn(); return r.data || null } catch { return null }
   }
 
@@ -45,6 +45,22 @@ export default async function KaryawanDetailPage({
       safe(() => supabase.from('employee_document_status').select('*').eq('employee_id', employee.id)),
     ])
 
+  // Fetch linked applicant data (screening notes + CV) if employee has applicant_id
+  let applicantScreeningNotes: Record<string, any>[] = []
+  let applicantCvUrl: string | null = null
+
+  if (employee.applicant_id) {
+    const [notesRes, applicantRes] = await Promise.all([
+      safe(() => supabase.from('applicant_activities').select('*')
+        .eq('applicant_id', employee.applicant_id)
+        .eq('activity_type', 'screening_note')
+        .order('created_at', { ascending: false })),
+      safeOne(() => supabase.from('applicants').select('cv_url').eq('id', employee.applicant_id).single()),
+    ])
+    applicantScreeningNotes = notesRes
+    applicantCvUrl = applicantRes?.cv_url || null
+  }
+
   return (
     <KaryawanDetailClient
       employee={employee}
@@ -55,6 +71,8 @@ export default async function KaryawanDetailPage({
       leaveBalance={leaveBalance}
       docTemplates={docTemplates}
       docStatus={docStatus}
+      applicantScreeningNotes={applicantScreeningNotes}
+      applicantCvUrl={applicantCvUrl}
     />
   )
 }

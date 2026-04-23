@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
+import Link from 'next/link'
 import { Users, FileText, Calculator, AlertTriangle, Plus, Search, CheckSquare } from 'lucide-react'
 
 export default async function HRDOverview() {
@@ -33,9 +34,9 @@ export default async function HRDOverview() {
   }
 
   const stats = [
-    { label: 'Karyawan Aktif', value: totalKaryawan, icon: Users, color: 'text-strada-blue', bg: 'bg-blue-50' },
-    { label: 'Pelamar Baru', value: totalApplicants, icon: FileText, color: 'text-strada-amber', bg: 'bg-amber-50' },
-    { label: 'Kontrak Berakhir (30 hr)', value: kontrakAkanHabis, icon: AlertTriangle, color: 'text-strada-coral', bg: 'bg-red-50' },
+    { label: 'Karyawan Aktif', value: totalKaryawan, icon: Users, color: 'text-strada-blue', bg: 'bg-blue-50', href: '/dashboard/hrd/karyawan?filter=active' },
+    { label: 'Pelamar Baru', value: totalApplicants, icon: FileText, color: 'text-strada-amber', bg: 'bg-amber-50', href: '/dashboard/hrd/rekrutmen' },
+    { label: 'Kontrak Berakhir (30 hr)', value: kontrakAkanHabis, icon: AlertTriangle, color: 'text-strada-coral', bg: 'bg-red-50', href: '/dashboard/hrd/karyawan?filter=expiring' },
   ]
 
   const quickActions = [
@@ -57,13 +58,13 @@ export default async function HRDOverview() {
         {stats.map(stat => {
           const Icon = stat.icon;
           return (
-            <div key={stat.label} className="apple-card p-6 flex flex-col items-start apple-card-hover group cursor-default">
+            <Link key={stat.label} href={stat.href} className="apple-card p-6 flex flex-col items-start apple-card-hover group cursor-pointer no-underline">
               <div className={`p-3 rounded-2xl ${stat.bg} ${stat.color} mb-5 group-hover:scale-110 transition-transform duration-300`}>
                 <Icon size={24} strokeWidth={2.5} />
               </div>
               <p className="text-4xl font-extrabold text-gray-900 mb-1">{stat.value}</p>
               <p className="text-sm font-medium text-gray-500">{stat.label}</p>
-            </div>
+            </Link>
           )
         })}
       </div>

@@ -213,22 +213,30 @@ export async function POST(request: NextRequest) {
   }
 }
 
-async function callClaude(messages: any[]): Promise<string> {
-  const res = await fetch('https://api.anthropic.com/v1/messages', {
+async function callGemini(messages: any[]): Promise<string> {
+  const apiKey = process.env.GEMINI_API_KEY
+  const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${apiKey}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'x-api-key': process.env.ANTHROPIC_API_KEY ?? '',
-      'anthropic-version': '2023-06-01',
     },
     body: JSON.stringify({
-      model: 'claude-sonnet-4-6',
-      max_tokens: 4096,
-      messages,
+      contents: messages.map(m => ({
+        role: m.role === 'assistant' ? 'model' : 'user',
+        parts: [{ text: m.content }]
+      })),
+      generationConfig: {
+        temperature: 0.1,
+        maxOutputTokens: 4096,
+      }
     }),
   })
+  if (!res.ok) {
+    const error = await res.json()
+    throw new Error(`Gemini error: ${JSON.stringify(error)}`)
+  }
   const data = await res.json()
-  return data.content?.[0]?.text?.trim() ?? ''
+  return data.candidates?.[0]?.content?.parts?.[0]?.text?.trim() ?? ''
 }
 
 function parseItemsFromText(raw: string): ExtractedItem[] {
@@ -242,7 +250,7 @@ function parseItemsFromText(raw: string): ExtractedItem[] {
 }
 
 async function extractWithClaude(text: string, format: string): Promise<ExtractedItem[]> {
-  const raw = await callClaude([{
+  const raw = await callGemini([{
     role: 'user',
     content: `You are a purchasing assistant for Strada Coffee Indonesia.
 Extract all items and their prices from this vendor price list (format: ${format}).
