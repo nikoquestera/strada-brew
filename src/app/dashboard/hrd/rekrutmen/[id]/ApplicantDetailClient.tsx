@@ -22,7 +22,8 @@ interface UserProfile { id: string; full_name: string; email: string }
 interface Activity {
   id: string; activity_type?: string | null; from_stage?: string | null
   to_stage?: string | null; note?: string | null
-  actor_id?: string | null; actor_name?: string | null; created_at: string
+  actor_id?: string | null; actor_name?: string | null
+  metadata?: { actor_name?: string | null } | null; created_at: string
 }
 interface DiscSession {
   id: string; access_code: string; status: string
@@ -130,7 +131,7 @@ export default function ApplicantDetailClient({ applicant }: { applicant: Applic
   const [noteInput, setNoteInput] = useState('')
   const [savingNote, setSavingNote] = useState(false)
   const [noteSaved, setNoteSaved] = useState(false)
-  const screeningNotes = activities.filter(a => a.activity_type === 'screening_note')
+  const screeningNotes = activities.filter(a => a.activity_type === 'note_added')
 
   /* edit profil */
   const [showEdit, setShowEdit] = useState(false)
@@ -201,7 +202,8 @@ export default function ApplicantDetailClient({ applicant }: { applicant: Applic
       supabase.from('applicant_activities').insert([{
         applicant_id: applicant.id, activity_type: 'stage_changed',
         from_stage: currentStage, to_stage: newStage,
-        actor_id: currentUser?.id ?? null, actor_name: currentUser?.full_name ?? null,
+        ...(currentUser?.id ? { actor_id: currentUser.id } : {}),
+        metadata: { actor_name: currentUser?.full_name ?? null },
       }]).then(() => {})
     }
     setChangingStage(false)
@@ -272,15 +274,15 @@ export default function ApplicantDetailClient({ applicant }: { applicant: Applic
     const nowIso = new Date().toISOString()
     const { error } = await supabase.from('applicant_activities').insert([{
       applicant_id: applicant.id,
-      activity_type: 'screening_note',
+      activity_type: 'note_added',
       note: text,
       ...(currentUser?.id ? { actor_id: currentUser.id } : {}),
-      actor_name: currentUser?.full_name ?? 'HR',
+      metadata: { actor_name: currentUser?.full_name ?? 'HR' },
     }])
     if (!error) {
       const newAct: Activity = {
         id: `tmp-${Date.now()}`,
-        activity_type: 'screening_note',
+        activity_type: 'note_added',
         note: text,
         actor_id: currentUser?.id ?? null,
         actor_name: currentUser?.full_name ?? 'HR',
@@ -735,7 +737,7 @@ export default function ApplicantDetailClient({ applicant }: { applicant: Applic
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0' }}>
                   {activities.map((act, idx) => {
                     const isStageChange = act.activity_type === 'stage_changed'
-                    const isNote = act.activity_type === 'screening_note'
+                    const isNote = act.activity_type === 'note_added'
                     const color = isStageChange ? '#005353' : isNote ? '#DE9733' : '#037894'
                     const toStageInfo = isStageChange ? PIPELINE_STAGES.find(s => s.key === act.to_stage) : null
                     return (
@@ -754,7 +756,7 @@ export default function ApplicantDetailClient({ applicant }: { applicant: Applic
                               </span>
                             )}
                             {isNote && <span style={{ fontSize: '11px', fontWeight: 800, padding: '2px 10px', borderRadius: '8px', backgroundColor: '#FEF8E6', color: '#DE9733' }}>Catatan Screening</span>}
-                            {act.actor_name && <span style={{ fontSize: '11px', color: '#8A8A8D', fontWeight: 600 }}>oleh {act.actor_name}</span>}
+                            {(act.actor_name ?? act.metadata?.actor_name) && <span style={{ fontSize: '11px', color: '#8A8A8D', fontWeight: 600 }}>oleh {act.actor_name ?? act.metadata?.actor_name}</span>}
                           </div>
                           {act.note && <p style={{ fontSize: '13px', color: '#4C4845', margin: '0 0 4px', lineHeight: 1.5, whiteSpace: 'pre-wrap' }}>{act.note}</p>}
                           <p style={{ fontSize: '11px', color: '#8A8A8D', margin: 0, fontWeight: 600 }}>{formatTs(act.created_at)}</p>
@@ -811,12 +813,12 @@ export default function ApplicantDetailClient({ applicant }: { applicant: Applic
                       {screeningNotes.map((act, idx) => (
                         <div key={act.id || idx} style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
                           <div style={{ width: '32px', height: '32px', borderRadius: '50%', backgroundColor: '#FEF8E6', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, fontSize: '13px', fontWeight: 900, color: '#DE9733', border: '1.5px solid #FAEABB' }}>
-                            {(act.actor_name || 'H').charAt(0).toUpperCase()}
+                            {(act.actor_name ?? act.metadata?.actor_name ?? 'H').charAt(0).toUpperCase()}
                           </div>
                           <div style={{ flex: 1, backgroundColor: '#F9FBFB', borderRadius: '12px', padding: '12px 16px', border: '1px solid #F0EEEC' }}>
                             <p style={{ fontSize: '13px', color: '#020000', margin: '0 0 6px', lineHeight: 1.6, whiteSpace: 'pre-wrap' }}>{act.note}</p>
                             <span style={{ fontSize: '11px', color: '#8A8A8D', fontWeight: 600 }}>
-                              {act.actor_name || 'HR'} · {formatTs(act.created_at)}
+                              {act.actor_name ?? act.metadata?.actor_name ?? 'HR'} · {formatTs(act.created_at)}
                             </span>
                           </div>
                         </div>
