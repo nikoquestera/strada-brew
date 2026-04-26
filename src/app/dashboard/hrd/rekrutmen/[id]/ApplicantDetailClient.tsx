@@ -684,6 +684,7 @@ export default function ApplicantDetailClient({ applicant }: { applicant: Applic
                         <div key={s.id} style={{ padding: '12px 16px', borderRadius: '12px', backgroundColor: '#F7F5F2', border: '1px solid #E8E4E0', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '8px' }}>
                           <div>
                             <code style={{ fontSize: '14px', fontWeight: 800, color: '#037894', letterSpacing: '2px' }}>{s.access_code}</code>
+                            <p style={{ fontSize: '11px', color: '#8A8A8D', margin: '2px 0 0' }}>brew.stradacoffee.com/tes-intelegensi/{s.access_code}</p>
                             {title && <p style={{ fontSize: '11px', color: '#4C4845', margin: '2px 0 0' }}>{title}</p>}
                           </div>
                           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>

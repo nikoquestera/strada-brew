@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { PIPELINE_STAGES, PipelineStage } from '@/lib/types'
-import { Search, Filter, ChevronDown, RefreshCw, Play } from 'lucide-react'
+import { Search, Filter, ChevronDown, RefreshCw, Play, Trash2 } from 'lucide-react'
 
 interface QuestScore {
   applicant_id?: string
@@ -143,6 +143,21 @@ export default function RekrutmenClient({ initialApplicants }: { initialApplican
   const [showMobileFilter, setShowMobileFilter] = useState(false)
   const [expandedGroups, setExpandedGroups] = useState<string[]>(['Masuk & Review', 'Seleksi'])
   const [sortBy, setSortBy] = useState<'date' | 'score'>('date')
+  const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null)
+  const [deleting, setDeleting] = useState(false)
+
+  const confirmApplicant = applicants.find(a => a.id === confirmDeleteId)
+
+  async function handleDelete() {
+    if (!confirmDeleteId) return
+    setDeleting(true)
+    const { error } = await supabase.from('applicants').delete().eq('id', confirmDeleteId)
+    if (!error) {
+      setApplicants(prev => prev.filter(a => a.id !== confirmDeleteId))
+    }
+    setDeleting(false)
+    setConfirmDeleteId(null)
+  }
 
   const applicantsRef = useRef(applicants)
   useEffect(() => { applicantsRef.current = applicants }, [applicants])
@@ -269,6 +284,30 @@ export default function RekrutmenClient({ initialApplicants }: { initialApplican
 
   return (
     <div className="min-h-screen bg-[#F5F5F7] flex flex-col">
+      {/* Confirm Delete Modal */}
+      {confirmDeleteId && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-gray-900/40 backdrop-blur-sm" onClick={() => setConfirmDeleteId(null)} />
+          <div className="relative bg-white rounded-2xl p-7 w-full max-w-sm shadow-2xl">
+            <p className="text-lg font-extrabold text-gray-900 mb-2">Hapus Pelamar?</p>
+            <p className="text-sm text-gray-700 mb-1"><strong>{confirmApplicant?.full_name}</strong></p>
+            <p className="text-sm text-gray-500 mb-6">
+              {confirmApplicant?.position_applied} · Data pelamar dan semua histori akan dihapus permanen.
+            </p>
+            <div className="flex gap-3">
+              <button onClick={() => setConfirmDeleteId(null)}
+                className="flex-1 py-3 rounded-xl border border-gray-200 text-sm font-bold text-gray-600 hover:bg-gray-50 transition-colors">
+                Batal
+              </button>
+              <button onClick={handleDelete} disabled={deleting}
+                className={`flex-1 py-3 rounded-xl text-sm font-bold text-white transition-colors ${deleting ? 'bg-red-300 cursor-not-allowed' : 'bg-red-600 hover:bg-red-700'}`}>
+                {deleting ? 'Menghapus...' : 'Hapus Permanen'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Top Header */}
       <div className="bg-white/80 backdrop-blur-xl border-b border-gray-200/50 px-6 py-5 sticky top-0 z-20">
         <div className="max-w-7xl mx-auto">
@@ -379,6 +418,12 @@ export default function RekrutmenClient({ initialApplicants }: { initialApplican
                         <p className="text-[15px] font-extrabold text-gray-900 mb-1 truncate">{applicant.full_name}</p>
                         <p className="text-[12px] font-bold text-strada-blue truncate">{applicant.position_applied}</p>
                       </div>
+                      <button
+                        onClick={(e) => { e.stopPropagation(); setConfirmDeleteId(applicant.id) }}
+                        title="Hapus pelamar"
+                        className="p-1.5 rounded-lg border border-red-200 bg-red-50 hover:bg-red-100 transition-colors shrink-0">
+                        <Trash2 size={13} className="text-red-500" />
+                      </button>
                     </div>
 
                     <div className="mb-4">

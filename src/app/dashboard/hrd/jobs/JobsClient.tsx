@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { DEFAULT_STORE_NAMES } from '@/lib/stores/defaults'
 import { JobPosting } from '@/lib/types'
-import { Plus, Users, MapPin, Clock, Zap, Edit2, ExternalLink, Briefcase, FileText } from 'lucide-react'
+import { Plus, Users, MapPin, Clock, Zap, Edit2, ExternalLink, Briefcase, Trash2 } from 'lucide-react'
 
 export default function JobsClient({ initialJobs }: { initialJobs: JobPosting[] }) {
   const supabase = createClient()
@@ -17,6 +17,21 @@ export default function JobsClient({ initialJobs }: { initialJobs: JobPosting[] 
   const [loading, setLoading] = useState(false)
   const [togglingId, setTogglingId] = useState<string | null>(null)
   const [outletOptions, setOutletOptions] = useState<string[]>([...DEFAULT_STORE_NAMES])
+  const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null)
+  const [deleting, setDeleting] = useState(false)
+
+  const confirmJob = jobs.find(j => j.id === confirmDeleteId)
+
+  async function handleDelete() {
+    if (!confirmDeleteId) return
+    setDeleting(true)
+    const { error } = await supabase.from('job_postings').delete().eq('id', confirmDeleteId)
+    if (!error) {
+      setJobs(prev => prev.filter(j => j.id !== confirmDeleteId))
+    }
+    setDeleting(false)
+    setConfirmDeleteId(null)
+  }
 
   const emptyForm = {
     job_id: '', title: '', department: '', entity: 'CV_KTN' as const,
@@ -99,6 +114,28 @@ export default function JobsClient({ initialJobs }: { initialJobs: JobPosting[] 
 
   return (
     <div className="p-6 md:p-8 max-w-7xl mx-auto bg-[#F5F5F7] min-h-screen font-sans">
+      {/* Confirm Delete Modal */}
+      {confirmDeleteId && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-gray-900/40 backdrop-blur-sm" onClick={() => setConfirmDeleteId(null)} />
+          <div className="relative bg-white rounded-2xl p-7 w-full max-w-sm shadow-2xl">
+            <p className="text-lg font-extrabold text-gray-900 mb-2">Hapus Job Posting?</p>
+            <p className="text-sm text-gray-700 mb-1"><strong>{confirmJob?.title}</strong> ({confirmJob?.job_id})</p>
+            <p className="text-sm text-gray-500 mb-6">Job posting ini akan dihapus permanen. Pelamar yang sudah mendaftar tidak terpengaruh.</p>
+            <div className="flex gap-3">
+              <button onClick={() => setConfirmDeleteId(null)}
+                className="flex-1 py-3 rounded-xl border border-gray-200 text-sm font-bold text-gray-600 hover:bg-gray-50 transition-colors">
+                Batal
+              </button>
+              <button onClick={handleDelete} disabled={deleting}
+                className={`flex-1 py-3 rounded-xl text-sm font-bold text-white transition-colors ${deleting ? 'bg-red-300 cursor-not-allowed' : 'bg-red-600 hover:bg-red-700'}`}>
+                {deleting ? 'Menghapus...' : 'Hapus Permanen'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
         <div>
@@ -196,7 +233,7 @@ export default function JobsClient({ initialJobs }: { initialJobs: JobPosting[] 
 
                 {/* Actions */}
                 <div className="flex gap-2 pt-4 border-t border-gray-100">
-                  <button onClick={(e) => { e.stopPropagation(); openEdit(job) }} 
+                  <button onClick={(e) => { e.stopPropagation(); openEdit(job) }}
                     className="flex-1 flex items-center justify-center gap-2 py-2 rounded-xl bg-gray-50 hover:bg-gray-100 text-gray-700 text-xs font-bold transition-colors">
                     <Edit2 size={14} /> Edit
                   </button>
@@ -204,6 +241,11 @@ export default function JobsClient({ initialJobs }: { initialJobs: JobPosting[] 
                     className="flex-1 flex items-center justify-center gap-2 py-2 rounded-xl bg-strada-blue/5 hover:bg-strada-blue/10 text-strada-blue text-xs font-bold transition-colors">
                     <ExternalLink size={14} /> Preview
                   </a>
+                  <button onClick={(e) => { e.stopPropagation(); setConfirmDeleteId(job.id) }}
+                    title="Hapus job posting"
+                    className="flex items-center justify-center px-3 py-2 rounded-xl bg-red-50 hover:bg-red-100 border border-red-200 transition-colors">
+                    <Trash2 size={14} className="text-red-500" />
+                  </button>
                 </div>
               </div>
             </div>

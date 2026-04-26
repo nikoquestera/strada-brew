@@ -64,23 +64,26 @@ export function computeDiscResults(answers: DiscAnswers): DiscResults {
   const plot2 = getPlotValues(graph2, 2)
   const plot3 = getPlotValues(graph3, 3)
 
-  // Patterns are determined by the NORMALIZED plot values, as per reference_result.php
+  // Patterns are determined by the NORMALIZED plot values, as per reference_result.php.
+  // The primary/main result is derived from Graph III (Change/Mirror) — plot3.
+  // Graph II (Core Private Self) is used for pattern2 display only.
   const pattern1 = findPatternByPlot(plot1)
   const pattern2 = findPatternByPlot(plot2)
   const pattern3 = findPatternByPlot(plot3)
 
-  const ranked = DIMS.slice().sort((a, b) => plot2[b] - plot2[a])
+  // Rank dimensions by plot3 (Graph III) — this is what the reference system uses
+  const ranked = DIMS.slice().sort((a, b) => plot3[b] - plot3[a])
   const primaryType = ranked[0]
-  const secondaryTypes = ranked.slice(1).filter(d => plot2[d] > 0)
+  const secondaryTypes = ranked.slice(1).filter(d => plot3[d] > 0)
 
-  return { 
-    graph1, graph2, graph3, 
+  return {
+    graph1, graph2, graph3,
     plot1, plot2, plot3,
-    primaryType, secondaryTypes, 
-    patternKey: pattern2.type,
-    pattern: pattern2, 
-    pattern1, 
-    pattern2 
+    primaryType, secondaryTypes,
+    patternKey: pattern3.type,
+    pattern: pattern3,
+    pattern1,
+    pattern2
   }
 }
 
@@ -93,7 +96,7 @@ function findPatternByPlot(plot: DiscRawScores): DiscPattern {
 
   if(D<=0 && I<=0 && S<=0 && C>0) pIdx=1;
   else if(D>0 && I<=0 && S<=0 && C<=0) pIdx=2;
-  else if(D>0 && I<=0 && S<=0 && C>0 && C>=D) pIdx=3;
+  else if(D>0 && I<=0 && S<=0 && C>0 && C>D) pIdx=3;
   else if(D>0 && I>0 && S<=0 && C<=0 && I>=D) pIdx=4;
   else if(D>0 && I>0 && S<=0 && C>0 && I>=D && D>=C) pIdx=5;
   else if(D>0 && I>0 && S>0 && C<=0 && I>=D && D>=S) pIdx=6;

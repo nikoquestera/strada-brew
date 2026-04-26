@@ -183,18 +183,10 @@ export function buildDiscReportCopy(results: DiscResults, applicant?: ApplicantC
   const applicantName = formatApplicant(applicant)
   const role = formatRole(applicant)
 
-  const adaptedLead = getLeadDimension(results.plot1)
   const naturalLead = getLeadDimension(results.plot2)
-  const integratedLead = naturalLead // We use Natural Style as the core driver per DISC PDF
+  const integratedLead = naturalLead
 
-  const adaptedRef = STYLE_REFERENCE[adaptedLead]
-  const naturalRef = STYLE_REFERENCE[naturalLead]
   const integratedRef = STYLE_REFERENCE[integratedLead]
-
-  const sameAdaptation = adaptedLead === naturalLead
-  const adaptationSentence = sameAdaptation
-    ? `${applicantName} tampak relatif konsisten antara gaya yang ditampilkan di lingkungan kerja dan kecenderungan alaminya.`
-    : `${applicantName} tampak melakukan penyesuaian perilaku: yang lebih terlihat di lingkungan kerja adalah gaya ${adaptedLead}, sementara kecenderungan yang lebih natural mengarah ke ${naturalLead}.`
 
   const integratedPattern = results.pattern?.pattern || integratedLead
   const activeDims = [results.primaryType, ...results.secondaryTypes]
@@ -202,72 +194,42 @@ export function buildDiscReportCopy(results: DiscResults, applicant?: ApplicantC
     .join(', ')
 
   const overviewTitle = `${integratedPattern} • ${activeDims}`
-  const overview = `${applicantName} terutama terbaca sebagai profil ${describeOrientation(integratedLead)}. Berdasarkan kerangka pada DISC PDF, kecenderungan alami (Natural Style) ${integratedLead} biasanya menunjukkan ${integratedRef.summary}.`
-  const applicantExplanation = `${adaptationSentence} Pada konteks rekrutmen untuk ${role}, pembacaan yang paling penting adalah gaya natural saat kandidat tidak terlalu menyesuaikan diri.`
-  const fitSummary = `Interpretasi ini sebaiknya dipakai sebagai bahan interview lanjutan, bukan keputusan final tunggal. Fungsi DISC adalah membantu HR membaca kecenderungan perilaku, cara kandidat berinteraksi, area kekuatan, dan area risiko dalam konteks kerja.`
-
-  const workStyle = uniqueStrings([
-    `Graph I menunjukkan gaya yang cenderung muncul ketika kandidat merasa ada ekspektasi lingkungan: ${adaptedRef.summary}.`,
-    `Graph II menunjukkan kecenderungan yang lebih natural: ${naturalRef.summary}.`,
-    `Sistem ini mengacu pada Graph II sebagai ringkasan pola perilaku utama, sehingga narasi utama di report ini mengikuti gaya ${integratedLead}.`,
-    sameAdaptation
-      ? `Karena gaya adaptif dan gaya natural relatif searah, perilaku kandidat kemungkinan terasa cukup konsisten lintas situasi.`
-      : `Karena gaya adaptif dan natural berbeda, HR perlu mengecek apakah penyesuaian ini sehat dan fungsional, atau justru menimbulkan kelelahan/pergeseran perilaku saat tekanan naik.`,
-  ])
+  const overview = `Kecenderungan alami ${naturalLead} — ${describeOrientation(naturalLead)}.`
+  const applicantExplanation = ``
+  const fitSummary = `Gunakan hasil ini sebagai bahan interview lanjutan, bukan keputusan final. DISC membantu membaca kecenderungan perilaku, kekuatan, dan area risiko kandidat dalam konteks kerja.`
 
   const strengths = uniqueStrings([
     ...integratedRef.strengths,
-    ...naturalRef.teamValue.slice(0, 1),
-  ]).slice(0, 4)
+  ]).slice(0, 3)
 
   const blindSpots = uniqueStrings([
     ...integratedRef.limitations,
-    naturalRef.teamCaution,
-  ]).slice(0, 4)
+  ]).slice(0, 3)
 
   const motivators = uniqueStrings([
-    adaptedLead === 'D' ? 'Target yang jelas, ruang mengambil keputusan, dan tantangan yang nyata.' : '',
-    adaptedLead === 'I' ? 'Ruang berinteraksi, pengakuan, dan suasana kerja yang hidup.' : '',
-    adaptedLead === 'S' ? 'Stabilitas, ritme kerja yang dapat diprediksi, dan hubungan kerja yang aman.' : '',
-    adaptedLead === 'C' ? 'Standard yang jelas, proses yang rapi, dan ekspektasi mutu yang spesifik.' : '',
-    naturalLead === 'D' ? 'Kesempatan memimpin, mengatasi hambatan, dan melihat hasil konkret.' : '',
+    naturalLead === 'D' ? 'Target yang jelas, ruang mengambil keputusan, dan tantangan yang nyata.' : '',
     naturalLead === 'I' ? 'Kesempatan mempengaruhi, membangun relasi, dan menyebarkan energi positif.' : '',
     naturalLead === 'S' ? 'Lingkungan yang suportif, konsisten, dan minim drama yang tidak perlu.' : '',
     naturalLead === 'C' ? 'Data yang cukup, struktur yang masuk akal, dan kualitas kerja yang bisa dijaga.' : '',
-  ].filter(Boolean)).slice(0, 4)
-
-  const communication = uniqueStrings([
-    ...adaptedRef.relateTo,
-    ...naturalRef.relateTo,
-  ]).slice(0, 4)
+    ...integratedRef.growth.slice(0, 2),
+  ].filter(Boolean)).slice(0, 3)
 
   const management = uniqueStrings([
     ...integratedRef.growth,
-    `Untuk menilai kecocokan ${applicantName} pada ${role}, bandingkan hasil ini dengan kebutuhan ritme kerja, intensitas interaksi customer, tuntutan SOP, dan kebutuhan kecepatan keputusan.`,
-  ]).slice(0, 4)
-
-  const graphExplanations = [
-    {
-      title: 'Graph I — Adapted Style',
-      summary: `Dalam DISC PDF, Graph I dibaca sebagai “This is expected of me”. Artinya grafik ini menunjukkan gaya yang kemungkinan ditampilkan kandidat untuk menyesuaikan diri dengan tuntutan lingkungan. Pada hasil ini, aksen terkuatnya mengarah ke ${adaptedLead}.`,
-    },
-    {
-      title: 'Graph II — Natural Style',
-      summary: `Dalam DISC PDF, Graph II dibaca sebagai “This is me”. Grafik ini sangat penting karena menunjukkan kecenderungan yang lebih natural saat kandidat berada dalam tekanan atau bersikap paling spontan. Profil utama kandidat (Primary Profile) diambil dari grafik ini, yaitu ${naturalLead}.`,
-    },
-  ]
+    `Bandingkan hasil ini dengan kebutuhan ritme kerja, intensitas interaksi customer, tuntutan SOP, dan kecepatan keputusan di posisi ${role}.`,
+  ]).slice(0, 3)
 
   return {
     overviewTitle,
     overview,
     applicantExplanation,
     fitSummary,
-    workStyle,
+    workStyle: [],
     strengths,
     blindSpots,
     motivators,
-    communication,
+    communication: [],
     management,
-    graphExplanations,
+    graphExplanations: [],
   }
 }

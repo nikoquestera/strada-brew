@@ -2,7 +2,8 @@
 import { useState } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { Plus, Users, Clock, AlertTriangle } from 'lucide-react'
+import { Plus, Users, Clock, AlertTriangle, Trash2 } from 'lucide-react'
+import { createClient } from '@/lib/supabase/client'
 
 interface Employee {
   id: string
@@ -37,13 +38,30 @@ const FILTERS = [
   { key: 'inactive', label: 'Tidak Aktif' },
 ]
 
-export default function KaryawanClient({ employees, now: nowStr }: Props) {
+export default function KaryawanClient({ employees: initialEmployees, now: nowStr }: Props) {
+  const supabase = createClient()
   const searchParams = useSearchParams()
   const router = useRouter()
   const now = new Date(nowStr)
 
+  const [employees, setEmployees] = useState(initialEmployees)
   const [activeFilter, setActiveFilter] = useState(searchParams.get('filter') || '')
   const [search, setSearch] = useState('')
+  const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null)
+  const [deleting, setDeleting] = useState(false)
+
+  const confirmEmployee = employees.find(e => e.id === confirmDeleteId)
+
+  async function handleDelete() {
+    if (!confirmDeleteId) return
+    setDeleting(true)
+    const { error } = await supabase.from('employees').delete().eq('id', confirmDeleteId)
+    if (!error) {
+      setEmployees(prev => prev.filter(e => e.id !== confirmDeleteId))
+    }
+    setDeleting(false)
+    setConfirmDeleteId(null)
+  }
 
   // Sync filter with URL
   function applyFilter(f: string) {
@@ -89,6 +107,30 @@ export default function KaryawanClient({ employees, now: nowStr }: Props) {
 
   return (
     <div className="p-6 md:p-8 max-w-7xl mx-auto space-y-6">
+      {/* Confirm Delete Modal */}
+      {confirmDeleteId && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-gray-900/40 backdrop-blur-sm" onClick={() => setConfirmDeleteId(null)} />
+          <div className="relative bg-white rounded-2xl p-7 w-full max-w-sm shadow-2xl">
+            <p className="text-lg font-extrabold text-gray-900 mb-2">Hapus Karyawan?</p>
+            <p className="text-sm text-gray-700 mb-1">
+              <strong>{confirmEmployee?.full_name}</strong> ({confirmEmployee?.employee_id})
+            </p>
+            <p className="text-sm text-gray-500 mb-6">Data karyawan akan dihapus permanen dari sistem.</p>
+            <div className="flex gap-3">
+              <button onClick={() => setConfirmDeleteId(null)}
+                className="flex-1 py-3 rounded-xl border border-gray-200 text-sm font-bold text-gray-600 hover:bg-gray-50 transition-colors">
+                Batal
+              </button>
+              <button onClick={handleDelete} disabled={deleting}
+                className={`flex-1 py-3 rounded-xl text-sm font-bold text-white transition-colors ${deleting ? 'bg-red-300 cursor-not-allowed' : 'bg-red-600 hover:bg-red-700'}`}>
+                {deleting ? 'Menghapus...' : 'Hapus Permanen'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
@@ -186,9 +228,17 @@ export default function KaryawanClient({ employees, now: nowStr }: Props) {
                       </div>
                     </td>
                     <td className="px-5 py-4 whitespace-nowrap">
-                      <span className={`text-[10px] font-extrabold px-2.5 py-1 rounded-md tracking-wider uppercase ${s.bg} ${s.color}`}>
-                        {emp.status || 'UNKNOWN'}
-                      </span>
+                      <div className="flex items-center gap-2">
+                        <span className={`text-[10px] font-extrabold px-2.5 py-1 rounded-md tracking-wider uppercase ${s.bg} ${s.color}`}>
+                          {emp.status || 'UNKNOWN'}
+                        </span>
+                        <button
+                          onClick={() => setConfirmDeleteId(emp.id)}
+                          title="Hapus karyawan"
+                          className="p-1.5 rounded-lg border border-red-200 bg-red-50 hover:bg-red-100 transition-colors">
+                          <Trash2 size={14} className="text-red-500" />
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 )

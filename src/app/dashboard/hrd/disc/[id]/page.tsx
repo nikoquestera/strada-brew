@@ -220,9 +220,8 @@ export default async function DiscResultPage({ params }: Props) {
 
         <div style={{ backgroundColor: '#fff', borderRadius: '20px', padding: '24px', border: '1.5px solid #E8E4E0' }}>
           <p style={{ fontSize: '11px', fontWeight: 700, color: dim.color, letterSpacing: '1px', textTransform: 'uppercase', margin: '0 0 6px' }}>Pembacaan Kandidat</p>
-          <h2 style={{ fontSize: '18px', fontWeight: 900, color: '#020000', margin: '0 0 10px' }}>{reportCopy.overviewTitle}</h2>
-          <p style={{ fontSize: '13px', color: '#4C4845', margin: '0 0 12px', lineHeight: 1.7 }}>{reportCopy.overview}</p>
-          <p style={{ fontSize: '13px', color: '#4C4845', margin: '0 0 12px', lineHeight: 1.7 }}>{reportCopy.applicantExplanation}</p>
+          <h2 style={{ fontSize: '18px', fontWeight: 900, color: '#020000', margin: '0 0 10px' }}>{results.pattern?.pattern} — {dim.label}</h2>
+          <p style={{ fontSize: '13px', color: '#4C4845', margin: '0 0 14px', lineHeight: 1.7 }}>{results.pattern?.description}</p>
           <div style={{ padding: '14px 16px', borderRadius: '14px', backgroundColor: dim.lightBg, border: `1px solid ${dim.color}25` }}>
             <p style={{ fontSize: '11px', fontWeight: 700, color: dim.color, letterSpacing: '1px', textTransform: 'uppercase', margin: '0 0 6px' }}>Catatan HR</p>
             <p style={{ fontSize: '12px', color: '#4C4845', margin: 0, lineHeight: 1.7 }}>{reportCopy.fitSummary}</p>
@@ -261,35 +260,20 @@ export default async function DiscResultPage({ params }: Props) {
         </div>
       </div>
 
-      <div className="disc-report-grid-3" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px', marginBottom: '20px' }}>
-        {reportCopy.graphExplanations.map((item, index) => (
-          <div key={item.title} style={{ backgroundColor: '#fff', borderRadius: '16px', padding: '18px', border: '1.5px solid #E8E4E0' }}>
-            <p style={{ fontSize: '10px', fontWeight: 700, color: index === 0 ? '#037894' : index === 1 ? '#DE9733' : dim.color, letterSpacing: '1px', textTransform: 'uppercase', margin: '0 0 6px' }}>
-              Penjelasan Grafik
-            </p>
-            <h3 style={{ fontSize: '14px', fontWeight: 800, color: '#020000', margin: '0 0 8px' }}>{item.title}</h3>
-            <p style={{ fontSize: '12px', color: '#4C4845', margin: 0, lineHeight: 1.6 }}>{item.summary}</p>
-          </div>
-        ))}
-      </div>
-
       {/* 3 Character Sections — Gambaran Karakter */}
       <div style={{ backgroundColor: '#fff', borderRadius: '20px', padding: '28px', border: '1.5px solid #E8E4E0', marginBottom: '20px' }}>
         <h2 style={{ fontSize: '14px', fontWeight: 800, color: '#020000', margin: '0 0 4px' }}>Gambaran Karakter</h2>
         <p style={{ fontSize: '12px', color: '#8A8A8D', margin: '0 0 24px' }}>Tiga dimensi kepribadian dari hasil tes</p>
         <div className="disc-report-grid-3" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px' }}>
           {[
-            { label: 'Kepribadian di Muka Umum', sub: 'Graph I — Public Self', p: results.pattern1, accent: '#037894', bg: '#E6F4F8' },
-            { label: 'Kepribadian Saat Tekanan', sub: 'Graph II — Under Pressure', p: results.pattern2, accent: '#DE9733', bg: '#FEF8E6' },
-            { label: 'Kepribadian Asli', sub: 'Graph III — Real Self (Utama)', p: results.pattern, accent: dim.color, bg: dim.lightBg },
+            { label: 'Topeng (Mask)', sub: 'Graph I — Public Self', p: results.pattern1, accent: '#037894', bg: '#E6F4F8' },
+            { label: 'Inti (Core)', sub: 'Graph II — Private Self / Under Pressure', p: results.pattern2, accent: '#DE9733', bg: '#FEF8E6' },
+            { label: 'Cermin (Mirror) — Utama', sub: 'Graph III — Perceived Self', p: results.pattern, accent: dim.color, bg: dim.lightBg },
           ].map(({ label, sub, p, accent, bg }) => (
             <div key={label} style={{ borderRadius: '16px', padding: '20px', backgroundColor: bg, border: `1.5px solid ${accent}30` }}>
               <p style={{ fontSize: '12px', fontWeight: 800, color: '#020000', margin: '0 0 6px' }}>{label}</p>
               <p style={{ fontSize: '10px', fontWeight: 700, color: accent, letterSpacing: '1px', textTransform: 'uppercase', margin: '0 0 2px' }}>{sub}</p>
               <h3 style={{ fontSize: '15px', fontWeight: 900, color: '#020000', margin: '0 0 12px' }}>{p?.pattern || '—'}</h3>
-              {p?.description && (
-                <p style={{ fontSize: '12px', color: '#4C4845', margin: '0 0 12px', lineHeight: 1.6 }}>{p.description}</p>
-              )}
               <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                 {(p?.behaviour || []).map((b: string, i: number) => (
                   <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
@@ -305,14 +289,12 @@ export default async function DiscResultPage({ params }: Props) {
 
       <div className="disc-report-grid-2" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '20px' }}>
         {[
-          { title: 'Cara Kandidat Kemungkinan Bekerja', items: reportCopy.workStyle, accent: dim.color, bg: '#fff' },
-          { title: 'Kekuatan yang Terlihat', items: reportCopy.strengths, accent: '#005353', bg: '#fff' },
-          { title: 'Area Risiko / Blind Spot', items: reportCopy.blindSpots, accent: '#FF4F31', bg: '#fff' },
-          { title: 'Yang Biasanya Memotivasi', items: reportCopy.motivators, accent: '#DE9733', bg: '#fff' },
-          { title: 'Cara Komunikasi yang Efektif', items: reportCopy.communication, accent: '#037894', bg: '#fff' },
-          { title: 'Arahan Pengelolaan & Penempatan', items: reportCopy.management, accent: '#020000', bg: '#fff' },
+          { title: 'Kekuatan yang Terlihat', items: reportCopy.strengths, accent: '#005353' },
+          { title: 'Area Risiko / Blind Spot', items: reportCopy.blindSpots, accent: '#FF4F31' },
+          { title: 'Yang Biasanya Memotivasi', items: reportCopy.motivators, accent: '#DE9733' },
+          { title: 'Arahan Pengelolaan & Penempatan', items: reportCopy.management, accent: '#020000' },
         ].map((section) => (
-          <div key={section.title} style={{ backgroundColor: section.bg, borderRadius: '20px', padding: '24px', border: '1.5px solid #E8E4E0' }}>
+          <div key={section.title} style={{ backgroundColor: '#fff', borderRadius: '20px', padding: '24px', border: '1.5px solid #E8E4E0' }}>
             <h2 style={{ fontSize: '14px', fontWeight: 800, color: '#020000', margin: '0 0 14px' }}>{section.title}</h2>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
               {section.items.map((item) => (
