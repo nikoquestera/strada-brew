@@ -1,12 +1,13 @@
 'use client'
 import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 import { PIPELINE_STAGES, PipelineStage } from '@/lib/types'
 import {
   ArrowLeft, Phone, Mail, AtSign, MapPin, Calendar,
   Briefcase, Star, MessageSquare, Clock, Edit2,
-  Brain, RefreshCw, FileText, CheckCircle2, User, X, ChevronDown
+  Brain, RefreshCw, FileText, CheckCircle2, User, X, ChevronDown, ExternalLink
 } from 'lucide-react'
 
 /* ─── Types ──────────────────────────────────────────────────────── */
@@ -636,18 +637,24 @@ export default function ApplicantDetailClient({ applicant }: { applicant: Applic
                 ) : (
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                     {discSessions.map(s => (
-                      <div key={s.id} style={{ padding: '12px 16px', borderRadius: '12px', backgroundColor: '#F7F5F2', border: '1px solid #E8E4E0', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '8px' }}>
+                      <div key={s.id} style={{ padding: '12px 16px', borderRadius: '12px', backgroundColor: s.status === 'completed' ? '#F0FAF8' : '#F7F5F2', border: `1px solid ${s.status === 'completed' ? '#A8D8D0' : '#E8E4E0'}`, display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '8px' }}>
                         <div>
                           <code style={{ fontSize: '14px', fontWeight: 800, color: '#037894', letterSpacing: '2px' }}>{s.access_code}</code>
                           <p style={{ fontSize: '11px', color: '#8A8A8D', margin: '2px 0 0' }}>brew.stradacoffee.com/disc/{s.access_code}</p>
                         </div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
                           {s.results?.pattern?.pattern && (
                             <span style={{ fontSize: '13px', fontWeight: 800, color: '#005353', padding: '4px 12px', borderRadius: '8px', backgroundColor: '#E6F4F1' }}>
-                              Pattern: {s.results.pattern.pattern}
+                              {s.results.pattern.pattern}
                             </span>
                           )}
                           <span style={{ fontSize: '10px', fontWeight: 800, padding: '3px 10px', borderRadius: '6px', textTransform: 'uppercase', backgroundColor: s.status === 'completed' ? '#E6F4F1' : '#F0F4F5', color: s.status === 'completed' ? '#005353' : '#8A8A8D' }}>{s.status}</span>
+                          {s.status === 'completed' && (
+                            <Link href={`/dashboard/hrd/disc/${s.id}`}
+                              style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', fontSize: '12px', fontWeight: 700, color: '#037894', textDecoration: 'none', padding: '5px 12px', borderRadius: '8px', border: '1.5px solid #037894', backgroundColor: '#fff' }}>
+                              <ExternalLink size={12} /> Lihat Hasil
+                            </Link>
+                          )}
                         </div>
                       </div>
                     ))}
