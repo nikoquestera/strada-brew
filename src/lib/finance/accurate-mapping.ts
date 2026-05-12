@@ -123,6 +123,29 @@ export const ACCURATE_MAPPING: Record<string, any> = {
       service_charge: '2002.04.05',
       tax: '2002.03.06'
     },
+    'SCBD': {
+      payment_cash: '1000.01.15',
+      payment_credit_bca: '1100.27',
+      payment_debit_bca: '1100.27',
+      payment_qris: '1100.27',
+      payment_gobiz: '1100.28',
+      payment_ovo: '1100.29',
+      payment_transfer: '1000.02.09',
+      settlement_bca: '1000.02.09',
+      admin_bank: '6000.01.08',
+      admin_merchant: '6000.01.36',
+      sales_bar: '4000.01.24',
+      sales_bundling: '4000.01.22',
+      sales_beans: '4000.01.20',
+      sales_inventory: '4000.01.21',
+      sales_kitchen: '4000.01.22',
+      sales_konsinyasi: '4000.01.23',
+      sales_konsinyasi_no_brand: '4000.01.23',
+      sales_modifier: '4000.01.24',
+      discount: '4000.96.23',
+      service_charge: '2002.04.07',
+      tax: '2002.03.08'
+    },
     'SMS': {
       payment_cash: '1000.01.14',
       payment_credit_bca: '1100.11',
@@ -190,7 +213,10 @@ export const ACCURATE_MAPPING: Record<string, any> = {
     '1100.10': 'C.00045',
     '1100.14': 'C.00045',
     '1100.15': 'C.00045',
-    '1100.11': 'C.00045'
+    '1100.11': 'C.00045',
+    '1100.27': 'C.00045',
+    '1100.28': 'C.00006',
+    '1100.29': 'C.00046'
   },
   VENDOR_MAPPING: {
     // Add vendor mappings here if needed, e.g.:
