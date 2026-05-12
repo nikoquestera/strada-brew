@@ -124,6 +124,7 @@ export const ACCURATE_MAPPING: Record<string, any> = {
       tax: '2002.03.06'
     },
     'SCBD': {
+      branchName: 'Kantor Pusat',
       payment_cash: '1000.01.15',
       payment_credit_bca: '1100.27',
       payment_debit_bca: '1100.27',

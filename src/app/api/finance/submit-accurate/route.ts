@@ -81,7 +81,11 @@ export async function POST(request: NextRequest) {
               }).eq('id', tokenData.id)
               sendLog('✅ [25%] Token berhasil diperbarui.', 'success')
             } catch (err: any) {
-              throw new Error(`Gagal memperbarui token: ${err.response?.data?.error_description || err.message}`)
+              const errDesc = err.response?.data?.error_description || err.response?.data?.error || err.message
+              await supabase.from('accurate_tokens').delete().eq('id', tokenData.id)
+              const authErr: any = new Error(`Sesi Accurate Anda telah berakhir. Silakan klik tombol "Hubungkan ke Accurate" untuk menghubungkan ulang. (${errDesc})`)
+              authErr.isAuthError = true
+              throw authErr
             }
           }
 
@@ -200,11 +204,12 @@ export async function POST(request: NextRequest) {
 
             await deleteExistingJournal(memo)
 
-            const payload = {
+            const payload: any = {
               transDate,
               description: memo,
               detailJournalVoucher: details
             }
+            if (mapping.branchName) payload.branchName = mapping.branchName
 
             console.log(`[Accurate Request] POST ${apiBaseUrl}/api/journal-voucher/save.do`)
             console.log('Payload:', JSON.stringify(payload, null, 2))
@@ -333,13 +338,16 @@ export async function POST(request: NextRequest) {
 
           // Detect revoked / expired token that wasn't caught by expires_at check
           const isInvalidToken =
+            err.isAuthError ||
             errorData?.error === 'invalid_token' ||
             err.response?.status === 401
 
           if (isInvalidToken) {
-            // Clear the stale token so the UI prompts reconnect
-            await supabase.from('accurate_tokens').delete().eq('user_id', user.id)
-            sendLog('🔑 Sesi Accurate telah berakhir atau dicabut. Silakan klik "Hubungkan ke Accurate" untuk login ulang.', 'auth_error')
+            if (!err.isAuthError) {
+              // Not yet deleted — clear the stale token
+              await supabase.from('accurate_tokens').delete().eq('user_id', user.id)
+            }
+            sendLog(`❌ ${err.isAuthError ? err.message : 'Sesi Accurate telah berakhir atau dicabut. Silakan klik "Hubungkan ke Accurate" untuk login ulang.'}`, 'auth_error')
           } else {
             let errorMsg = err.message
             if (errorData) {
