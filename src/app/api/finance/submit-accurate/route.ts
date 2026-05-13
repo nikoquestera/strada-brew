@@ -207,9 +207,9 @@ export async function POST(request: NextRequest) {
             const payload: any = {
               transDate,
               description: memo,
-              detailJournalVoucher: details
+              detailJournalVoucher: details,
+              branchName: mapping.branchName
             }
-            if (mapping.branchName) payload.branchName = mapping.branchName
 
             console.log(`[Accurate Request] POST ${apiBaseUrl}/api/journal-voucher/save.do`)
             console.log('Payload:', JSON.stringify(payload, null, 2))

@@ -1,6 +1,7 @@
 export const ACCURATE_MAPPING: Record<string, any> = {
   STORES: {
     'BSD': {
+      branchName: 'BSD',
       // UANG MASUK (Kredit) / PENJUALAN (Debit)
       payment_cash: '1000.01.10',
       payment_credit_bca: '1100.13',
@@ -31,6 +32,7 @@ export const ACCURATE_MAPPING: Record<string, any> = {
       tax: '2002.03.03'
     },
     'LA.PIAZZA': {
+      branchName: 'LPZ',
       payment_cash: '1000.01.01',
       payment_credit_bca: '1100.01',
       payment_debit_bca: '1100.01',
@@ -54,6 +56,7 @@ export const ACCURATE_MAPPING: Record<string, any> = {
       tax: '2002.03.02'
     },
     'MKG': {
+      branchName: 'MKG',
       payment_cash: '1000.01.11',
       payment_credit_bca: '1100.10',
       payment_debit_bca: '1100.10',
@@ -78,6 +81,7 @@ export const ACCURATE_MAPPING: Record<string, any> = {
       tax: '2002.03.04'
     },
     'SMB': {
+      branchName: 'SMB',
       payment_cash: '1000.01.12',
       payment_credit_bca: '1100.14',
       payment_debit_bca: '1100.14',
@@ -101,6 +105,7 @@ export const ACCURATE_MAPPING: Record<string, any> = {
       tax: '2002.03.05'
     },
     'SMB GOLD LOUNGE': {
+      branchName: 'SMB Gold Lounge',
       payment_cash: '1000.01.13',
       payment_credit_bca: '1100.15',
       payment_debit_bca: '1100.15',
@@ -124,7 +129,7 @@ export const ACCURATE_MAPPING: Record<string, any> = {
       tax: '2002.03.06'
     },
     'SCBD': {
-      branchName: 'Kantor Pusat',
+      branchName: 'SCBD',
       payment_cash: '1000.01.15',
       payment_credit_bca: '1100.27',
       payment_debit_bca: '1100.27',
@@ -148,6 +153,7 @@ export const ACCURATE_MAPPING: Record<string, any> = {
       tax: '2002.03.08'
     },
     'SMS': {
+      branchName: 'SMS',
       payment_cash: '1000.01.14',
       payment_credit_bca: '1100.11',
       payment_debit_bca: '1100.11',
