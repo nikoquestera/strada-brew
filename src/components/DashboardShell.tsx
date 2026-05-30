@@ -2,11 +2,12 @@
 import { useState } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
-import { Users, FileText, Calculator, Home, LogOut, Menu, X, Briefcase, FolderOpen, Scale, Brain, Key, Loader2, Settings } from 'lucide-react'
+import { Users, FileText, Calculator, Home, LogOut, Menu, X, Briefcase, FolderOpen, Scale, Brain, Key, Loader2, Settings, BarChart2, Calendar } from 'lucide-react'
 
 interface Props {
   children: React.ReactNode
   userEmail?: string
+  role?: 'hrd' | 'ops_manager' | 'finance' | 'purchasing' | 'admin'
 }
 
 const hrdNav = [
@@ -22,7 +23,20 @@ const hrdNav = [
   { label: 'Payroll', href: '/dashboard/hrd/payroll', icon: Calculator },
 ]
 
-export default function DashboardShell({ children, userEmail }: Props) {
+const opsNav = [
+  { label: 'Performance', href: '/dashboard/ops/performance', icon: BarChart2 },
+  { label: 'Jadwal', href: '/dashboard/ops/schedule', icon: Calendar },
+]
+
+const MODULE_META: Record<string, { label: string; roleDisplay: string }> = {
+  hrd:         { label: 'HRD Module',  roleDisplay: 'HRD Administrator' },
+  ops_manager: { label: 'OPS Module',  roleDisplay: 'Ops Manager' },
+  finance:     { label: 'Finance',     roleDisplay: 'Finance' },
+  purchasing:  { label: 'Purchasing',  roleDisplay: 'Purchasing' },
+  admin:       { label: 'Admin',       roleDisplay: 'Administrator' },
+}
+
+export default function DashboardShell({ children, userEmail, role = 'hrd' }: Props) {
   const router = useRouter()
   const pathname = usePathname()
   const supabase = createClient()
@@ -71,28 +85,32 @@ export default function DashboardShell({ children, userEmail }: Props) {
         </button>
       </div>
 
-      {/* Module label + switcher */}
+      {/* Module label */}
       <div className="px-6 pt-6 pb-2 flex items-center justify-between">
-        <p className="text-gray-400 text-[10px] font-bold tracking-[3px] uppercase m-0">HRD Module</p>
+        <p className="text-gray-400 text-[10px] font-bold tracking-[3px] uppercase m-0">
+          {MODULE_META[role]?.label ?? 'Dashboard'}
+        </p>
       </div>
 
       {/* Nav */}
       <nav className="flex-1 px-3 py-2 flex flex-col gap-1 overflow-y-auto">
-        {hrdNav.map(item => {
+        {(role === 'ops_manager' ? opsNav : hrdNav).map(item => {
           const Icon = item.icon
-          // Fix: Ensure exact match for items that are prefixes of others
-          const active = pathname === item.href || (pathname.startsWith(item.href + '/') && !hrdNav.some(n => n.href !== item.href && pathname.startsWith(n.href) && n.href.length > item.href.length))
-          
+          const navList = role === 'ops_manager' ? opsNav : hrdNav
+          const active = pathname === item.href || (
+            pathname.startsWith(item.href + '/') &&
+            !navList.some(n => n.href !== item.href && pathname.startsWith(n.href) && n.href.length > item.href.length)
+          )
           return (
             <button key={item.href}
               onClick={() => { router.push(item.href); setSidebarOpen(false) }}
               className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] font-semibold transition-all duration-200 ${
-                active 
-                  ? 'bg-strada-blue text-white shadow-sm' 
+                active
+                  ? 'bg-strada-blue text-white shadow-sm'
                   : 'text-gray-500 hover:bg-gray-100 hover:text-gray-900'
               }`}
             >
-              <Icon size={16} className={active ? "text-white" : "text-gray-400"} />
+              <Icon size={16} className={active ? 'text-white' : 'text-gray-400'} />
               {item.label}
             </button>
           )
@@ -106,7 +124,9 @@ export default function DashboardShell({ children, userEmail }: Props) {
         </div>
         <div className="flex-1 min-w-0">
           <p className="text-gray-900 text-sm font-semibold m-0 truncate">{userEmail}</p>
-          <p className="text-gray-400 text-[10px] m-0 tracking-wider uppercase font-medium">HRD Administrator</p>
+          <p className="text-gray-400 text-[10px] m-0 tracking-wider uppercase font-medium">
+            {MODULE_META[role]?.roleDisplay ?? 'Staff'}
+          </p>
         </div>
         <button onClick={() => setShowPasswordModal(true)} title="Ganti Password"
           className="text-gray-400 hover:text-strada-blue hover:bg-blue-50 p-2 rounded-lg transition-all duration-200 shrink-0">
