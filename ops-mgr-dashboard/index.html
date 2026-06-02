@@ -1,0 +1,1075 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>BREW — Ops Manager Dashboard · Strada Coffee</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'strada-blue':      '#037894',
+                        'strada-black':     '#020000',
+                        'strada-foam':      '#E4DED8',
+                        'strada-teal':      '#8FC6C5',
+                        'strada-charcoal':  '#4C4845',
+                        'strada-gray':      '#8A8A8D',
+                        'strada-coral':     '#FF4F31',
+                        'strada-amber':     '#DE9733',
+                        'strada-dark-teal': '#005353',
+                        'dashboard-bg':     '#F5F5F7'
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        html { scroll-behavior: smooth; }
+        * { font-family: 'Plus Jakarta Sans', sans-serif; box-sizing: border-box; }
+        body { background-color: #F5F5F7; color: #111827; -webkit-font-smoothing: antialiased; }
+        ::-webkit-scrollbar { width: 5px; height: 5px; }
+        ::-webkit-scrollbar-thumb { background: #4C4845; border-radius: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        .card-shadow { box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04); }
+        .table-container { max-height: 400px; overflow-y: auto; }
+        thead th { position: sticky; top: 0; background-color: #F5F5F7; z-index: 10; }
+        /* Sidebar nav active */
+        .nav-item-active { background: rgba(255,255,255,0.12) !important; color: #E4DED8 !important; }
+        /* Modal Transitions */
+        .modal-enter { opacity: 0; transform: scale(0.95); }
+        .modal-enter-active { opacity: 1; transform: scale(1); transition: opacity 200ms, transform 200ms; }
+    </style>
+</head>
+<body class="flex h-screen overflow-hidden font-sans" style="background:#F5F5F7; color:#111827;">
+
+    <!-- Left Sidebar — matches real BREW DashboardShell (white/frosted) -->
+    <aside class="w-64 flex flex-col hidden md:flex flex-shrink-0 z-20 shadow-[1px_0_10px_rgba(0,0,0,0.03)]"
+           style="background:rgba(255,255,255,0.85); backdrop-filter:blur(20px); border-right:1px solid rgba(229,231,235,0.5);">
+
+        <!-- Brand / Logo — same as BREW DashboardShell -->
+        <div class="px-6 py-6 flex items-center justify-between" style="border-bottom:1px solid #F3F4F6;">
+            <img src="https://brew.stradacoffee.com/strada-logo.svg"
+                 alt="Strada Coffee BREW"
+                 class="h-10 w-auto block"
+                 style="filter:grayscale(1) contrast(2) opacity(0.95);"
+                 onerror="this.style.display='none';this.nextElementSibling.style.display='block';" />
+            <!-- Fallback text logo if image fails -->
+            <span style="display:none; font-weight:900; font-size:18px; letter-spacing:0.1em; color:#111827;">BREW</span>
+        </div>
+
+        <!-- Section label -->
+        <div class="px-6 pt-6 pb-2 flex items-center justify-between">
+            <p class="text-gray-400 font-bold uppercase" style="font-size:10px; letter-spacing:3px;">OPS Module</p>
+        </div>
+
+        <!-- Nav — matches DashboardShell active/inactive states -->
+        <nav class="flex-1 px-3 py-2 space-y-1 overflow-y-auto" id="sidebarNav">
+            <button onclick="switchTab('overview', this)" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all text-left text-sm font-semibold" style="background:#037894; color:#fff; box-shadow:0 1px 3px rgba(0,0,0,0.1);">
+                <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+                Store Performance
+            </button>
+            <button onclick="switchTab('schedules', this)" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all text-left text-sm font-semibold" style="color:#6B7280;">
+                <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                Staff Schedule
+            </button>
+        </nav>
+
+        <!-- User section — matches DashboardShell footer -->
+        <div class="p-4 bg-white flex items-center gap-2" style="border-top:1px solid #F3F4F6;">
+            <div class="w-9 h-9 rounded-full flex items-center justify-center shrink-0 shadow-sm text-white text-xs font-black"
+                 style="background:linear-gradient(135deg,#037894,#005353);">R</div>
+            <div class="flex-1 min-w-0">
+                <p class="text-gray-900 text-sm font-semibold truncate">rinda@stradacoffee.com</p>
+                <p class="text-gray-400 font-medium uppercase" style="font-size:10px; letter-spacing:0.1em;">Ops Manager</p>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 flex flex-col h-screen overflow-hidden relative">
+
+        <!-- Global Progress Bar -->
+        <div id="syncProgressBarContainer" class="hidden absolute top-0 left-0 w-full h-1 z-50 bg-gray-100">
+            <div id="syncProgressBar" class="h-full bg-strada-blue transition-all duration-300" style="width: 0%"></div>
+        </div>
+
+        <!-- Header -->
+        <header class="h-16 bg-white/80 backdrop-blur-xl border-b border-gray-200/50 flex items-center justify-between px-6 flex-shrink-0 z-10" style="box-shadow:0 1px 3px rgba(0,0,0,0.04);">
+            <div class="flex items-center gap-4">
+                <h2 id="pageTitle" class="text-lg font-black text-gray-900 hidden sm:block">Operations Overview</h2>
+                <div class="relative">
+                    <select id="storeFilter" onchange="handleStoreFilterChange()" class="appearance-none bg-gray-50 border border-gray-200 text-gray-800 text-sm rounded-xl focus:ring-2 block w-44 px-3 py-2 pr-8 font-semibold" style="focus-ring-color:#037894;">
+                        <option value="All">Semua Outlet</option>
+                        <option value="LA-PIAZZA">La Piazza</option>
+                        <option value="MKG-GL">MKG</option>
+                        <option value="SMS">SMS</option>
+                        <option value="BSD">BSD</option>
+                        <option value="SMB">SMB</option>
+                        <option value="SMB-GL">SMB GL</option>
+                        <option value="SUMMITMAS">Summitmas</option>
+                    </select>
+                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2.5 text-gray-400">
+                        <svg class="h-3.5 w-3.5" fill="currentColor" viewBox="0 0 20 20"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-4">
+                <div id="syncStatusBadge" class="hidden md:flex flex-col items-end">
+                    <p id="syncStatusLabel" class="text-[10px] text-gray-400 font-medium uppercase tracking-wide">Menunggu Sinkronisasi</p>
+                    <p id="lastUpdated" class="text-xs font-bold text-gray-700">—</p>
+                </div>
+                
+                <button onclick="openConfigModal()" class="p-2 text-gray-400 hover:text-gray-900 transition-colors rounded-xl hover:bg-gray-100">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                </button>
+
+                <button onclick="startSync()" id="syncBtn" class="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-black transition-all shadow-lg active:scale-95" style="background:#037894; color:#fff;">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                    <span>START YOUR DAY</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Initial State Welcome -->
+        <div id="welcomeScreen" class="flex-1 flex flex-col items-center justify-center p-12 text-center bg-white z-20">
+            <div class="w-24 h-24 bg-gray-50 rounded-full flex items-center justify-center mb-6 shadow-inner">
+                <svg class="w-12 h-12 text-strada-blue animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 2m6-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            </div>
+            <h1 class="text-3xl font-black text-gray-900 mb-2 italic">Selamat Pagi, Rinda!</h1>
+            <p class="text-gray-500 max-w-md mb-8">Data dari 28 spreadsheet sedang menunggu. Klik tombol "Start Your Day" di atas untuk memulai sinkronisasi pagi ini.</p>
+            <div id="syncErrorBox" class="hidden bg-red-50 border border-red-100 p-6 rounded-2xl max-w-lg text-left">
+                <h4 class="text-red-800 font-bold mb-1">Gagal Menghubungkan Backend</h4>
+                <p id="errorMessage" class="text-red-600 text-[10px] leading-relaxed"></p>
+            </div>
+        </div>
+
+        <!-- Scrollable Content Area -->
+        <div class="hidden flex-1 overflow-y-auto p-6 space-y-5 transition-opacity duration-500 opacity-0" id="mainContentArea" style="background:#F5F5F7;">
+
+            <!-- SECTION: AI Insights (Overview only) -->
+            <div id="section-ai" class="dashboard-section rounded-2xl p-6 text-white relative overflow-hidden" style="background:linear-gradient(135deg,#037894 0%,#005353 100%);">
+                <div class="absolute top-0 right-0 -mt-8 -mr-8 w-40 h-40 bg-white opacity-5 rounded-full blur-3xl pointer-events-none"></div>
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="w-9 h-9 rounded-xl flex items-center justify-center" style="background:rgba(255,255,255,0.15);">
+                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                    </div>
+                    <div>
+                        <h3 class="text-base font-black">AI Ops Analysis</h3>
+                        <p class="text-white/60 text-[10px] uppercase tracking-wider">Powered by Gemini</p>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 relative z-10">
+                    <div>
+                        <p class="text-[10px] font-bold mb-2 uppercase tracking-widest" style="color:rgba(255,255,255,0.6);">Ringkasan Analisis</p>
+                        <p class="text-sm leading-relaxed text-white/90" id="aiAnalysisText">Memuat analisis...</p>
+                    </div>
+                    <div>
+                        <p class="text-[10px] font-bold mb-2 uppercase tracking-widest" style="color:rgba(255,255,255,0.6);">Rekomendasi Aksi Minggu Ini</p>
+                        <ul class="space-y-1.5 text-sm text-white/90" id="aiActionList"></ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION: Hero KPI Cards -->
+            <div id="section-sales" class="dashboard-section grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="bg-white rounded-2xl p-5 card-shadow border border-gray-100" style="border-left:3px solid #037894;">
+                    <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Net Sales Aktual</p>
+                    <h3 class="text-xl font-black text-gray-900 mb-1" id="kpiNetSales">Rp 0</h3>
+                    <div class="flex items-center gap-2">
+                        <span class="flex items-center font-bold text-xs px-2 py-0.5 rounded-lg" id="kpiSalesAchieved">
+                            <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg>0%
+                        </span>
+                        <span class="text-gray-400 text-xs">vs Target <span id="kpiTargetSales" class="font-semibold text-gray-600">Rp 0</span></span>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-2xl p-5 card-shadow border border-gray-100" style="border-left:3px solid #8A8A8D;">
+                    <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Net Sales Bulan Lalu</p>
+                    <h3 class="text-xl font-black text-gray-700 mb-1" id="kpiLastMonthSales">Rp 0</h3>
+                    <div class="flex items-center gap-2">
+                        <span class="flex items-center font-bold text-xs" id="kpiMoM">
+                            <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg>0%
+                        </span>
+                        <span class="text-gray-400 text-xs">MoM Growth</span>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-2xl p-5 card-shadow border border-gray-100" style="border-left:3px solid #8FC6C5;">
+                    <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Avg. Transaction</p>
+                    <h3 class="text-xl font-black text-gray-900 mb-1" id="kpiAvgTrans">Rp 0</h3>
+                    <p class="text-gray-400 text-xs">Target: <span class="font-semibold text-gray-600">Rp 120.000</span></p>
+                </div>
+
+                <div class="bg-white rounded-2xl p-5 card-shadow border border-gray-100" style="border-left:3px solid #FF4F31;">
+                    <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Overall COGS %</p>
+                    <h3 class="text-xl font-black text-gray-900 mb-1" id="kpiCogs">0%</h3>
+                    <div class="flex items-center gap-2">
+                        <span class="font-bold text-xs" id="kpiCogsStatus" style="color:#FF4F31;">Perlu Perhatian</span>
+                        <span class="text-gray-400 text-xs">· Target &lt; 32%</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION: Time Series Table -->
+            <div id="section-time-series" class="dashboard-section bg-white rounded-2xl p-5 card-shadow border border-gray-100 mt-6 mb-6">
+                <h3 class="text-base font-black text-gray-900 mb-3">Sales Performance (Time Series)</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm border-collapse">
+                        <thead>
+                            <tr class="text-[10px] text-gray-400 font-bold uppercase tracking-wider border-b border-gray-100">
+                                <th class="py-2 px-3">Periode</th>
+                                <th class="py-2 px-3">Net Sales Aktual</th>
+                                <th class="py-2 px-3">Target Sales</th>
+                                <th class="py-2 px-3">Achievement</th>
+                                <th class="py-2 px-3">Avg Transaction</th>
+                            </tr>
+                        </thead>
+                        <tbody id="timeSeriesTableBody" class="divide-y divide-gray-50 text-xs text-gray-700">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- SECTION: Daily Breakdown Table -->
+            <div id="section-daily-breakdown" class="dashboard-section bg-white rounded-2xl p-5 card-shadow border border-gray-100 mt-6 mb-6">
+                <h3 class="text-base font-black text-gray-900 mb-3">Daily Breakdown</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm border-collapse">
+                        <thead>
+                            <tr id="dailyBreakdownHeaders" class="text-[10px] text-gray-400 font-bold uppercase tracking-wider border-b border-gray-100">
+                                <th class="py-2 px-3">Metric</th>
+                                <!-- Dynamic headers will be populated here -->
+                            </tr>
+                        </thead>
+                        <tbody id="dailyBreakdownTableBody" class="divide-y divide-gray-50 text-xs text-gray-700">
+                            <!-- Dynamic rows will be populated here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- SECTION: Weekly Breakdown Table -->
+            <div id="section-weekly-breakdown" class="dashboard-section bg-white rounded-2xl p-5 card-shadow border border-gray-100 mt-6 mb-6">
+                <h3 class="text-base font-black text-gray-900 mb-3">Weekly Breakdown</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm border-collapse">
+                        <thead>
+                            <tr id="weeklyBreakdownHeaders" class="text-[10px] text-gray-400 font-bold uppercase tracking-wider border-b border-gray-100">
+                                <th class="py-2 px-3">Metric</th>
+                                <!-- Dynamic headers will be populated here -->
+                            </tr>
+                        </thead>
+                        <tbody id="weeklyBreakdownTableBody" class="divide-y divide-gray-50 text-xs text-gray-700">
+                            <!-- Dynamic rows will be populated here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- SECTION: Product Performance Grids -->
+            <div id="section-products" class="dashboard-section">
+                <div class="flex items-center gap-2 mb-4">
+                    <svg class="w-4 h-4" style="color:#037894;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
+                    <h3 class="text-base font-black text-gray-900">Product Performance Matrix</h3>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <!-- Beverages -->
+                    <div class="bg-white rounded-2xl p-4 card-shadow border border-gray-100 flex flex-col">
+                        <div class="flex justify-between items-center mb-3">
+                            <h4 class="font-black text-gray-900 text-sm">🥤 Beverages</h4>
+                            <span class="text-[10px] font-bold bg-gray-100 px-2 py-1 rounded-lg text-gray-500 uppercase tracking-wide">Top/Bot</span>
+                        </div>
+                        <div class="space-y-3 overflow-y-auto max-h-96 pr-2">
+                            <div>
+                                <p class="text-[10px] font-bold mb-1.5 uppercase tracking-wider" style="color:#037894;">Top Sellers (Weekly)</p>
+                                <ul class="text-xs space-y-1" id="topBevListW"></ul>
+                            </div>
+                            <div class="border-t border-gray-100 pt-3">
+                                <p class="text-[10px] font-bold mb-1.5 uppercase tracking-wider" style="color:#FF4F31;">Bottom Sellers (Weekly)</p>
+                                <ul class="text-xs space-y-1 text-gray-400" id="botBevListW"></ul>
+                            </div>
+                            <div class="border-t border-gray-100 pt-3">
+                                <p class="text-[10px] font-bold mb-1.5 uppercase tracking-wider" style="color:#037894;">Top Sellers (Monthly)</p>
+                                <ul class="text-xs space-y-1" id="topBevListM"></ul>
+                            </div>
+                            <div class="border-t border-gray-100 pt-3">
+                                <p class="text-[10px] font-bold mb-1.5 uppercase tracking-wider" style="color:#FF4F31;">Bottom Sellers (Monthly)</p>
+                                <ul class="text-xs space-y-1 text-gray-400" id="botBevListM"></ul>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Main Courses -->
+                    <div class="bg-white rounded-2xl p-4 card-shadow border border-gray-100 flex flex-col">
+                        <div class="flex justify-between items-center mb-3">
+                            <h4 class="font-black text-gray-900 text-sm">🍽️ Main Courses</h4>
+                            <span class="text-[10px] font-bold bg-gray-100 px-2 py-1 rounded-lg text-gray-500 uppercase tracking-wide">Top/Bot</span>
+                        </div>
+                        <div class="space-y-3 overflow-y-auto max-h-96 pr-2">
+                            <div>
+                                <p class="text-[10px] font-bold mb-1.5 uppercase tracking-wider" style="color:#037894;">Top Sellers (Weekly)</p>
+                                <ul class="text-xs space-y-1" id="topMainListW"></ul>
+                            </div>
+                            <div class="border-t border-gray-100 pt-3">
+                                <p class="text-[10px] font-bold mb-1.5 uppercase tracking-wider" style="color:#FF4F31;">Bottom Sellers (Weekly)</p>
+                                <ul class="text-xs space-y-1 text-gray-400" id="botMainListW"></ul>
+                            </div>
+                            <div class="border-t border-gray-100 pt-3">
+                                <p class="text-[10px] font-bold mb-1.5 uppercase tracking-wider" style="color:#037894;">Top Sellers (Monthly)</p>
+                                <ul class="text-xs space-y-1" id="topMainListM"></ul>
+                            </div>
+                            <div class="border-t border-gray-100 pt-3">
+                                <p class="text-[10px] font-bold mb-1.5 uppercase tracking-wider" style="color:#FF4F31;">Bottom Sellers (Monthly)</p>
+                                <ul class="text-xs space-y-1 text-gray-400" id="botMainListM"></ul>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Cake -->
+                    <div class="bg-white rounded-2xl p-4 card-shadow border border-gray-100 flex flex-col">
+                        <div class="flex justify-between items-center mb-3">
+                            <h4 class="font-black text-gray-900 text-sm">🎂 Cake & Pastry</h4>
+                            <span class="text-[10px] font-bold bg-gray-100 px-2 py-1 rounded-lg text-gray-500 uppercase tracking-wide">Top/Bot</span>
+                        </div>
+                        <div class="space-y-3 overflow-y-auto max-h-96 pr-2">
+                            <div>
+                                <p class="text-[10px] font-bold mb-1.5 uppercase tracking-wider" style="color:#037894;">Top Sellers (Weekly)</p>
+                                <ul class="text-xs space-y-1" id="topCakeListW"></ul>
+                            </div>
+                            <div class="border-t border-gray-100 pt-3">
+                                <p class="text-[10px] font-bold mb-1.5 uppercase tracking-wider" style="color:#FF4F31;">Bottom Sellers (Weekly)</p>
+                                <ul class="text-xs space-y-1 text-gray-400" id="botCakeListW"></ul>
+                            </div>
+                            <div class="border-t border-gray-100 pt-3">
+                                <p class="text-[10px] font-bold mb-1.5 uppercase tracking-wider" style="color:#037894;">Top Sellers (Monthly)</p>
+                                <ul class="text-xs space-y-1" id="topCakeListM"></ul>
+                            </div>
+                            <div class="border-t border-gray-100 pt-3">
+                                <p class="text-[10px] font-bold mb-1.5 uppercase tracking-wider" style="color:#FF4F31;">Bottom Sellers (Monthly)</p>
+                                <ul class="text-xs space-y-1 text-gray-400" id="botCakeListM"></ul>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Merchandise -->
+                    <div class="bg-white rounded-2xl p-4 card-shadow border border-gray-100 flex flex-col">
+                        <div class="flex justify-between items-center mb-3">
+                            <h4 class="font-black text-gray-900 text-sm">🛍️ Merchandise</h4>
+                        </div>
+                        <div class="space-y-3 overflow-y-auto max-h-96 pr-2">
+                            <div>
+                                <p class="text-[10px] font-bold mb-1.5 uppercase tracking-wider" style="color:#DE9733;">Top Merch Seller (Monthly)</p>
+                                <ul class="text-xs space-y-1" id="topMerchListM"></ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION: Waste & COGS -->
+            <div id="section-waste" class="dashboard-section grid grid-cols-1 lg:grid-cols-2 gap-4">
+                <div class="bg-white rounded-2xl p-5 card-shadow border border-gray-100 flex flex-col">
+                    <h3 class="text-sm font-black text-gray-900 mb-0.5">🗑️ Top Waste Items</h3>
+                    <p class="text-[10px] text-gray-400 mb-4">Breakdown berdasarkan volume / nilai</p>
+                    <div class="space-y-3 overflow-y-auto max-h-80 pr-2">
+                        <div>
+                            <p class="text-[10px] font-bold mb-1.5 uppercase tracking-wider" style="color:#FF4F31;">Top Waste (Weekly)</p>
+                            <table class="w-full text-left text-xs border-collapse">
+                                <thead>
+                                    <tr class="text-[10px] text-gray-400 uppercase tracking-wider bg-gray-50 border-y border-gray-100">
+                                        <th class="py-1 px-2">Outlet</th>
+                                        <th class="py-1 px-2">Item</th>
+                                        <th class="py-1 px-2 text-right">Qty / Rp</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="wasteListW_Main" class="text-gray-600 divide-y divide-gray-50"></tbody>
+                            </table>
+                        </div>
+                        <div class="border-t border-gray-100 pt-3">
+                            <p class="text-[10px] font-bold mb-1.5 uppercase tracking-wider" style="color:#FF4F31;">Top Waste (Monthly)</p>
+                            <table class="w-full text-left text-xs border-collapse">
+                                <thead>
+                                    <tr class="text-[10px] text-gray-400 uppercase tracking-wider bg-gray-50 border-y border-gray-100">
+                                        <th class="py-1 px-2">Outlet</th>
+                                        <th class="py-1 px-2">Item</th>
+                                        <th class="py-1 px-2 text-right">Qty / Rp</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="wasteListM_Main" class="text-gray-600 divide-y divide-gray-50"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-2xl p-5 card-shadow border border-gray-100">
+                    <h3 class="text-sm font-black text-gray-900 mb-0.5">COGS Breakdown (%)</h3>
+                    <p class="text-[10px] text-gray-400 mb-4">Distribusi biaya per kategori</p>
+                    <div class="overflow-x-auto mt-2">
+                        <table class="w-full text-left border-collapse text-xs">
+                            <thead>
+                                <tr class="text-[10px] text-gray-400 uppercase tracking-wider border-b border-gray-100 bg-gray-50">
+                                    <th class="py-2 px-3 font-bold">Kategori</th>
+                                    <th class="py-2 px-3 font-bold text-center">Mingguan (%)</th>
+                                    <th class="py-2 px-3 font-bold text-center">Bulanan (%)</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-50 text-gray-700">
+                                <tr class="hover:bg-gray-50 transition-colors">
+                                    <td class="py-2.5 px-3 font-semibold">Bar</td>
+                                    <td class="py-2.5 px-3 text-center" id="cogsBarW">0%</td>
+                                    <td class="py-2.5 px-3 text-center" id="cogsBarM">0%</td>
+                                </tr>
+                                <tr class="hover:bg-gray-50 transition-colors">
+                                    <td class="py-2.5 px-3 font-semibold">Kitchen</td>
+                                    <td class="py-2.5 px-3 text-center" id="cogsKitW">0%</td>
+                                    <td class="py-2.5 px-3 text-center" id="cogsKitM">0%</td>
+                                </tr>
+                                <tr class="hover:bg-gray-50 transition-colors">
+                                    <td class="py-2.5 px-3 font-semibold">Cake / Merch</td>
+                                    <td class="py-2.5 px-3 text-center" id="cogsCakeW">0%</td>
+                                    <td class="py-2.5 px-3 text-center" id="cogsCakeM">0%</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION: Unified Shift Schedule View -->
+            <div id="section-schedules" class="dashboard-section bg-white rounded-2xl card-shadow border border-gray-100 flex flex-col">
+                <div class="px-5 py-4 border-b border-gray-100 flex justify-between items-center">
+                    <div>
+                        <h3 class="text-sm font-black text-gray-900">Jadwal Shift Mingguan</h3>
+                        <p class="text-[10px] text-gray-400 mt-0.5">Ringkasan minggu ini — semua outlet yang dipilih</p>
+                    </div>
+                    <button class="text-xs font-bold px-3 py-1.5 rounded-lg transition-colors" style="color:#037894; background:#03789410;">Export CSV</button>
+                </div>
+                <div id="schedulesContainer" class="p-0 overflow-x-auto" style="max-height: 75vh; overflow-y: auto;">
+                    <!-- Populated dynamically by JS -->
+                </div>
+            </div>
+
+            <!-- Footer Spacing -->
+            <div class="h-6"></div>
+        </div>
+    </main>
+
+    <!-- Configuration Modal -->
+    <div id="configModal" class="hidden fixed inset-0 z-50 flex items-center justify-center transition-opacity opacity-0" style="background:rgba(0,0,0,0.5); backdrop-filter:blur(8px);">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden transform scale-95 transition-transform" id="configModalPanel">
+            <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center">
+                <div>
+                    <h3 class="font-black text-gray-900">Konfigurasi Data Source</h3>
+                    <p class="text-[10px] text-gray-400 mt-0.5">Google Spreadsheet IDs per outlet</p>
+                </div>
+                <button onclick="closeConfigModal()" class="text-gray-300 hover:text-gray-600 transition-colors p-1 rounded-lg hover:bg-gray-100">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+            <div class="p-6">
+                <p class="text-xs text-gray-500 mb-4 leading-relaxed">Masukkan Google Spreadsheet ID untuk setiap outlet. Pastikan Service Account sudah diberikan akses Viewer ke semua sheet.</p>
+                <div class="space-y-4 max-h-72 overflow-y-auto pr-1" id="configFormContent">
+                    <!-- Inputs injected via JS -->
+                </div>
+            </div>
+            <div class="px-6 py-4 bg-gray-50 border-t border-gray-100 flex justify-end gap-3">
+                <button onclick="closeConfigModal()" class="px-4 py-2 text-sm font-semibold text-gray-500 hover:text-gray-800 transition-colors rounded-xl hover:bg-gray-100">Batal</button>
+                <button onclick="saveConfig()" class="px-4 py-2 text-sm font-semibold text-white rounded-xl transition-colors" style="background:#037894;" onmouseover="this.style.background='#005353'" onmouseout="this.style.background='#037894'">Simpan</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // CONFIGURATION: Prepare for Google Sheets API Integration
+        const CONFIG = {
+            storeMappings: {}, // Populated dynamically from backend
+            COLORS: {
+                blue: '#037894',
+                black: '#4C4845',
+                teal: '#8FC6C5',
+                orange: '#FF4F31',
+                yellow: '#DE9733',
+                gray: '#cbd5e1'
+            }
+        };
+
+        // MOCK DATA STORE: Simulating aggregated data from 27+ spreadsheets
+        const MOCK_DATA_STORE = {
+            "All": {
+                kpi: { netSales: 452000000, targetSales: 500000000, lastMonthSales: 410000000, avgTransaction: 135000, cogsPercent: 34.2 },
+                aiInsights: {
+                    text: "Overall performance is tracking well with a 10.2% MoM growth. However, Lapiazza is underperforming in Cake sales compared to MKG. Waste levels in the Kitchen at Summitmas have spiked by 15% this week.",
+                    actions: [
+                        "Implement Cake bundle promo at Lapiazza.",
+                        "Audit Kitchen waste logs at Summitmas.",
+                        "Brief BSD cashiers on Tumbler upselling."
+                    ]
+                },
+                products: {
+                    beverages: { top: ["Iced Aren Latte", "Caramel Macchiato", "Americano", "Matcha Latte", "Cappuccino"], bottom: ["Hot Tea", "Espresso", "Syrup Extra", "Mineral Water", "Hot Chocolate"] },
+                    main: { top: ["Signature Burger", "Carbonara", "Chicken Katsu", "Nasi Goreng", "Caesar Salad"], bottom: ["Mushroom Soup", "Fish & Chips", "Aglio Olio", "Beef Bowl", "Club Sandwich"] },
+                    cake: { top: ["Cheesecake", "Choco Fudge", "Croissant Butter", "Almond Croissant", "Red Velvet"], bottom: ["Lemon Tart", "Muffin", "Danish", "Cookies", "Brownies"] },
+                    merch: { name: "Strada Canvas Tote", sales: 128 }
+                },
+                waste: {
+                    labels: ['Milk (L)', 'Coffee Beans (Gr)', 'Croissant (Pcs)', 'Chicken (Gr)', 'Syrup (ml)'],
+                    bar: [45, 1200, 0, 0, 300], kitchen: [0, 0, 15, 2500, 0], floor: [2, 50, 3, 0, 0]
+                },
+                cogs: { labels: ['Bar', 'Kitchen', 'Cake', 'Merchandise', 'Packaging'], data: [45, 30, 15, 2, 8] },
+                schedules: [
+                    { store: "Lapiazza", name: "Andi S.", role: "Head Bar", shifts: ["Pagi", "Pagi", "Middle", "Off", "Sore", "Sore", "Middle"] },
+                    { store: "Summitmas", name: "Budi R.", role: "Kitchen", shifts: ["Middle", "Middle", "Sore", "Sore", "Off", "Pagi", "Pagi"] },
+                    { store: "MKG", name: "Citra W.", role: "Cashier", shifts: ["Sore", "Sore", "Off", "Pagi", "Pagi", "Middle", "Middle"] }
+                ]
+            }
+        };
+
+        function getBranchData(branchName) {
+            if (MOCK_DATA_STORE[branchName]) return MOCK_DATA_STORE[branchName];
+            const base = MOCK_DATA_STORE["All"];
+            return {
+                ...base,
+                kpi: {
+                    netSales: Math.floor(Math.random() * 100000000) + 50000000,
+                    targetSales: 120000000,
+                    lastMonthSales: Math.floor(Math.random() * 100000000) + 40000000,
+                    avgTransaction: Math.floor(Math.random() * 50000) + 90000,
+                    cogsPercent: (Math.random() * 10 + 28).toFixed(1)
+                },
+                aiInsights: {
+                    text: `Displaying dynamic insights for ${branchName}. Adjust specific localized strategies.`,
+                    actions: [`Review inventory at ${branchName}.`, `Optimize weekend schedule.`]
+                },
+                schedules: base.schedules.map(s => ({...s, store: branchName}))
+            };
+        }
+
+        let wasteChartInstance = null;
+        let cogsChartInstance = null;
+
+        const formatCurrency = (val) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(val);
+        const formatPercent = (val) => `${val}%`;
+
+        function renderDashboard(branchData) {
+            // Safe fallbacks for strict backend structure
+            const wSalesArr = branchData.weeklyBreakdown?.netSales || [];
+            const wTargetArr = branchData.weeklyBreakdown?.target || [];
+            const wAtArr = branchData.weeklyBreakdown?.at || [];
+            
+            // 1. Calculate KPI Totals derived from weekly breakdown
+            const totalSales = wSalesArr.reduce((a, b) => a + b, 0);
+            const totalTarget = wTargetArr.reduce((a, b) => a + b, 0);
+            const atSum = wAtArr.reduce((a, b) => a + b, 0);
+            const avgTrans = wAtArr.length ? atSum / wAtArr.length : 0;
+            
+            const achPercent = totalTarget ? ((totalSales / totalTarget) * 100).toFixed(1) : "0.0";
+            const lastMonthSales = totalTarget * 0.9;
+            const momPercent = lastMonthSales ? (((totalSales - lastMonthSales) / lastMonthSales) * 100).toFixed(1) : "0.0";
+
+            // Update KPI DOM
+            document.getElementById('kpiNetSales').innerText = formatCurrency(totalSales);
+            document.getElementById('kpiTargetSales').innerText = formatCurrency(totalTarget);
+
+            const achEl = document.getElementById('kpiSalesAchieved');
+            const achOk = achPercent >= 100;
+            achEl.innerHTML = `<svg style="width:10px;height:10px;margin-right:3px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="${achOk ? 'M5 10l7-7m0 0l7 7m-7-7v18' : 'M19 14l-7 7m0 0l-7-7m7 7V3'}"></path></svg>${achPercent}%`;
+            achEl.style.cssText = `display:inline-flex;align-items:center;font-weight:700;font-size:11px;padding:2px 8px;border-radius:8px;background:${achOk ? '#03789420' : '#FF4F3118'};color:${achOk ? '#037894' : '#FF4F31'};`;
+
+            document.getElementById('kpiLastMonthSales').innerText = formatCurrency(lastMonthSales);
+            const momEl = document.getElementById('kpiMoM');
+            const momOk = momPercent >= 0;
+            momEl.innerHTML = `<svg style="width:10px;height:10px;margin-right:3px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="${momOk ? 'M5 10l7-7m0 0l7 7m-7-7v18' : 'M19 14l-7 7m0 0l-7-7m7 7V3'}"></path></svg>${Math.abs(momPercent)}%`;
+            momEl.style.cssText = `display:inline-flex;align-items:center;font-weight:700;font-size:11px;color:${momOk ? '#037894' : '#FF4F31'};`;
+
+            document.getElementById('kpiAvgTrans').innerText = formatCurrency(avgTrans);
+            
+            // Dummy COGS placeholder removed to prevent double declaration
+
+            // 2. Update AI Insights (if available, otherwise safe fallback)
+            document.getElementById('aiAnalysisText').innerText = branchData.aiInsights?.text || "Mengambil insight struktural...";
+            document.getElementById('aiActionList').innerHTML = (branchData.aiInsights?.actions || ["Analisis sedang diproses"]).map(action => `
+                <li class="flex items-start gap-2">
+                    <span class="shrink-0 mt-0.5 w-4 h-4 rounded-full flex items-center justify-center text-white text-[9px] font-black" style="background:#DE9733;">✓</span>
+                    <span>${action}</span>
+                </li>`).join('');
+
+            // 3. Update Product Matrices (Weekly & Monthly)
+            const renderList = (items) => {
+                if (!items || items.length === 0) return '<li class="text-xs text-gray-400 italic">Kosong</li>';
+                return items.map((item, i) => `
+                <li class="flex items-center gap-2 truncate" title="${item}">
+                    <span class="text-[10px] font-black text-gray-300 w-4 shrink-0">${i+1}</span>
+                    <span class="truncate">${item}</span>
+                </li>`).join('');
+            };
+
+            const renderWasteTable = (items) => {
+                if (!items || items.length === 0) return '<tr><td colspan="3" class="py-2 text-center text-xs text-gray-400 italic">Kosong</td></tr>';
+                return items.map((item, i) => {
+                    let store = "All";
+                    let rest = item;
+                    if (item.includes(': ')) {
+                        const parts = item.split(': ');
+                        store = parts[0];
+                        rest = parts.slice(1).join(': ');
+                    }
+                    let itemName = rest;
+                    let qty = "-";
+                    if (rest.includes(' - ')) {
+                        const parts = rest.split(' - ');
+                        itemName = parts[0];
+                        qty = parts.slice(1).join(' - ');
+                    }
+                    return `
+                    <tr class="hover:bg-gray-50 border-b border-gray-50">
+                        <td class="py-1 px-2 font-bold text-gray-900">${store}</td>
+                        <td class="py-1 px-2 truncate" title="${itemName}">${itemName}</td>
+                        <td class="py-1 px-2 text-right text-gray-500">${qty}</td>
+                    </tr>`;
+                }).join('');
+            };
+            
+            const prod = branchData.products || { weekly: {}, monthly: {} };
+            
+            // Beverages
+            document.getElementById('topBevListW').innerHTML = renderList(prod.weekly?.topBeverage);
+            document.getElementById('botBevListW').innerHTML = renderList(prod.weekly?.bottomBeverage);
+            document.getElementById('topBevListM').innerHTML = renderList(prod.monthly?.topBeverage);
+            document.getElementById('botBevListM').innerHTML = renderList(prod.monthly?.bottomBeverage);
+
+            // Main Courses
+            document.getElementById('topMainListW').innerHTML = renderList(prod.weekly?.topMain);
+            document.getElementById('botMainListW').innerHTML = renderList(prod.weekly?.bottomMain);
+            document.getElementById('topMainListM').innerHTML = renderList(prod.monthly?.topMain);
+            document.getElementById('botMainListM').innerHTML = renderList(prod.monthly?.bottomMain);
+
+            // Cakes
+            document.getElementById('topCakeListW').innerHTML = renderList(prod.weekly?.topCake);
+            document.getElementById('botCakeListW').innerHTML = renderList(prod.weekly?.bottomCake);
+            document.getElementById('topCakeListM').innerHTML = renderList(prod.monthly?.topCake);
+            document.getElementById('botCakeListM').innerHTML = renderList(prod.monthly?.bottomCake);
+
+            // Merch & Waste
+            document.getElementById('topMerchListM').innerHTML = renderList(prod.monthly?.topMerch);
+            document.getElementById('wasteListW_Main').innerHTML = renderWasteTable(prod.weekly?.waste);
+            document.getElementById('wasteListM_Main').innerHTML = renderWasteTable(prod.monthly?.waste);
+
+            // COGS Values
+            const cogs = branchData.cogs || { weekly: {}, monthly: {} };
+            const cW = cogs.weekly || {};
+            const cM = cogs.monthly || {};
+            
+            const avgCogs = (cW.bar || 32.5); // Example KPI fallback
+            document.getElementById('kpiCogs').innerText = formatPercent(avgCogs);
+            const cogsEl = document.getElementById('kpiCogsStatus');
+            const cogsOk = avgCogs <= 32;
+            cogsEl.innerText = cogsOk ? 'On Track' : 'Perlu Perhatian';
+            cogsEl.style.cssText = `font-weight:700;font-size:11px;color:${cogsOk ? '#037894' : '#FF4F31'};`;
+
+            document.getElementById('cogsBarW').innerText = (cW.bar || 0).toFixed(2) + '%';
+            document.getElementById('cogsKitW').innerText = (cW.kitchen || 0).toFixed(2) + '%';
+            document.getElementById('cogsCakeW').innerText = (cW.cake || 0).toFixed(2) + '%';
+
+            document.getElementById('cogsBarM').innerText = (cM.bar || 0).toFixed(2) + '%';
+            document.getElementById('cogsKitM').innerText = (cM.kitchen || 0).toFixed(2) + '%';
+            document.getElementById('cogsCakeM').innerText = (cM.cake || 0).toFixed(2) + '%';
+
+            // Hide old Time Series element to prevent collision
+            const tsSection = document.getElementById('section-time-series');
+            if (tsSection) tsSection.style.display = 'none';
+
+            // 4. Update Breakdown Tables
+            const renderBreakdown = (headerId, bodyId, breakdownData) => {
+                if (!breakdownData || !breakdownData.labels || breakdownData.labels.length === 0) {
+                    const el = document.getElementById(bodyId);
+                    if (el) el.innerHTML = '<tr><td colspan="5" class="py-3 px-3 text-center text-gray-400 italic text-xs">Belum ada data tersedia untuk periode ini</td></tr>';
+                    return;
+                }
+                
+                const labels = breakdownData.labels;
+                let headersHtml = '<th class="py-2 px-3">Metric</th>';
+                labels.forEach(label => {
+                    headersHtml += `<th class="py-2 px-3">${label}</th>`;
+                });
+                const headerEl = document.getElementById(headerId);
+                if(headerEl) headerEl.innerHTML = headersHtml;
+
+                const renderTrendRow = (metricName, trendArray) => {
+                    let rowHtml = `<tr class="hover:bg-gray-50 transition-colors"><td class="py-2 px-3 font-semibold">${metricName}</td>`;
+                    labels.forEach((_, i) => {
+                        const val = trendArray[i] || 0;
+                        rowHtml += `<td class="py-2 px-3">${formatCurrency(val)}</td>`;
+                    });
+                    rowHtml += '</tr>';
+                    return rowHtml;
+                };
+
+                const bodyEl = document.getElementById(bodyId);
+                if(bodyEl) {
+                    bodyEl.innerHTML = 
+                        renderTrendRow('Net Sales (Actual)', breakdownData.netSales) +
+                        renderTrendRow('Net Sales (Target)', breakdownData.target) +
+                        renderTrendRow('Avg Transaction', breakdownData.at);
+                }
+            };
+
+            renderBreakdown('dailyBreakdownHeaders', 'dailyBreakdownTableBody', branchData.dailyBreakdown);
+            renderBreakdown('weeklyBreakdownHeaders', 'weeklyBreakdownTableBody', branchData.weeklyBreakdown);
+
+            // Schedules
+            const container = document.getElementById('schedulesContainer');
+            const scheds = branchData.schedules || [];
+            
+            if (scheds.length === 0) {
+                container.innerHTML = '<p class="text-center text-gray-400 italic text-xs py-10">Jadwal tidak tersedia</p>';
+            } else {
+                let html = '';
+                scheds.forEach(storeObj => {
+                    if (!storeObj.list || storeObj.list.length === 0) return;
+                    
+                    let headers = `<th class="py-3 px-4 font-bold">Outlet</th>
+                                   <th class="py-3 px-4 font-bold">Nama Staff</th>
+                                   <th class="py-3 px-4 font-bold">Role</th>`;
+                    storeObj.headers.forEach(h => {
+                        headers += `<th class="py-3 px-2 font-bold text-center whitespace-nowrap min-w-[60px]">${h}</th>`;
+                    });
+
+                    let rows = storeObj.list.map(s => {
+                        const renderShift = (shift) => {
+                            const lc = (shift||'').toLowerCase();
+                            let bg = '#F3F4F6', color = '#8A8A8D';
+                            if (lc.includes('pagi') || lc.includes('06') || lc.includes('07') || lc.includes('08') || lc.includes('09')) { bg = '#DE973318'; color = '#DE9733'; }
+                            else if (lc.includes('middle') || lc.includes('10') || lc.includes('11') || lc.includes('12') || lc.includes('13')) { bg = '#03789418'; color = '#037894'; }
+                            else if (lc.includes('sore') || lc.includes('14') || lc.includes('15') || lc.includes('16')) { bg = '#FF4F3118'; color = '#FF4F31'; }
+                            else if (lc.includes('off') || lc === '' || lc === '-') { bg = '#F3F4F6'; color = '#8A8A8D'; }
+                            else { bg = '#E5E7EB'; color = '#374151'; }
+                            return `<span style="background:${bg};color:${color};" class="px-2 py-1 rounded-lg text-[10px] font-bold block text-center whitespace-nowrap">${shift||'OFF'}</span>`;
+                        };
+                        return `
+                        <tr class="hover:bg-gray-50 transition-colors">
+                            <td class="py-2.5 px-4 font-bold text-gray-900">${storeObj.store}</td>
+                            <td class="py-2.5 px-4 text-gray-700 font-semibold">${s.name}</td>
+                            <td class="py-2.5 px-4 text-gray-400 text-[10px] font-bold uppercase tracking-wide">${s.role}</td>
+                            ${s.shifts.map(shift => `<td class="py-2.5 px-1.5">${renderShift(shift)}</td>`).join('')}
+                        </tr>`;
+                    }).join('');
+
+                    html += `
+                    <div class="mb-8 border border-gray-100 rounded-xl overflow-hidden shadow-sm">
+                        <div class="bg-gray-50 px-4 py-2 border-b border-gray-100">
+                            <h4 class="font-black text-strada-blue text-sm uppercase tracking-wide">${storeObj.store}</h4>
+                        </div>
+                        <table class="w-full text-left border-collapse text-xs">
+                            <thead>
+                                <tr class="text-[10px] text-gray-400 uppercase tracking-wider border-b border-gray-100 bg-white">
+                                    ${headers}
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-50 text-gray-700 bg-white">
+                                ${rows}
+                            </tbody>
+                        </table>
+                    </div>`;
+                });
+                container.innerHTML = html;
+            }
+            
+            document.getElementById('lastUpdated').innerText = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        }
+
+        function renderWasteChart(wasteData) {
+            const canvas = document.getElementById('wasteChart');
+            const ctx = canvas.getContext('2d');
+            
+            // Fix: Destroy existing chart instance to prevent flickering
+            if (wasteChartInstance !== null) {
+                wasteChartInstance.destroy();
+            }
+            
+            wasteChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: wasteData.labels,
+                    datasets: [
+                        { label: 'Bar', data: wasteData.bar, backgroundColor: CONFIG.COLORS.blue },
+                        { label: 'Kitchen', data: wasteData.kitchen, backgroundColor: CONFIG.COLORS.orange },
+                        { label: 'Floor', data: wasteData.floor, backgroundColor: CONFIG.COLORS.teal }
+                    ]
+                },
+                options: { responsive: true, maintainAspectRatio: false, scales: { x: { stacked: true, grid: { display: false } }, y: { stacked: true, border: { dash: [4, 4] } } }, plugins: { legend: { position: 'bottom', labels: { usePointStyle: true, boxWidth: 8 } } } }
+            });
+        }
+
+        function renderCogsChart(cogsData) {
+            const canvas = document.getElementById('cogsChart');
+            const ctx = canvas.getContext('2d');
+            
+            // Fix: Destroy existing chart instance to prevent flickering
+            if (cogsChartInstance !== null) {
+                cogsChartInstance.destroy();
+            }
+            
+            cogsChartInstance = new Chart(ctx, {
+                type: 'doughnut',
+                data: { labels: cogsData.labels, datasets: [{ data: cogsData.data, backgroundColor: [CONFIG.COLORS.blue, CONFIG.COLORS.orange, CONFIG.COLORS.yellow, CONFIG.COLORS.teal, CONFIG.COLORS.black], borderWidth: 0 }] },
+                options: { responsive: true, maintainAspectRatio: false, cutout: '70%', plugins: { legend: { position: 'right', labels: { usePointStyle: true, boxWidth: 8, font: {size: 11} } } } }
+            });
+        }
+
+        // Interactivity Handlers
+        function handleStoreFilterChange() {
+            const filter = document.getElementById('storeFilter').value;
+            const content = document.getElementById('mainContentArea');
+            content.style.opacity = '0.4';
+            setTimeout(() => {
+                renderDashboard(getBranchData(filter));
+                content.style.opacity = '1';
+            }, 250);
+        }
+
+        function refreshData() {
+            const btn = document.querySelector('button[onclick="refreshData()"]');
+            const original = btn.innerHTML;
+            btn.innerHTML = `<svg class="animate-spin h-4 w-4 mr-2" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg><span class="hidden sm:inline">Syncing...</span>`;
+            setTimeout(() => { handleStoreFilterChange(); btn.innerHTML = original; }, 800);
+        }
+
+        // Tab Switcher Logic
+        function switchTab(tabName, element) {
+            // Update Active Nav State — white sidebar like real DashboardShell
+            document.querySelectorAll('.nav-item').forEach(el => {
+                el.style.background = '';
+                el.style.color = '#6B7280';
+                el.style.boxShadow = '';
+            });
+            element.style.background = '#037894';
+            element.style.color = '#ffffff';
+            element.style.boxShadow = '0 1px 3px rgba(0,0,0,0.1)';
+
+            // Update Header Title
+            const titles = {
+                'overview': 'Store Performance',
+                'schedules': 'Staff Schedules'
+            };
+            document.getElementById('pageTitle').innerText = titles[tabName] || 'Operations Overview';
+
+            // Toggle Store Filter Visibility
+            const filterEl = document.getElementById('storeFilter').parentElement;
+            if (tabName === 'schedules') {
+                filterEl.style.display = 'none';
+            } else {
+                filterEl.style.display = 'block';
+            }
+
+            // Toggle Visibility
+            const sections = [
+                'section-ai', 'section-sales', 'section-daily-breakdown', 
+                'section-weekly-breakdown', 'section-products', 'section-waste', 
+                'section-schedules'
+            ];
+
+            sections.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.classList.add('hidden');
+            });
+
+            if (tabName === 'overview') {
+                const overviewSections = [
+                    'section-ai', 'section-sales', 'section-daily-breakdown', 
+                    'section-weekly-breakdown', 'section-products', 'section-waste'
+                ];
+                overviewSections.forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) el.classList.remove('hidden');
+                });
+            } else if (tabName === 'schedules') {
+                const el = document.getElementById('section-schedules');
+                if (el) el.classList.remove('hidden');
+            }
+        }
+
+        // Settings / Config Modal Logic
+        function openConfigModal() {
+            const modal = document.getElementById('configModal');
+            const panel = document.getElementById('configModalPanel');
+            const content = document.getElementById('configFormContent');
+            
+            // Build inputs
+            content.innerHTML = '';
+            
+            if (!CONFIG.storeMappings || Object.keys(CONFIG.storeMappings).length === 0) {
+                content.innerHTML = '<p class="text-sm text-red-500">Failed to load configuration from backend.</p>';
+            } else {
+                Object.keys(CONFIG.storeMappings).forEach(branch => {
+                    if (branch === 'global_defaults') return; // Skip defaults
+                    
+                    content.innerHTML += `<h4 class="font-bold text-strada-blue mt-4 mb-2 uppercase text-sm border-b pb-1">${branch}</h4>`;
+                    
+                    const sheets = ['schedule', 'daily', 'weekly', 'monthly'];
+                    sheets.forEach(type => {
+                        const val = CONFIG.storeMappings[branch][type] || '';
+                        content.innerHTML += `
+                            <div class="mb-2 pl-2">
+                                <label class="block text-xs font-medium text-gray-700 mb-1 capitalize">${type} Sheet ID</label>
+                                <input type="text" id="sheet-id-${branch}-${type}" value="${val}" 
+                                       class="w-full text-xs border border-gray-300 rounded-lg p-2 focus:ring-strada-blue focus:border-strada-blue outline-none transition-shadow" 
+                                       placeholder="Paste ${type} Spreadsheet ID here"/>
+                            </div>
+                        `;
+                    });
+                });
+            }
+            
+            modal.classList.remove('hidden');
+            // Trigger animation
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                panel.classList.remove('scale-95');
+            }, 10);
+        }
+
+        function closeConfigModal() {
+            const modal = document.getElementById('configModal');
+            const panel = document.getElementById('configModalPanel');
+            
+            modal.classList.add('opacity-0');
+            panel.classList.add('scale-95');
+            
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 200);
+        }
+
+        async function saveConfig() {
+            // Gather updated IDs from the form
+            Object.keys(CONFIG.storeMappings).forEach(branch => {
+                if (branch === 'global_defaults') return;
+                
+                const sheets = ['schedule', 'daily', 'weekly', 'monthly'];
+                sheets.forEach(type => {
+                    const inputEl = document.getElementById(`sheet-id-${branch}-${type}`);
+                    if (inputEl) {
+                        CONFIG.storeMappings[branch][type] = inputEl.value.trim();
+                    }
+                });
+            });
+            
+            try {
+                // Post to backend
+                await fetch('http://localhost:3000/api/config', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(CONFIG.storeMappings)
+                });
+                
+                closeConfigModal();
+                
+                // Quick UX feedback
+                const btn = document.querySelector('button[title="Configure Spreadsheets"]');
+                btn.classList.add('text-green-500');
+                setTimeout(() => btn.classList.remove('text-green-500'), 2000);
+                
+                // Refresh dashboard to pull new data
+                refreshData();
+                
+            } catch (err) {
+                console.error("Failed to save config:", err);
+                alert("Failed to save configuration to the backend server.");
+            }
+        }
+
+        // ============================================================================
+        // SYNC ENGINE & UI CONTROL
+        // ============================================================================
+        let isSyncing = false;
+
+        async function startSync() {
+            if (isSyncing) return;
+            isSyncing = true;
+
+            const btn = document.getElementById('syncBtn');
+            const welcome = document.getElementById('welcomeScreen');
+            const content = document.getElementById('mainContentArea');
+            const progressContainer = document.getElementById('syncProgressBarContainer');
+            const statusBadge = document.getElementById('syncStatusBadge');
+            const statusLabel = document.getElementById('syncStatusLabel');
+            const errorBox = document.getElementById('syncErrorBox');
+            
+            // UI Transition
+            btn.classList.add('opacity-50', 'pointer-events-none');
+            btn.innerHTML = `<svg class="animate-spin h-4 w-4" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> SYNCING...`;
+            progressContainer.classList.remove('hidden');
+            statusBadge.classList.remove('hidden');
+            errorBox.classList.add('hidden');
+
+            // Trigger data load in background
+            const fetchPromise = fetch('http://localhost:3000/api/dashboard-data?refresh=true')
+                .then(res => res.json())
+                .catch(err => ({ error: err.message }));
+
+            // Start polling progress
+            const pollInterval = setInterval(async () => {
+                try {
+                    const res = await fetch('http://localhost:3000/api/sync-status');
+                    const status = await res.json();
+                    
+                    const bar = document.getElementById('syncProgressBar');
+                    bar.style.width = status.percentage + '%';
+                    statusLabel.innerText = `Syncing: ${status.currentStore || 'Preparing'} (${status.percentage}%)`;
+
+                    if (status.status === 'complete' || status.status === 'error') {
+                        clearInterval(pollInterval);
+                    }
+                } catch (e) {}
+            }, 1000);
+
+            const data = await fetchPromise;
+
+            if (data.error) {
+                isSyncing = false;
+                clearInterval(pollInterval);
+                errorBox.classList.remove('hidden');
+                document.getElementById('errorMessage').innerText = data.error;
+                btn.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg> RETRY SYNC`;
+                btn.classList.remove('opacity-50', 'pointer-events-none');
+                return;
+            }
+
+            // Sync Success
+            Object.assign(MOCK_DATA_STORE, data);
+            renderDashboard(MOCK_DATA_STORE["All"]);
+            
+            // Final UI Reveal
+            welcome.classList.add('hidden');
+            content.classList.remove('hidden');
+            setTimeout(() => {
+                content.style.opacity = '1';
+                progressContainer.classList.add('hidden');
+                statusLabel.innerText = 'SINKRONISASI BERHASIL';
+                btn.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> SYNC COMPLETE`;
+                isSyncing = false;
+            }, 800);
+        }
+
+        // Initialize on load (Fetch config only, do NOT auto-sync)
+        window.onload = async () => {
+            try {
+                const configRes = await fetch('http://localhost:3000/api/config');
+                if (configRes.ok) {
+                    CONFIG.storeMappings = await configRes.json();
+                }
+            } catch (error) {
+                console.error("Config fetch failed:", error);
+            }
+        };
+    </script>
+</body>
+</html>

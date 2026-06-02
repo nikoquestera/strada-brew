@@ -37,27 +37,27 @@ export interface OutletScheduleFile {
 
 export const OUTLET_SCHEDULE_FILES: Record<string, OutletScheduleFile> = {
   'bsd': {
-    fileId: 'YOUR_SHEET_ID_BSD',
+    fileId: '1OZDFvTl6FQNN75R56yggD8PJaRVApRb2f8ClVZZ1TAw',
     outletName: 'BSD',
     format: 'bsd',
   },
   'la-piazza': {
-    fileId: 'YOUR_SHEET_ID_LAPIAZZA',
+    fileId: '1DtonAOtzkaPFWV-cCr-giQjJ9ZrqosZN4_X0nr-Hr-k',
     outletName: 'La Piazza',
     format: 'la-piazza',
   },
   'mkg': {
-    fileId: 'YOUR_SHEET_ID_MKG',
+    fileId: '1lR2juRWd-0YoKhSDSksLAftm767nrACWdNc0HE70oY0',
     outletName: 'MKG',
     format: 'mkg',
   },
   'smb': {
-    fileId: 'YOUR_SHEET_ID_SMB',
+    fileId: '1AvQ6fF4wt839ejmHv1qJsdXCzWc4Q30GrA8C8vCiEnc',
     outletName: 'SMB',
     format: 'smb',
   },
   'smb-gl': {
-    fileId: 'YOUR_SHEET_ID_SMB_GL',
+    fileId: '1Qvy7xgNP-dz_5o8Y9XfuRlIgiy-BDVgf5jkKvVnL0n0',
     outletName: 'SMB Gold Lounge',
     format: 'smb-gl',
   },

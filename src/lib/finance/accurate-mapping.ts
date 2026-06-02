@@ -16,7 +16,7 @@ export const ACCURATE_MAPPING: Record<string, any> = {
       payment_qris: '1000.02.04.02',
       sales_modifier: '4000.01.02',
       settlement_bca: '1000.02.04.01',
-      payment_cl_upperwest: '1100.12',
+      payment_cl_upperwest: '1100.05.04',
       admin_merchant: '6000.01.36',
       admin_bank: '6000.01.08',
       payment_transfer: '1000.02.04.01',

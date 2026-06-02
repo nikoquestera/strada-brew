@@ -58,7 +58,7 @@ Sales per Department - Modifier,4000.01.02,3.SMS,Kredit,,(Uang masuk menurut Set
 Payment Method - Academy 100 Vouc,4000.96.02,ALL,Debit,,(Uang masuk menurut Settlement BCA),1000.02.07.01,6.SMB,Debit,
 Payment Method - Academy 50 Vouch,4000.96.03,ALL,Debit,,(Uang masuk menurut Settlement BCA),1000.02.07.01,7.SMB Gold Lounge,Debit,
 Payment Method - Go Dine In Vou, 4000.96.15,ALL,Debit,,(Uang masuk menurut Settlement BCA),1000.02.03.01,3.SMS,Debit,
-Payment Method - CL UPPERWEST,1100.12,4.BSD,Debit,,(Uang masuk menurut Settlement BCA),1000.02.08.01,8.SCBD,Debit,
+Payment Method - CL UPPERWEST,1100.05.04,4.BSD,Debit,,(Uang masuk menurut Settlement BCA),1000.02.08.01,8.SCBD,Debit,
 Payment Method - STRADA + REWARD,4000.96.04,ALL,Debit,,Admin merchant,6000.01.36,ALL,Debit,
 Payment Method - Strada+ Gift Vou,4000.96.05,ALL,Debit,,Admin bank,6000.01.08,ALL,Debit,
 Payment Method - TRANSFER,1000.02.04.01,4.BSD,Debit,,Biaya Pembulatan,7200.02,ALL,Debit,
