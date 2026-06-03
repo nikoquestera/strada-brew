@@ -101,11 +101,11 @@ export default function FinanceLayout({ children, userEmail }: Props) {
       {/* User section */}
       <div className="p-4 border-t border-gray-100 bg-white flex items-center gap-2">
         <div className="w-9 h-9 rounded-full bg-gradient-to-br from-strada-blue to-strada-dark-teal flex items-center justify-center shrink-0 shadow-sm">
-          <span className="text-white text-xs font-bold">{userEmail?.[0]?.toUpperCase()}</span>
+          <span className="text-white text-xs font-bold">FA</span>
         </div>
         <div className="flex-1 min-w-0">
-          <p className="text-gray-900 text-sm font-semibold m-0 truncate">{userEmail}</p>
-          <p className="text-gray-400 text-[10px] m-0 tracking-wider uppercase font-medium">Finance Staff</p>
+          <p className="text-gray-900 text-sm font-semibold m-0 truncate">Finance Accounting Team</p>
+          <p className="text-gray-400 text-[10px] m-0 tracking-wider uppercase font-medium">Finance & Accounting</p>
         </div>
         <button onClick={() => setShowPasswordModal(true)} title="Ganti Password"
           className="text-gray-400 hover:text-strada-blue hover:bg-blue-50 p-2 rounded-lg transition-all duration-200 shrink-0">

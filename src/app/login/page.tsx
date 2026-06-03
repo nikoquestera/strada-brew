@@ -13,17 +13,29 @@ export default function LoginPage() {
   const router = useRouter()
   const supabase = createClient()
 
-  // Short alias → real Supabase email (finance team convenience logins)
+  // Alias logins: these short usernames resolve to real Supabase emails
   const USERNAME_ALIASES: Record<string, string> = {
     'fa': 'selena@stradacoffee.com',
   }
+
+  // These emails cannot be used directly — only accessible via their alias
+  const ALIAS_ONLY_EMAILS = ['selena@stradacoffee.com']
 
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault()
     setLoading(true)
     setError('')
 
-    const resolvedEmail = USERNAME_ALIASES[email.trim().toLowerCase()] ?? email.trim()
+    const raw = email.trim().toLowerCase()
+
+    // Block direct login with alias-only emails
+    if (ALIAS_ONLY_EMAILS.includes(raw)) {
+      setError('Email atau password salah.')
+      setLoading(false)
+      return
+    }
+
+    const resolvedEmail = USERNAME_ALIASES[raw] ?? raw
 
     // 1. Authenticate with Supabase Auth
     const { data: authData, error: authError } = await supabase.auth.signInWithPassword({ email: resolvedEmail, password })
