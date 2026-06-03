@@ -13,13 +13,20 @@ export default function LoginPage() {
   const router = useRouter()
   const supabase = createClient()
 
+  // Short alias → real Supabase email (finance team convenience logins)
+  const USERNAME_ALIASES: Record<string, string> = {
+    'fa': 'selena@stradacoffee.com',
+  }
+
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault()
     setLoading(true)
     setError('')
-    
+
+    const resolvedEmail = USERNAME_ALIASES[email.trim().toLowerCase()] ?? email.trim()
+
     // 1. Authenticate with Supabase Auth
-    const { data: authData, error: authError } = await supabase.auth.signInWithPassword({ email, password })
+    const { data: authData, error: authError } = await supabase.auth.signInWithPassword({ email: resolvedEmail, password })
     
     if (authError || !authData.user) { 
       setError('Email atau password salah.')
@@ -61,7 +68,7 @@ export default function LoginPage() {
           <form onSubmit={handleLogin} className="space-y-5">
             <div className="space-y-2">
               <label className="block text-[13px] font-bold text-gray-700">Email</label>
-              <input type="email" value={email} onChange={e => setEmail(e.target.value)} required
+              <input type="text" value={email} onChange={e => setEmail(e.target.value)} required
                 className="w-full px-4 py-3.5 rounded-xl border border-gray-200/80 bg-gray-50 text-gray-900 text-sm focus:bg-white focus:ring-2 focus:ring-strada-blue/20 focus:border-strada-blue transition-all duration-200 outline-none placeholder:text-gray-400"
                 placeholder="nama@stradacoffee.com"
               />
