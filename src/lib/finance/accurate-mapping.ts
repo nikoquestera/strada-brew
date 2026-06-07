@@ -214,7 +214,25 @@ export const ACCURATE_MAPPING: Record<string, any> = {
     '1100.11': 'C.00045',
     '1100.27': 'C.00045',
     '1100.28': 'C.00006',
-    '1100.29': 'C.00046'
+    '1100.29': 'C.00046',
+    // GoBiz piutang per outlet (Penjualan debit + Uang Masuk kredit)
+    '1100.02.02': 'C.00006',
+    '1100.02.03': 'C.00006',
+    '1100.02.04': 'C.00006',
+    '1100.02.05': 'C.00006',
+    '1100.02.06': 'C.00006',
+    '1100.02.07': 'C.00006',
+    '1100.02.08': 'C.00006',
+    // OVO piutang per outlet (Penjualan debit + Uang Masuk kredit)
+    '1100.03.02': 'C.00044',
+    '1100.03.03': 'C.00044',
+    '1100.03.04': 'C.00044',
+    '1100.03.05': 'C.00044',
+    '1100.03.06': 'C.00044',
+    '1100.03.07': 'C.00044',
+    '1100.03.08': 'C.00044',
+    // CL Upperwest piutang (BSD only)
+    '1100.05.04': 'C.00098'
   },
   VENDOR_MAPPING: {
     // Add vendor mappings here if needed, e.g.:
