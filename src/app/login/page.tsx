@@ -1,7 +1,6 @@
 'use client'
 import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
-import { isFinanceUser } from '@/lib/auth/access'
 import { useRouter } from 'next/navigation'
 import { Loader2 } from 'lucide-react'
 
@@ -15,7 +14,8 @@ export default function LoginPage() {
 
   // Alias logins: these short usernames resolve to real Supabase emails
   const USERNAME_ALIASES: Record<string, string> = {
-    'fa': 'selena@stradacoffee.com',
+    'fa':    'selena@stradacoffee.com',
+    'rinda': 'rinda@stradacoffee.com',
   }
 
   // These emails cannot be used directly — only accessible via their alias
@@ -51,7 +51,11 @@ export default function LoginPage() {
       const res = await fetch('/api/auth/role')
       if (res.ok) {
         const { role } = await res.json()
-        const destination = role === 'FINANCE' ? '/dashboard/finance' : '/dashboard/hrd'
+        const destination =
+          role === 'FINANCE'      ? '/dashboard/finance' :
+          role === 'OPS_MANAGER'  ? '/dashboard/ops' :
+          role === 'PURCHASING'   ? '/dashboard/purchasing' :
+          '/dashboard/hrd'
         router.push(destination)
         return
       }
@@ -59,7 +63,7 @@ export default function LoginPage() {
       console.error('Failed to fetch role:', e)
     }
 
-    // Fallback if API fails
+    // Fallback if API fails — re-fetch role client-side
     router.push('/dashboard/hrd')
   }
 

@@ -261,18 +261,36 @@
 
             <!-- SECTION: Weekly Breakdown Table -->
             <div id="section-weekly-breakdown" class="dashboard-section bg-white rounded-2xl p-5 card-shadow border border-gray-100 mt-6 mb-6">
-                <h3 class="text-base font-black text-gray-900 mb-3">Weekly Breakdown</h3>
+                <div class="flex items-center justify-between mb-3">
+                    <h3 class="text-base font-black text-gray-900">Weekly Breakdown</h3>
+                    <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wide">Net Sales · Target · Avg Transaction</span>
+                </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-left text-sm border-collapse">
                         <thead>
                             <tr id="weeklyBreakdownHeaders" class="text-[10px] text-gray-400 font-bold uppercase tracking-wider border-b border-gray-100">
                                 <th class="py-2 px-3">Metric</th>
-                                <!-- Dynamic headers will be populated here -->
                             </tr>
                         </thead>
-                        <tbody id="weeklyBreakdownTableBody" class="divide-y divide-gray-50 text-xs text-gray-700">
-                            <!-- Dynamic rows will be populated here -->
-                        </tbody>
+                        <tbody id="weeklyBreakdownTableBody" class="divide-y divide-gray-50 text-xs text-gray-700"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- SECTION: Monthly Breakdown Table -->
+            <div id="section-monthly-breakdown" class="dashboard-section bg-white rounded-2xl p-5 card-shadow border border-gray-100 mt-6 mb-6">
+                <div class="flex items-center justify-between mb-3">
+                    <h3 class="text-base font-black text-gray-900">Monthly Breakdown</h3>
+                    <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wide">YTD · incl. MTD bulan berjalan</span>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm border-collapse">
+                        <thead>
+                            <tr id="monthlyBreakdownHeaders" class="text-[10px] text-gray-400 font-bold uppercase tracking-wider border-b border-gray-100">
+                                <th class="py-2 px-3">Metric</th>
+                            </tr>
+                        </thead>
+                        <tbody id="monthlyBreakdownTableBody" class="divide-y divide-gray-50 text-xs text-gray-700"></tbody>
                     </table>
                 </div>
             </div>
@@ -443,8 +461,8 @@
                 </div>
             </div>
 
-            <!-- SECTION: Unified Shift Schedule View -->
-            <div id="section-schedules" class="dashboard-section bg-white rounded-2xl card-shadow border border-gray-100 flex flex-col">
+            <!-- SECTION: Unified Shift Schedule View (only shown in Schedules tab) -->
+            <div id="section-schedules" class="hidden dashboard-section bg-white rounded-2xl card-shadow border border-gray-100 flex flex-col">
                 <div class="px-5 py-4 border-b border-gray-100 flex justify-between items-center">
                     <div>
                         <h3 class="text-sm font-black text-gray-900">Jadwal Shift Mingguan</h3>
@@ -559,33 +577,38 @@
         const formatPercent = (val) => `${val}%`;
 
         function renderDashboard(branchData) {
-            // Safe fallbacks for strict backend structure
-            const wSalesArr = branchData.weeklyBreakdown?.netSales || [];
-            const wTargetArr = branchData.weeklyBreakdown?.target || [];
-            const wAtArr = branchData.weeklyBreakdown?.at || [];
-            
-            // 1. Calculate KPI Totals derived from weekly breakdown
-            const totalSales = wSalesArr.reduce((a, b) => a + b, 0);
-            const totalTarget = wTargetArr.reduce((a, b) => a + b, 0);
-            const atSum = wAtArr.reduce((a, b) => a + b, 0);
-            const avgTrans = wAtArr.length ? atSum / wAtArr.length : 0;
-            
-            const achPercent = totalTarget ? ((totalSales / totalTarget) * 100).toFixed(1) : "0.0";
-            const lastMonthSales = totalTarget * 0.9;
-            const momPercent = lastMonthSales ? (((totalSales - lastMonthSales) / lastMonthSales) * 100).toFixed(1) : "0.0";
+            // Safe fallbacks
+            const mSalesArr  = branchData.monthlyBreakdown?.netSales || [];
+            const mTargetArr = branchData.monthlyBreakdown?.target   || [];
+            const mAtArr     = branchData.monthlyBreakdown?.at       || [];
+            const wAtArr     = branchData.weeklyBreakdown?.at        || [];
+
+            // 1. KPIs from monthly breakdown:
+            //    Current period = last column (MTD of current month)
+            //    Previous month = second-to-last column
+            const curMSales  = mSalesArr[mSalesArr.length - 1]  || 0;
+            const curMTarget = mTargetArr[mTargetArr.length - 1] || 0;
+            const prevMSales = mSalesArr[mSalesArr.length - 2]   || 0;
+
+            // AT from weekly breakdown: average of non-zero values (latest weeks)
+            const atNonZero = wAtArr.filter(v => v > 0);
+            const avgTrans  = atNonZero.length ? atNonZero.reduce((a,b)=>a+b,0)/atNonZero.length : (mAtArr[mAtArr.length-1]||0);
+
+            const achPercent = curMTarget ? ((curMSales / curMTarget) * 100).toFixed(1) : "0.0";
+            const momPercent = prevMSales ? (((curMSales - prevMSales) / prevMSales) * 100).toFixed(1) : "0.0";
 
             // Update KPI DOM
-            document.getElementById('kpiNetSales').innerText = formatCurrency(totalSales);
-            document.getElementById('kpiTargetSales').innerText = formatCurrency(totalTarget);
+            document.getElementById('kpiNetSales').innerText = formatCurrency(curMSales);
+            document.getElementById('kpiTargetSales').innerText = formatCurrency(curMTarget);
 
             const achEl = document.getElementById('kpiSalesAchieved');
-            const achOk = achPercent >= 100;
+            const achOk = parseFloat(achPercent) >= 100;
             achEl.innerHTML = `<svg style="width:10px;height:10px;margin-right:3px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="${achOk ? 'M5 10l7-7m0 0l7 7m-7-7v18' : 'M19 14l-7 7m0 0l-7-7m7 7V3'}"></path></svg>${achPercent}%`;
             achEl.style.cssText = `display:inline-flex;align-items:center;font-weight:700;font-size:11px;padding:2px 8px;border-radius:8px;background:${achOk ? '#03789420' : '#FF4F3118'};color:${achOk ? '#037894' : '#FF4F31'};`;
 
-            document.getElementById('kpiLastMonthSales').innerText = formatCurrency(lastMonthSales);
+            document.getElementById('kpiLastMonthSales').innerText = formatCurrency(prevMSales);
             const momEl = document.getElementById('kpiMoM');
-            const momOk = momPercent >= 0;
+            const momOk = parseFloat(momPercent) >= 0;
             momEl.innerHTML = `<svg style="width:10px;height:10px;margin-right:3px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="${momOk ? 'M5 10l7-7m0 0l7 7m-7-7v18' : 'M19 14l-7 7m0 0l-7-7m7 7V3'}"></path></svg>${Math.abs(momPercent)}%`;
             momEl.style.cssText = `display:inline-flex;align-items:center;font-weight:700;font-size:11px;color:${momOk ? '#037894' : '#FF4F31'};`;
 
@@ -690,39 +713,88 @@
             const renderBreakdown = (headerId, bodyId, breakdownData) => {
                 if (!breakdownData || !breakdownData.labels || breakdownData.labels.length === 0) {
                     const el = document.getElementById(bodyId);
-                    if (el) el.innerHTML = '<tr><td colspan="5" class="py-3 px-3 text-center text-gray-400 italic text-xs">Belum ada data tersedia untuk periode ini</td></tr>';
+                    if (el) el.innerHTML = '<tr><td colspan="9" class="py-3 px-3 text-center text-gray-400 italic text-xs">Belum ada data tersedia untuk periode ini</td></tr>';
                     return;
                 }
-                
-                const labels = breakdownData.labels;
-                let headersHtml = '<th class="py-2 px-3">Metric</th>';
-                labels.forEach(label => {
-                    headersHtml += `<th class="py-2 px-3">${label}</th>`;
-                });
-                const headerEl = document.getElementById(headerId);
-                if(headerEl) headerEl.innerHTML = headersHtml;
 
-                const renderTrendRow = (metricName, trendArray) => {
-                    let rowHtml = `<tr class="hover:bg-gray-50 transition-colors"><td class="py-2 px-3 font-semibold">${metricName}</td>`;
-                    labels.forEach((_, i) => {
-                        const val = trendArray[i] || 0;
-                        rowHtml += `<td class="py-2 px-3">${formatCurrency(val)}</td>`;
+                // Show last 6 columns max for readability; always include the last (WTD/MTD) if present
+                const MAX_COLS = 6;
+                let allLabels = breakdownData.labels;
+                let startIdx = allLabels.length > MAX_COLS ? allLabels.length - MAX_COLS : 0;
+                const labels = allLabels.slice(startIdx);
+                const netSales = (breakdownData.netSales || []).slice(startIdx);
+                const target   = (breakdownData.target   || []).slice(startIdx);
+                const at       = (breakdownData.at       || []).slice(startIdx);
+
+                const headerEl = document.getElementById(headerId);
+                if (headerEl) {
+                    let h = '<th class="py-2 px-3 text-left sticky left-0 bg-gray-50">Metric</th>';
+                    labels.forEach((label, i) => {
+                        const isPartial = label.includes('WTD') || label.includes('MTD');
+                        const isLast = i === labels.length - 1;
+                        const bg = isPartial ? 'background:#03789408;' : '';
+                        const badgeType = label.includes('WTD') ? 'WTD' : 'MTD';
+                        const badge = isPartial ? `<span style="display:inline-block;background:#037894;color:#fff;font-size:8px;padding:1px 4px;border-radius:4px;margin-left:3px;letter-spacing:0.05em;">${badgeType}</span>` : '';
+                        // Shorten label for headers — for WTD/MTD strip the type and date range, keep just the month
+                        let shortLabel = label.replace(' 2026','').replace(' 26','').replace(' (Actual)','');
+                        if (isPartial) shortLabel = shortLabel.replace(/\s*(WTD|MTD).*$/i, '').trim();
+                        h += `<th class="py-2 px-3 text-center whitespace-nowrap" style="${bg}">${shortLabel}${badge}</th>`;
                     });
-                    rowHtml += '</tr>';
-                    return rowHtml;
+                    headerEl.innerHTML = h;
+                }
+
+                const renderTrendRow = (metricName, vals, isCurrency = true, suffix = '') => {
+                    let row = `<tr class="hover:bg-gray-50 transition-colors">
+                        <td class="py-2.5 px-3 font-semibold text-xs sticky left-0 bg-white" style="min-width:120px">${metricName}</td>`;
+                    labels.forEach((label, i) => {
+                        const v = vals[i] || 0;
+                        const isPartial = label.includes('WTD') || label.includes('MTD');
+                        const bg = isPartial ? 'background:#03789408;' : '';
+                        const formatted = (v > 0) ? formatCurrency(v) : '—';
+                        row += `<td class="py-2.5 px-3 text-center text-xs" style="${bg}">${formatted}${suffix}</td>`;
+                    });
+                    row += '</tr>';
+                    return row;
+                };
+
+                // Achievement % row
+                const achRow = () => {
+                    let row = `<tr class="hover:bg-gray-50 transition-colors border-t-2 border-gray-100">
+                        <td class="py-2.5 px-3 font-semibold text-xs sticky left-0 bg-white">Achievement %</td>`;
+                    labels.forEach((label, i) => {
+                        const s = netSales[i] || 0;
+                        const t = target[i] || 0;
+                        const isPartial = label.includes('WTD') || label.includes('MTD');
+                        const bg = isPartial ? 'background:#03789408;' : '';
+                        if (!t) {
+                            row += `<td class="py-2.5 px-3 text-center text-xs" style="${bg}">—</td>`;
+                            return;
+                        }
+                        const pct = ((s / t) * 100).toFixed(1);
+                        const ok = parseFloat(pct) >= 100;
+                        const pctBg = ok ? '#03789420' : parseFloat(pct) >= 80 ? '#DE973320' : '#FF4F3118';
+                        const pctColor = ok ? '#037894' : parseFloat(pct) >= 80 ? '#DE9733' : '#FF4F31';
+                        row += `<td class="py-2.5 px-3 text-center text-xs" style="${bg}">
+                            <span style="display:inline-block;padding:2px 6px;border-radius:6px;font-weight:700;background:${pctBg};color:${pctColor};">${pct}%</span>
+                        </td>`;
+                    });
+                    row += '</tr>';
+                    return row;
                 };
 
                 const bodyEl = document.getElementById(bodyId);
-                if(bodyEl) {
-                    bodyEl.innerHTML = 
-                        renderTrendRow('Net Sales (Actual)', breakdownData.netSales) +
-                        renderTrendRow('Net Sales (Target)', breakdownData.target) +
-                        renderTrendRow('Avg Transaction', breakdownData.at);
+                if (bodyEl) {
+                    bodyEl.innerHTML =
+                        renderTrendRow('Net Sales (Actual)', netSales) +
+                        renderTrendRow('Net Sales (Target)', target) +
+                        achRow() +
+                        renderTrendRow('Avg Transaction', at);
                 }
             };
 
             renderBreakdown('dailyBreakdownHeaders', 'dailyBreakdownTableBody', branchData.dailyBreakdown);
             renderBreakdown('weeklyBreakdownHeaders', 'weeklyBreakdownTableBody', branchData.weeklyBreakdown);
+            renderBreakdown('monthlyBreakdownHeaders', 'monthlyBreakdownTableBody', branchData.monthlyBreakdown);
 
             // Schedules
             const container = document.getElementById('schedulesContainer');
@@ -870,23 +942,20 @@
             }
 
             // Toggle Visibility
-            const sections = [
-                'section-ai', 'section-sales', 'section-daily-breakdown', 
-                'section-weekly-breakdown', 'section-products', 'section-waste', 
-                'section-schedules'
+            const allSections = [
+                'section-ai', 'section-sales', 'section-daily-breakdown',
+                'section-weekly-breakdown', 'section-monthly-breakdown',
+                'section-products', 'section-waste', 'section-schedules'
             ];
-
-            sections.forEach(id => {
+            allSections.forEach(id => {
                 const el = document.getElementById(id);
                 if (el) el.classList.add('hidden');
             });
 
             if (tabName === 'overview') {
-                const overviewSections = [
-                    'section-ai', 'section-sales', 'section-daily-breakdown', 
-                    'section-weekly-breakdown', 'section-products', 'section-waste'
-                ];
-                overviewSections.forEach(id => {
+                ['section-ai', 'section-sales', 'section-daily-breakdown',
+                 'section-weekly-breakdown', 'section-monthly-breakdown',
+                 'section-products', 'section-waste'].forEach(id => {
                     const el = document.getElementById(id);
                     if (el) el.classList.remove('hidden');
                 });
