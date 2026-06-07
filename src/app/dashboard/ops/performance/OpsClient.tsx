@@ -240,9 +240,9 @@ export default function OpsClient() {
     : OUTLET_ORDER.map(id => ({ id, data: null }))
 
   // Summary stats
-  const withData = outletResults.filter(o => o.data?.achievementPct !== null)
+  const withData = outletResults.filter(o => o.data !== null && o.data.achievementPct !== null)
   const avgAchievement = withData.length > 0
-    ? withData.reduce((s, o) => s + (o.data!.achievementPct ?? 0), 0) / withData.length
+    ? withData.reduce((s, o) => s + (o.data?.achievementPct ?? 0), 0) / withData.length
     : null
   const totalSales = outletResults.reduce((s, o) => s + (o.data?.netSalesActual ?? 0), 0)
   const aboveTarget = withData.filter(o => (o.data?.achievementPct ?? 0) >= 100).length
