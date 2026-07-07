@@ -33,6 +33,11 @@ function RevenueStoreForm() {
   const [showInvestigation, setShowInvestigation] = useState(false)
   const [isBalanceApproved, setIsBalanceApproved] = useState(false)
   const [isMarkingResolved, setIsMarkingResolved] = useState(false)
+  const [showRevisionPanel, setShowRevisionPanel] = useState(false)
+  const [revisionApplied, setRevisionApplied] = useState(false)
+  const [revisedCreditQuinos, setRevisedCreditQuinos] = useState<string>('0')
+  const [revisedDebitQuinos, setRevisedDebitQuinos] = useState<string>('0')
+  const [revisedQrisQuinos, setRevisedQrisQuinos] = useState<string>('0')
 
   // Track if there's active/unsaved data
   const hasUnsavedChanges = isProcessing || isSubmitting || !!result || logs.length > 0
@@ -227,6 +232,32 @@ function RevenueStoreForm() {
     setIsMarkingResolved(false)
   }
 
+  const applyQuinosRevision = () => {
+    const newCredit = parseCurrencyInput(revisedCreditQuinos)
+    const newDebit = parseCurrencyInput(revisedDebitQuinos)
+    const newQris = parseCurrencyInput(revisedQrisQuinos)
+    const bankCredit = parseCurrencyInput(bcaKreditIncome)
+    const bankDebit = parseCurrencyInput(bcaDebitIncome)
+    const bankQris = parseCurrencyInput(bcaQrisIncome)
+    const newBiayaAdmin = (newCredit - bankCredit) + (newDebit - bankDebit) + (newQris - bankQris)
+    const newPctCredit = newCredit > 0 ? ((newCredit - bankCredit) / newCredit * 100) : 0
+    const newPctDebit = newDebit > 0 ? ((newDebit - bankDebit) / newDebit * 100) : 0
+    const newPctQris = newQris > 0 ? ((newQris - bankQris) / newQris * 100) : 0
+    setResult((prev: any) => ({
+      ...prev,
+      payment_credit_bca: newCredit,
+      payment_debit_bca: newDebit,
+      payment_qris: newQris,
+      biaya_admin_bank: newBiayaAdmin,
+      pct_credit: newPctCredit,
+      pct_debit: newPctDebit,
+      pct_qris: newPctQris,
+    }))
+    setRevisionApplied(true)
+    setShowRevisionPanel(false)
+    addLog(`✏️ Revisi Quinos — KREDIT: Rp ${newCredit.toLocaleString('id-ID')}, DEBIT: Rp ${newDebit.toLocaleString('id-ID')}, QRIS: Rp ${newQris.toLocaleString('id-ID')}`, 'warning')
+  }
+
   const parseCurrencyInput = (val: string) => {
     if (!val || val === '0') return 0
     const cleaned = val.toString().replace(/\./g, '').replace(/,/g, '.')
@@ -244,6 +275,8 @@ function RevenueStoreForm() {
     setResult(null)
     setShowInvestigation(false)
     setIsBalanceApproved(false)
+    setShowRevisionPanel(false)
+    setRevisionApplied(false)
 
     try {
       addLog('🚀 Memulai proses revenue report...', 'info')
@@ -302,6 +335,9 @@ function RevenueStoreForm() {
             if (log.type === 'result') {
               finalData = log.data
               setResult(log.data)
+              setRevisedCreditQuinos(formatCurrencyInput(String(Math.round(log.data.payment_credit_bca || 0))))
+              setRevisedDebitQuinos(formatCurrencyInput(String(Math.round(log.data.payment_debit_bca || 0))))
+              setRevisedQrisQuinos(formatCurrencyInput(String(Math.round(log.data.payment_qris || 0))))
             } else if (log.message) {
               addLog(log.message, log.type || 'info')
             }
@@ -461,15 +497,13 @@ function RevenueStoreForm() {
     let proposal = null
     if (isUnbalanced) {
       const isRounding = absDiff <= 5
-      const isMisc = absDiff > 5 && absDiff <= 15000
-      const canAutoFix = isRounding || isMisc
-      
       proposal = {
         amount: absDiff,
-        type: diffBalance > 0 ? 'CREDIT' : 'DEBIT', // If Debit is higher, add Credit to balance
+        type: diffBalance > 0 ? 'CREDIT' : 'DEBIT',
         code: isRounding ? '7200.02' : '4000.90',
         label: isRounding ? 'Pembulatan' : 'Pendapatan Lain-lain',
-        canAutoFix
+        isRounding,
+        canAutoFix: true
       }
     }
 
@@ -644,19 +678,59 @@ function RevenueStoreForm() {
             {/* Validation Alerts */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {validation?.isSalahKamar ? (
-                <div className="bg-red-50 border border-red-200 rounded-xl p-4 flex items-start gap-3 shadow-sm">
-                  <AlertTriangle className="text-red-600 shrink-0 mt-0.5" size={20} />
-                  <div>
-                    <p className="text-sm font-bold text-red-900">Terdeteksi Salah Kamar</p>
-                    <p className="text-[11px] text-red-700 mt-1 font-medium leading-relaxed">
-                      Selisih Mutasi Bank vs Quinos melebihi batas toleransi.<br/>
-                      <span className="opacity-80 font-mono mt-1 block space-y-0.5">
-                        • Credit: {((validation?.details?.pctCredit || 0) * 100).toFixed(2)}% (Limit: 2.10%)<br/>
-                        • Debit: {((validation?.details?.pctDebit || 0) * 100).toFixed(2)}% (Limit: 1.00%)<br/>
-                        • QRIS: {((validation?.details?.pctQris || 0) * 100).toFixed(2)}% (Limit: 0.85%)
-                      </span>
-                    </p>
+                <div className="bg-red-50 border border-red-200 rounded-xl p-4 shadow-sm">
+                  <div className="flex items-start gap-3">
+                    <AlertTriangle className="text-red-600 shrink-0 mt-0.5" size={20} />
+                    <div className="flex-1">
+                      <p className="text-sm font-bold text-red-900">Terdeteksi Salah Kamar</p>
+                      <p className="text-[11px] text-red-700 mt-1 font-medium leading-relaxed">
+                        Selisih Mutasi Bank vs Quinos melebihi batas toleransi.<br/>
+                        <span className="opacity-80 font-mono mt-1 block space-y-0.5">
+                          • Credit: {((validation?.details?.pctCredit || 0) * 100).toFixed(2)}% (Limit: 2.10%)<br/>
+                          • Debit: {((validation?.details?.pctDebit || 0) * 100).toFixed(2)}% (Limit: 1.00%)<br/>
+                          • QRIS: {((validation?.details?.pctQris || 0) * 100).toFixed(2)}% (Limit: 0.85%)
+                        </span>
+                      </p>
+                      <button
+                        onClick={() => setShowRevisionPanel(p => !p)}
+                        className="mt-2 text-[10px] bg-red-100 hover:bg-red-200 text-red-700 px-2 py-1 rounded font-bold uppercase tracking-wider transition-all"
+                      >
+                        {showRevisionPanel ? '▲ Tutup Revisi' : '✏️ Revisi Angka Quinos'}
+                      </button>
+                    </div>
                   </div>
+                  {showRevisionPanel && (
+                    <div className="mt-3 pt-3 border-t border-red-200 space-y-3">
+                      <p className="text-[11px] font-bold text-red-800">Revisi Angka Quinos — patokan: settlement bank</p>
+                      <div className="grid grid-cols-3 gap-2">
+                        {[
+                          { label: 'KREDIT BCA', quinos: result?.payment_credit_bca || 0, bank: parseCurrencyInput(bcaKreditIncome), val: revisedCreditQuinos, setVal: setRevisedCreditQuinos },
+                          { label: 'DEBIT BCA',  quinos: result?.payment_debit_bca  || 0, bank: parseCurrencyInput(bcaDebitIncome),  val: revisedDebitQuinos,  setVal: setRevisedDebitQuinos  },
+                          { label: 'QRIS',        quinos: result?.payment_qris        || 0, bank: parseCurrencyInput(bcaQrisIncome),  val: revisedQrisQuinos,   setVal: setRevisedQrisQuinos   },
+                        ].map(f => (
+                          <div key={f.label} className="bg-white/80 rounded-lg p-2.5 border border-red-100">
+                            <p className="text-[10px] font-bold text-red-700 uppercase mb-1.5">{f.label}</p>
+                            <p className="text-[9px] text-gray-400 leading-relaxed mb-1.5">
+                              Quinos: Rp {Math.round(f.quinos).toLocaleString('id-ID')}<br/>
+                              Bank: Rp {f.bank.toLocaleString('id-ID')}
+                            </p>
+                            <input
+                              type="text"
+                              value={f.val}
+                              onChange={(e) => f.setVal(formatCurrencyInput(e.target.value))}
+                              className="w-full px-2 py-1 text-[11px] border border-red-200 rounded focus:ring-1 focus:ring-red-400 outline-none"
+                            />
+                          </div>
+                        ))}
+                      </div>
+                      <button
+                        onClick={applyQuinosRevision}
+                        className="w-full py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-bold text-[11px] uppercase tracking-widest transition-all active:scale-95"
+                      >
+                        Terapkan Revisi Quinos
+                      </button>
+                    </div>
+                  )}
                 </div>
               ) : (
                 <div className="bg-green-50 border border-green-200 rounded-xl p-4 flex items-start gap-3 shadow-sm">
@@ -699,37 +773,38 @@ function RevenueStoreForm() {
 
                   {showInvestigation && !isBalanceApproved && (
                     <div className="bg-white/60 rounded-lg p-3 text-[11px] border border-red-100 space-y-2 animate-in fade-in slide-in-from-top-1">
-                      <p className="font-bold text-gray-800 underline">Proposal Solusi Pembulatan:</p>
+                      <p className="font-bold text-gray-800 underline">Proposal Solusi Selisih:</p>
                       <div className="grid grid-cols-2 gap-2 font-mono">
                         <div className="text-gray-500">Nominal Selisih:</div>
                         <div className="font-bold text-red-600">Rp {validation.absDiff.toLocaleString('id-ID')}</div>
-                        <div className="text-gray-500">Posisi Akun:</div>
-                        <div className="font-bold">{validation.proposal?.type}</div>
+                        <div className="text-gray-500">Jenis Selisih:</div>
+                        <div className="font-bold">
+                          {validation.proposal?.isRounding
+                            ? 'Pembulatan'
+                            : validation.proposal?.type === 'DEBIT'
+                              ? '⬆ Kurang Bayar → DEBIT'
+                              : '⬇ Lebih Bayar → KREDIT'}
+                        </div>
                         <div className="text-gray-500">Kode Akun:</div>
                         <div className="font-bold">{validation.proposal?.code}</div>
-                        <div className="text-gray-500">Keterangan:</div>
+                        <div className="text-gray-500">Nama Akun:</div>
                         <div className="font-bold uppercase">{validation.proposal?.label}</div>
                       </div>
-                      
-                      {validation.proposal?.canAutoFix ? (
-                        <div className="pt-2 border-t border-red-100 flex flex-col gap-2">
-                          <p className="text-[10px] text-gray-600 italic text-pretty">Selisih masih dalam batas toleransi (≤ Rp 15.000). Anda dapat menyetujui proposal ini untuk melanjutkan.</p>
-                          <button 
-                            onClick={() => {
-                              setIsBalanceApproved(true)
-                              setShowInvestigation(false)
-                              addLog(`⚠️ User menyetujui balancing otomatis: ${validation.proposal?.label} (Rp ${validation.absDiff})`, 'warning')
-                            }}
-                            className="w-full py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-lg font-bold uppercase tracking-tighter text-[10px] shadow-sm transition-all active:scale-95"
-                          >
-                            Saya sudah membaca dan setuju dengan pembulatan ini
-                          </button>
-                        </div>
-                      ) : (
-                        <p className="pt-2 border-t border-red-100 text-[10px] text-red-600 font-bold italic text-pretty">
-                          ⚠️ Selisih diatas Rp 15.000. Investigasi manual wajib dilakukan pada data Quinos/Mutasi. Proses Submit dihentikan.
+                      <div className="pt-2 border-t border-red-100 flex flex-col gap-2">
+                        <p className="text-[10px] text-gray-600 italic text-pretty">
+                          Selisih Rp {validation.absDiff.toLocaleString('id-ID')} akan diposting ke {validation.proposal?.code} ({validation.proposal?.label}) sebagai <strong>{validation.proposal?.type}</strong> untuk menyeimbangkan jurnal.
                         </p>
-                      )}
+                        <button
+                          onClick={() => {
+                            setIsBalanceApproved(true)
+                            setShowInvestigation(false)
+                            addLog(`⚠️ Selisih Rp ${validation.absDiff?.toLocaleString('id-ID')} → ${validation.proposal?.code} (${validation.proposal?.type})`, 'warning')
+                          }}
+                          className="w-full py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-lg font-bold uppercase tracking-tighter text-[10px] shadow-sm transition-all active:scale-95"
+                        >
+                          ✓ Setuju — Posting ke {validation.proposal?.label} ({validation.proposal?.code}) sebagai {validation.proposal?.type}
+                        </button>
+                      </div>
                     </div>
                   )}
                 </div>
