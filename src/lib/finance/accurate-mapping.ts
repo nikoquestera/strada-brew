@@ -101,7 +101,7 @@ export const ACCURATE_MAPPING: Record<string, any> = {
     },
     'SMB GOLD LOUNGE': {
       sales_bar: '4000.01.02',
-      payment_cash: '1000.01.08',
+      payment_cash: '1000.01.07',
       sales_bundling: '4000.01.01',
       payment_credit_bca: '1000.02.07.02',
       sales_beans: '4000.01.03',
@@ -125,7 +125,7 @@ export const ACCURATE_MAPPING: Record<string, any> = {
     },
     'SMS': {
       sales_bar: '4000.01.02',
-      payment_cash: '1000.01.07',
+      payment_cash: '1000.90.03',
       sales_bundling: '4000.01.01',
       payment_credit_bca: '1000.02.03.02',
       sales_beans: '4000.01.03',
@@ -150,7 +150,7 @@ export const ACCURATE_MAPPING: Record<string, any> = {
     },
     'SCBD': {
       sales_bar: '4000.01.02',
-      payment_cash: '1000.01.03',
+      payment_cash: '1000.01.08',
       sales_bundling: '4000.01.01',
       payment_credit_bca: '1000.02.08.02',
       sales_beans: '4000.01.03',
@@ -212,6 +212,9 @@ export const ACCURATE_MAPPING: Record<string, any> = {
     payment_voucher_timezone: '4000.96.11',
     payment_voucher_workshop: '4000.96.12',
     payment_voucher_50_smb: '2002.01.03',
+    payment_voucher_25_smb: '2002.01.03',
+    payment_voucher_event_50: '4000.96.25',
+    payment_voucher_wellgrou: '4000.96.26',
     payment_voucher_bogo: '4000.96.07',
     payment_voucher_chope: '4000.96.08',
     payment_voucher_telkomsel: '4000.96.17'
