@@ -4,6 +4,8 @@ export const DEFAULT_STORE_NAMES = [
   'MKG',
   'SMB',
   'SMB GOLD LOUNGE',
-  'SMS'
+  'SMS',
+  'SCBD',
+  'KEM TOWER'
 ] as const
 

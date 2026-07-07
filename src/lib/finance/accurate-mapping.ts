@@ -23,7 +23,7 @@ export const ACCURATE_MAPPING: Record<string, any> = {
       payment_bsd_workshop_vou: '4000.96.06',
       discount: '4000.91',
       service_charge: '2001.03.04',
-      tax: '2002.03.02.04',
+      tax: '2001.02.02.04',
       branchName: '4.BSD'
     },
     'LA.PIAZZA': {
@@ -47,7 +47,7 @@ export const ACCURATE_MAPPING: Record<string, any> = {
       payment_transfer: '1000.02.02.01',
       discount: '4000.91',
       service_charge: '2001.03.02',
-      tax: '2002.03.02.01',
+      tax: '2001.02.02.02',
       branchName: '2.LPZ'
     },
     'MKG': {
@@ -72,7 +72,7 @@ export const ACCURATE_MAPPING: Record<string, any> = {
       payment_voucher_smkg: '2002.01.02',
       discount: '4000.91',
       service_charge: '2001.03.05',
-      tax: '2002.03.02.05',
+      tax: '2001.02.02.05',
       branchName: '5.MKG'
     },
     'SMB': {
@@ -96,7 +96,7 @@ export const ACCURATE_MAPPING: Record<string, any> = {
       payment_transfer: '1000.02.07.01',
       discount: '4000.91',
       service_charge: '2001.03.06',
-      tax: '2002.03.02.06',
+      tax: '2001.02.02.06',
       branchName: '6.SMB'
     },
     'SMB GOLD LOUNGE': {
@@ -120,7 +120,7 @@ export const ACCURATE_MAPPING: Record<string, any> = {
       payment_transfer: '1000.02.07.01',
       discount: '4000.91',
       service_charge: '2001.03.07',
-      tax: '2002.03.02.07',
+      tax: '2001.02.02.07',
       branchName: '7.SMB Gold Lounge'
     },
     'SMS': {
@@ -145,7 +145,7 @@ export const ACCURATE_MAPPING: Record<string, any> = {
       payment_workshop_sms_voucher: '4000.96.13',
       discount: '4000.91',
       service_charge: '2001.03.03',
-      tax: '2002.03.02.03',
+      tax: '2001.02.02.02',
       branchName: '3.SMS'
     },
     'SCBD': {
@@ -168,8 +168,32 @@ export const ACCURATE_MAPPING: Record<string, any> = {
       payment_transfer: '1000.02.08.01',
       discount: '4000.91',
       service_charge: '2001.03.08',
-      tax: '2002.03.02.08',
+      tax: '2001.02.02.08',
       branchName: '8.SCBD'
+    },
+    'KEM TOWER': {
+      sales_bar: '4000.01.02',
+      payment_cash: '1000.01.09',
+      sales_bundling: '4000.01.01',
+      payment_credit_bca: '1000.02.09.02',
+      sales_beans: '4000.01.03',
+      payment_debit_bca: '1000.02.09.02',
+      sales_inventory: '4000.01.04',
+      sales_kitchen: '4000.01.01',
+      payment_gobiz: '1100.02.09',
+      sales_konsinyasi: '4000.01.05',
+      payment_ovo: '1100.03.09',
+      sales_konsinyasi_no_brand: '4000.01.05',
+      sales_modifier: '4000.01.02',
+      payment_qris: '1000.02.09.02',
+      settlement_bca: '1000.02.09.02',
+      admin_merchant: '6000.01.36',
+      admin_bank: '6000.01.08',
+      payment_transfer: '1000.02.09.02',
+      discount: '4000.91',
+      service_charge: '2001.03.09',
+      tax: '2001.02.02.09',
+      branchName: '9.Kem Tower'
     }
   },
   GLOBAL: {
@@ -223,6 +247,7 @@ export const ACCURATE_MAPPING: Record<string, any> = {
     '1100.02.06': 'C.00006',
     '1100.02.07': 'C.00006',
     '1100.02.08': 'C.00006',
+    '1100.02.09': 'C.00006',
     // OVO piutang per outlet (Penjualan debit + Uang Masuk kredit)
     '1100.03.02': 'C.00044',
     '1100.03.03': 'C.00044',
@@ -231,6 +256,7 @@ export const ACCURATE_MAPPING: Record<string, any> = {
     '1100.03.06': 'C.00044',
     '1100.03.07': 'C.00044',
     '1100.03.08': 'C.00044',
+    '1100.03.09': 'C.00044',
     // CL Upperwest piutang (BSD only)
     '1100.05.04': 'C.00098'
   },
