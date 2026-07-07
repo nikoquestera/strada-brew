@@ -35,6 +35,7 @@ function RevenueStoreForm() {
   const [isMarkingResolved, setIsMarkingResolved] = useState(false)
   const [showRevisionPanel, setShowRevisionPanel] = useState(false)
   const [revisionApplied, setRevisionApplied] = useState(false)
+  const [salahKamarOverridden, setSalahKamarOverridden] = useState(false)
   const [revisedCreditQuinos, setRevisedCreditQuinos] = useState<string>('0')
   const [revisedDebitQuinos, setRevisedDebitQuinos] = useState<string>('0')
   const [revisedQrisQuinos, setRevisedQrisQuinos] = useState<string>('0')
@@ -277,6 +278,7 @@ function RevenueStoreForm() {
     setIsBalanceApproved(false)
     setShowRevisionPanel(false)
     setRevisionApplied(false)
+    setSalahKamarOverridden(false)
 
     try {
       addLog('🚀 Memulai proses revenue report...', 'info')
@@ -465,16 +467,21 @@ function RevenueStoreForm() {
     if (!data) return null
 
     // 1. Validasi Salah Kamar
+    // Require BOTH pct above threshold AND absolute diff > Rp 10.000.
+    // Small totals cause inflated pct from fee rounding — absolute floor prevents false positives.
+    const MIN_DIFF = 10000
     const diffCredit = Math.abs((data.payment_credit_bca || 0) - (data.bca_kredit_income || 0))
     const pctCredit = (data.payment_credit_bca || 0) > 0 ? (diffCredit / data.payment_credit_bca) : 0
-    
+
     const diffDebit = Math.abs((data.payment_debit_bca || 0) - (data.bca_debit_income || 0))
     const pctDebit = (data.payment_debit_bca || 0) > 0 ? (diffDebit / data.payment_debit_bca) : 0
-    
+
     const diffQris = Math.abs((data.payment_qris || 0) - (data.bca_qris_income || 0))
     const pctQris = (data.payment_qris || 0) > 0 ? (diffQris / data.payment_qris) : 0
 
-    const isSalahKamar = (pctCredit > 0.021) || (pctDebit > 0.01) || (pctQris > 0.0085)
+    const isSalahKamar = (pctCredit > 0.021 && diffCredit > MIN_DIFF) ||
+                         (pctDebit > 0.01 && diffDebit > MIN_DIFF) ||
+                         (pctQris > 0.0085 && diffQris > MIN_DIFF)
 
     // 2. Validasi Balance
     // Must include ALL payment methods from Quinos for Journal 1 validation
@@ -691,12 +698,24 @@ function RevenueStoreForm() {
                           • QRIS: {((validation?.details?.pctQris || 0) * 100).toFixed(2)}% (Limit: 0.85%)
                         </span>
                       </p>
-                      <button
-                        onClick={() => setShowRevisionPanel(p => !p)}
-                        className="mt-2 text-[10px] bg-red-100 hover:bg-red-200 text-red-700 px-2 py-1 rounded font-bold uppercase tracking-wider transition-all"
-                      >
-                        {showRevisionPanel ? '▲ Tutup Revisi' : '✏️ Revisi Angka Quinos'}
-                      </button>
+                      <div className="flex gap-2 mt-2 flex-wrap">
+                        <button
+                          onClick={() => setShowRevisionPanel(p => !p)}
+                          className="text-[10px] bg-red-100 hover:bg-red-200 text-red-700 px-2 py-1 rounded font-bold uppercase tracking-wider transition-all"
+                        >
+                          {showRevisionPanel ? '▲ Tutup Revisi' : '✏️ Revisi Angka Quinos'}
+                        </button>
+                        <button
+                          onClick={() => {
+                            setSalahKamarOverridden(true)
+                            setShowRevisionPanel(false)
+                            addLog('⚠�� Salah kamar diabaikan oleh user — data sudah diverifikasi manual.', 'warning')
+                          }}
+                          className="text-[10px] bg-gray-100 hover:bg-gray-200 text-gray-600 px-2 py-1 rounded font-bold uppercase tracking-wider transition-all"
+                        >
+                          ✓ Konfirmasi Tidak Salah Kamar
+                        </button>
+                      </div>
                     </div>
                   </div>
                   {showRevisionPanel && (
@@ -1042,9 +1061,9 @@ function RevenueStoreForm() {
 
                   <button
                     onClick={handleSubmitAccurate}
-                    disabled={!isVerified || isSubmitting || (validation?.isSalahKamar) || (validation?.isUnbalanced && !isBalanceApproved)}
+                    disabled={!isVerified || isSubmitting || (validation?.isSalahKamar && !salahKamarOverridden) || (validation?.isUnbalanced && !isBalanceApproved)}
                     className={`w-full py-4 rounded-xl font-black text-sm uppercase tracking-widest flex items-center justify-center gap-2 transition-all ${
-                      !isVerified || isSubmitting || (validation?.isSalahKamar) || (validation?.isUnbalanced && !isBalanceApproved)
+                      !isVerified || isSubmitting || (validation?.isSalahKamar && !salahKamarOverridden) || (validation?.isUnbalanced && !isBalanceApproved)
                         ? 'bg-blue-200 text-white cursor-not-allowed'
                         : 'bg-strada-blue text-white hover:bg-strada-dark-teal shadow-lg hover:shadow-xl active:scale-[0.98]'
                     }`}
