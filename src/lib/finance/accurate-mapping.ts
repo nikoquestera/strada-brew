@@ -171,7 +171,7 @@ export const ACCURATE_MAPPING: Record<string, any> = {
       tax: '2001.02.02.08',
       branchName: '8.SCBD'
     },
-    'KEM TOWER': {
+    'KEM.TOWER': {
       sales_bar: '4000.01.02',
       payment_cash: '1000.01.09',
       sales_bundling: '4000.01.01',
